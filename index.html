@@ -4,53 +4,73 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>North Echo — Premium Apparel</title>
+
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+
 </head>
 <body>
 
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
-
   <a href="index.html" class="logo">NORTH ECHO</a>
-
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <button id="themeToggle" class="theme-btn">○</button>
   </div>
 </header>
 
+<!-- ---------------- HERO ---------------- -->
+<section class="hero-full">
+  <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" class="hero-full-img">
 
+  <div class="hero-full-text">
+    <h1>Winter Essentials</h1>
+    <p>Premium comfort for the colder season. Minimalist, clean and timeless.</p>
 
-<div class="side-menu" id="sideMenu">
-  <button id="closeMenu" class="close-menu">×</button>
-  <a href="index.html">Home</a>
-  <a href="tshirts.html">T-Shirts</a>
-  <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="cart.html">Cart</a>
-</div>
-
-<main class="home-hero">
-  <div class="hero-wrapper">
-    
-    <div class="hero-left">
-      <h1 class="hero-title">Premium Essentials<br>Designed for Minimalists</h1>
-      <p class="hero-sub">Timeless silhouettes, clean lines and modern comfort for everyday wear.</p>
-
-      <div class="hero-buttons">
-        <a href="tshirts.html" class="hero-btn">Shop T-Shirts</a>
-        <a href="sweatshirts.html" class="hero-btn alt">Shop Sweatshirts</a>
-      </div>
+    <div class="hero-full-buttons">
+      <a href="sweatshirts.html" class="hero-btn main">Shop Sweatshirts</a>
+      <a href="tshirts.html" class="hero-btn alt">Shop T-Shirts</a>
     </div>
+  </div>
+</section>
 
-    <div class="hero-right">
-      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" class="hero-img"/>
-    </div>
+
+<!-- ---------------- CATEGORY CARDS ---------------- -->
+<section class="category-section">
+  <h2 class="cat-head">Explore Categories</h2>
+
+  <div class="category-cards">
+
+    <a href="tshirts.html" class="cat-card">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
+      <h3>T-Shirts</h3>
+    </a>
+
+    <a href="sweatshirts.html" class="cat-card">
+      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
+      <h3>Sweatshirts</h3>
+    </a>
 
   </div>
-</main>
+</section>
 
+
+<!-- ---------------- ABOUT / BRAND ---------------- -->
+<section class="about-brand">
+  <h2>Minimalist. Modern. Essential.</h2>
+  <p>
+    North Echo delivers minimalist, premium-quality apparel designed for everyday comfort 
+    and timeless style — focusing on clean silhouettes and modern simplicity.
+  </p>
+
+  <a href="https://instagram.com/northecho.fi" class="insta-link">Instagram</a>
+</section>
+
+
+<!-- ---------------- FOOTER ---------------- -->
 <footer class="footer">
   <div class="footer-logo">NORTH ECHO</div>
   <p>North Echo delivers minimalist, high-quality apparel designed for everyday comfort and style.</p>
