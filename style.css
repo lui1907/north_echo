@@ -711,3 +711,7 @@ a {
     max-width: 100%;
   }
 }
+.cart-title {
+  margin-top: 40px !important;
+  text-align: center;
+}
