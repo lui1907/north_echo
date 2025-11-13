@@ -791,8 +791,7 @@ a {
 /* SOL ÜRÜNLER */
 .product-area {
   flex: 1;
-  display: flex;
-  justify-content: center;   /* ürün grid’ini soldaki alanda ortaya al */
+  max-width: 950px;   /* Ürün alanı ortaya gelir */
 }
 
 .product-grid {
