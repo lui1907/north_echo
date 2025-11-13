@@ -1,19 +1,24 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Gray Printed T-Shirt — North Echo</title>
-<link rel="stylesheet" href="style.css"/>
-<script src="menu.js" defer></script>
-<script src="theme.js" defer></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gray Printed T-Shirt — North Echo</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="menu.js" defer></script>
+  <script src="theme.js" defer></script>
+  <script src="cart.js" defer></script>
+  <script src="product.js" defer></script>
 </head>
 <body>
 
 <header class="header">
-  <div class="logo">NORTH ECHO</div>
   <div class="hamburger" id="menuBtn">☰</div>
-  <button id="themeToggle" class="theme-btn">○</button>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
 </header>
 
 <div class="side-menu" id="sideMenu">
@@ -27,15 +32,10 @@
 <main class="product-page">
 
   <div class="product-left">
-    <img class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
+    <img class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
   </div>
 
   <div class="product-right">
-    <button class="add-cart" 
-        onclick="addToCart('Gray Printed T-Shirt', 20, 'https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg')">
-  Add to Cart
-</button>
-
     <h1>Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
 
@@ -47,9 +47,11 @@
       <option>XL</option>
     </select>
 
-    <div style="margin-top:20px;">
-      <a class="hero-btn" href="#">Add to Cart</a>
-    </div>
+    <button
+      class="add-cart"
+      onclick="addToCart('Gray Printed T-Shirt', 20, 'https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg')">
+      Add to Cart
+    </button>
   </div>
 
 </main>
