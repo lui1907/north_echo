@@ -897,3 +897,25 @@ a {
 .checkout-btn:hover {
   opacity: 0.8;
 }
+.banner-btn {
+    padding: 12px 28px;
+    background: #fff;           /* SAĞDAKİ GİBİ BEYAZ */
+    color: #000;                /* SİYAH YAZI */
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.25s;
+    border: 1px solid transparent;
+}
+
+/* Hover efekti */
+.banner-btn:hover {
+    background: #e8e8e8;
+}
+
+/* Eskiden alt buton için ayrı class vardı, ona da beyaz yapıyoruz */
+.banner-btn.alt {
+    background: #fff;
+    color: #000;
+    border: 1px solid #fff;
+}
