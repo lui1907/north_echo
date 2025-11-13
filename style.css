@@ -99,15 +99,15 @@ a {
 .side-menu {
   position: fixed;
   top: 0;
-  left: -260px;
+  left: -320px;   /* 🔥 TAMAMEN KAYBOLUR */
   width: 260px;
   height: 100%;
   background: var(--card);
   padding: 25px;
-  border-right: 1px solid var(--border);
   transition: 0.35s ease;
+  border-right: 1px solid var(--border);
   pointer-events: none;
-  z-index: 10000;
+  z-index: 9999;
 }
 
 .side-menu.open {
