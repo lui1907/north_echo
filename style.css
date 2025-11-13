@@ -402,10 +402,10 @@ a {
 .recommended-box {
   width: 100%;
   max-width: 900px;
-  margin-top: 60px !important;
-  margin: 50px auto 30px;
+  margin: 120px auto 30px;   /* 🔥 50 → 120 yaptım, aşağı indi */
   padding: 0 20px;
 }
+
 
 .rec-title {
   font-size: 22px;
