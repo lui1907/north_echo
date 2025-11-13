@@ -519,3 +519,106 @@ a {
   width: 100%;
   border-radius: 8px;
 }
+/* ===== PREMIUM CART PAGE ===== */
+
+.cart-wrapper {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 0 40px;
+}
+
+.cart-title {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 50px;
+}
+
+.cart-layout {
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+}
+
+/* SOL ÜRÜNLER */
+.cart-products {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.cart-item-box {
+  display: flex;
+  gap: 20px;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.cart-img {
+  width: 110px;
+  border-radius: 10px;
+}
+
+.cart-info h3 {
+  margin: 0 0 5px;
+}
+
+.quantity-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quantity-controls button {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* SAĞ ÖZET */
+.cart-summary-box {
+  flex: 1;
+  background: var(--card);
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.summary-line,
+.summary-total-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+.summary-total-line {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+
+/* CHECKOUT BUTTON */
+
+.checkout-final-btn {
+  display: block;
+  margin-top: 25px;
+  text-align: center;
+  padding: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.checkout-final-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
