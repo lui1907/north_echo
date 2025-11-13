@@ -29,25 +29,42 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- ================= PRODUCT PAGE ================= -->
 <main class="product-page">
 
+  <!-- SOL TARAF -->
   <div class="product-left">
-    <img id="blackMainImg" class="product-img" src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
 
-    <div class="thumb-list">
-      <img class="thumb" src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" onclick="setBlackImg('https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg')" alt="">
-      <img class="thumb" src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg" onclick="setBlackImg('https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg')" alt="">
-      <img class="thumb" src="https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg" onclick="setBlackImg('https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg')" alt="">
+    <!-- ANA FOTO -->
+    <img id="blackMainImg" class="product-main-img"
+         src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg"
+         alt="Black Printed T-Shirt">
+
+    <!-- THUMBNAILS -->
+    <div class="product-thumbnails">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg"
+           onclick="setBlackImg('https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg')" alt="">
+
+      <img src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg"
+           onclick="setBlackImg('https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg')" alt="">
+
+      <img src="https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg"
+           onclick="setBlackImg('https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg')" alt="">
     </div>
+
   </div>
 
+  <!-- SAĞ TARAF -->
   <div class="product-right">
+
     <h1 class="product-title">Black Printed T-Shirt</h1>
     <p class="price">20€</p>
+
     <p class="product-desc">
-      Clean black base with a bold front print. Easy to pair with anything in your wardrobe.
+      Clean minimal print, soft cotton comfort and a modern everyday look.
     </p>
 
+    <!-- BEDEN -->
     <div class="size-box">
       <label for="blackSize">Size</label>
       <select id="blackSize">
@@ -58,6 +75,7 @@
       </select>
     </div>
 
+    <!-- ADET -->
     <div class="qty-box">
       <span>Quantity</span>
       <button type="button" onclick="changeBlackQty(-1)">-</button>
@@ -65,15 +83,20 @@
       <button type="button" onclick="changeBlackQty(1)">+</button>
     </div>
 
+    <!-- SEPETE EKLE -->
     <button class="add-cart-btn" type="button" onclick="addBlackToCart()">
       Add to Cart
     </button>
+
   </div>
 
 </main>
 
+
+<!-- ================= RECOMMENDED ================= -->
 <section class="recommended-box">
   <h2 class="rec-title">You May Also Like</h2>
+
   <div class="rec-grid">
 
     <a class="rec-card" href="gray-printed.html">
@@ -82,18 +105,20 @@
     </a>
 
     <a class="rec-card" href="mr-right.html">
-      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt">
-      <h3>Mr. Right T-Shirt</h3>
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr Right T-Shirt">
+      <h3>Mr Right T-Shirt</h3>
     </a>
 
-    <a class="rec-card" href="trust-no-one.html">
-      <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" alt="Trust No One T-Shirt">
-      <h3>Trust No One T-Shirt</h3>
+    <a class="rec-card" href="white-printed.html">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
+      <h3>White Printed T-Shirt</h3>
     </a>
 
   </div>
 </section>
 
+
+<!-- ================= SCRIPTLER ================= -->
 <script>
 let blackCurrentQty = 1;
 let blackCurrentImg = "https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg";
