@@ -30,71 +30,92 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<main class="cart-page">
-  <h1>Shopping Cart</h1>
 
-  <div id="cartItems" class="cart-items"></div>
-  <h2 id="cartTotal"></h2>
+<!-- ======================= -->
+<!--      PREMIUM CART       -->
+<!-- ======================= -->
 
-  <br/>
-  <a href="checkout.html" class="checkout-btn">Go to Checkout</a>
+<main class="cart-wrapper">
+
+  <h1 class="cart-title">Shopping Cart</h1>
+
+  <div class="cart-layout">
+
+      <!-- SOL TARAF — ÜRÜNLER -->
+      <div class="cart-products" id="cartItems"></div>
+
+      <!-- SAĞ TARAF — ÖZET -->
+      <div class="cart-summary-box">
+          <h2>Order Summary</h2>
+
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span id="sumSubtotal">0€</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+
+          <div class="summary-total-line">
+            <span>Total</span>
+            <span id="sumTotal">0€</span>
+          </div>
+
+          <a href="checkout.html" class="checkout-final-btn">Go to Checkout →</a>
+      </div>
+
+  </div>
+
 </main>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const itemsEl = document.getElementById("cartItems");
-    const totalEl = document.getElementById("cartTotal");
+    const container = document.getElementById("cartItems");
 
     if (cart.length === 0) {
-        itemsEl.innerHTML = "<p>Your cart is empty.</p>";
-        totalEl.textContent = "";
+        container.innerHTML = "<p>Your cart is empty.</p>";
+        document.getElementById("sumSubtotal").textContent = "0€";
+        document.getElementById("sumTotal").textContent = "0€";
         return;
     }
 
-    let total = 0;
+    let subtotal = 0;
+
+    container.innerHTML = "";
 
     cart.forEach((item, index) => {
-        itemsEl.innerHTML += `
-            <div class="cart-item">
-                <div style="display:flex; gap:15px; align-items:center;">
-                    <img src="${item.image}" width="80" style="border-radius:6px;">
-                    <div>
-                      <h3>${item.name}</h3>
-                      <p>Size: ${item.size}</p>
-                      <p>${item.price}€</p>
 
-                      <div class="quantity-controls">
-                        <button onclick="changeQuantity(${index}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="changeQuantity(${index}, 1)">+</button>
-                      </div>
-                    </div>
+        container.innerHTML += `
+            <div class="cart-item-box">
+
+                <img src="${item.image}" class="cart-img">
+
+                <div class="cart-info">
+                  <h3>${item.name}</h3>
+                  <p>Size: ${item.size}</p>
+                  <p>${item.price}€</p>
+
+                  <div class="quantity-controls">
+                    <button onclick="changeQuantity(${index}, -1)">-</button>
+                    <span>${item.quantity}</span>
+                    <button onclick="changeQuantity(${index}, 1)">+</button>
+                  </div>
                 </div>
+
             </div>
         `;
 
-        total += item.price * item.quantity;
+        subtotal += item.price * item.quantity;
     });
 
-    totalEl.textContent = "Total: " + total + "€";
+    document.getElementById("sumSubtotal").textContent = subtotal + "€";
+    document.getElementById("sumTotal").textContent = subtotal + "€";
 });
-
-// QUANTITY CHANGE
-function changeQuantity(index, amount) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    cart[index].quantity += amount;
-
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    loadCartCount();
-    location.reload();
-}
 </script>
 
 </body>
