@@ -74,19 +74,19 @@ a {
 .side-menu {
   position: fixed;
   top: 0;
-  left: -300px;         /* TAMAMEN DIŞARIDA BAŞLASIN */
+  left: -300px;        
   width: 260px;
   height: 100%;
-  background: #111;
+  background: var(--card);   /* 🎯 ÖNEMLİ KISMI DÜZELTTİK */
   padding: 25px;
   transition: 0.35s ease;
   border-right: 1px solid var(--border);
-  pointer-events: none; /* KAPALIYKEN TIKLANMASIN */
+  pointer-events: none; 
 }
 
 .side-menu.open {
-  left: 0;              /* TAM AÇILSIN */
-  pointer-events: auto; /* AÇILINCA TIKLANABİLSİN */
+  left: 0;
+  pointer-events: auto;
 }
 
 .close-menu {
@@ -101,10 +101,11 @@ a {
 .side-menu a {
   display: block;
   text-decoration: none;
-  color: var(--text);
+  color: var(--text);   /* 🎯 Bu doğru */
   font-size: 18px;
   margin: 18px 0;
 }
+
 
 /* ---------- HOME HERO WITH BACKGROUND IMAGE ---------- */
 .hero-bg {
