@@ -507,3 +507,42 @@ body {
     max-width: 380px;
   }
 }
+/* ---------- CATEGORY PRODUCT GRID ---------- */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.product-card {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: 0.25s;
+}
+
+.product-card:hover {
+  background: #222;
+  transform: scale(1.03);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.product-card h3 {
+  font-size: 18px;
+  margin: 8px 0 4px;
+}
+
+.product-card p {
+  opacity: 0.8;
+  font-size: 16px;
+}
