@@ -494,7 +494,7 @@ a {
 
 .rec-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, auto));
   gap: 30px;
   justify-items: center;
 }
@@ -518,19 +518,4 @@ a {
 .rec-card img {
   width: 100%;
   border-radius: 8px;
-}
-/* ---- FIX: Recommended (You May Also Like) CENTER ---- */
-.recommended-box {
-  max-width: 1100px;
-  margin: 80px auto 0 auto !important; /* tam ortala */
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-}
-
-.rec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px;
-  justify-items: center !important;  /* ürünleri ortala */
-  align-items: center;
 }
