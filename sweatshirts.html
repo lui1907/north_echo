@@ -1,27 +1,31 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sweatshirts — North Echo</title>
 
-<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="style.css" />
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
 
 </head>
+
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <button id="themeToggle" class="theme-btn">○</button>
   </div>
 </header>
 
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -30,19 +34,128 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<main class="category-page">
-  <h1 class="cat-title">Sweatshirts</h1>
+<!-- PAGE TITLE -->
+<h1 class="page-title">Sweatshirts</h1>
 
-  <div class="product-grid">
+<!-- ANA LAYOUT -->
+<div class="tshirt-layout">
 
-    <a href="black-sweatshirt.html" class="product-card">
-      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
-      <h3>Black Printed Sweatshirt</h3>
-      <p>35€</p>
-    </a>
+  <!-- SOL: ÜRÜNLER -->
+  <div class="product-area">
 
+    <div class="product-grid">
+
+      <!-- SWEATSHIRT 1 -->
+      <a href="black-sweatshirt.html" class="product-card"
+         data-name="black printed sweatshirt" data-price="35">
+
+        <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
+        <h3>Black Printed Sweatshirt</h3>
+        <p>35€</p>
+      </a>
+
+    </div>
   </div>
-</main>
+
+  <!-- SAĞ: ARAMA + FİLTRE -->
+  <div class="filter-side">
+
+    <!-- Arama -->
+    <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
+
+    <!-- FİLTRE KUTUSU -->
+    <div class="filter-box">
+
+      <h3>Filters</h3>
+
+      <!-- PRICE SLIDER -->
+      <h4>Price</h4>
+      <div class="price-slider-box">
+        <input type="range" id="priceRange" min="20" max="60" value="60">
+        <div class="price-value">Max: <span id="priceVal">60</span>€</div>
+      </div>
+
+      <!-- SIZE -->
+      <h4>Size</h4>
+      <div class="size-filter-box">
+        <div class="size-buttons">
+          <div class="size-btn" data-size="S">S</div>
+          <div class="size-btn" data-size="M">M</div>
+          <div class="size-btn" data-size="L">L</div>
+          <div class="size-btn" data-size="XL">XL</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ========== FİLTRE / ARAMA JS ========== -->
+<script>
+
+const cards = document.querySelectorAll(".product-card");
+const searchInput = document.getElementById("searchInput");
+const priceRange = document.getElementById("priceRange");
+const priceVal = document.getElementById("priceVal");
+
+let selectedSize = null;
+
+// BEDEN BUTONLARI
+const sizeBtns = document.querySelectorAll(".size-btn");
+
+sizeBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    if (btn.classList.contains("active")) {
+      btn.classList.remove("active");
+      selectedSize = null;
+    } else {
+      sizeBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedSize = btn.dataset.size;
+    }
+
+    applyFilters();
+  });
+});
+
+// FİYAT SLIDER
+priceRange.addEventListener("input", () => {
+  priceVal.textContent = priceRange.value;
+  applyFilters();
+});
+
+// ARAMA
+searchInput.addEventListener("input", applyFilters);
+
+
+// ANA FİLTRE FONKSİYONU
+function applyFilters() {
+
+  const searchText = searchInput.value.toLowerCase();
+  const maxPrice = parseInt(priceRange.value);
+
+  cards.forEach(card => {
+    const name = card.dataset.name.toLowerCase();
+    const price = parseInt(card.dataset.price);
+
+    const matchSearch = name.includes(searchText);
+    const matchPrice = price <= maxPrice;
+
+    // Şimdilik tüm sweatshirtler tüm bedende var
+    const matchSize = true;
+
+    if (matchSearch && matchPrice && matchSize) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
+</script>
 
 </body>
 </html>
