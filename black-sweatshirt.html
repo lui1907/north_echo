@@ -1,20 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Black Printed Sweatshirt — North Echo</title>
-<link rel="stylesheet" href="style.css" />
+
+<link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 <script src="product.js" defer></script>
+
 </head>
 <body>
 
 <header class="header">
-  <div class="logo">NORTH ECHO</div>
   <div class="hamburger" id="menuBtn">☰</div>
-  <button id="themeToggle" class="theme-btn">○</button>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
 </header>
 
 <div class="side-menu" id="sideMenu">
@@ -25,30 +31,65 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<main class="product-page">
+<main class="product-page" style="flex-direction: column; align-items: center; text-align:center;">
 
-  <div class="product-left">
-    <img class="product-img" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg" />
+  <!-- IMAGE SLIDER -->
+  <div class="product-gallery">
+    <img id="mainImage" class="product-img" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
+
+    <div class="thumb-list">
+      <img class="thumb" onclick="changeImage(0)" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
+      <img class="thumb" onclick="changeImage(1)" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg">
+    </div>
+
+    <div class="dots">
+      <span class="dot active" onclick="changeImage(0)"></span>
+      <span class="dot" onclick="changeImage(1)"></span>
+    </div>
   </div>
 
-  <div class="product-right">
+  <!-- PRODUCT INFO -->
+  <div class="product-right" style="margin-top:40px; max-width:400px;">
+
     <h1>Black Printed Sweatshirt</h1>
     <p class="price">35€</p>
 
-    <label>Size:</label>
-    <select>
+    <label>Size:</label><br>
+    <select style="margin-top:8px; padding:10px; width:120px;">
       <option>S</option>
       <option>M</option>
       <option>L</option>
       <option>XL</option>
     </select>
 
-    <div style="margin-top:20px;">
-      <a class="hero-btn" href="#" onclick="addToCart('Black Printed Sweatshirt', 35)">Add to Cart</a>
-    </div>
+    <button class="add-cart" style="margin-top:25px;"
+      onclick="addToCart(
+        'Black Printed Sweatshirt',
+        35,
+        'https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg'
+      )">
+      Add to Cart
+    </button>
+
   </div>
 
 </main>
+
+<!-- SLIDER SCRIPT -->
+<script>
+const images = [
+  "https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg",
+  "https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg"
+];
+
+function changeImage(index) {
+  document.getElementById("mainImage").src = images[index];
+
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
+}
+</script>
 
 </body>
 </html>
