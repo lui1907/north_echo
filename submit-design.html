@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Submit Your Design — North Echo</title>
+
+<link rel="stylesheet" href="style.css" />
+
+<style>
+.submit-wrapper {
+    max-width: 600px;
+    margin: 120px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+}
+
+.submit-wrapper h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.submit-wrapper input,
+.submit-wrapper textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+}
+
+.submit-wrapper button {
+    width: 100%;
+    padding: 14px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit-wrapper button:hover {
+    opacity: 0.8;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
+</header>
+
+<div class="submit-wrapper">
+    <h1>Submit Your Design</h1>
+
+    <form id="designForm">
+
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+
+        <textarea id="description" placeholder="Describe your design..." rows="5" required></textarea>
+
+        <input type="file" id="file" accept="image/*,.pdf" required>
+
+        <button type="submit">Send Design</button>
+    </form>
+
+    <p id="status"></p>
+</div>
+
+<script>
+document.getElementById("designForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", document.getElementById("name").value);
+    formData.append("email", document.getElementById("email").value);
+    formData.append("description", document.getElementById("description").value);
+    formData.append("file", document.getElementById("file").files[0]);
+
+    document.getElementById("status").textContent = "Sending...";
+
+    const response = await fetch("YOUR_APPS_SCRIPT_URL", {
+        method: "POST",
+        body: formData
+    });
+
+    const result = await response.text();
+    document.getElementById("status").textContent = result;
+});
+</script>
+
+</body>
+</html>
