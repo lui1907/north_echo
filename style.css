@@ -28,6 +28,25 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+.right-buttons {
+  position: absolute;
+  right: 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cart-icon {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.cart-icon #cartCount {
+  font-weight: 700;
+  margin-left: 4px;
+}
+
 /* Sol hamburger */
 .hamburger {
   font-size: 26px;
