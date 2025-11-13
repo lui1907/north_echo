@@ -453,3 +453,113 @@ body {
   text-decoration: none;
   border-bottom: 1px solid;
 }
+/* ---------- FULL HERO ---------- */
+
+.hero-full {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-full-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+
+.hero-full-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--text);
+  max-width: 500px;
+}
+
+.hero-full-text h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.hero-full-text p {
+  opacity: 0.85;
+  margin-bottom: 20px;
+  font-size: 17px;
+}
+
+.hero-full-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* ---------- CATEGORY CARDS ---------- */
+
+.category-section {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.cat-head {
+  font-size: 32px;
+  margin-bottom: 40px;
+}
+
+.category-cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.cat-card {
+  width: 260px;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: 0.25s;
+}
+
+.cat-card:hover {
+  transform: scale(1.04);
+  background: #222;
+}
+
+.cat-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.cat-card h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 20px;
+}
+
+/* ---------- ABOUT BRAND ---------- */
+
+.about-brand {
+  text-align: center;
+  padding: 70px 40px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.insta-link {
+  margin-top: 20px;
+  display: inline-block;
+  color: var(--text);
+  font-size: 18px;
+  border-bottom: 1px solid;
+  text-decoration: none;
+}
