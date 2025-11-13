@@ -247,6 +247,10 @@ a {
     margin: 0 auto;
 }
 
+/* 🔥 Tek ürün olduğunda otomatik ortalar */
+.product-grid {
+    justify-content: center !important;
+}
 
 /* ÜRÜN SAYFASINDAKİ RECOMMENDED GRID BOZULMASIN */
 .recommended-box .rec-grid {
