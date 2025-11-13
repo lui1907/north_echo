@@ -1,15 +1,15 @@
 /* ---------- GLOBAL ---------- */
 :root {
-  --bg: #000;
-  --text: #fff;
-  --card: #111;
-  --border: #222;
+  --bg: #111;       /* siyah değil, koyu gri */
+  --text: #f2f2f2;  /* tam beyaz değil */
+  --card: #1a1a1a;  /* kartlar koyu gri */
+  --border: #333;
 }
 .light {
-  --bg: #f7f7f7;
-  --text: #000;
-  --card: #ffffff;
-  --border: #ddd;
+  --bg: #f2f2f2;     /* tam beyaz değil */
+  --text: #111;      /* siyah değil */
+  --card: #ffffff;   /* kartlar beyaz */
+  --border: #ccc;    
 }
 body {
   background: var(--bg);
