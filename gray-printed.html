@@ -32,40 +32,103 @@
 
 <main class="product-page">
 
-  <div class="product-left">
-    <img id="mainImg" class="product-img"
+  <!-- LEFT (SLIDER) -->
+  <div class="product-left centered-left">
+    <img id="mainImg" class="product-img" 
          src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
 
     <div class="thumb-list">
-      <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="changeImg(this.src)">
-      <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="changeImg(this.src)">
-      <img class="thumb" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg" onclick="changeImg(this.src)">
+      <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg" onclick="changeImage(this)">
     </div>
   </div>
 
-  <div class="product-right">
-    <h1>Gray Printed T-Shirt</h1>
+  <!-- RIGHT (PRODUCT DETAILS) -->
+  <div class="product-right premium-info">
+
+    <h1 class="product-title">Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
 
-    <label>Size:</label>
-    <select id="sizeSelect">
-      <option>S</option>
-      <option>M</option>
-      <option>L</option>
-      <option>XL</option>
-    </select>
+    <p class="product-desc">
+      Soft-touch cotton fabric. Minimal printed front graphic.  
+      Comfortable modern fit suitable for everyday wear.
+    </p>
 
-    <button class="add-cart"
-      onclick="addToCart('Gray Printed T-Shirt', 20, document.getElementById('mainImg').src, document.getElementById('sizeSelect').value)">
+    <!-- SIZE SELECTOR -->
+    <div class="size-box">
+      <label>Size</label>
+      <div class="size-options">
+        <span onclick="selectSize('S')" id="size_S">S</span>
+        <span onclick="selectSize('M')" id="size_M">M</span>
+        <span onclick="selectSize('L')" id="size_L">L</span>
+        <span onclick="selectSize('XL')" id="size_XL">XL</span>
+      </div>
+    </div>
+
+    <!-- QUANTITY -->
+    <div class="qty-box">
+      <button onclick="changeQty(-1)">−</button>
+      <span id="qtyNumber">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <!-- ADD TO CART -->
+    <button class="add-cart-btn"
+      onclick="premiumAddToCart()">
       Add to Cart
     </button>
+
   </div>
 
 </main>
 
 <script>
-function changeImg(src) {
-  document.getElementById('mainImg').src = src;
+// Thumbnail change
+function changeImage(el) {
+  document.getElementById("mainImg").src = el.src;
+}
+
+// Quantity selector
+function changeQty(amount) {
+  const el = document.getElementById("qtyNumber");
+  let val = parseInt(el.textContent) + amount;
+  if (val < 1) val = 1;
+  el.textContent = val;
+}
+
+// Size selector
+let selectedSize = null;
+
+function selectSize(size) {
+  selectedSize = size;
+
+  ["S","M","L","XL"].forEach(s => {
+    document.getElementById("size_"+s).classList.remove("active-size");
+  });
+
+  document.getElementById("size_"+size).classList.add("active-size");
+}
+
+// Add to cart wrapper
+function premiumAddToCart() {
+  if (!selectedSize) {
+    alert("Please select a size.");
+    return;
+  }
+
+  const qty = parseInt(document.getElementById("qtyNumber").textContent);
+
+  for (let i=0; i < qty; i++) {
+    addToCart(
+      "Gray Printed T-Shirt",
+      20,
+      document.getElementById("mainImg").src,
+      selectedSize
+    );
+  }
+
+  alert("Added to cart!");
 }
 </script>
 
