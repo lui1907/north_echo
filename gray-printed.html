@@ -32,22 +32,17 @@
 
 <main class="product-page">
 
-  <!-- LEFT: IMAGE GALLERY -->
   <div class="product-left">
+    <img id="mainImg" class="product-img"
+         src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
 
-    <div class="product-gallery">
-      <img id="mainImg" class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
-
-      <div class="thumb-list">
-        <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="changeImg(this.src)">
-        <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="changeImg(this.src)">
-        <img class="thumb" src="https://i.ibb.co/Kp53k5j/gri-tshirt3.jpg" onclick="changeImg(this.src)">
-      </div>
+    <div class="thumb-list">
+      <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="changeImg(this.src)">
+      <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="changeImg(this.src)">
+      <img class="thumb" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg" onclick="changeImg(this.src)">
     </div>
-
   </div>
 
-  <!-- RIGHT: PRODUCT INFO -->
   <div class="product-right">
     <h1>Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
@@ -60,20 +55,13 @@
       <option>XL</option>
     </select>
 
-    <button class="add-cart" onclick="
-      addToCart(
-        'Gray Printed T-Shirt',
-        20,
-        document.getElementById('mainImg').src,
-        document.getElementById('sizeSelect').value
-      )">
+    <button class="add-cart"
+      onclick="addToCart('Gray Printed T-Shirt', 20, document.getElementById('mainImg').src, document.getElementById('sizeSelect').value)">
       Add to Cart
     </button>
-
   </div>
 
 </main>
-
 
 <script>
 function changeImg(src) {
