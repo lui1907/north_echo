@@ -3,7 +3,7 @@ const menuBtn = document.getElementById("menuBtn");
 const closeMenu = document.getElementById("closeMenu");
 
 menuBtn.onclick = () => {
-    sideMenu.style.left = "0";
+    sideMenu.style.left = "0px";
 };
 
 closeMenu.onclick = () => {
