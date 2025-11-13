@@ -4,10 +4,12 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Your Cart — North Echo</title>
+
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
+
 </head>
 <body>
 
@@ -28,25 +30,23 @@
   <a href="cart.html">Cart</a>
 </div>
 
-  <div class="checkout-container">
-  <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
-</div>
-
-
 <main class="cart-page">
-  <h1>Shopping Cart</h1>
+  <h1>Your Cart</h1>
 
-  <div id="cartItems" class="cart-items"></div>
+  <div id="cartItems"></div>
   <h2 id="cartTotal"></h2>
+
+  <div class="checkout-container">
+    <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+  </div>
 </main>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-
+function loadCartPage() {
     const itemsEl = document.getElementById("cartItems");
     const totalEl = document.getElementById("cartTotal");
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = getCart();
 
     if (cart.length === 0) {
         itemsEl.innerHTML = "<p>Your cart is empty.</p>";
@@ -55,14 +55,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let total = 0;
+    itemsEl.innerHTML = "";
 
     cart.forEach(item => {
-
         itemsEl.innerHTML += `
             <div class="cart-item">
                 <img src="${item.image}" width="80" style="border-radius:6px;"/>
                 <h3>${item.name}</h3>
-                <p>${item.price}€ × ${item.quantity}</p>
+                <p>${item.price}€</p>
+
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('${item.name}', 'decrease')">-</button>
+                    <span>${item.quantity}</span>
+                    <button onclick="changeQuantity('${item.name}', 'increase')">+</button>
+                </div>
             </div>
         `;
 
@@ -70,7 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     totalEl.textContent = "Total: " + total + "€";
-});
+}
+
+document.addEventListener("DOMContentLoaded", loadCartPage);
 </script>
 
 </body>
