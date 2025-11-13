@@ -103,6 +103,25 @@
     </div>
 
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const productCards = document.querySelectorAll(".product-card");
+
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+
+        productCards.forEach(card => {
+            const name = card.querySelector("h3").textContent.toLowerCase();
+            if (name.includes(query)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
+</script>
 
 </body>
 </html>
