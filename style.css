@@ -886,24 +886,42 @@ a {
     transition: 0.2s;
 }
 
-/* 🌙 Dark mode (default) */
-body:not(.light) .footer a,
-body:not(.light) .footer-link {
+/* Footer genel yazı rengi (paragraf) */
+.footer p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* 🌙 Dark Mode (varsayılan) */
+body:not(.light) .footer p {
     color: #ccc;
 }
 
-body:not(.light) .footer a:hover,
-body:not(.light) .footer-link:hover {
+/* ☀️ Light Mode */
+body.light .footer p {
+    color: #000; /* siyah */
+    opacity: 0.7;
+}
+
+/* Footer linkleri */
+.footer a {
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+/* Dark mode link */
+body:not(.light) .footer a {
+    color: #ccc;
+}
+body:not(.light) .footer a:hover {
     color: #fff;
 }
 
-/* ☀️ Light mode */
-body.light .footer a,
-body.light .footer-link {
+/* Light mode link */
+body.light .footer a {
     color: #000;
 }
-
-body.light .footer a:hover,
-body.light .footer-link:hover {
+body.light .footer a:hover {
     opacity: 0.6;
 }
