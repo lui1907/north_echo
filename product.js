@@ -1,32 +1,29 @@
-// ------------------------------
-// SLIDER (Eğer isteğe göre geliştirilecek)
-// ------------------------------
-function initProductPage() {
-    const img = document.querySelector(".product-img");
-    return; // Şimdilik slider yok, sade tasarım
+let currentIndex = 0;
+
+function showImage(index) {
+  const imgs = document.querySelectorAll(".thumb");
+  const mainImg = document.querySelector(".product-img");
+  const dots = document.querySelectorAll(".dot");
+
+  if (index < 0) index = imgs.length - 1;
+  if (index >= imgs.length) index = 0;
+
+  currentIndex = index;
+
+  mainImg.src = imgs[index].dataset.full;
+
+  dots.forEach(d => d.classList.remove("active"));
+  dots[index].classList.add("active");
 }
 
-// ------------------------------
-// ADD TO CART (ASIL KISIM)
-// ------------------------------
-
-function addToCart(name, price) {
-    const sizeSelect = document.querySelector("select");
-    const size = sizeSelect.value;
-
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    cart.push({
-        name: name,
-        price: price,
-        size: size,
-        qty: 1
-    });
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Added to cart ✔");
+function nextImage() {
+  showImage(currentIndex + 1);
 }
 
-// Eğer sayfa ürün sayfasıysa slider init edilir
-document.addEventListener("DOMContentLoaded", initProductPage);
+function prevImage() {
+  showImage(currentIndex - 1);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  showImage(0);
+});
