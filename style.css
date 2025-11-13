@@ -5,7 +5,12 @@
   --card: #111;
   --border: #222;
 }
-
+.light {
+  --bg: #f7f7f7;
+  --text: #000;
+  --card: #ffffff;
+  --border: #ddd;
+}
 body {
   background: var(--bg);
   color: var(--text);
@@ -166,18 +171,18 @@ a {
 
 
 .product-card {
-  background: #111;
+  background: var(--card);
   padding: 14px;
   border-radius: 8px;
   text-decoration: none;
-  color: #fff;
-  border: 1px solid #222;
+  color: var(--text);
+  border: 1px solid var(--border);
   transition: 0.25s;
 }
 
 .product-card:hover {
+  background: rgba(0,0,0,0.05);  /* AÇIK TEMADA hafif gri */
   transform: scale(1.03);
-  background: #222;
 }
 
 .product-card img {
