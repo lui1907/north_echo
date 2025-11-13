@@ -1,37 +1,37 @@
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
+// CART SYSTEM — FINAL VERSION
+
+function loadCartCount() {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const count = cart.reduce((total, item) => total + item.quantity, 0);
+  
+  const badge = document.getElementById("cartCount");
+  if (badge) badge.textContent = count;
 }
 
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
+// ADD TO CART FUNCTION
+function addToCart(name, price, image, size) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // SAME PRODUCT & SAME SIZE? → Increase quantity
+  let existing = cart.find(item => item.name === name && item.size === size);
+
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({
+      name: name,
+      price: price,
+      image: image,
+      size: size,
+      quantity: 1
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCartCount();
+
+  alert("Added to cart!");
 }
 
-function updateCartCount() {
-    const cart = getCart();
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartCountEl = document.getElementById("cartCount");
-    if (cartCountEl) cartCountEl.textContent = count;
-}
-
-function changeQuantity(name, type) {
-    let cart = getCart();
-    let item = cart.find(i => i.name === name);
-
-    if (!item) return;
-
-    if (type === "increase") {
-        item.quantity += 1;
-    } 
-    if (type === "decrease") {
-        item.quantity -= 1;
-        if (item.quantity <= 0) {
-            cart = cart.filter(i => i.name !== name); // ürünü sil
-        }
-    }
-
-    saveCart(cart);
-    loadCartPage();
-    updateCartCount();
-}
-
-document.addEventListener("DOMContentLoaded", updateCartCount);
+// LOAD COUNT ON PAGE START
+document.addEventListener("DOMContentLoaded", loadCartCount);
