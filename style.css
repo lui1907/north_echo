@@ -276,3 +276,30 @@ body {
   border-bottom: 1px solid;
   margin-top: 10px;
 }
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  background: #111;
+  padding: 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid #222;
+  transition: 0.25s;
+}
+
+.product-card:hover {
+  background: #222;
+  transform: scale(1.03);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
