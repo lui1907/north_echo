@@ -791,12 +791,16 @@ a {
 /* SOL ÜRÜNLER */
 .product-area {
   flex: 1;
+  display: flex;
+  justify-content: center;   /* ürün grid’ini soldaki alanda ortaya al */
 }
 
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 30px;
+  max-width: 900px;          /* çok büyümesin */
+  width: 100%;
 }
 
 /* SAĞ ARAMA + FİLTRE */
