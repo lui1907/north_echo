@@ -73,33 +73,29 @@
 
     </form>
 
-    <!-- SAĞ ÖZET -->
-    <div class="checkout-summary-box">
-      <h2>Order Summary</h2>
+<!-- ORDER SUMMARY -->
+<div class="checkout-summary-box">
 
-      <div id="checkoutItems"></div>
+    <h2>Order Summary</h2>
 
-      <div class="summary-line">
+    <div id="summaryItems"></div>
+
+    <div class="summary-line">
         <span>Subtotal</span>
-        <span id="sumSubtotal">0€</span>
-      </div>
-
-      <div class="summary-line">
-        <span>Shipping</span>
-        <span>Free</span>
-      </div>
-
-      <div class="summary-total-line">
-        <span>Total</span>
-        <span id="sumTotal">0€</span>
-      </div>
-
+        <span id="summarySubtotal">0€</span>
     </div>
 
-  </div>
+    <div class="summary-line">
+        <span>Shipping</span>
+        <span>Free</span>
+    </div>
 
-</main>
+    <div class="summary-total-line">
+        <span>Total</span>
+        <span id="summaryTotal">0€</span>
+    </div>
 
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
