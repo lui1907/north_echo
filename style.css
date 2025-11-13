@@ -46,10 +46,10 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* ---------- HEADER (FIXED) ---------- */
+/* ---------- HEADER (FINAL FIX) ---------- */
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid var(--border);
@@ -60,24 +60,24 @@ body {
   font-size: 26px;
   cursor: pointer;
   position: absolute;
-  left: 30px;               /* SOLA SABİTLE */
+  left: 25px;
   top: 50%;
   transform: translateY(-50%);
+  line-height: 1;               /* <- BUNU EKLEDİK! ÇİZGİLERİ YOK EDER */
 }
 
 .logo {
   font-weight: 700;
   font-size: 22px;
-  text-decoration: none;
   color: var(--text);
-  margin: 0 auto;           /* ORTALA */
+  text-decoration: none;
 }
 
 .right-buttons {
   display: flex;
   gap: 20px;
   position: absolute;
-  right: 30px;              /* SAĞA SABİTLE */
+  right: 25px;
   top: 50%;
   transform: translateY(-50%);
 }
