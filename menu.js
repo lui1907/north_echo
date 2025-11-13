@@ -1,0 +1,1 @@
+document.getElementById('menuBtn').onclick=()=>sideMenu.style.left='0';document.getElementById('closeMenu').onclick=()=>sideMenu.style.left='-250px';

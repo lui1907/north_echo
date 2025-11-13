@@ -1,0 +1,1 @@
+function addToCart(n,p){alert('Added '+n)}

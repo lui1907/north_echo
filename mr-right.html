@@ -1,0 +1,39 @@
+
+<!doctype html><html><head>
+<meta charset='utf-8'/><meta name='viewport' content='width=device-width,initial-scale=1'/>
+<title>Mr Right T‑Shirt</title>
+<link rel='stylesheet' href='style.css'/>
+<script src='menu.js' defer></script>
+<script src='theme.js' defer></script>
+<script src='product.js' defer></script>
+</head>
+<body>
+<header class='header'><div class='logo'>NORTH ECHO</div><div id='menuBtn' class='hamburger'>☰</div><button id='themeToggle' class='theme-btn'>○</button></header>
+<div id='sideMenu' class='side-menu'><button id='closeMenu' class='close-menu'>×</button>
+<a href='index.html'>Home</a><a href='tshirts.html'>T-Shirts</a><a href='sweatshirts.html'>Sweatshirts</a><a href='cart.html'>Cart</a>
+</div>
+
+<main class='product-page'>
+<div class='slider' data-images="https://i.ibb.co/Pvm9MBd/,https://i.ibb.co/cXK7nsJ/,https://i.ibb.co/fVdw20r/">
+<img id='slideImg' class='slide-img' src='https://i.ibb.co/Pvm9MBd/'/>
+<div id='dots' class='dots'></div>
+</div>
+
+<div class='info'>
+<h1>Mr Right T‑Shirt</h1>
+<p class='price'>20€</p>
+
+<label>Size:</label>
+<select id='size'><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+
+<label>Qty:</label>
+<div class='qty'><button id='minus'>−</button><span id='amount'>1</span><button id='plus'>+</button></div>
+
+<button class='add-cart' onclick="addToCart('Mr Right T‑Shirt',20)">Add to Cart</button>
+</div>
+</main>
+
+<footer class='footer'><div class='footer-logo'>NORTH ECHO</div>
+<p>North Echo delivers minimalist, high‑quality apparel designed for everyday comfort and style.</p>
+<a href='https://instagram.com/northecho.fi'>Instagram</a></footer>
+</body></html>
