@@ -758,11 +758,13 @@ a {
     font-size: 18px;
     font-weight: 600;
 }
+/* T-Shirts sayfası - panel soldan daha yakın olsun */
 .tshirt-layout {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;   /* 🔥 HİZALAMA BURADA OLDU */
-    gap: 70px;
+    justify-content: flex-start;   /* 🔥 Filtre kutusu sola yaklaştı */
+    align-items: flex-start;
+    gap: 50px;                     /* 🔥 Boşluğu 50px yaptım (çok iyi duruyor) */
+    padding-left: 120px;           /* 🔥 Sayfanın genel hizasını ortalıyoruz */
 }
 
 .filter-side {
