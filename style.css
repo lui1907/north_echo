@@ -407,7 +407,7 @@ body {
   font-weight: 600;
 }
 
-/* ---------- CHECKOUT PAGE (PREMIUM) ---------- */
+/* ---------- CHECKOUT PAGE ---------- */
 
 .checkout-title {
   text-align: center;
@@ -419,80 +419,80 @@ body {
 .checkout-container {
   display: flex;
   justify-content: center;
-  gap: 60px;
-  max-width: 1100px;
+  gap: 50px;
+  max-width: 1000px;
   margin: auto;
-  padding: 20px;
+  padding: 10px;
 }
 
 .checkout-form {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .checkout-form input,
 .checkout-form textarea {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border-radius: 8px;
   border: 1px solid #333;
   background: #111;
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .payment-btn {
   margin-top: 10px;
-  padding: 14px;
+  padding: 13px;
   background: #fff;
   color: #000;
   font-weight: 700;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 18px;
-  transition: 0.2s;
+  font-size: 17px;
 }
 
 .payment-btn:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* ORDER SUMMARY */
 .checkout-summary {
-  width: 350px;
+  width: 300px;
   background: #111;
   border: 1px solid #333;
-  padding: 22px;
+  padding: 18px;
   border-radius: 12px;
+  height: fit-content; /* KART AŞAĞIYA AKMASIN */
 }
 
 .checkout-summary h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 22px;
+  margin-bottom: 16px;
+  font-size: 20px;
   font-weight: 700;
 }
 
 .summary-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
 .summary-item img {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
   object-fit: cover;
 }
 
 .summary-total {
-  margin-top: 25px;
-  font-size: 22px;
+  margin-top: 20px;
+  font-size: 20px;
   font-weight: 700;
+  text-align: right;
 }
 
 /* mobile */
@@ -501,9 +501,9 @@ body {
     flex-direction: column;
     align-items: center;
   }
+
   .checkout-summary {
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
   }
 }
-
