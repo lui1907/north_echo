@@ -928,3 +928,15 @@ body.light .footer-link:hover {
 .submit-btn:hover {
   opacity: 0.8;
 }
+.submit-nav {
+  color: var(--text);
+  font-size: 17px;
+  text-decoration: none;
+  margin-right: 12px;
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
+.submit-nav:hover {
+  opacity: 1;
+}
