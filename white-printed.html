@@ -29,19 +29,36 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- ================= PRODUCT PAGE ================= -->
 <main class="product-page">
 
+  <!-- SOL TARAF -->
   <div class="product-left">
-    <img id="whiteMainImg" class="product-img" src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
+
+    <!-- ANA FOTO -->
+    <img id="whiteMainImg" class="product-main-img"
+         src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg"
+         alt="White Printed T-Shirt">
+
+    <!-- THUMBNAILS -->
+    <div class="product-thumbnails">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg"
+           onclick="setWhiteImg('https://i.ibb.co/DNJdMBr/white-tshirt1.jpg')" alt="">
+    </div>
+
   </div>
 
+  <!-- SAĞ TARAF -->
   <div class="product-right">
+
     <h1 class="product-title">White Printed T-Shirt</h1>
     <p class="price">20€</p>
+
     <p class="product-desc">
-      Crisp white tee with a minimal print. A clean essential for any capsule wardrobe.
+      Clean minimalist print, soft cotton fabric and a premium everyday fit.
     </p>
 
+    <!-- BEDEN -->
     <div class="size-box">
       <label for="whiteSize">Size</label>
       <select id="whiteSize">
@@ -52,6 +69,7 @@
       </select>
     </div>
 
+    <!-- ADET -->
     <div class="qty-box">
       <span>Quantity</span>
       <button type="button" onclick="changeWhiteQty(-1)">-</button>
@@ -59,15 +77,20 @@
       <button type="button" onclick="changeWhiteQty(1)">+</button>
     </div>
 
+    <!-- SEPETE EKLE -->
     <button class="add-cart-btn" type="button" onclick="addWhiteToCart()">
       Add to Cart
     </button>
+
   </div>
 
 </main>
 
+
+<!-- ================= RECOMMENDED ================= -->
 <section class="recommended-box">
   <h2 class="rec-title">You May Also Like</h2>
+
   <div class="rec-grid">
 
     <a class="rec-card" href="gray-printed.html">
@@ -81,16 +104,23 @@
     </a>
 
     <a class="rec-card" href="mr-right.html">
-      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt">
-      <h3>Mr. Right T-Shirt</h3>
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr Right T-Shirt">
+      <h3>Mr Right T-Shirt</h3>
     </a>
 
   </div>
 </section>
 
+
+<!-- ================= SCRIPTLER ================= -->
 <script>
 let whiteCurrentQty = 1;
 let whiteCurrentImg = "https://i.ibb.co/DNJdMBr/white-tshirt1.jpg";
+
+function setWhiteImg(url) {
+  whiteCurrentImg = url;
+  document.getElementById("whiteMainImg").src = url;
+}
 
 function changeWhiteQty(delta) {
   whiteCurrentQty += delta;
