@@ -47,17 +47,16 @@ body {
 .side-menu {
   position: fixed;
   top: 0;
-  left: -260px;
+  left: -300px;   /* eskiden -260px idi */
   width: 260px;
   height: 100%;
   background: #111;
   padding: 25px;
-  transition: 0.3s;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
   border-right: 1px solid var(--border);
+  transition: 0.3s;
+  overflow: hidden;
 }
+
 
 .side-menu a {
   color: var(--text);
