@@ -41,11 +41,9 @@ a {
   height: 60px;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 9000;
 }
 
@@ -54,7 +52,6 @@ a {
   font-size: 22px;
 }
 
-/* SOLDA MENÜ TUŞU */
 .hamburger {
   position: absolute;
   left: 20px;
@@ -66,7 +63,6 @@ a {
   z-index: 9001;
 }
 
-/* SAĞDA CART + TEMA */
 .right-buttons {
   position: absolute;
   right: 20px;
@@ -99,7 +95,7 @@ a {
 .side-menu {
   position: fixed;
   top: 0;
-  left: -320px;   /* 🔥 TAMAMEN KAYBOLUR */
+  left: -320px;
   width: 260px;
   height: 100%;
   background: var(--card);
@@ -141,12 +137,10 @@ a {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
-  margin-top: 60px; /* HEADER YÜZÜNDEN */
+  margin-top: 60px;
   position: relative;
   z-index: 1;
 }
@@ -184,7 +178,6 @@ a {
   background: #fff;
   color: #000;
   font-weight: 600;
-  text-decoration: none;
 }
 
 .fh-btn.alt {
@@ -260,8 +253,6 @@ a {
   justify-content: center;
 }
 
-/* FİLTRELER */
-
 .filter-side {
   width: 260px;
   display: flex;
@@ -309,21 +300,70 @@ a {
 /* ========================================= */
 
 .product-page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 40px;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 40px;
   display: flex;
   gap: 60px;
-  align-items: flex-start;
   justify-content: center;
-  flex-wrap: wrap; /* mobilde düzgün gözüksün */
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
-.product-img {
-  width: 100%;
+/* Sol taraf */
+.product-left {
   max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-main-img {
+  width: 100%;
   border-radius: 12px;
+  object-fit: contain;
+}
+
+/* Thumbnail'ler */
+.product-thumbnails {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.product-thumbnails img {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
   object-fit: cover;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: 0.2s;
+  border: 2px solid transparent;
+}
+
+.product-thumbnails img:hover {
+  opacity: 1;
+  border-color: var(--text);
+}
+
+/* Sağ taraf */
+.product-right {
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-title {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.price {
+  font-size: 22px;
 }
 
 .add-cart-btn {
@@ -332,51 +372,11 @@ a {
   color: #000;
   border-radius: 10px;
   font-weight: 700;
+  cursor: pointer;
 }
 
 /* ========================================= */
-/* ===== YOU MAY ALSO LIKE (CENTERED) ====== */
-/* ========================================= */
-
-.recommended-box {
-  margin-top: 70px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.rec-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.rec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, auto));
-  gap: 30px;
-  justify-items: center;
-}
-
-.rec-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 15px;
-  max-width: 220px;
-  transition: 0.25s;
-}
-
-.rec-card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-/* ========================================= */
-/* ================= CART ================== */
+/* ================ CART ==================== */
 /* ========================================= */
 
 .cart-wrapper {
@@ -406,24 +406,19 @@ a {
   border-radius: 14px;
 }
 
+.cart-item img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
 .cart-summary-box {
   flex: 1;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 25px;
-}
-
-.checkout-final-btn {
-  display: block;
-  margin-top: 25px;
-  text-align: center;
-  padding: 14px;
-  background: var(--text);
-  color: var(--bg);
-  font-weight: 700;
-  border-radius: 10px;
-  transition: 0.25s;
 }
 
 /* ========================================= */
@@ -461,119 +456,24 @@ a {
   cursor: pointer;
 }
 
+.co-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
 /* ========================================= */
 /* ================ MOBILE ================= */
 /* ========================================= */
 
-@media (max-width: 900px) {
+@media(max-width: 900px) {
   .tshirt-layout {
     flex-direction: column;
     align-items: center;
   }
 
-  .filter-side {
-    width: 100%;
-    max-width: 400px;
-  }
-
   .product-page {
-    flex-direction: column;
-  }
-
-  .cart-layout {
-    flex-direction: column;
-  }
-}
-/* ========================================================= */
-/* ========== FIX: T-SHIRTS & SWEATSHIRTS PAGES ============ */
-/* ========================================================= */
-
-/* Sayfa başlığı */
-.page-title {
-  text-align: center;
-  font-size: 32px;
-  margin: 30px 0 35px;
-  font-weight: 700;
-}
-
-/* Ana layout */
-.tshirt-layout {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 0 40px;
-  display: flex;
-  gap: 50px;
-  align-items: flex-start;
-}
-
-/* Sol taraf (ürünler) */
-.product-area {
-  flex: 1;
-  max-width: 900px;
-}
-
-/* Ürün grid — EN ÖNEMLİ KISIM */
-.product-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)) !important;
-  gap: 28px !important;
-  justify-content: center !important;
-}
-
-/* Ürün kartı */
-.product-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px;
-  text-decoration: none;
-  color: var(--text);
-  transition: 0.25s;
-  width: 100%;
-}
-
-/* Foto boyutu */
-.product-card img {
-  width: 100%;
-  height: 260px;     /* sabit yükseklik → hizalı görünüm */
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* Hover */
-.product-card:hover {
-  transform: scale(1.03);
-  border-color: var(--text);
-}
-
-/* Sağ taraf (arama + filtre) */
-.filter-side {
-  width: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-/* Arama kutusu */
-.search-box {
-  padding: 12px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-}
-
-/* Filtre kutusu */
-.filter-box {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
-/* Responsive */
-@media(max-width: 900px) {
-  .tshirt-layout {
     flex-direction: column;
     gap: 40px;
   }
@@ -581,315 +481,13 @@ a {
   .filter-side {
     width: 100%;
     max-width: 400px;
-    margin: 0 auto;
   }
 
-  .product-area {
-    max-width: 100%;
-  }
-}
-/* ========================================================= */
-/* ============= FIX: CART & CHECKOUT IMAGES =============== */
-/* ========================================================= */
-
-/* CART PAGE */
-.cart-item img,
-.cart-img {
-  width: 90px !important;     /* 🔥 Küçük, düzgün boyut */
-  height: 90px !important;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* CART ITEM BOX */
-.cart-item-box {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-/* CHECKOUT PAGE */
-.co-img {
-  width: 80px !important;
-  height: 80px !important;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* Checkout ürün listesi hizalama */
-.co-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-/* Responsive düzeltme */
-@media(max-width: 600px) {
-  .cart-item img,
-  .cart-img {
-    width: 70px !important;
-    height: 70px !important;
+  .cart-layout {
+    flex-direction: column;
   }
 
-  .co-img {
-    width: 65px !important;
-    height: 65px !important;
-  }
-}
-/* ========================================================= */
-/* =============== CHECKOUT SUMMARY REPAIR ================= */
-/* ========================================================= */
-
-/* Checkout ana layout */
-.checkout-layout {
-  display: flex;
-  gap: 50px;
-  align-items: flex-start;
-}
-
-/* Sol form kısmı */
-.checkout-form {
-  flex: 2;
-  background: var(--card);
-  padding: 25px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Sağ sipariş özeti kutusu */
-.checkout-summary-box {
-  flex: 1;
-  background: var(--card);
-  padding: 25px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  max-width: 340px;
-}
-
-/* Ürün satırı */
-.co-item {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-/* Ürün fotoğrafı */
-.co-img {
-  width: 80px !important;
-  height: 80px !important;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* Ürün bilgilerinin hizası */
-.co-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-/* Fiyat satırları */
-.summary-line,
-.summary-total-line {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-}
-
-.summary-total-line {
-  font-size: 20px;
-  font-weight: 700;
-  margin-top: 20px;
-}
-
-/* Mobil düzeltme */
-@media(max-width: 900px) {
   .checkout-layout {
     flex-direction: column;
   }
-
-  .checkout-summary-box {
-    max-width: 100%;
-  }
-}
-.cart-title {
-  margin-top: 40px !important;
-  text-align: center;
-}
-h1, .page-title, .cart-title, .checkout-title {
-  margin-top: 80px !important;
-}
-/* ---- FIX THUMBNAIL SIZE ---- */
-.thumb-list {
-  display: flex;
-  gap: 12px;
-  margin-top: 15px;
-  justify-content: center; /* ortala */
-}
-
-.thumb {
-  width: 70px !important;
-  height: 70px !important;
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: 0.2s;
-}
-
-.thumb:hover {
-  border-color: var(--text);
-}
-/* === FORCE THUMBNAIL FIX (HER ȘEYİ EZER) === */
-.product-page .thumb {
-  width: 65px !important;
-  height: 65px !important;
-  object-fit: cover !important;
-  border-radius: 6px !important;
-  border: 2px solid transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  display: inline-block !important;
-}
-
-.product-page .thumb-list {
-  display: flex !important;
-  gap: 10px !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
-/* === PRODUCT LAYOUT FIX (BEDEN VE DETAYLAR AŞAĞI KAYMASIN) === */
-.product-page {
-  display: flex !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  gap: 60px !important;
-}
-
-/* Sol taraf (büyük foto + küçük foto listesi) */
-.product-left {
-  max-width: 420px !important;
-  flex-shrink: 0 !important;
-}
-
-/* Sağ taraf (isim, fiyat, bedenler, açıklama, sepete ekle) */
-.product-right {
-  max-width: 420px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 16px !important;
-  margin-top: 0 !important; /* 🔥 En önemli satır */
-  padding-top: 0 !important;
-}
-/* ============================================ */
-/* === FINAL PRODUCT PAGE LAYOUT FIX (PERFECT) === */
-/* ============================================ */
-
-.product-page {
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 40px;
-
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
-    gap: 70px !important;
-}
-
-/* SOL BÜYÜK FOTO VE THUMBNAIL'LER */
-.product-left {
-    max-width: 420px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.product-img {
-    width: 100%;
-    max-width: 420px;
-    border-radius: 12px;
-}
-
-/* ========================================= */
-/* === CLEAN PRODUCT PAGE LAYOUT (FINAL) === */
-/* ========================================= */
-
-.product-page {
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 40px;
-    display: flex;
-    gap: 60px;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
-
-/* SOL TARAF — BÜYÜK FOTO + KÜÇÜK FOTO */
-.product-left {
-    max-width: 420px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.product-main-img {
-    width: 100%;
-    border-radius: 12px;
-    object-fit: contain;
-}
-
-/* === Thumbnail'ler === */
-.product-thumbnails {
-    margin-top: 14px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.product-thumbnails img {
-    width: 70px;
-    height: 70px;
-    border-radius: 8px;
-    object-fit: cover;
-    cursor: pointer;
-    opacity: 0.75;
-    transition: 0.2s ease;
-    border: 2px solid transparent;
-}
-
-.product-thumbnails img:hover {
-    opacity: 1;
-    border-color: var(--text);
-}
-
-/* SAĞ TARAF — ÜRÜN BİLGİLERİ */
-.product-right {
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.product-title {
-    font-size: 30px;
-    font-weight: 700;
-}
-
-.price {
-    font-size: 22px;
-}
-
-/* Mobil uyum */
-@media(max-width: 900px) {
-    .product-page {
-        flex-direction: column;
-        gap: 40px;
-    }
 }
