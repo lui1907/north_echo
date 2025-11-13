@@ -116,7 +116,7 @@ document.getElementById("designForm").addEventListener("submit", async function(
 
         document.getElementById("status").textContent = "Sending...";
 
-        const response = await fetch("YOUR_SCRIPT_URL", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwIBSF13uwFkfukHvAEgvf-k-b6DitVoMOeP-ClhFi18Z0IOGQnW8WX-wX2VtX8gAyEyg/exec", {
             method: "POST",
             body: JSON.stringify(payload)
         });
