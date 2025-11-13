@@ -9,7 +9,6 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-
 </head>
 <body>
 
@@ -32,100 +31,76 @@
 
 <main class="product-page">
 
-  <!-- LEFT IMAGE -->
-  <div class="product-left centered-left">
-    <img id="mainImg" class="product-img"
-         src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
-
-    <div class="thumb-list">
-      <img class="thumb"
-           src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg"
-           onclick="changeImage(this)">
-    </div>
+  <div class="product-left">
+    <img id="trustMainImg" class="product-img" src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" alt="Trust No One T-Shirt">
   </div>
 
-  <!-- RIGHT INFO -->
-  <div class="product-right premium-info">
-
+  <div class="product-right">
     <h1 class="product-title">Trust No One T-Shirt</h1>
     <p class="price">20€</p>
-
     <p class="product-desc">
-      Minimal monochrome graphic tee made from soft premium cotton.  
-      Designed with a clean silhouette suitable for daily wear.
+      Darker, moodier print for nights, late walks and low–key outfits.
     </p>
 
-    <!-- SIZE -->
     <div class="size-box">
-      <label>Size</label>
-      <div class="size-options">
-        <span onclick="selectSize('S')" id="size_S">S</span>
-        <span onclick="selectSize('M')" id="size_M">M</span>
-        <span onclick="selectSize('L')" id="size_L">L</span>
-        <span onclick="selectSize('XL')" id="size_XL">XL</span>
-      </div>
+      <label for="trustSize">Size</label>
+      <select id="trustSize">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
     </div>
 
-    <!-- QUANTITY -->
     <div class="qty-box">
-      <button onclick="changeQty(-1)">−</button>
-      <span id="qtyNumber">1</span>
-      <button onclick="changeQty(1)">+</button>
+      <span>Quantity</span>
+      <button type="button" onclick="changeTrustQty(-1)">-</button>
+      <span id="trustQty">1</span>
+      <button type="button" onclick="changeTrustQty(1)">+</button>
     </div>
 
-    <!-- ADD -->
-    <button class="add-cart-btn" onclick="premiumAddToCart()">
+    <button class="add-cart-btn" type="button" onclick="addTrustToCart()">
       Add to Cart
     </button>
-
   </div>
+
 </main>
 
+<section class="recommended-box">
+  <h2 class="rec-title">You May Also Like</h2>
+  <div class="rec-grid">
+
+    <a class="rec-card" href="gray-printed.html">
+      <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
+      <h3>Gray Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="white-printed.html">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
+      <h3>White Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="mr-right.html">
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt">
+      <h3>Mr. Right T-Shirt</h3>
+    </a>
+
+  </div>
+</section>
+
 <script>
-// IMG change
-function changeImage(el) {
-  document.getElementById("mainImg").src = el.src;
+let trustCurrentQty = 1;
+let trustCurrentImg = "https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg";
+
+function changeTrustQty(delta) {
+  trustCurrentQty += delta;
+  if (trustCurrentQty < 1) trustCurrentQty = 1;
+  document.getElementById("trustQty").textContent = trustCurrentQty;
 }
 
-// Quantity
-function changeQty(amount) {
-  let el = document.getElementById("qtyNumber");
-  let v = parseInt(el.textContent) + amount;
-  if (v < 1) v = 1;
-  el.textContent = v;
-}
-
-// Size choose
-let selectedSize = null;
-
-function selectSize(size) {
-  selectedSize = size;
-
-  ["S","M","L","XL"].forEach(s =>
-    document.getElementById("size_" + s).classList.remove("active-size")
-  );
-
-  document.getElementById("size_" + size).classList.add("active-size");
-}
-
-// Add to cart
-function premiumAddToCart() {
-  if (!selectedSize) {
-    alert("Please select a size.");
-    return;
-  }
-
-  const qty = parseInt(document.getElementById("qtyNumber").textContent);
-
-  addToCart(
-    "Trust No One T-Shirt",
-    20,
-    document.getElementById("mainImg").src,
-    selectedSize,
-    qty
-  );
-
-  alert("Added to cart!");
+function addTrustToCart() {
+  const size = document.getElementById("trustSize").value;
+  addToCart("Trust No One T-Shirt", 20, trustCurrentImg, size, trustCurrentQty);
 }
 </script>
 
