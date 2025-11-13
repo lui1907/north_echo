@@ -803,3 +803,7 @@ a {
     font-size: 16px;               /* 🔥 fiyat daha okunaklı */
     margin-top: 4px;
 }
+/* SWEATSHIRTS ürün kartlarını düzelt */
+.sweatshirt-grid .product-card {
+    width: 230px !important;
+}
