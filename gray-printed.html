@@ -4,11 +4,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Gray Printed T-Shirt — North Echo</title>
+
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
 <script src="product.js" defer></script>
+
 </head>
 <body>
 
@@ -16,6 +18,7 @@
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <button id="themeToggle" class="theme-btn">○</button>
@@ -34,9 +37,9 @@
 <!-- PRODUCT PAGE -->
 <main class="product-page" style="flex-direction: column; align-items: center; text-align:center;">
 
-  <!-- SLIDER -->
+  <!-- IMAGE SLIDER -->
   <div class="product-gallery">
-    <img class="product-img" id="mainImage" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg"/>
+    <img id="mainImage" class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
 
     <div class="thumb-list">
       <img class="thumb" onclick="changeImage(0)" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
@@ -65,9 +68,12 @@
       <option>XL</option>
     </select>
 
-    <button class="add-cart"
-      style="margin-top:25px;"
-      onclick="addToCart('Gray Printed T-Shirt', 20, 'https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg')">
+    <button class="add-cart" style="margin-top:25px;"
+      onclick="addToCart(
+        'Gray Printed T-Shirt',
+        20,
+        'https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg'
+      )">
       Add to Cart
     </button>
 
@@ -86,9 +92,9 @@ const images = [
 function changeImage(index) {
   document.getElementById("mainImage").src = images[index];
 
-  const dots = document.querySelectorAll(".dot");
-  dots.forEach(dot => dot.classList.remove("active"));
-  dots[index].classList.add("active");
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
 }
 </script>
 
