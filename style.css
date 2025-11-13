@@ -800,3 +800,6 @@ a {
     font-size: 16px;               /* 🔥 fiyat daha okunaklı */
     margin-top: 4px;
 }
+.product-page + .recommended-box {
+    margin-top: 120px !important;
+}
