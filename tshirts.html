@@ -8,126 +8,101 @@
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
 </head>
 
 <body>
 
-<!-- HEADER (DEĞİŞMEDİ) -->
+<!-- HEADER -->
 <header class="header">
-  <div class="hamburger" id="menuBtn">☰</div>
-  <a href="index.html" class="logo">NORTH ECHO</a>
+    <div class="hamburger" id="menuBtn">☰</div>
+    <a href="index.html" class="logo">NORTH ECHO</a>
 
-  <div class="right-buttons">
-    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-    <button id="themeToggle" class="theme-btn">○</button>
-  </div>
+    <div class="right-buttons">
+        <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+        <button id="themeToggle" class="theme-btn">○</button>
+    </div>
 </header>
 
-<!-- SIDE MENU (DEĞİŞMEDİ) -->
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
-  <button id="closeMenu" class="close-menu">×</button>
-  <a href="index.html">Home</a>
-  <a href="tshirts.html">T-Shirts</a>
-  <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="cart.html">Cart</a>
+    <button id="closeMenu" class="close-menu">×</button>
+    <a href="index.html">Home</a>
+    <a href="tshirts.html">T-Shirts</a>
+    <a href="sweatshirts.html">Sweatshirts</a>
+    <a href="cart.html">Cart</a>
 </div>
 
+<!-- PAGE TITLE -->
+<h1 class="page-title">T-SHIRTS</h1>
 
+<!-- PAGE LAYOUT -->
+<div class="tshirt-layout">
 
-<!-- ⭐⭐ CATEGORY CONTENT AREA ⭐⭐ -->
-<section class="category-container">
+    <!-- LEFT: PRODUCTS -->
+    <div class="product-area">
 
-  <!-- SOL TARAF: Filtreler -->
-  <aside class="filters">
-    <h3>Filters</h3>
+        <div class="product-grid">
 
-    <h4>Size</h4>
-    <label><input type="checkbox"> S</label>
-    <label><input type="checkbox"> M</label>
-    <label><input type="checkbox"> L</label>
-    <label><input type="checkbox"> XL</label>
+            <a href="gray-printed.html" class="product-card">
+                <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
+                <h3>Gray Printed T-Shirt</h3>
+                <p>20€</p>
+            </a>
 
-    <hr>
+            <a href="black-printed.html" class="product-card">
+                <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg">
+                <h3>Black Printed T-Shirt</h3>
+                <p>20€</p>
+            </a>
 
-    <h4>Price</h4>
-    <label><input type="checkbox"> Under 25€</label>
-    <label><input type="checkbox"> 25€ - 30€</label>
-    <label><input type="checkbox"> 30€ - 40€</label>
-  </aside>
+            <a href="mr-right.html" class="product-card">
+                <img src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg">
+                <h3>Mr Right T-Shirt</h3>
+                <p>20€</p>
+            </a>
 
+            <a href="white-printed.html" class="product-card">
+                <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
+                <h3>White Printed T-Shirt</h3>
+                <p>20€</p>
+            </a>
 
+            <a href="trust-no-one.html" class="product-card">
+                <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
+                <h3>Trust No One T-Shirt</h3>
+                <p>20€</p>
+            </a>
 
-  <!-- SAĞ TARAF -->
-  <main class="category-main">
-
-    <!-- ÜSTTE ORTADA BAŞLIK -->
-    <h1 class="category-title">T-SHIRTS</h1>
-
-    <!-- SAĞ ÜSTTE ARAMA KUTUSU -->
-    <div class="category-search">
-      <input type="text" class="search-box" placeholder="Search products...">
+        </div>
     </div>
 
-    <!-- ÜRÜNLER -->
-    <div class="product-grid">
+    <!-- RIGHT: SEARCH + FILTER -->
+    <div class="filter-side">
 
-      <a href="gray-printed.html" class="product-card">
-        <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
-        <h3>Gray Printed T-Shirt</h3>
-        <p>20€</p>
-      </a>
+        <!-- SEARCH -->
+        <input type="text" placeholder="Search products..." class="search-box">
 
-      <a href="black-printed.html" class="product-card">
-        <img src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg">
-        <h3>Black Printed T-Shirt</h3>
-        <p>20€</p>
-      </a>
+        <!-- FILTER BOX -->
+        <div class="filter-box">
+            <h3>Filters</h3>
 
-      <a href="mr-right.html" class="product-card">
-        <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg">
-        <h3>Mr Right T-Shirt</h3>
-        <p>20€</p>
-      </a>
+            <strong>Size</strong>
+            <div class="filter-option"><input type="checkbox"> S</div>
+            <div class="filter-option"><input type="checkbox"> M</div>
+            <div class="filter-option"><input type="checkbox"> L</div>
+            <div class="filter-option"><input type="checkbox"> XL</div>
 
-      <a href="white-printed.html" class="product-card">
-        <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
-        <h3>White Printed T-Shirt</h3>
-        <p>20€</p>
-      </a>
+            <hr>
 
-      <a href="trust-no-one.html" class="product-card">
-        <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
-        <h3>Trust No One T-Shirt</h3>
-        <p>20€</p>
-      </a>
+            <strong>Price</strong>
+            <div class="filter-option"><input type="checkbox"> Under 25€</div>
+            <div class="filter-option"><input type="checkbox"> 25€ - 30€</div>
+            <div class="filter-option"><input type="checkbox"> 30€ - 40€</div>
+        </div>
 
     </div>
 
-  </main>
-
-</section>
-
-
-
-<!-- GERÇEK ARAMA FONKSİYONU -->
-<script>
-const searchInput = document.querySelector(".search-box");
-const productCards = document.querySelectorAll(".product-card");
-
-searchInput.addEventListener("input", () => {
-  const value = searchInput.value.toLowerCase();
-
-  productCards.forEach(card => {
-    const name = card.querySelector("h3").textContent.toLowerCase();
-    const price = card.querySelector("p").textContent.toLowerCase();
-
-    card.style.display = (name.includes(value) || price.includes(value)) 
-      ? "block" 
-      : "none";
-  });
-});
-</script>
+</div>
 
 </body>
 </html>
