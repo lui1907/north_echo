@@ -9,117 +9,106 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 </head>
-
 <body>
 
-<!-- HEADER -->
 <header class="header">
-    <div class="hamburger" id="menuBtn">☰</div>
-    <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
 
-    <div class="right-buttons">
-        <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-        <button id="themeToggle" class="theme-btn">○</button>
-    </div>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
 </header>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
-    <button id="closeMenu" class="close-menu">×</button>
-    <a href="index.html">Home</a>
-    <a href="tshirts.html">T-Shirts</a>
-    <a href="sweatshirts.html">Sweatshirts</a>
-    <a href="cart.html">Cart</a>
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
 </div>
 
-<!-- PAGE TITLE -->
 <h1 class="page-title">T-SHIRTS</h1>
 
-<!-- PAGE LAYOUT -->
 <div class="tshirt-layout">
 
-    <!-- LEFT: PRODUCTS -->
-    <div class="product-area">
-
-        <div class="product-grid">
-
-            <a href="gray-printed.html" class="product-card">
-                <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
-                <h3>Gray Printed T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <a href="black-printed.html" class="product-card">
-                <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg">
-                <h3>Black Printed T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <a href="mr-right.html" class="product-card">
-                <img src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg">
-                <h3>Mr Right T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <a href="white-printed.html" class="product-card">
-                <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
-                <h3>White Printed T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <a href="trust-no-one.html" class="product-card">
-                <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
-                <h3>Trust No One T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-        </div>
+  <!-- SOL ÜRÜNLER -->
+  <div class="product-area">
+    
+    <!-- ARAMA ÇUBUĞU -->
+    <div class="category-search">
+      <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
     </div>
 
-    <!-- RIGHT: SEARCH + FILTER -->
-    <div class="filter-side">
+    <!-- ÜRÜNLER GRID -->
+    <div class="product-grid" id="productList">
 
-        <!-- SEARCH -->
-        <input type="text" placeholder="Search products..." class="search-box">
+      <a href="gray.html" class="product-card">
+        <img src="https://i.ibb.co/7KRScb1/gray-shirt-front.jpg">
+        <h3>Gray Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-        <!-- FILTER BOX -->
-        <div class="filter-box">
-            <h3>Filters</h3>
+      <a href="black.html" class="product-card">
+        <img src="https://i.ibb.co/vjSf0kj/black-shirt-front.jpg">
+        <h3>Black Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-            <strong>Size</strong>
-            <div class="filter-option"><input type="checkbox"> S</div>
-            <div class="filter-option"><input type="checkbox"> M</div>
-            <div class="filter-option"><input type="checkbox"> L</div>
-            <div class="filter-option"><input type="checkbox"> XL</div>
+      <a href="mr-right.html" class="product-card">
+        <img src="https://i.ibb.co/0mH9RB8/mr-right-front.jpg">
+        <h3>Mr Right T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-            <hr>
+      <a href="white.html" class="product-card">
+        <img src="https://i.ibb.co/GRS0Ggp/white-shirt-back.jpg">
+        <h3>White Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-            <strong>Price</strong>
-            <div class="filter-option"><input type="checkbox"> Under 25€</div>
-            <div class="filter-option"><input type="checkbox"> 25€ - 30€</div>
-            <div class="filter-option"><input type="checkbox"> 30€ - 40€</div>
-        </div>
+      <a href="trust.html" class="product-card">
+        <img src="https://i.ibb.co/v4V0dVj/trust-no-one-front.jpg">
+        <h3>Trust No One T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
     </div>
+
+  </div>
+
+  <!-- SAĞ FİLTRE MENÜSÜ -->
+  <div class="filter-side">
+
+    <div class="filter-box">
+      <h3>Filters</h3>
+
+      <h4>Size</h4>
+      <label class="filter-option"><input type="checkbox"> S</label>
+      <label class="filter-option"><input type="checkbox"> M</label>
+      <label class="filter-option"><input type="checkbox"> L</label>
+      <label class="filter-option"><input type="checkbox"> XL</label>
+
+      <h4>Price</h4>
+      <label class="filter-option"><input type="checkbox"> Under 25€</label>
+      <label class="filter-option"><input type="checkbox"> 25€ - 30€</label>
+      <label class="filter-option"><input type="checkbox"> 30€ - 40€</label>
+    </div>
+  </div>
 
 </div>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
-    const productCards = document.querySelectorAll(".product-card");
+// ARAMA FİLTRESİ
+document.getElementById("searchInput").addEventListener("input", function () {
+  const filter = this.value.toLowerCase();
+  const products = document.querySelectorAll("#productList .product-card");
 
-    searchInput.addEventListener("input", () => {
-        const query = searchInput.value.toLowerCase();
-
-        productCards.forEach(card => {
-            const name = card.querySelector("h3").textContent.toLowerCase();
-            if (name.includes(query)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-    });
+  products.forEach(card => {
+    const name = card.querySelector("h3").textContent.toLowerCase();
+    card.style.display = name.includes(filter) ? "block" : "none";
+  });
 });
 </script>
 
