@@ -654,3 +654,42 @@ body {
 .add-cart-btn:hover {
   opacity: .85;
 }
+/* --- RECOMMENDED PRODUCTS (PREMIUM) --- */
+
+.recommended-box {
+  margin-top: 80px;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+
+.rec-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+}
+
+.rec-card {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: 0.2s;
+}
+
+.rec-card:hover {
+  transform: scale(1.05);
+  background: #222;
+}
+
+.rec-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
