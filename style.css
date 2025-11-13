@@ -475,3 +475,47 @@ a {
     opacity: 0.85;
     transform: translateY(-2px);
 }
+/* ---------- YOU MAY ALSO LIKE (FIXED CENTER VERSION) ---------- */
+.recommended-box {
+  margin-top: 70px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rec-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  justify-items: center;
+}
+
+.rec-card {
+  text-decoration: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 15px;
+  border-radius: 10px;
+  color: var(--text);
+  max-width: 220px;
+  transition: 0.25s ease;
+}
+
+.rec-card:hover {
+  transform: scale(1.05);
+  border-color: var(--text);
+}
+
+.rec-card img {
+  width: 100%;
+  border-radius: 8px;
+}
