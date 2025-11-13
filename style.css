@@ -632,3 +632,82 @@ a {
     height: 65px !important;
   }
 }
+/* ========================================================= */
+/* =============== CHECKOUT SUMMARY REPAIR ================= */
+/* ========================================================= */
+
+/* Checkout ana layout */
+.checkout-layout {
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+}
+
+/* Sol form kısmı */
+.checkout-form {
+  flex: 2;
+  background: var(--card);
+  padding: 25px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Sağ sipariş özeti kutusu */
+.checkout-summary-box {
+  flex: 1;
+  background: var(--card);
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  max-width: 340px;
+}
+
+/* Ürün satırı */
+.co-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* Ürün fotoğrafı */
+.co-img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Ürün bilgilerinin hizası */
+.co-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Fiyat satırları */
+.summary-line,
+.summary-total-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.summary-total-line {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+
+/* Mobil düzeltme */
+@media(max-width: 900px) {
+  .checkout-layout {
+    flex-direction: column;
+  }
+
+  .checkout-summary-box {
+    max-width: 100%;
+  }
+}
