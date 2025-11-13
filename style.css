@@ -825,3 +825,52 @@ a {
   background: var(--bg);
   color: var(--text);
 }
+.page-title {
+  text-align: center;
+  font-size: 34px;
+  margin-top: 25px;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.tshirt-layout {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 0 40px;
+}
+
+.product-area {
+  flex: 1;
+  max-width: 850px;
+}
+
+.filter-side {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.search-box {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #111;
+  color: #fff;
+}
+
+.filter-box {
+  background: #111;
+  border: 1px solid #222;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.filter-box h3 {
+  margin-top: 0;
+}
+
+.filter-option {
+  margin: 6px 0;
+}
