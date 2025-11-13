@@ -349,4 +349,11 @@ body {
 .dot.active {
   background: #fff;
 }
+.logo {
+  color: var(--text) !important;
+  text-decoration: none;
+}
 
+.logo:visited {
+  color: var(--text) !important;
+}
