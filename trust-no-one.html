@@ -29,19 +29,36 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- ================= PRODUCT PAGE ================= -->
 <main class="product-page">
 
+  <!-- SOL TARAF -->
   <div class="product-left">
-    <img id="trustMainImg" class="product-img" src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" alt="Trust No One T-Shirt">
+
+    <!-- ANA FOTO -->
+    <img id="trustMainImg" class="product-main-img"
+         src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg"
+         alt="Trust No One T-Shirt">
+
+    <!-- THUMBNAILS -->
+    <div class="product-thumbnails">
+      <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg"
+           onclick="setTrustImg('https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg')" alt="">
+    </div>
+
   </div>
 
+  <!-- SAĞ TARAF -->
   <div class="product-right">
+
     <h1 class="product-title">Trust No One T-Shirt</h1>
     <p class="price">20€</p>
+
     <p class="product-desc">
-      Darker, moodier print for nights, late walks and low–key outfits.
+      A bold, minimal graphic with soft cotton comfort and a premium regular fit.
     </p>
 
+    <!-- BEDEN -->
     <div class="size-box">
       <label for="trustSize">Size</label>
       <select id="trustSize">
@@ -52,6 +69,7 @@
       </select>
     </div>
 
+    <!-- ADET -->
     <div class="qty-box">
       <span>Quantity</span>
       <button type="button" onclick="changeTrustQty(-1)">-</button>
@@ -59,15 +77,20 @@
       <button type="button" onclick="changeTrustQty(1)">+</button>
     </div>
 
+    <!-- SEPETE EKLE -->
     <button class="add-cart-btn" type="button" onclick="addTrustToCart()">
       Add to Cart
     </button>
+
   </div>
 
 </main>
 
+
+<!-- ================= RECOMMENDED ================= -->
 <section class="recommended-box">
   <h2 class="rec-title">You May Also Like</h2>
+
   <div class="rec-grid">
 
     <a class="rec-card" href="gray-printed.html">
@@ -75,22 +98,29 @@
       <h3>Gray Printed T-Shirt</h3>
     </a>
 
-    <a class="rec-card" href="white-printed.html">
-      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
-      <h3>White Printed T-Shirt</h3>
+    <a class="rec-card" href="black-printed.html">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
+      <h3>Black Printed T-Shirt</h3>
     </a>
 
     <a class="rec-card" href="mr-right.html">
-      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt">
-      <h3>Mr. Right T-Shirt</h3>
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr Right T-Shirt">
+      <h3>Mr Right T-Shirt</h3>
     </a>
 
   </div>
 </section>
 
+
+<!-- ================= SCRIPTLER ================= -->
 <script>
 let trustCurrentQty = 1;
 let trustCurrentImg = "https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg";
+
+function setTrustImg(url) {
+  trustCurrentImg = url;
+  document.getElementById("trustMainImg").src = url;
+}
 
 function changeTrustQty(delta) {
   trustCurrentQty += delta;
