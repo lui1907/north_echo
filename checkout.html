@@ -32,25 +32,24 @@
 
 <main class="checkout-page">
 
-  <h1>Checkout</h1>
+  <h1 class="checkout-title">Checkout</h1>
 
   <div class="checkout-container">
 
-    <!-- LEFT SIDE (FORM) -->
+    <!-- LEFT FORM -->
     <div class="checkout-form">
 
-      <input type="text" placeholder="Full Name"/>
-      <input type="text" placeholder="Address"/>
-      <input type="email" placeholder="Email"/>
+      <input type="text" placeholder="Full Name" />
+      <input type="text" placeholder="Address" />
+      <input type="email" placeholder="Email" />
       <textarea placeholder="Notes (optional)" rows="4"></textarea>
 
-      <a href="#" class="checkout-btn">Complete Payment</a>
+      <button class="payment-btn">Complete Payment</button>
 
     </div>
 
-    <!-- RIGHT SIDE (ORDER SUMMARY) -->
-    <div class="checkout-summary" id="checkoutSummary">
-    </div>
+    <!-- RIGHT SUMMARY -->
+    <div class="checkout-summary" id="checkoutSummary"></div>
 
   </div>
 
@@ -69,20 +68,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let total = 0;
-
-    let html = "<h2>Order Summary</h2>";
+    let html = `<h2>Order Summary</h2>`;
 
     cart.forEach(item => {
         html += `
-            <div class="cart-item">
-                <strong>${item.name}</strong>  
-                (${item.quantity} × ${item.price}€)
+            <div class="summary-item">
+                <img src="${item.image}" />
+                <div>
+                  <strong>${item.name}</strong><br>
+                  <span>${item.quantity} × ${item.price}€</span>
+                </div>
             </div>
         `;
         total += item.price * item.quantity;
     });
 
-    html += `<h2 style='margin-top:20px;'>Total: ${total}€</h2>`;
+    html += `<div class="summary-total">Total: ${total}€</div>`;
 
     summaryEl.innerHTML = html;
 });
