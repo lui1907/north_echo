@@ -1,17 +1,18 @@
-const btn = document.getElementById("themeToggle");
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("themeToggle");
 
-btn.addEventListener("click", () => {
-    const current = document.documentElement.getAttribute("data-theme");
+  // Eski tema varsa yükle
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light");
+  }
 
-    if (current === "light") {
-        document.documentElement.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
+  btn.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+
+    if (document.body.classList.contains("light")) {
+      localStorage.setItem("theme", "light");
     } else {
-        document.documentElement.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", "light");
+      localStorage.setItem("theme", "dark");
     }
+  });
 });
-
-// Load saved theme
-const saved = localStorage.getItem("theme") || "dark";
-document.documentElement.setAttribute("data-theme", saved);
