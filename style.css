@@ -739,3 +739,31 @@ a {
   background: var(--text);
   color: var(--bg) !important;
 }
+/* ======= MOBILE MENU FIX ======= */
+
+/* Menü her şeyin üstünde */
+.side-menu {
+  z-index: 9999 !important;
+}
+
+/* Menü butonları da üstte olsun */
+.header,
+.hamburger,
+.right-buttons {
+  position: relative;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* Hero kutuları menüye karışmasın */
+.hero-bg,
+.full-hero {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
