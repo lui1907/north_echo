@@ -29,25 +29,40 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- ================= PRODUCT PAGE ================= -->
 <main class="product-page">
 
+  <!-- SOL TARAF -->
   <div class="product-left">
-    <img id="grayMainImg" class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
 
-    <div class="thumb-list">
-      <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="setGrayImg('https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg')" alt="">
-      <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="setGrayImg('https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg')" alt="">
-      <img class="thumb" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg" onclick="setGrayImg('https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg')" alt="">
+    <!-- 🔥 BÜYÜK FOTO: DOĞRU CLASS product-main-img -->
+    <img id="grayMainImg" class="product-main-img"
+         src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg"
+         alt="Gray Printed T-Shirt">
+
+    <!-- 🔥 THUMBNAILS → DOĞRU CLASS product-thumbnails -->
+    <div class="product-thumbnails">
+      <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg"
+           onclick="setGrayImg('https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg')" alt="">
+      <img src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg"
+           onclick="setGrayImg('https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg')" alt="">
+      <img src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg"
+           onclick="setGrayImg('https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg')" alt="">
     </div>
+
   </div>
 
+  <!-- SAĞ TARAF -->
   <div class="product-right">
+
     <h1 class="product-title">Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
+
     <p class="product-desc">
       Minimal graphic print, soft cotton fabric and a regular fit designed for everyday comfort.
     </p>
 
+    <!-- BEDEN -->
     <div class="size-box">
       <label for="graySize">Size</label>
       <select id="graySize">
@@ -58,6 +73,7 @@
       </select>
     </div>
 
+    <!-- ADET -->
     <div class="qty-box">
       <span>Quantity</span>
       <button type="button" onclick="changeGrayQty(-1)">-</button>
@@ -65,17 +81,21 @@
       <button type="button" onclick="changeGrayQty(1)">+</button>
     </div>
 
+    <!-- SEPETE EKLE -->
     <button class="add-cart-btn" type="button" onclick="addGrayToCart()">
       Add to Cart
     </button>
+
   </div>
 
 </main>
 
+
+<!-- ================= RECOMMENDED ================= -->
 <section class="recommended-box">
   <h2 class="rec-title">You May Also Like</h2>
-  <div class="rec-grid">
 
+  <div class="rec-grid">
     <a class="rec-card" href="black-printed.html">
       <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
       <h3>Black Printed T-Shirt</h3>
@@ -90,10 +110,11 @@
       <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
       <h3>White Printed T-Shirt</h3>
     </a>
-
   </div>
 </section>
 
+
+<!-- ================= SCRIPTLER ================= -->
 <script>
 let grayCurrentQty = 1;
 let grayCurrentImg = "https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg";
@@ -111,7 +132,6 @@ function changeGrayQty(delta) {
 
 function addGrayToCart() {
   const size = document.getElementById("graySize").value;
-  // cart.js içindeki addToCart fonksiyonuna göre fazla argüman sorun çıkarmaz
   addToCart("Gray Printed T-Shirt", 20, grayCurrentImg, size, grayCurrentQty);
 }
 </script>
