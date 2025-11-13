@@ -46,6 +46,27 @@ body {
   font-weight: 700;
   margin-left: 4px;
 }
+.checkout-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.checkout-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #fff;
+  color: #000;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.25s;
+}
+
+.checkout-btn:hover {
+  opacity: 0.85;
+}
+
 
 /* Sol hamburger */
 .hamburger {
