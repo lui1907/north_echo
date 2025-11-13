@@ -845,3 +845,37 @@ a {
     font-size: 17px;
     font-weight: 700;
 }
+/* ===== FOOTER ===== */
+.footer {
+    width: 100%;
+    margin-top: 80px;
+    padding: 40px 20px;
+    background: transparent;
+    text-align: center;
+    color: #ccc;
+    border-top: 1px solid #222;
+}
+
+.footer-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: white;
+}
+
+.footer-content p {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 12px;
+}
+
+.footer-link {
+    font-size: 14px;
+    color: #4ea3ff;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.footer-link:hover {
+    color: #82c3ff;
+}
