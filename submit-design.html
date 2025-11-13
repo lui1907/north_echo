@@ -118,16 +118,18 @@ document.getElementById("designForm").addEventListener("submit", async function(
 
         const response = await fetch("https://script.google.com/macros/s/AKfycbwIBSF13uwFkfukHvAEgvf-k-b6DitVoMOeP-ClhFi18Z0IOGQnW8WX-wX2VtX8gAyEyg/exec", {
             method: "POST",
+            headers: { "Content-Type": "application/json" }, 
             body: JSON.stringify(payload)
         });
 
         const json = await response.json();
-document.getElementById("status").textContent = json.success ? "Uploaded successfully!" : "Error!";
-
+        document.getElementById("status").textContent =
+            json.success ? "Uploaded successfully!" : "Upload failed!";
     };
 
     reader.readAsDataURL(file);
 });
+
 </script>
 
 <!-- MENU + THEME + CART -->
