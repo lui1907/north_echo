@@ -402,11 +402,12 @@ a {
 .recommended-box {
   width: 100%;
   max-width: 900px;
-  padding-top: 120px !important;  /* 🔥 aşağı iter */
+  padding-top: 170px !important;   /* 🔥 120 → 170 yap = daha aşağı */
   padding-left: 20px;
   padding-right: 20px;
   margin: 0 auto 30px !important;
 }
+
 
 
 .rec-title {
