@@ -236,7 +236,10 @@ body {
 .product-page {
   padding: 60px 40px;
   display: flex;
+  justify-content: center;   /* <— ORTALAMA */
+  align-items: flex-start;
   gap: 60px;
+  text-align: left;
 }
 
 .product-gallery {
