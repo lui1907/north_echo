@@ -843,29 +843,13 @@ a {
   opacity: 0.8;
 }
 /* HERO BUTONLARINI EŞİTLE */
-.banner-btn {
-  padding: 12px 26px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 10px;
-  border: 2px solid #fff;
-  background: transparent;
-  color: #fff;
-  cursor: pointer;
-  text-decoration: none;
-  transition: 0.25s ease;
-}
 
 .banner-btn:hover {
   background: rgba(255,255,255,0.15);
 }
 
 /* Sağdaki butonun farkını kaldırıyoruz */
-.banner-btn.alt {
-  background: transparent !important;
-  border: 2px solid #fff !important;
-  color: #fff !important;
-}
+
 /* ---- CHECKOUT BUTTON FIX ---- */
 
 .checkout-btn {
@@ -882,16 +866,6 @@ a {
 .checkout-btn:hover {
   opacity: 0.8;
 }
-.banner-btn {
-    padding: 12px 28px;
-    background: #fff;           /* SAĞDAKİ GİBİ BEYAZ */
-    color: #000;                /* SİYAH YAZI */
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.25s;
-    border: 1px solid transparent;
-}
 
 /* Hover efekti */
 .banner-btn:hover {
@@ -899,6 +873,24 @@ a {
 }
 
 /* Eskiden alt buton için ayrı class vardı, ona da beyaz yapıyoruz */
+/* ---- CLEAN & FINAL BANNER BUTTON STYLE ---- */
+
+.banner-btn {
+    padding: 12px 28px;
+    background: #fff;
+    color: #000;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.25s;
+    border: 1px solid #fff;
+}
+
+.banner-btn:hover {
+    background: #e5e5e5;
+}
+
+/* ALT BUTON DA AYNISI OLACAK */
 .banner-btn.alt {
     background: #fff;
     color: #000;
