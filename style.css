@@ -734,3 +734,7 @@ a {
     color: #000;
     border-color: #fff;
 }
+/* ===== ÜRÜN SAYFASINI AŞAĞI İTME ===== */
+.product-page {
+    margin-top: 120px !important;
+}
