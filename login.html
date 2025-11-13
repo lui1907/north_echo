@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login — North Echo</title>
+
+<link rel="stylesheet" href="style.css" />
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+.login-box {
+    max-width: 400px;
+    margin: 140px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+#googleBtn {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+    <h1>Login</h1>
+    <p>Sign in to your North Echo account</p>
+    <div id="googleBtn"></div>
+</div>
+
+<script>
+function handleCredentialResponse(response) {
+    fetch("https://script.google.com/macros/s/AKfycbzUdq_ofy2vixQvHoM_Kd0ISULSq29qqg23waBXg7fUTG1LLrsGOyDpmRFFRHEokpfoPA/exec", {
+        method: "POST",
+        body: JSON.stringify({
+            mode: "login",
+            token: response.credential
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(user => {
+
+        if (user.error) {
+            alert("Login Failed!");
+            return;
+        }
+
+        // Kullanıcı bilgilerini kaydet
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Dashboard'a yönlendir
+        window.location.href = "dashboard.html";
+    });
+}
+
+window.onload = function () {
+    google.accounts.id.initialize({
+        client_id: "601348055639-qi2a2a8gkd41mavfrh8ark0qr13d52vl.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+    });
+
+    google.accounts.id.renderButton(
+        document.getElementById("googleBtn"),
+        { theme: "filled_black", size: "large", width: 320 }
+    );
+};
+</script>
+
+</body>
+</html>
