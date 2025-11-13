@@ -1,29 +1,27 @@
-let currentIndex = 0;
+function addToCart(productName, price, image) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-function showImage(index) {
-  const imgs = document.querySelectorAll(".thumb");
-  const mainImg = document.querySelector(".product-img");
-  const dots = document.querySelectorAll(".dot");
+    const existing = cart.find(item => item.name === productName);
 
-  if (index < 0) index = imgs.length - 1;
-  if (index >= imgs.length) index = 0;
+    if (existing) {
+        existing.quantity += 1;
+    } else {
+        cart.push({
+            name: productName,
+            price: price,
+            quantity: 1,
+            image: image
+        });
+    }
 
-  currentIndex = index;
+    localStorage.setItem("cart", JSON.stringify(cart));
 
-  mainImg.src = imgs[index].dataset.full;
+    // Sayacı güncelle
+    const cartCountEl = document.getElementById("cartCount");
+    if (cartCountEl) {
+        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountEl.textContent = total;
+    }
 
-  dots.forEach(d => d.classList.remove("active"));
-  dots[index].classList.add("active");
+    alert("Added to cart!");
 }
-
-function nextImage() {
-  showImage(currentIndex + 1);
-}
-
-function prevImage() {
-  showImage(currentIndex - 1);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  showImage(0);
-});
