@@ -715,3 +715,6 @@ a {
   margin-top: 40px !important;
   text-align: center;
 }
+h1, .page-title, .cart-title, .checkout-title {
+  margin-top: 80px !important;
+}
