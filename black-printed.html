@@ -9,7 +9,6 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<script src="product.js" defer></script>
 
 </head>
 <body>
@@ -31,66 +30,104 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<main class="product-page" style="flex-direction: column; align-items: center; text-align:center;">
+<main class="product-page">
 
-  <!-- IMAGE SLIDER -->
-  <div class="product-gallery">
-    <img id="mainImage" class="product-img" src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg">
+  <!-- LEFT (images) -->
+  <div class="product-left centered-left">
+
+    <img id="mainImg" class="product-img"
+         src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg">
 
     <div class="thumb-list">
-      <img class="thumb" onclick="changeImage(0)" src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg">
-      <img class="thumb" onclick="changeImage(1)" src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg">
-      <img class="thumb" onclick="changeImage(2)" src="https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg">
+      <img class="thumb" src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg" onclick="changeImage(this)">
     </div>
 
-    <div class="dots">
-      <span class="dot active" onclick="changeImage(0)"></span>
-      <span class="dot" onclick="changeImage(1)"></span>
-      <span class="dot" onclick="changeImage(2)"></span>
-    </div>
   </div>
 
-  <!-- PRODUCT INFO -->
-  <div class="product-right" style="margin-top:40px; max-width:400px;">
+  <!-- RIGHT (product info) -->
+  <div class="product-right premium-info">
 
-    <h1>Black Printed T-Shirt</h1>
+    <h1 class="product-title">Black Printed T-Shirt</h1>
     <p class="price">20€</p>
 
-    <label>Size:</label><br>
-    <select style="margin-top:8px; padding:10px; width:120px;">
-      <option>S</option>
-      <option>M</option>
-      <option>L</option>
-      <option>XL</option>
-    </select>
+    <p class="product-desc">
+      Premium cotton tee with a minimal front print.   
+      Regular-fit silhouette designed for everyday comfort.
+    </p>
 
-    <button class="add-cart" style="margin-top:25px;"
-      onclick="addToCart(
-        'Black Printed T-Shirt',
-        20,
-        'https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg'
-      )">
+    <!-- SIZE SELECTOR -->
+    <div class="size-box">
+      <label>Size</label>
+      <div class="size-options">
+        <span onclick="selectSize('S')" id="size_S">S</span>
+        <span onclick="selectSize('M')" id="size_M">M</span>
+        <span onclick="selectSize('L')" id="size_L">L</span>
+        <span onclick="selectSize('XL')" id="size_XL">XL</span>
+      </div>
+    </div>
+
+    <!-- QUANTITY -->
+    <div class="qty-box">
+      <button onclick="changeQty(-1)">−</button>
+      <span id="qtyNumber">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <!-- ADD TO CART -->
+    <button class="add-cart-btn" onclick="premiumAddToCart()">
       Add to Cart
     </button>
 
   </div>
-
 </main>
 
-<!-- SLIDER SCRIPT -->
 <script>
-const images = [
-  "https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg",
-  "https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg",
-  "https://i.ibb.co/gFwqSkCb/black-tshirt-3.jpg"
-];
+// Main image switch
+function changeImage(el) {
+  document.getElementById("mainImg").src = el.src;
+}
 
-function changeImage(index) {
-  document.getElementById("mainImage").src = images[index];
+// Quantity change
+function changeQty(amount) {
+  let el = document.getElementById("qtyNumber");
+  let val = parseInt(el.textContent) + amount;
+  if (val < 1) val = 1;
+  el.textContent = val;
+}
 
-  document.querySelectorAll(".dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === index);
-  });
+// Size select
+let selectedSize = null;
+
+function selectSize(size) {
+  selectedSize = size;
+
+  ["S","M","L","XL"].forEach(s =>
+    document.getElementById("size_" + s).classList.remove("active-size")
+  );
+
+  document.getElementById("size_" + size).classList.add("active-size");
+}
+
+// Final Add to Cart
+function premiumAddToCart() {
+  if (!selectedSize) {
+    alert("Please select a size.");
+    return;
+  }
+
+  const qty = parseInt(document.getElementById("qtyNumber").textContent);
+
+  addToCart(
+    "Black Printed T-Shirt",
+    20,
+    document.getElementById("mainImg").src,
+    selectedSize,
+    qty
+  );
+
+  alert("Added to cart!");
 }
 </script>
 
