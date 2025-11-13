@@ -780,12 +780,10 @@ a {
 
 /* ANA GRID YAPISI */
 .tshirt-layout {
-  max-width: 1350px;
-  margin: 0 auto;
   display: flex;
+  justify-content: center;
   gap: 50px;
   padding: 0 30px;
-  align-items: flex-start;
 }
 
 /* SOL ÜRÜNLER */
