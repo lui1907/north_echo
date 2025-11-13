@@ -410,13 +410,11 @@ a {
   gap: 20px;
 }
 
-.cart-item-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  border-radius: 14px;
+.cart-item-box img {
+    width: 90px;          
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .cart-item img {
