@@ -409,6 +409,7 @@ a {
   flex: 2.3;            /* daha geniş */
   display: flex;
   flex-direction: column;
+  margin-left: 40px; /* 🔥 Sol bölümü sağa iter */
   gap: 20px;
   max-width: 650px;     /* genişlik arttı */
 }
@@ -431,6 +432,7 @@ a {
   object-fit: cover;
   border-radius: 10px;
 }
+
 
 /* Ürün bilgileri */
 .cart-info {
