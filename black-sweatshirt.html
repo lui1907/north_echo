@@ -32,7 +32,7 @@
 
 <main class="product-page">
 
-  <!-- LEFT SLIDER -->
+  <!-- LEFT IMAGE SLIDER -->
   <div class="product-left centered-left">
 
     <img id="mainImg" class="product-img"
@@ -45,7 +45,7 @@
 
   </div>
 
-  <!-- RIGHT PRODUCT INFO -->
+  <!-- RIGHT SIDE INFO -->
   <div class="product-right premium-info">
 
     <h1 class="product-title">Black Printed Sweatshirt</h1>
@@ -74,16 +74,51 @@
       <button onclick="changeQty(1)">+</button>
     </div>
 
-    <!-- ADD TO CART -->
+    <!-- ADD TO CART BUTTON -->
     <button class="add-cart-btn" onclick="premiumAddToCart()">
       Add to Cart
     </button>
 
-  </div>
+  </div> <!-- END RIGHT INFO -->
+
+
+
+  <!-- ⭐⭐⭐ YOU MAY ALSO LIKE ⭐⭐⭐ -->
+
+  <section class="recommended-box">
+
+    <h2 class="rec-title">You May Also Like</h2>
+
+    <div class="rec-grid">
+
+      <a href="black-printed.html" class="rec-card">
+        <img src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg">
+        <h3>Black Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
+
+      <a href="mr-right.html" class="rec-card">
+        <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg">
+        <h3>Mr. Right T-Shirt</h3>
+        <p>20€</p>
+      </a>
+
+      <a href="trust-no-one.html" class="rec-card">
+        <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
+        <h3>Trust No One T-Shirt</h3>
+        <p>20€</p>
+      </a>
+
+    </div>
+
+  </section>
+
 </main>
 
+
 <script>
-// Image switch
+
+// Change image
 function changeImage(el) {
   document.getElementById("mainImg").src = el.src;
 }
@@ -96,7 +131,7 @@ function changeQty(amount) {
   el.textContent = v;
 }
 
-// Size selection
+// Size
 let selectedSize = null;
 
 function selectSize(size) {
@@ -109,7 +144,7 @@ function selectSize(size) {
   document.getElementById("size_" + size).classList.add("active-size");
 }
 
-// Add to cart
+// Add to Cart
 function premiumAddToCart() {
   if (!selectedSize) {
     alert("Please select a size.");
@@ -128,6 +163,7 @@ function premiumAddToCart() {
 
   alert("Added to cart!");
 }
+
 </script>
 
 </body>
