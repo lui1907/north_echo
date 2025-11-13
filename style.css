@@ -509,6 +509,23 @@ a {
     font-weight: 700;
 }
 
+.checkout-final-btn {
+    display: block;
+    text-decoration: none;
+    background: #fff;
+    color: #000;
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+.checkout-final-btn:hover {
+    background: #e6e6e6;
+
 /* ========================================= */
 /* ================ CHECKOUT =============== */
 /* ========================================= */
