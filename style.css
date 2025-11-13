@@ -1,36 +1,3 @@
-/* LIGHT MODE */
-body.light {
-  --bg: #fff;
-  --text: #000;
-  --card: #f5f5f5;
-  --border: #ddd;
-}
-
-body.light .hero-btn.alt {
-  border-color: #000;
-  color: #000;
-}
-
-/* Menü light mode */
-body.light .side-menu {
-  background: #f5f5f5;
-}
-
-body.light .side-menu a {
-  color: #000;
-}
-
-/* Ürün kartları light */
-body.light .product-card {
-  background: #f5f5f5;
-  color: #000;
-}
-
-body.light .rec-card {
-  background: #f5f5f5;
-  color: #000;
-}
-
 /* ---------- GLOBAL ---------- */
 :root {
   --bg: #000;
@@ -46,7 +13,7 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* ---------- HEADER (FINAL FIX) ---------- */
+/* ---------- HEADER ---------- */
 .header {
   display: flex;
   justify-content: center;
@@ -64,7 +31,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   line-height: 1;
-  z-index: 9999;  /* <<< HAMBURGER HER ŞEYİN ÜSTÜNDE */
+  z-index: 9999;
 }
 
 .logo {
@@ -99,19 +66,24 @@ body {
   cursor: pointer;
 }
 
-
 /* ---------- SIDE MENU ---------- */
 .side-menu {
   position: fixed;
   top: 0;
-  left: -260px;
+  left: -300px;         /* TAMAMEN DIŞARIDA BAŞLASIN */
   width: 260px;
   height: 100%;
   background: #111;
   padding: 25px;
-  transition: 0.3s ease;
+  transition: 0.35s ease;
   border-right: 1px solid var(--border);
-  z-index: 999;   /* <<< MENÜ HAMBURGERDEN ALTA */
+  z-index: 999;
+  pointer-events: none; /* KAPALIYKEN TIKLANMASIN */
+}
+
+.side-menu.open {
+  left: 0;              /* TAM AÇILSIN */
+  pointer-events: auto; /* AÇILINCA TIKLANABİLSİN */
 }
 
 .close-menu {
@@ -217,7 +189,7 @@ body {
   border-radius: 6px;
 }
 
-/* ---------- PRODUCT PAGE (UNIQLO STYLE) ---------- */
+/* ---------- PRODUCT PAGE ---------- */
 .product-page {
   max-width: 1100px;
   margin: 0 auto;
@@ -343,6 +315,9 @@ body {
   margin-top: 80px;
   padding-top: 40px;
   border-top: 1px solid var(--border);
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .rec-title {
@@ -354,6 +329,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 30px;
+  justify-items: center;  
 }
 
 .rec-card {
@@ -364,6 +340,7 @@ body {
   color: #fff;
   border: 1px solid #222;
   transition: 0.2s;
+  max-width: 240px;
 }
 
 .rec-card:hover {
@@ -406,22 +383,4 @@ body {
 .footer-logo {
   font-weight: 700;
   margin-bottom: 10px;
-}
-.recommended-box {
-  margin-top: 80px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-  max-width: 1100px;       /* ürün sayfası ile aynı genişlik */
-  margin-left: auto;
-  margin-right: auto;       /* ORTALA */
-}
-.rec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px;
-  justify-items: center;    /* HÜCRELERİ ORTALA */
-}
-.rec-card {
-  width: 100%;
-  max-width: 240px;         /* Zara boyutu */
 }
