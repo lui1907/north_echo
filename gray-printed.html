@@ -9,23 +9,19 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<script src="product.js" defer></script>
 
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <button id="themeToggle" class="theme-btn">○</button>
   </div>
 </header>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -34,45 +30,42 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PRODUCT PAGE -->
-<main class="product-page" style="flex-direction: column; align-items: center; text-align:center;">
+<main class="product-page">
 
-  <!-- IMAGE SLIDER -->
-  <div class="product-gallery">
-    <img id="mainImage" class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
+  <!-- LEFT: IMAGE GALLERY -->
+  <div class="product-left">
 
-    <div class="thumb-list">
-      <img class="thumb" onclick="changeImage(0)" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
-      <img class="thumb" onclick="changeImage(1)" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg">
-      <img class="thumb" onclick="changeImage(2)" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg">
+    <div class="product-gallery">
+      <img id="mainImg" class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
+
+      <div class="thumb-list">
+        <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="changeImg(this.src)">
+        <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="changeImg(this.src)">
+        <img class="thumb" src="https://i.ibb.co/Kp53k5j/gri-tshirt3.jpg" onclick="changeImg(this.src)">
+      </div>
     </div>
 
-    <div class="dots">
-      <span class="dot active" onclick="changeImage(0)"></span>
-      <span class="dot" onclick="changeImage(1)"></span>
-      <span class="dot" onclick="changeImage(2)"></span>
-    </div>
   </div>
 
-  <!-- PRODUCT INFO -->
-  <div class="product-right" style="margin-top:40px; max-width:400px;">
-
+  <!-- RIGHT: PRODUCT INFO -->
+  <div class="product-right">
     <h1>Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
 
-    <label>Size:</label><br>
-    <select style="margin-top:8px; padding:10px; width:120px;">
+    <label>Size:</label>
+    <select id="sizeSelect">
       <option>S</option>
       <option>M</option>
       <option>L</option>
       <option>XL</option>
     </select>
 
-    <button class="add-cart" style="margin-top:25px;"
-      onclick="addToCart(
+    <button class="add-cart" onclick="
+      addToCart(
         'Gray Printed T-Shirt',
         20,
-        'https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg'
+        document.getElementById('mainImg').src,
+        document.getElementById('sizeSelect').value
       )">
       Add to Cart
     </button>
@@ -81,20 +74,10 @@
 
 </main>
 
-<!-- SLIDER SCRIPT -->
+
 <script>
-const images = [
-  "https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg",
-  "https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg",
-  "https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg"
-];
-
-function changeImage(index) {
-  document.getElementById("mainImage").src = images[index];
-
-  document.querySelectorAll(".dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === index);
-  });
+function changeImg(src) {
+  document.getElementById('mainImg').src = src;
 }
 </script>
 
