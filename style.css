@@ -818,3 +818,10 @@ a {
     object-fit: cover;
     border-radius: 10px;
 }
+/* ==== SWEATSHIRTS - Tek ürün ortaya gelsin ==== */
+.sweatshirt-page .product-grid {
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: wrap;
+    gap: 20px;
+}
