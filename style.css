@@ -455,19 +455,20 @@ a {
   transform: scale(1.03);
   border-color: var(--text);
 }
-/* ---------- MODERN CHECKOUT BUTTON ---------- */
+/* ===== CHECKOUT BUTTON (FINAL) ===== */
+
 .checkout-btn {
     display: inline-block;
-    padding: 14px 28px;
-    background: var(--text);   /* açık temada siyah, koyu temada beyaz */
-    color: var(--bg);          /* ters renk */
+    padding: 14px 30px;
+    background: var(--text);
+    color: var(--bg);
     border-radius: 10px;
     font-weight: 700;
-    text-decoration: none;
     font-size: 17px;
+    text-decoration: none;
     transition: 0.25s ease;
-    margin-top: 20px;
-    border: 1px solid transparent;
+    margin-top: 25px;
+    border: 1px solid var(--border);
 }
 
 .checkout-btn:hover {
