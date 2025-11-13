@@ -30,66 +30,107 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<main class="checkout-page">
+<!-- ======================= -->
+<!--   PREMIUM CHECKOUT PAGE -->
+<!-- ======================= -->
+
+<main class="checkout-wrapper">
 
   <h1 class="checkout-title">Checkout</h1>
 
-  <div class="checkout-container">
+  <div class="checkout-layout">
 
-    <!-- LEFT SIDE — FORM -->
-    <div class="checkout-form">
-      <input type="text" placeholder="Full Name">
-      <input type="text" placeholder="Address">
-      <input type="text" placeholder="City">
-      <input type="text" placeholder="Postal Code">
-      <input type="text" placeholder="Phone Number">
-      <textarea placeholder="Additional Notes" rows="4"></textarea>
+    <!-- SOL FORM -->
+    <form class="checkout-form">
 
-      <button class="payment-btn">Proceed to Payment</button>
-    </div>
+      <h2>Contact Information</h2>
 
-    <!-- RIGHT SIDE — ORDER SUMMARY -->
-    <div class="checkout-summary" id="summaryBox">
-      <h2>Your Order</h2>
-      <div id="summaryItems"></div>
-      <div class="summary-total" id="summaryTotal"></div>
+      <label>Name</label>
+      <input type="text" placeholder="Your full name" required>
+
+      <label>Email</label>
+      <input type="email" placeholder="your@mail.com" required>
+
+      <label>Phone Number</label>
+      <input type="text" placeholder="+90 5xx xxx xx xx" required>
+
+
+      <h2 style="margin-top:30px;">Shipping Address</h2>
+
+      <label>Country</label>
+      <input type="text" placeholder="Turkey" required>
+
+      <label>City</label>
+      <input type="text" placeholder="Istanbul" required>
+
+      <label>Full Address</label>
+      <textarea placeholder="Street, building, apartment number..." required></textarea>
+
+
+      <button class="placeorder-btn" type="submit">
+        Complete Order →
+      </button>
+
+    </form>
+
+    <!-- SAĞ ÖZET -->
+    <div class="checkout-summary-box">
+      <h2>Order Summary</h2>
+
+      <div id="checkoutItems"></div>
+
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span id="sumSubtotal">0€</span>
+      </div>
+
+      <div class="summary-line">
+        <span>Shipping</span>
+        <span>Free</span>
+      </div>
+
+      <div class="summary-total-line">
+        <span>Total</span>
+        <span id="sumTotal">0€</span>
+      </div>
+
     </div>
 
   </div>
 
 </main>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const itemsBox = document.getElementById("summaryItems");
-    const totalBox = document.getElementById("summaryTotal");
+    const box = document.getElementById("checkoutItems");
 
     if (cart.length === 0) {
-        itemsBox.innerHTML = "<p>Your cart is empty.</p>";
-        totalBox.innerHTML = "";
-        return;
+      box.innerHTML = "<p>Your cart is empty.</p>";
+      return;
     }
 
-    let total = 0;
+    let subtotal = 0;
+    box.innerHTML = "";
 
     cart.forEach(item => {
-        itemsBox.innerHTML += `
-            <div class="summary-item">
-                <img src="${item.image}">
-                <div>
-                    <strong>${item.name}</strong><br>
-                    Size: ${item.size}<br>
-                    ${item.price}€ × ${item.quantity}
-                </div>
+        box.innerHTML += `
+          <div class="co-item">
+            <img src="${item.image}" class="co-img">
+            <div class="co-info">
+              <h3>${item.name}</h3>
+              <p>Size: ${item.size}</p>
+              <p>${item.price}€ × ${item.quantity}</p>
             </div>
+          </div>
         `;
-        total += item.price * item.quantity;
+        subtotal += item.price * item.quantity;
     });
 
-    totalBox.textContent = "Total: " + total + "€";
+    document.getElementById("sumSubtotal").textContent = subtotal + "€";
+    document.getElementById("sumTotal").textContent = subtotal + "€";
 });
 </script>
 
