@@ -147,7 +147,6 @@ a {
 
 .hero-btn {
   padding: 14px 26px;
-  background: #fff;
   color: #000;
   border-radius: 6px;
   font-weight: 600;
@@ -276,11 +275,9 @@ a {
 }
 
 .size-options span:hover {
-  background: #222;
 }
 
 .active-size {
-  background: #fff;
   color: #000 !important;
 }
 
@@ -296,7 +293,6 @@ a {
   height: 34px;
   border-radius: 6px;
   border: 1px solid #444;
-  background: #111;
   color: #fff;
   cursor: pointer;
 }
@@ -304,7 +300,6 @@ a {
 /* ADD TO CART */
 .add-cart-btn {
   padding: 14px;
-  background: #fff;
   color: #000;
   border-radius: 6px;
   cursor: pointer;
@@ -334,7 +329,6 @@ a {
 }
 
 .rec-card {
-  background: #111;
   padding: 15px;
   border-radius: 8px;
   text-decoration: none;
@@ -346,7 +340,6 @@ a {
 
 .rec-card:hover {
   transform: scale(1.05);
-  background: #222;
 }
 
 .rec-card img {
@@ -362,7 +355,6 @@ a {
 }
 
 .cart-item {
-  background: #111;
   border: 1px solid #222;
   padding: 15px;
   border-radius: 8px;
@@ -395,7 +387,6 @@ a {
 .hero-box {
   display: flex;
   gap: 40px;
-  background: #111;
   padding: 40px;
   border-radius: 14px;
   box-shadow: 0 0 40px rgba(0,0,0,0.4);
@@ -433,7 +424,6 @@ a {
 
 .hero-btn {
   padding: 14px 24px;
-  background: #fff;
   color: #000;
   border-radius: 6px;
   text-decoration: none;
@@ -514,7 +504,6 @@ a {
 
 .banner-btn {
   padding: 12px 26px;
-  background: #fff;
   color: #000;
   font-weight: 600;
   border-radius: 6px;
@@ -533,7 +522,6 @@ a {
 }
 
 .banner-btn.alt:hover {
-  background: #fff;
   color: #000;
 }
 
@@ -555,7 +543,6 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 60px;
-  background: #0f0f0f;
   border: 1px solid #222;
   border-radius: 14px;
   box-shadow: 0px 0px 40px rgba(255,255,255,0.06);
@@ -586,7 +573,6 @@ a {
 
 .hero-btn-m {
   padding: 14px 26px;
-  background: #fff;
   color: #000;
   text-decoration: none;
   border-radius: 8px;
@@ -605,7 +591,6 @@ a {
 }
 
 .hero-btn-m.alt:hover {
-  background: #fff;
   color: #000;
 }
 
@@ -675,7 +660,6 @@ a {
 .fh-btn {
   text-decoration: none;
   padding: 12px 26px;
-  background: #fff;
   color: #000;
   border-radius: 10px;
   font-weight: 600;
@@ -693,7 +677,6 @@ a {
 }
 
 .fh-btn.alt:hover {
-  background: #fff;
   color: #000;
 }
 
@@ -860,11 +843,9 @@ a {
 }
 
 .size-btn:hover {
-  background: #222;
 }
 
 .size-btn.active {
-  background: #fff;
   color: #000 !important;
   border-color: #fff;
 }
