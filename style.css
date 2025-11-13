@@ -29,36 +29,86 @@ a {
   text-decoration: none;
 }
 
-/* ---------- HEADER ---------- */
+/* ========================================= */
+/* ============ FIXED HEADER =============== */
+/* ========================================= */
+
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 30px;
-  border-bottom: 1px solid var(--border);
 
-  position: relative;
-  z-index: 2000;          /* ✅ MENÜ + HERO ÜSTÜNDE */
-  background: var(--bg);  /* açık temada da şerit görünsün */
+  z-index: 9000;
 }
 
+.logo {
+  font-weight: 700;
+  font-size: 22px;
+}
 
-/* ---------- SIDE MENU ---------- */
+/* SOLDA MENÜ TUŞU */
+.hamburger {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text);
+  z-index: 9001;
+}
+
+/* SAĞDA CART + TEMA */
+.right-buttons {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 9001;
+}
+
+.cart-icon {
+  font-size: 20px;
+  color: var(--text);
+}
+
+.theme-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* ========================================= */
+/* ================= SIDE MENU ============= */
+/* ========================================= */
+
 .side-menu {
   position: fixed;
   top: 0;
-  left: -300px;
+  left: -260px;
   width: 260px;
   height: 100%;
   background: var(--card);
   padding: 25px;
-  transition: 0.35s ease;
   border-right: 1px solid var(--border);
+  transition: 0.35s ease;
   pointer-events: none;
-
-  z-index: 3000;   /* ✅ HERO, BANNER, HER ŞEYİN ÜSTÜNDE */
+  z-index: 10000;
 }
-
 
 .side-menu.open {
   left: 0;
@@ -66,22 +116,22 @@ a {
 }
 
 .close-menu {
-  background: none;
-  color: var(--text);
-  border: none;
   font-size: 32px;
+  background: none;
+  border: none;
+  color: var(--text);
   cursor: pointer;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .side-menu a {
   display: block;
   margin: 18px 0;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* ========================================= */
-/* ============== HERO (TOP) =============== */
+/* ================= HERO ================== */
 /* ========================================= */
 
 .full-hero {
@@ -91,12 +141,14 @@ a {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
   display: flex;
   justify-content: center;
   align-items: center;
 
+  margin-top: 60px; /* HEADER YÜZÜNDEN */
   position: relative;
-  z-index: 1;      /* ✅ HEADER & MENÜN ALTINDA */
+  z-index: 1;
 }
 
 .hero-overlay {
@@ -106,10 +158,6 @@ a {
   border-radius: 16px;
   text-align: center;
   border: 1px solid rgba(255,255,255,0.14);
-  box-shadow: 0 0 30px rgba(0,0,0,0.4);
-
-  position: relative;
-  z-index: 1;      /* aynı şekilde, menünün altında kalsın */
 }
 
 .fh-title {
@@ -121,22 +169,22 @@ a {
 .fh-sub {
   opacity: 0.85;
   font-size: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .fh-buttons {
   display: flex;
-  gap: 20px;
+  gap: 18px;
   justify-content: center;
 }
 
 .fh-btn {
   padding: 12px 26px;
   border-radius: 10px;
-  font-weight: 600;
-  text-decoration: none;
   background: #fff;
   color: #000;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .fh-btn.alt {
@@ -146,12 +194,12 @@ a {
 }
 
 /* ========================================= */
-/* ============== HOME CATEGORIES ========== */
+/* ============ HOME CATEGORIES ============ */
 /* ========================================= */
 
 .categories-section {
   max-width: 1200px;
-  margin: 60px auto;
+  margin: 60px auto 90px;
   padding: 0 40px;
 }
 
@@ -166,13 +214,8 @@ a {
   border: 1px solid var(--border);
   padding: 18px;
   border-radius: 12px;
-  transition: 0.25s;
   text-align: center;
-}
-
-.category-card:hover {
-  transform: scale(1.04);
-  border-color: var(--text);
+  transition: 0.25s;
 }
 
 .category-card img {
@@ -182,14 +225,19 @@ a {
   border-radius: 10px;
 }
 
+.category-card:hover {
+  transform: scale(1.04);
+  border-color: var(--text);
+}
+
 /* ========================================= */
-/* ============= CATEGORY PAGE ============= */
+/* ============ CATEGORY PAGES ============= */
 /* ========================================= */
 
 .page-title {
   text-align: center;
-  font-size: 32px;
   margin: 40px 0 30px;
+  font-size: 32px;
   font-weight: 700;
 }
 
@@ -211,6 +259,8 @@ a {
   gap: 30px;
   justify-content: center;
 }
+
+/* FİLTRELER */
 
 .filter-side {
   width: 260px;
@@ -234,12 +284,28 @@ a {
   border-radius: 10px;
 }
 
-.filter-option {
-  margin: 6px 0;
+.size-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.size-btn {
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.size-btn.active {
+  background: var(--text);
+  color: var(--bg);
 }
 
 /* ========================================= */
-/* ============== PRODUCT PAGE ============= */
+/* ============= PRODUCT PAGE ============== */
 /* ========================================= */
 
 .product-page {
@@ -247,207 +313,26 @@ a {
   margin: 0 auto;
   padding: 60px 40px;
   display: flex;
-  gap: 60px;
-}
-
-.product-left {
-  max-width: 420px;
+  gap: 70px;
 }
 
 .product-img {
   width: 100%;
-  border-radius: 12px;
-}
-
-.thumb-list {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.thumb {
-  width: 70px;
-  height: 70px;
-  border-radius: 6px;
-  object-fit: cover;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.product-right {
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  border-radius: 14px;
 }
 
 .add-cart-btn {
   padding: 14px;
-  font-weight: 700;
   background: #fff;
   color: #000;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* ========================================= */
-/* ============= RECOMMENDED BOX =========== */
-/* ========================================= */
-
-.recommended-box {
-  margin-top: 80px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-}
-
-.rec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 25px;
-}
-
-/* ========================================= */
-/* ================= CART ================== */
-/* ========================================= */
-
-.cart-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 60px 40px;
-}
-
-.cart-item {
-  display: flex;
-  gap: 15px;
-  padding: 15px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  border-radius: 8px;
-}
-
-.checkout-area {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.checkout-btn {
-  padding: 12px 26px;
-  background: #fff;
-  color: #000;
-  border-radius: 8px;
-  font-weight: 700;
-  border: 1px solid #ddd;
-  transition: 0.25s;
-}
-
-.checkout-btn:hover {
-  background: #e5e5e5;
-}
-
-/* ========================================= */
-/* ================= FOOTER ================ */
-/* ========================================= */
-
-.footer {
-  padding: 40px;
-  text-align: center;
-  border-top: 1px solid var(--border);
-}
-
-.footer-logo {
-  font-weight: 700;
-}
-
-/* ========================================= */
-/* ================ MOBILE ================= */
-/* ========================================= */
-
-@media (max-width: 900px) {
-  .tshirt-layout {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .filter-side {
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .product-area {
-    max-width: 100%;
-  }
-}
-
-/* ================================================= */
-/* ========== PRODUCT GRID SIZE FIX (FINAL) ========= */
-/* ================================================= */
-
-.product-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important;
-  gap: 26px !important;
-  justify-content: center !important;
-}
-
-/* Ürün kartı */
-.product-card {
-  background: var(--card);
-  border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 12px;
-  transition: 0.25s;
-  text-align: center;
-  width: 100%;
+  font-weight: 700;
 }
 
-/* Ürün fotoğrafı */
-.product-card img {
-  width: 100%;
-  height: 260px;        /* 🔥 Çok önemli: sabit yükseklik → hepsi hizalı */
-  object-fit: cover;
-  border-radius: 8px;
-  display: block;
-}
+/* ========================================= */
+/* ===== YOU MAY ALSO LIKE (CENTERED) ====== */
+/* ========================================= */
 
-/* Ürün ismi */
-.product-card h3 {
-  font-size: 17px;
-  margin: 12px 0 4px;
-}
-
-/* Fiyat */
-.product-card p {
-  font-size: 16px;
-  opacity: 0.85;
-}
-
-/* Hover */
-.product-card:hover {
-  transform: scale(1.03);
-  border-color: var(--text);
-}
-/* ===== CHECKOUT BUTTON (FINAL) ===== */
-
-.checkout-btn {
-    display: inline-block;
-    padding: 14px 30px;
-    background: var(--text);
-    color: var(--bg);
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 17px;
-    text-decoration: none;
-    transition: 0.25s ease;
-    margin-top: 25px;
-    border: 1px solid var(--border);
-}
-
-.checkout-btn:hover {
-    opacity: 0.85;
-    transform: translateY(-2px);
-}
-/* ---------- YOU MAY ALSO LIKE (FIXED CENTER VERSION) ---------- */
 .recommended-box {
   margin-top: 70px;
   padding-top: 40px;
@@ -458,10 +343,10 @@ a {
 }
 
 .rec-title {
+  text-align: center;
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 25px;
-  text-align: center;
+  margin-bottom: 20px;
 }
 
 .rec-grid {
@@ -472,26 +357,22 @@ a {
 }
 
 .rec-card {
-  text-decoration: none;
   background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 15px;
-  border-radius: 10px;
-  color: var(--text);
   max-width: 220px;
-  transition: 0.25s ease;
-}
-
-.rec-card:hover {
-  transform: scale(1.05);
-  border-color: var(--text);
+  transition: 0.25s;
 }
 
 .rec-card img {
   width: 100%;
   border-radius: 8px;
 }
-/* ===== PREMIUM CART PAGE ===== */
+
+/* ========================================= */
+/* ================= CART ================== */
+/* ========================================= */
 
 .cart-wrapper {
   max-width: 1200px;
@@ -499,102 +380,50 @@ a {
   padding: 0 40px;
 }
 
-.cart-title {
-  text-align: center;
-  font-size: 34px;
-  margin-bottom: 50px;
-}
-
 .cart-layout {
   display: flex;
   gap: 50px;
-  align-items: flex-start;
 }
 
-/* SOL ÜRÜNLER */
 .cart-products {
   flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .cart-item-box {
+  background: var(--card);
+  border: 1px solid var(--border);
   display: flex;
   gap: 20px;
-  background: var(--card);
   padding: 20px;
   border-radius: 14px;
-  border: 1px solid var(--border);
 }
 
-.cart-img {
-  width: 110px;
-  border-radius: 10px;
-}
-
-.cart-info h3 {
-  margin: 0 0 5px;
-}
-
-.quantity-controls {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.quantity-controls button {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  cursor: pointer;
-}
-
-/* SAĞ ÖZET */
 .cart-summary-box {
   flex: 1;
   background: var(--card);
-  padding: 25px;
-  border-radius: 16px;
   border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 25px;
 }
-
-.summary-line,
-.summary-total-line {
-  display: flex;
-  justify-content: space-between;
-  margin: 12px 0;
-}
-
-.summary-total-line {
-  font-size: 20px;
-  font-weight: 700;
-  margin-top: 20px;
-}
-
-/* CHECKOUT BUTTON */
 
 .checkout-final-btn {
   display: block;
   margin-top: 25px;
   text-align: center;
   padding: 14px;
-  font-weight: 700;
-  border-radius: 10px;
   background: var(--text);
   color: var(--bg);
-  text-decoration: none;
-  transition: 0.25s ease;
+  font-weight: 700;
+  border-radius: 10px;
+  transition: 0.25s;
 }
 
-.checkout-final-btn:hover {
-  opacity: 0.85;
-  transform: translateY(-2px);
-}
-/* ===== PREMIUM CHECKOUT PAGE ===== */
+/* ========================================= */
+/* ================ CHECKOUT =============== */
+/* ========================================= */
 
 .checkout-wrapper {
   max-width: 1200px;
@@ -602,33 +431,18 @@ a {
   padding: 0 40px;
 }
 
-.checkout-title {
-  text-align: center;
-  font-size: 34px;
-  margin-bottom: 50px;
-}
-
 .checkout-layout {
   display: flex;
   gap: 50px;
-  align-items: flex-start;
-}
-
-/* SOL FORM */
-.checkout-form {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
 .checkout-form input,
 .checkout-form textarea {
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
   background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 10px;
   color: var(--text);
 }
 
@@ -640,102 +454,28 @@ a {
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
-  border: none;
-  transition: 0.25s ease;
 }
 
-.placeorder-btn:hover {
-  opacity: 0.85;
-  transform: translateY(-2px);
-}
+/* ========================================= */
+/* ================ MOBILE ================= */
+/* ========================================= */
 
-/* SAĞ ÖZET */
-.checkout-summary-box {
-  flex: 1;
-  background: var(--card);
-  padding: 25px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-}
+@media (max-width: 900px) {
+  .tshirt-layout {
+    flex-direction: column;
+    align-items: center;
+  }
 
-.co-item {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 18px;
-}
+  .filter-side {
+    width: 100%;
+    max-width: 400px;
+  }
 
-.co-img {
-  width: 80px;
-  border-radius: 10px;
-}
+  .product-page {
+    flex-direction: column;
+  }
 
-.summary-line,
-.summary-total-line {
-  display: flex;
-  justify-content: space-between;
-  margin: 12px 0;
-}
-
-.summary-total-line {
-  font-size: 20px;
-  font-weight: 700;
-  margin-top: 20px;
-}
-/* --------- SIZE FILTER BUTTONS (S / M / L / XL) --------- */
-
-.size-filter-box {
-  margin-top: 20px;
-}
-
-.size-buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.size-btn {
-  padding: 10px 18px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.size-btn:hover {
-  border-color: var(--text);
-}
-
-.size-btn.active {
-  background: var(--text);
-  color: var(--bg) !important;
-}
-/* ======= MOBILE MENU FIX ======= */
-
-/* Menü her şeyin üstünde */
-.side-menu {
-  z-index: 9999 !important;
-}
-
-/* Menü butonları da üstte olsun */
-.header,
-.hamburger,
-.right-buttons {
-  position: relative;
-  z-index: 9999 !important;
-  pointer-events: auto !important;
-}
-
-/* Hero kutuları menüye karışmasın */
-.hero-bg,
-.full-hero {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-overlay {
-  position: relative;
-  z-index: 2;
-  pointer-events: auto;
+  .cart-layout {
+    flex-direction: column;
+  }
 }
