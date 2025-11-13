@@ -32,9 +32,9 @@
 
 <main class="product-page">
 
-  <!-- LEFT (SLIDER) -->
+  <!-- LEFT IMAGES -->
   <div class="product-left centered-left">
-    <img id="mainImg" class="product-img" 
+    <img id="mainImg" class="product-img"
          src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
 
     <div class="thumb-list">
@@ -44,18 +44,18 @@
     </div>
   </div>
 
-  <!-- RIGHT (PRODUCT DETAILS) -->
+  <!-- RIGHT DETAILS -->
   <div class="product-right premium-info">
 
     <h1 class="product-title">Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
 
     <p class="product-desc">
-      Soft-touch cotton fabric. Minimal printed front graphic.  
+      Soft-touch cotton fabric. Minimal printed front graphic.
       Comfortable modern fit suitable for everyday wear.
     </p>
 
-    <!-- SIZE SELECTOR -->
+    <!-- SIZE -->
     <div class="size-box">
       <label>Size</label>
       <div class="size-options">
@@ -74,40 +74,38 @@
     </div>
 
     <!-- ADD TO CART -->
-    <button class="add-cart-btn"
-      onclick="premiumAddToCart()">
+    <button class="add-cart-btn" onclick="premiumAddToCart()">
       Add to Cart
     </button>
 
   </div>
-
 </main>
 
 <script>
-// Thumbnail change
+// Main image change
 function changeImage(el) {
   document.getElementById("mainImg").src = el.src;
 }
 
-// Quantity selector
+// Quantity
 function changeQty(amount) {
-  const el = document.getElementById("qtyNumber");
+  let el = document.getElementById("qtyNumber");
   let val = parseInt(el.textContent) + amount;
   if (val < 1) val = 1;
   el.textContent = val;
 }
 
-// Size selector
+// Size selection
 let selectedSize = null;
 
 function selectSize(size) {
   selectedSize = size;
 
-  ["S","M","L","XL"].forEach(s => {
-    document.getElementById("size_"+s).classList.remove("active-size");
-  });
+  ["S","M","L","XL"].forEach(s =>
+    document.getElementById("size_" + s).classList.remove("active-size")
+  );
 
-  document.getElementById("size_"+size).classList.add("active-size");
+  document.getElementById("size_" + size).classList.add("active-size");
 }
 
 // Add to cart wrapper
@@ -119,14 +117,13 @@ function premiumAddToCart() {
 
   const qty = parseInt(document.getElementById("qtyNumber").textContent);
 
-  for (let i=0; i < qty; i++) {
-    addToCart(
-      "Gray Printed T-Shirt",
-      20,
-      document.getElementById("mainImg").src,
-      selectedSize
-    );
-  }
+  addToCart(
+    "Gray Printed T-Shirt",
+    20,
+    document.getElementById("mainImg").src,
+    selectedSize,
+    qty
+  );
 
   alert("Added to cart!");
 }
