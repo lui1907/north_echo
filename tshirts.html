@@ -35,50 +35,49 @@
 
   <!-- SOL ÜRÜNLER -->
   <div class="product-area">
-    
-    <!-- ARAMA ÇUBUĞU -->
+
+    <!-- ARAMA -->
     <div class="category-search">
       <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
     </div>
 
-    <!-- ÜRÜNLER GRID -->
+    <!-- ÜRÜNLER LISTESİ -->
     <div class="product-grid" id="productList">
 
       <a href="gray.html" class="product-card">
-        <img src="https://i.ibb.co/7KRScb1/gray-shirt-front.jpg">
+        <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
         <h3>Gray Printed T-Shirt</h3>
         <p>20€</p>
       </a>
 
       <a href="black.html" class="product-card">
-        <img src="https://i.ibb.co/vjSf0kj/black-shirt-front.jpg">
+        <img src="https://i.ibb.co/D828RAj/siyah-tshirt-1.jpg">
         <h3>Black Printed T-Shirt</h3>
         <p>20€</p>
       </a>
 
       <a href="mr-right.html" class="product-card">
-        <img src="https://i.ibb.co/0mH9RB8/mr-right-front.jpg">
+        <img src="https://i.ibb.co/28jGv1W/mr-right-1.jpg">
         <h3>Mr Right T-Shirt</h3>
         <p>20€</p>
       </a>
 
       <a href="white.html" class="product-card">
-        <img src="https://i.ibb.co/GRS0Ggp/white-shirt-back.jpg">
+        <img src="https://i.ibb.co/8P7t93d/beyaz-tshirt-1.jpg">
         <h3>White Printed T-Shirt</h3>
         <p>20€</p>
       </a>
 
       <a href="trust.html" class="product-card">
-        <img src="https://i.ibb.co/v4V0dVj/trust-no-one-front.jpg">
+        <img src="https://i.ibb.co/bFqBp9F/trust-no-one-1.jpg">
         <h3>Trust No One T-Shirt</h3>
         <p>20€</p>
       </a>
 
     </div>
-
   </div>
 
-  <!-- SAĞ FİLTRE MENÜSÜ -->
+  <!-- SAĞ FİLTRE -->
   <div class="filter-side">
 
     <div class="filter-box">
@@ -94,13 +93,14 @@
       <label class="filter-option"><input type="checkbox"> Under 25€</label>
       <label class="filter-option"><input type="checkbox"> 25€ - 30€</label>
       <label class="filter-option"><input type="checkbox"> 30€ - 40€</label>
+
     </div>
   </div>
 
 </div>
 
 <script>
-// ARAMA FİLTRESİ
+// ARAMA ÇALIŞMASI
 document.getElementById("searchInput").addEventListener("input", function () {
   const filter = this.value.toLowerCase();
   const products = document.querySelectorAll("#productList .product-card");
