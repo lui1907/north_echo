@@ -1,25 +1,63 @@
-function addToCart(name, price, image) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const existing = cart.find(item => item.name === name);
-
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({
-            name: name,
-            price: price,
-            image: image,
-            quantity: 1
-        });
+// Ürün veri listesi (örnek)
+const products = {
+    "white_tshirt": {
+        name: "White Minimal Tee",
+        price: 459,
+        images: [
+            "assets/white/main.jpg",
+            "assets/white/1.jpg",
+            "assets/white/2.jpg",
+            "assets/white/3.jpg"
+        ]
     }
+};
 
-    localStorage.setItem("cart", JSON.stringify(cart));
+// URL’den ürün ID al
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
 
-    // Update count in header
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const countEl = document.getElementById("cartCount");
-    if (countEl) countEl.textContent = count;
+// Ürün bilgisi
+const product = products[productId];
 
-    alert("Added to cart!");
+if (!product) {
+    document.querySelector(".product-page").innerHTML = "<h2>Product not found</h2>";
+} else {
+
+    // HTML oluştur
+    document.querySelector(".product-page").innerHTML = `
+        <div class="product-left">
+            <img src="${product.images[0]}" id="mainImage" class="product-main-img">
+
+            <div class="product-thumbnails">
+                ${product.images.map(img => `
+                    <img src="${img}" onclick="changeImage('${img}')">
+                `).join("")}
+            </div>
+        </div>
+
+        <div class="product-right">
+            <h2 class="product-title">${product.name}</h2>
+            <p class="price">₺${product.price}</p>
+
+            <label>Beden:</label>
+            <select id="sizeSelect">
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+            </select>
+
+            <button class="add-cart-btn" onclick="addToCart('${product.name}', ${product.price}, '${product.images[0]}')">
+                Add to Cart
+            </button>
+        </div>
+    `;
 }
+
+// Thumbnail tıklayınca büyük resmi değiştir
+function changeImage(src) {
+    document.getElementById("mainImage").src = src;
+}
+
+
+//
