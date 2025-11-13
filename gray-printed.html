@@ -9,7 +9,6 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-
 </head>
 <body>
 
@@ -32,100 +31,88 @@
 
 <main class="product-page">
 
-  <!-- LEFT IMAGES -->
-  <div class="product-left centered-left">
-    <img id="mainImg" class="product-img"
-         src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
+  <div class="product-left">
+    <img id="grayMainImg" class="product-img" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
 
     <div class="thumb-list">
-      <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="changeImage(this)">
-      <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="changeImage(this)">
-      <img class="thumb" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" onclick="setGrayImg('https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg')" alt="">
+      <img class="thumb" src="https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg" onclick="setGrayImg('https://i.ibb.co/27pNF17V/gri-tshirt-2.jpg')" alt="">
+      <img class="thumb" src="https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg" onclick="setGrayImg('https://i.ibb.co/Kp53k5jj/gri-tshirt3.jpg')" alt="">
     </div>
   </div>
 
-  <!-- RIGHT DETAILS -->
-  <div class="product-right premium-info">
-
+  <div class="product-right">
     <h1 class="product-title">Gray Printed T-Shirt</h1>
     <p class="price">20€</p>
-
     <p class="product-desc">
-      Soft-touch cotton fabric. Minimal printed front graphic.
-      Comfortable modern fit suitable for everyday wear.
+      Minimal graphic print, soft cotton fabric and a regular fit designed for everyday comfort.
     </p>
 
-    <!-- SIZE -->
     <div class="size-box">
-      <label>Size</label>
-      <div class="size-options">
-        <span onclick="selectSize('S')" id="size_S">S</span>
-        <span onclick="selectSize('M')" id="size_M">M</span>
-        <span onclick="selectSize('L')" id="size_L">L</span>
-        <span onclick="selectSize('XL')" id="size_XL">XL</span>
-      </div>
+      <label for="graySize">Size</label>
+      <select id="graySize">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
     </div>
 
-    <!-- QUANTITY -->
     <div class="qty-box">
-      <button onclick="changeQty(-1)">−</button>
-      <span id="qtyNumber">1</span>
-      <button onclick="changeQty(1)">+</button>
+      <span>Quantity</span>
+      <button type="button" onclick="changeGrayQty(-1)">-</button>
+      <span id="grayQty">1</span>
+      <button type="button" onclick="changeGrayQty(1)">+</button>
     </div>
 
-    <!-- ADD TO CART -->
-    <button class="add-cart-btn" onclick="premiumAddToCart()">
+    <button class="add-cart-btn" type="button" onclick="addGrayToCart()">
       Add to Cart
     </button>
-
   </div>
+
 </main>
 
+<section class="recommended-box">
+  <h2 class="rec-title">You May Also Like</h2>
+  <div class="rec-grid">
+
+    <a class="rec-card" href="black-printed.html">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
+      <h3>Black Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="mr-right.html">
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt">
+      <h3>Mr. Right T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="white-printed.html">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
+      <h3>White Printed T-Shirt</h3>
+    </a>
+
+  </div>
+</section>
+
 <script>
-// Main image change
-function changeImage(el) {
-  document.getElementById("mainImg").src = el.src;
+let grayCurrentQty = 1;
+let grayCurrentImg = "https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg";
+
+function setGrayImg(url) {
+  grayCurrentImg = url;
+  document.getElementById("grayMainImg").src = url;
 }
 
-// Quantity
-function changeQty(amount) {
-  let el = document.getElementById("qtyNumber");
-  let val = parseInt(el.textContent) + amount;
-  if (val < 1) val = 1;
-  el.textContent = val;
+function changeGrayQty(delta) {
+  grayCurrentQty += delta;
+  if (grayCurrentQty < 1) grayCurrentQty = 1;
+  document.getElementById("grayQty").textContent = grayCurrentQty;
 }
 
-// Size selection
-let selectedSize = null;
-
-function selectSize(size) {
-  selectedSize = size;
-
-  ["S","M","L","XL"].forEach(s =>
-    document.getElementById("size_" + s).classList.remove("active-size")
-  );
-
-  document.getElementById("size_" + size).classList.add("active-size");
-}
-
-// Add to cart wrapper
-function premiumAddToCart() {
-  if (!selectedSize) {
-    alert("Please select a size.");
-    return;
-  }
-
-  const qty = parseInt(document.getElementById("qtyNumber").textContent);
-
-  addToCart(
-    "Gray Printed T-Shirt",
-    20,
-    document.getElementById("mainImg").src,
-    selectedSize,
-    qty
-  );
-
-  alert("Added to cart!");
+function addGrayToCart() {
+  const size = document.getElementById("graySize").value;
+  // cart.js içindeki addToCart fonksiyonuna göre fazla argüman sorun çıkarmaz
+  addToCart("Gray Printed T-Shirt", 20, grayCurrentImg, size, grayCurrentQty);
 }
 </script>
 
