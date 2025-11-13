@@ -9,7 +9,6 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<script src="product.js" defer></script>
 
 </head>
 <body>
@@ -31,63 +30,103 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<main class="product-page" style="flex-direction: column; align-items: center; text-align:center;">
+<main class="product-page">
 
-  <!-- IMAGE SLIDER -->
-  <div class="product-gallery">
-    <img id="mainImage" class="product-img" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
+  <!-- LEFT SLIDER -->
+  <div class="product-left centered-left">
+
+    <img id="mainImg" class="product-img"
+         src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg">
 
     <div class="thumb-list">
-      <img class="thumb" onclick="changeImage(0)" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
-      <img class="thumb" onclick="changeImage(1)" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg">
+      <img class="thumb" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" onclick="changeImage(this)">
     </div>
 
-    <div class="dots">
-      <span class="dot active" onclick="changeImage(0)"></span>
-      <span class="dot" onclick="changeImage(1)"></span>
-    </div>
   </div>
 
-  <!-- PRODUCT INFO -->
-  <div class="product-right" style="margin-top:40px; max-width:400px;">
+  <!-- RIGHT PRODUCT INFO -->
+  <div class="product-right premium-info">
 
-    <h1>Black Printed Sweatshirt</h1>
+    <h1 class="product-title">Black Printed Sweatshirt</h1>
     <p class="price">35€</p>
 
-    <label>Size:</label><br>
-    <select style="margin-top:8px; padding:10px; width:120px;">
-      <option>S</option>
-      <option>M</option>
-      <option>L</option>
-      <option>XL</option>
-    </select>
+    <p class="product-desc">
+      Warm heavyweight sweatshirt featuring a minimalist front print.  
+      Soft brushed interior fabric designed for comfort during colder seasons.
+    </p>
 
-    <button class="add-cart" style="margin-top:25px;"
-      onclick="addToCart(
-        'Black Printed Sweatshirt',
-        35,
-        'https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg'
-      )">
+    <!-- SIZE SELECTOR -->
+    <div class="size-box">
+      <label>Size</label>
+      <div class="size-options">
+        <span onclick="selectSize('S')" id="size_S">S</span>
+        <span onclick="selectSize('M')" id="size_M">M</span>
+        <span onclick="selectSize('L')" id="size_L">L</span>
+        <span onclick="selectSize('XL')" id="size_XL">XL</span>
+      </div>
+    </div>
+
+    <!-- QUANTITY -->
+    <div class="qty-box">
+      <button onclick="changeQty(-1)">−</button>
+      <span id="qtyNumber">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <!-- ADD TO CART -->
+    <button class="add-cart-btn" onclick="premiumAddToCart()">
       Add to Cart
     </button>
 
   </div>
-
 </main>
 
-<!-- SLIDER SCRIPT -->
 <script>
-const images = [
-  "https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg",
-  "https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg"
-];
+// Image switch
+function changeImage(el) {
+  document.getElementById("mainImg").src = el.src;
+}
 
-function changeImage(index) {
-  document.getElementById("mainImage").src = images[index];
+// Quantity
+function changeQty(amount) {
+  let el = document.getElementById("qtyNumber");
+  let v = parseInt(el.textContent) + amount;
+  if (v < 1) v = 1;
+  el.textContent = v;
+}
 
-  document.querySelectorAll(".dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === index);
-  });
+// Size selection
+let selectedSize = null;
+
+function selectSize(size) {
+  selectedSize = size;
+
+  ["S","M","L","XL"].forEach(s =>
+    document.getElementById("size_" + s).classList.remove("active-size")
+  );
+
+  document.getElementById("size_" + size).classList.add("active-size");
+}
+
+// Add to cart
+function premiumAddToCart() {
+  if (!selectedSize) {
+    alert("Please select a size.");
+    return;
+  }
+
+  const qty = parseInt(document.getElementById("qtyNumber").textContent);
+
+  addToCart(
+    "Black Printed Sweatshirt",
+    35,
+    document.getElementById("mainImg").src,
+    selectedSize,
+    qty
+  );
+
+  alert("Added to cart!");
 }
 </script>
 
