@@ -1,4 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Your Cart — North Echo</title>
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+</head>
+<body>
 
-<html><body><h1>Cart</h1><div id='cartItems'></div><p>Total: <span id='cartTotal'>0€</span></p>
-<a href='checkout.html'>Checkout</a>
-<script src='cart.js'></script></body></html>
+<header class="header">
+  <div class="logo">NORTH ECHO</div>
+  <div class="hamburger" id="menuBtn">☰</div>
+  <button id="themeToggle" class="theme-btn">○</button>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<main class="cart-page">
+  <h1>Your Cart</h1>
+
+  <div id="cartItems" class="cart-items"></div>
+
+  <div class="cart-summary">
+    <p>Total: <span id="cartTotal">0€</span></p>
+    <a href="checkout.html" class="hero-btn">Proceed to Checkout</a>
+  </div>
+</main>
+
+</body>
+</html>
