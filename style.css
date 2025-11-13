@@ -63,7 +63,8 @@ body {
   left: 25px;
   top: 50%;
   transform: translateY(-50%);
-  line-height: 1;               /* <- BUNU EKLEDİK! ÇİZGİLERİ YOK EDER */
+  line-height: 1;
+  z-index: 9999;  /* <<< HAMBURGER HER ŞEYİN ÜSTÜNDE */
 }
 
 .logo {
@@ -110,10 +111,7 @@ body {
   padding: 25px;
   transition: 0.3s ease;
   border-right: 1px solid var(--border);
-}
-
-.side-menu.open {
-  left: 0;
+  z-index: 999;   /* <<< MENÜ HAMBURGERDEN ALTA */
 }
 
 .close-menu {
