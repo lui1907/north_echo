@@ -16,6 +16,19 @@
   --border: #ccc;
 }
 
+/* ====== GLOBAL PAGE SPACING FIX ====== */
+
+.page-title {
+    margin-top: 80px;   /* 🔥 Başlığı aşağı çeker */
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 28px;
+}
+
+body {
+    padding-top: 80px;  /* Header yüzünden içerik çok yukarı çıkıyorsa dengeler */
+}
+
 body {
   background: var(--bg);
   color: var(--text);
