@@ -1,15 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Black Printed Sweatshirt — North Echo</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Black Printed Sweatshirt — North Echo</title>
 
-<link rel="stylesheet" href="style.css"/>
-<script src="menu.js" defer></script>
-<script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
-
+  <link rel="stylesheet" href="style.css"/>
+  <script src="menu.js" defer></script>
+  <script src="theme.js" defer></script>
+  <script src="cart.js" defer></script>
 </head>
 <body>
 
@@ -30,33 +29,34 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- ÜRÜN BLOĞU SADECE BURADA -->
 <main class="product-page">
 
-  <!-- LEFT IMAGE SLIDER -->
-  <div class="product-left centered-left">
+  <!-- SOL: FOTOĞRAFLAR -->
+  <div class="product-left">
 
     <img id="mainImg" class="product-img"
-         src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg">
+         src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg"/>
 
     <div class="thumb-list">
-      <img class="thumb" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg" onclick="changeImage(this)">
-      <img class="thumb" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" onclick="changeImage(this)">
+      <img class="thumb" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg" onclick="changeImage(this)"/>
+      <img class="thumb" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" onclick="changeImage(this)"/>
     </div>
 
   </div>
 
-  <!-- RIGHT SIDE INFO -->
-  <div class="product-right premium-info">
+  <!-- SAĞ: ÜRÜN BİLGİLERİ -->
+  <div class="product-right">
 
     <h1 class="product-title">Black Printed Sweatshirt</h1>
     <p class="price">35€</p>
 
     <p class="product-desc">
-      Warm heavyweight sweatshirt featuring a minimalist front print.  
+      Warm heavyweight sweatshirt featuring a minimalist front print.
       Soft brushed interior fabric designed for comfort during colder seasons.
     </p>
 
-    <!-- SIZE SELECTOR -->
+    <!-- BEDEN -->
     <div class="size-box">
       <label>Size</label>
       <div class="size-options">
@@ -67,71 +67,66 @@
       </div>
     </div>
 
-    <!-- QUANTITY -->
+    <!-- ADET -->
     <div class="qty-box">
       <button onclick="changeQty(-1)">−</button>
       <span id="qtyNumber">1</span>
       <button onclick="changeQty(1)">+</button>
     </div>
 
-    <!-- ADD TO CART BUTTON -->
+    <!-- SEPET BUTONU -->
     <button class="add-cart-btn" onclick="premiumAddToCart()">
       Add to Cart
     </button>
 
-  </div> <!-- END RIGHT INFO -->
-
-
-
-  <!-- ⭐⭐⭐ YOU MAY ALSO LIKE ⭐⭐⭐ -->
-
-  <section class="recommended-box">
-
-    <h2 class="rec-title">You May Also Like</h2>
-
-    <div class="rec-grid">
-
-      <a href="black-printed.html" class="rec-card">
-        <img src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg">
-        <h3>Black Printed T-Shirt</h3>
-        <p>20€</p>
-      </a>
-
-      <a href="mr-right.html" class="rec-card">
-        <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg">
-        <h3>Mr. Right T-Shirt</h3>
-        <p>20€</p>
-      </a>
-
-      <a href="trust-no-one.html" class="rec-card">
-        <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
-        <h3>Trust No One T-Shirt</h3>
-        <p>20€</p>
-      </a>
-
-    </div>
-
-  </section>
+  </div>
 
 </main>
+<!-- BURADA MAIN BİTİYOR -->
+
+
+<!-- YOU MAY ALSO LIKE: ARTIK MAIN DIŞINDA, EN ALTA OTURACAK -->
+<section class="recommended-box">
+
+  <h2 class="rec-title">You May Also Like</h2>
+
+  <div class="rec-grid">
+
+    <a href="black-printed.html" class="rec-card">
+      <img src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg" alt="Black Printed T-Shirt"/>
+      <h3>Black Printed T-Shirt</h3>
+      <p>20€</p>
+    </a>
+
+    <a href="mr-right.html" class="rec-card">
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt"/>
+      <h3>Mr. Right T-Shirt</h3>
+      <p>20€</p>
+    </a>
+
+    <a href="trust-no-one.html" class="rec-card">
+      <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" alt="Trust No One T-Shirt"/>
+      <h3>Trust No One T-Shirt</h3>
+      <p>20€</p>
+    </a>
+
+  </div>
+
+</section>
 
 
 <script>
-
-// Change image
 function changeImage(el) {
   document.getElementById("mainImg").src = el.src;
 }
 
-// Quantity
 function changeQty(amount) {
-  let el = document.getElementById("qtyNumber");
-  let v = parseInt(el.textContent) + amount;
-  if (v < 1) v = 1;
-  el.textContent = v;
+  const el = document.getElementById("qtyNumber");
+  let val = parseInt(el.textContent) + amount;
+  if (val < 1) val = 1;
+  el.textContent = val;
 }
 
-// Size
 let selectedSize = null;
 
 function selectSize(size) {
@@ -144,7 +139,6 @@ function selectSize(size) {
   document.getElementById("size_" + size).classList.add("active-size");
 }
 
-// Add to Cart
 function premiumAddToCart() {
   if (!selectedSize) {
     alert("Please select a size.");
@@ -163,7 +157,6 @@ function premiumAddToCart() {
 
   alert("Added to cart!");
 }
-
 </script>
 
 </body>
