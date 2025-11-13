@@ -881,3 +881,19 @@ a {
   border: 2px solid #fff !important;
   color: #fff !important;
 }
+/* ---- CHECKOUT BUTTON FIX ---- */
+
+.checkout-btn {
+  padding: 12px 26px;
+  border-radius: 8px;
+  background: var(--text);  /* butonun arka planı: yazı rengi */
+  color: var(--bg);         /* yazı rengi: arka plan rengi */
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.25s;
+  display: inline-block;
+}
+
+.checkout-btn:hover {
+  opacity: 0.8;
+}
