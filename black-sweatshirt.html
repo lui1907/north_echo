@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Black Printed Sweatshirt — North Echo</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Black Printed Sweatshirt — North Echo</title>
 
-  <link rel="stylesheet" href="style.css"/>
-  <script src="menu.js" defer></script>
-  <script src="theme.js" defer></script>
-  <script src="cart.js" defer></script>
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 </head>
 <body>
 
@@ -29,133 +29,111 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- ÜRÜN BLOĞU SADECE BURADA -->
+<!-- ================= PRODUCT PAGE ================= -->
 <main class="product-page">
 
-  <!-- SOL: FOTOĞRAFLAR -->
+  <!-- SOL TARAF -->
   <div class="product-left">
 
-    <img id="mainImg" class="product-img"
-         src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg"/>
+    <!-- ANA FOTO -->
+    <img id="sweatMainImg" class="product-main-img"
+         src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg"
+         alt="Black Printed Sweatshirt">
 
-    <div class="thumb-list">
-      <img class="thumb" src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg" onclick="changeImage(this)"/>
-      <img class="thumb" src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" onclick="changeImage(this)"/>
+    <!-- THUMBNAILS -->
+    <div class="product-thumbnails">
+      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg"
+           onclick="setSweatImg('https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg')" alt="">
+
+      <img src="https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg"
+           onclick="setSweatImg('https://i.ibb.co/TqJWMmx7/black-sweatshirt-1.jpg')" alt="">
     </div>
 
   </div>
 
-  <!-- SAĞ: ÜRÜN BİLGİLERİ -->
+  <!-- SAĞ TARAF -->
   <div class="product-right">
 
     <h1 class="product-title">Black Printed Sweatshirt</h1>
     <p class="price">35€</p>
 
     <p class="product-desc">
-      Warm heavyweight sweatshirt featuring a minimalist front print.
-      Soft brushed interior fabric designed for comfort during colder seasons.
+      Premium heavyweight cotton blend, soft interior lining and a sharp printed design.
     </p>
 
     <!-- BEDEN -->
     <div class="size-box">
-      <label>Size</label>
-      <div class="size-options">
-        <span onclick="selectSize('S')" id="size_S">S</span>
-        <span onclick="selectSize('M')" id="size_M">M</span>
-        <span onclick="selectSize('L')" id="size_L">L</span>
-        <span onclick="selectSize('XL')" id="size_XL">XL</span>
-      </div>
+      <label for="sweatSize">Size</label>
+      <select id="sweatSize">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
     </div>
 
     <!-- ADET -->
     <div class="qty-box">
-      <button onclick="changeQty(-1)">−</button>
-      <span id="qtyNumber">1</span>
-      <button onclick="changeQty(1)">+</button>
+      <span>Quantity</span>
+      <button type="button" onclick="changeSweatQty(-1)">-</button>
+      <span id="sweatQty">1</span>
+      <button type="button" onclick="changeSweatQty(1)">+</button>
     </div>
 
-    <!-- SEPET BUTONU -->
-    <button class="add-cart-btn" onclick="premiumAddToCart()">
+    <!-- SEPETE EKLE -->
+    <button class="add-cart-btn" type="button" onclick="addSweatToCart()">
       Add to Cart
     </button>
 
   </div>
 
 </main>
-<!-- BURADA MAIN BİTİYOR -->
 
 
-<!-- YOU MAY ALSO LIKE: ARTIK MAIN DIŞINDA, EN ALTA OTURACAK -->
+<!-- ================= RECOMMENDED ================= -->
 <section class="recommended-box">
-
   <h2 class="rec-title">You May Also Like</h2>
 
   <div class="rec-grid">
 
-    <a href="black-printed.html" class="rec-card">
-      <img src="https://i.ibb.co/Y4p3jXR3/black-tshirt-1.jpg" alt="Black Printed T-Shirt"/>
+    <a class="rec-card" href="gray-printed.html">
+      <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
+      <h3>Gray Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="black-printed.html">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
       <h3>Black Printed T-Shirt</h3>
-      <p>20€</p>
     </a>
 
-    <a href="mr-right.html" class="rec-card">
-      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt"/>
-      <h3>Mr. Right T-Shirt</h3>
-      <p>20€</p>
-    </a>
-
-    <a href="trust-no-one.html" class="rec-card">
-      <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" alt="Trust No One T-Shirt"/>
-      <h3>Trust No One T-Shirt</h3>
-      <p>20€</p>
+    <a class="rec-card" href="mr-right.html">
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr Right T-Shirt">
+      <h3>Mr Right T-Shirt</h3>
     </a>
 
   </div>
-
 </section>
 
 
+<!-- ================= SCRIPTLER ================= -->
 <script>
-function changeImage(el) {
-  document.getElementById("mainImg").src = el.src;
+let sweatCurrentQty = 1;
+let sweatCurrentImg = "https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg";
+
+function setSweatImg(url) {
+  sweatCurrentImg = url;
+  document.getElementById("sweatMainImg").src = url;
 }
 
-function changeQty(amount) {
-  const el = document.getElementById("qtyNumber");
-  let val = parseInt(el.textContent) + amount;
-  if (val < 1) val = 1;
-  el.textContent = val;
+function changeSweatQty(delta) {
+  sweatCurrentQty += delta;
+  if (sweatCurrentQty < 1) sweatCurrentQty = 1;
+  document.getElementById("sweatQty").textContent = sweatCurrentQty;
 }
 
-let selectedSize = null;
-
-function selectSize(size) {
-  selectedSize = size;
-
-  ["S","M","L","XL"].forEach(s =>
-    document.getElementById("size_" + s).classList.remove("active-size")
-  );
-
-  document.getElementById("size_" + size).classList.add("active-size");
-}
-
-function premiumAddToCart() {
-  if (!selectedSize) {
-    alert("Please select a size.");
-    return;
-  }
-
-  const qty = parseInt(document.getElementById("qtyNumber").textContent);
-
-  addToCart(
-    "Black Printed Sweatshirt",
-    35,
-    document.getElementById("mainImg").src,
-    selectedSize,
-    qty
-  );
-
-  alert("Added to cart!");
+function addSweatToCart() {
+  const size = document.getElementById("sweatSize").value;
+  addToCart("Black Printed Sweatshirt", 35, sweatCurrentImg, size, sweatCurrentQty);
 }
 </script>
 
