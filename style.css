@@ -762,3 +762,26 @@ h1, .page-title, .cart-title, .checkout-title {
   justify-content: center !important;
   align-items: center !important;
 }
+/* === PRODUCT LAYOUT FIX (BEDEN VE DETAYLAR AŞAĞI KAYMASIN) === */
+.product-page {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 60px !important;
+}
+
+/* Sol taraf (büyük foto + küçük foto listesi) */
+.product-left {
+  max-width: 420px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Sağ taraf (isim, fiyat, bedenler, açıklama, sepete ekle) */
+.product-right {
+  max-width: 420px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  margin-top: 0 !important; /* 🔥 En önemli satır */
+  padding-top: 0 !important;
+}
