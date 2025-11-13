@@ -616,3 +616,89 @@ body {
     justify-content: center;
   }
 }
+/* ---------- FULL WIDTH PREMIUM HERO ---------- */
+.full-hero {
+  width: 100%;
+  height: 32vh;                   /* Senin istediğin geniş-kısa banner */
+  background-image: url("https://i.ibb.co/DNJdMBr/white-tshirt1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Blur cam kutusu */
+.hero-overlay {
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(9px);
+  padding: 25px 45px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+}
+
+.fh-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.fh-sub {
+  opacity: 0.85;
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+.fh-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.fh-btn {
+  text-decoration: none;
+  padding: 12px 26px;
+  background: #fff;
+  color: #000;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.fh-btn:hover {
+  opacity: .8;
+}
+
+.fh-btn.alt {
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+.fh-btn.alt:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* MOBILE */
+@media(max-width: 900px) {
+  .full-hero {
+    height: 26vh;                /* Mobilde biraz daha ince */
+  }
+  .hero-overlay {
+    padding: 18px 28px;
+  }
+  .fh-title {
+    font-size: 28px;
+  }
+  .fh-sub {
+    font-size: 14px;
+  }
+  .fh-buttons {
+    flex-direction: column;
+  }
+}
