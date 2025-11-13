@@ -768,3 +768,34 @@ a {
 .filter-side {
     margin-top: 0 !important;   /* 🔥 ÜSTTEN BOŞLUK YOK */
 }
+/* ==== T-Shirts ürün kartlarını büyütme ==== */
+.tshirt-layout .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* 🔥 kart genişledi */
+    gap: 30px; /* kartlar arası daha ferah */
+    max-width: 1100px;
+}
+
+.product-card {
+    padding: 16px;                 /* kart içi daha ferah */
+    border-radius: 14px;           /* daha modern */
+}
+
+/* Ürün fotoğraflarını büyüt */
+.product-card img {
+    width: 100%;
+    height: 280px;                 /* 🔥 görsel YÜKSELTİLDİ */
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Başlık ve fiyat boyutunu büyüt */
+.product-card h3 {
+    font-size: 18px;               /* 🔥 daha büyük başlık */
+    margin-top: 12px;
+}
+
+.product-card p {
+    font-size: 16px;               /* 🔥 fiyat daha okunaklı */
+    margin-top: 4px;
+}
