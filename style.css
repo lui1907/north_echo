@@ -896,3 +896,26 @@ a {
     color: #000;
     border: 1px solid #fff;
 }
+/* ------------------------------------------ */
+/* GO TO CHECKOUT BUTTON — ALWAYS VISIBLE FIX */
+/* ------------------------------------------ */
+
+.checkout-btn,
+.go-checkout-btn,
+.cart-checkout-btn {
+    padding: 12px 26px;
+    background: #fff !important;    /* HER TEMADA BEYAZ */
+    color: #000 !important;         /* SİYAH YAZI */
+    border-radius: 8px;
+    font-weight: 700;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.25s;
+}
+
+.checkout-btn:hover,
+.go-checkout-btn:hover,
+.cart-checkout-btn:hover {
+    background: #e5e5e5 !important;
+}
