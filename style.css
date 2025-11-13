@@ -564,11 +564,12 @@ a {
 }
 
 .co-img {
-  width: 80px;
-  height: 80px;
+  width: 55px;     /* 🔥 Daha küçük, şık */
+  height: 55px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 8px;
 }
+
 
 /* ========================================= */
 /* ================ MOBILE ================= */
