@@ -9,7 +9,6 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-
 </head>
 <body>
 
@@ -32,103 +31,76 @@
 
 <main class="product-page">
 
-  <!-- LEFT IMAGE (only 1 photo but premium layout stays same) -->
-  <div class="product-left centered-left">
-
-    <img id="mainImg" class="product-img"
-         src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
-
-    <div class="thumb-list">
-      <img class="thumb"
-           src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg"
-           onclick="changeImage(this)">
-    </div>
-
+  <div class="product-left">
+    <img id="whiteMainImg" class="product-img" src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
   </div>
 
-  <!-- RIGHT DETAILS -->
-  <div class="product-right premium-info">
-
+  <div class="product-right">
     <h1 class="product-title">White Printed T-Shirt</h1>
     <p class="price">20€</p>
-
     <p class="product-desc">
-      Lightweight premium cotton tee in a crisp white tone.  
-      Clean front graphic with a modern minimalist look.
+      Crisp white tee with a minimal print. A clean essential for any capsule wardrobe.
     </p>
 
-    <!-- SIZE -->
     <div class="size-box">
-      <label>Size</label>
-      <div class="size-options">
-        <span onclick="selectSize('S')" id="size_S">S</span>
-        <span onclick="selectSize('M')" id="size_M">M</span>
-        <span onclick="selectSize('L')" id="size_L">L</span>
-        <span onclick="selectSize('XL')" id="size_XL">XL</span>
-      </div>
+      <label for="whiteSize">Size</label>
+      <select id="whiteSize">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
     </div>
 
-    <!-- QUANTITY -->
     <div class="qty-box">
-      <button onclick="changeQty(-1)">−</button>
-      <span id="qtyNumber">1</span>
-      <button onclick="changeQty(1)">+</button>
+      <span>Quantity</span>
+      <button type="button" onclick="changeWhiteQty(-1)">-</button>
+      <span id="whiteQty">1</span>
+      <button type="button" onclick="changeWhiteQty(1)">+</button>
     </div>
 
-    <!-- ADD TO CART -->
-    <button class="add-cart-btn" onclick="premiumAddToCart()">
+    <button class="add-cart-btn" type="button" onclick="addWhiteToCart()">
       Add to Cart
     </button>
-
   </div>
 
 </main>
 
+<section class="recommended-box">
+  <h2 class="rec-title">You May Also Like</h2>
+  <div class="rec-grid">
+
+    <a class="rec-card" href="gray-printed.html">
+      <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
+      <h3>Gray Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="black-printed.html">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
+      <h3>Black Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="mr-right.html">
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right T-Shirt">
+      <h3>Mr. Right T-Shirt</h3>
+    </a>
+
+  </div>
+</section>
+
 <script>
-// Thumbnail action
-function changeImage(el) {
-  document.getElementById("mainImg").src = el.src;
+let whiteCurrentQty = 1;
+let whiteCurrentImg = "https://i.ibb.co/DNJdMBr/white-tshirt1.jpg";
+
+function changeWhiteQty(delta) {
+  whiteCurrentQty += delta;
+  if (whiteCurrentQty < 1) whiteCurrentQty = 1;
+  document.getElementById("whiteQty").textContent = whiteCurrentQty;
 }
 
-// Qty change
-function changeQty(amount) {
-  let el = document.getElementById("qtyNumber");
-  let val = parseInt(el.textContent) + amount;
-  if (val < 1) val = 1;
-  el.textContent = val;
-}
-
-// Size selector
-let selectedSize = null;
-
-function selectSize(size) {
-  selectedSize = size;
-
-  ["S","M","L","XL"].forEach(s =>
-    document.getElementById("size_" + s).classList.remove("active-size")
-  );
-
-  document.getElementById("size_" + size).classList.add("active-size");
-}
-
-// Add to Cart
-function premiumAddToCart() {
-  if (!selectedSize) {
-    alert("Please select a size.");
-    return;
-  }
-
-  const qty = parseInt(document.getElementById("qtyNumber").textContent);
-
-  addToCart(
-    "White Printed T-Shirt",
-    20,
-    document.getElementById("mainImg").src,
-    selectedSize,
-    qty
-  );
-
-  alert("Added to cart!");
+function addWhiteToCart() {
+  const size = document.getElementById("whiteSize").value;
+  addToCart("White Printed T-Shirt", 20, whiteCurrentImg, size, whiteCurrentQty);
 }
 </script>
 
