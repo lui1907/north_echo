@@ -406,3 +406,83 @@ a {
     max-width: 100%;
   }
 }
+/* ================================================= */
+/* =========== CATEGORY PAGE FIX (TSHIRT / SWEAT) == */
+/* ================================================= */
+
+/* Sayfa başlığı ortalansın */
+.page-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 700;
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+/* Ana layout */
+.tshirt-layout {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  gap: 50px;
+  padding: 0 40px;
+  align-items: flex-start;
+}
+
+/* ÜRÜNLER — sola değil ortaya gelsin */
+.product-area {
+  flex: 1;
+  max-width: 900px;
+}
+
+/* ÜRÜN GRIDİ — çok önemli */
+.product-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)) !important;
+  gap: 30px !important;
+  justify-content: center !important;
+}
+
+/* FİLTRE + ARAMA — sağ sütun */
+.filter-side {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Arama kutusu */
+.search-box {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Filtre kutusu */
+.filter-box {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.filter-box h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* Responsive düzeltmesi */
+@media(max-width: 900px) {
+  .tshirt-layout {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .filter-side {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+}
