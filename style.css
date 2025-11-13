@@ -69,7 +69,7 @@ body {
   cursor: pointer;
 }
 
-/* ---------- SIDE MENU ---------- */
+/* ---------- SIDE MENU (FINAL) ---------- */
 
 .side-menu {
   position: fixed;
@@ -77,11 +77,15 @@ body {
   left: -300px;
   width: 260px;
   height: 100%;
-  background: rgba(20, 20, 20, 0.95);
-  background: var(--card);
+  background: rgba(0, 0, 0, 0.95);  /* TAM KOYU – ŞEFFAFLIK YOK */
   padding: 25px;
-  transition: 0.3s;
+  transition: 0.3s ease;
   border-right: 1px solid var(--border);
+  z-index: 9999; /* ÜSTTE OLSUN */
+}
+
+:root[data-theme="light"] .side-menu {
+  background: rgba(255, 255, 255, 0.96); /* LIGHT TEMA İÇİN */
 }
 
 .side-menu.open {
@@ -94,6 +98,7 @@ body {
   border: none;
   color: var(--text);
   cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .side-menu a {
@@ -103,6 +108,7 @@ body {
   color: var(--text);
   text-decoration: none;
 }
+
 
 /* ---------- HOME PAGE ---------- */
 
