@@ -650,49 +650,6 @@ a {
 .placeorder-btn:hover {
   opacity: 0.85;
 }
-
-/* ================= RIGHT SIDE ORDER ITEMS ================= */
-
-.checkout-summary {
-  flex: 1;
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 25px;
-  border-radius: 14px;
-  height: fit-content;
-}
-
-.checkout-summary h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.checkout-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
-/* 🔥 Checkout ürün foto KÜÇÜK */
-.co-img {
-  width: 55px;
-  height: 55px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Ürün yazıları */
-.checkout-item div p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.checkout-item div p:last-child {
-  font-weight: 600;
-  font-size: 15px;
-}
 .search-box {
     width: 100%;
     padding: 12px 14px;
@@ -819,4 +776,72 @@ a {
     justify-content: center !important;
     flex-wrap: wrap;
     gap: 20px;
+}
+/* ===================== */
+/*   CHECKOUT SUMMARY    */
+/* ===================== */
+
+.checkout-summary {
+    background: #111;
+    border: 1px solid #333;
+    padding: 22px 26px;
+    border-radius: 14px;
+    width: 300px;
+    color: #fff;
+}
+
+.checkout-summary h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: 0.3px;
+}
+
+/* Ürün üst kısmı */
+.summary-product {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.summary-product img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.summary-product-info h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.summary-product-info p {
+    margin: 2px 0;
+    font-size: 14px;
+    color: #bbb;
+}
+
+/* Alt çizgili bölümler */
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.summary-line span:first-child {
+    color: #aaa;
+}
+
+.summary-total {
+    border-top: 1px solid #333;
+    margin-top: 15px;
+    padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+    font-weight: 700;
 }
