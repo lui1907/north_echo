@@ -766,3 +766,62 @@ a {
     height: 180px;
   }
 }
+/* ---------- CATEGORY LAYOUT ---------- */
+
+.category-container {
+  max-width: 1300px;
+  margin: 40px auto;
+  display: flex;
+  gap: 40px;
+  padding: 0 40px;
+}
+
+/* SOL FİLTRELER */
+.filters {
+  width: 220px;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  height: fit-content;
+}
+
+.filters h3 {
+  margin-bottom: 15px;
+}
+
+.filters h4 {
+  margin: 15px 0 10px;
+  font-size: 18px;
+}
+
+.filters label {
+  display: block;
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+/* SAĞ İÇERİK */
+.category-main {
+  flex: 1;
+}
+
+.category-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.category-search {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
