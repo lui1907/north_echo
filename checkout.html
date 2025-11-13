@@ -1,11 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Checkout — North Echo</title>
+<link rel="stylesheet" href="style.css" />
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+</head>
+<body>
 
-<html><body><h1>Checkout</h1>
-<form>
-<input placeholder='Name'/><br/>
-<input placeholder='Email'/><br/>
-<textarea placeholder='Address'></textarea><br/>
-<button id='payBtn'>Pay</button>
-</form>
-<script src='stripe.js'></script>
-<script src='cart.js'></script>
-</body></html>
+<header class="header">
+  <div class="logo">NORTH ECHO</div>
+  <div class="hamburger" id="menuBtn">☰</div>
+  <button id="themeToggle" class="theme-btn">○</button>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<main class="checkout-page">
+  <h1>Checkout</h1>
+
+  <div class="checkout-container">
+
+    <!-- LEFT SIDE: Contact Info -->
+    <form class="checkout-form">
+      <label>Full Name</label>
+      <input type="text" id="fullName" required />
+
+      <label>Email</label>
+      <input type="email" id="email" required />
+
+      <label>Address</label>
+      <textarea id="address" required></textarea>
+
+      <label>Note (Optional)</label>
+      <textarea id="note"></textarea>
+    </form>
+
+    <!-- RIGHT SIDE: Order Summary -->
+    <div class="order-summary">
+      <h2>Your Order</h2>
+      <div id="orderItems"></div>
+
+      <p class="summary-total">
+        Total: <span id="orderTotal">0€</span>
+      </p>
+
+      <button class="hero-btn" onclick="fakePay()">Complete Order</button>
+
+      <p style="font-size: 12px; opacity: .7;">
+        *Stripe gerçek ödeme sistemi sonradan eklenebilir.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<script>
+function fakePay() {
+    alert("Order completed (demo).");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const orderItems = document.getElementById("orderItems");
+    const orderTotal = document.getElementById("orderTotal");
+
+    let total = 0;
+
+    cart.forEach(item => {
+        const p = document.createElement("p");
+        p.innerHTML = `${item.qty} × ${item.name} (${item.size}) — ${item.price * item.qty}€`;
+        orderItems.appendChild(p);
+        total += item.price * item.qty;
+    });
+
+    orderTotal.textContent = total + "€";
+});
+</script>
+
+</body>
+</html>
