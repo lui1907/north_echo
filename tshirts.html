@@ -13,19 +13,18 @@
 
 <body>
 
-<!-- HEADER -->
+<!-- HEADER (DEĞİŞMEDİ) -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
-  <a href="tshirts.html" class="page-title">T-SHIRTS</a>
+  <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <input type="text" class="search-box" placeholder="Search...">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <button id="themeToggle" class="theme-btn">○</button>
   </div>
 </header>
 
-<!-- SIDE MENU -->
+<!-- SIDE MENU (DEĞİŞMEDİ) -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -34,10 +33,12 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- CONTENT -->
-<div class="category-layout">
 
-  <!-- LEFT FILTERS -->
+
+<!-- ⭐⭐ CATEGORY CONTENT AREA ⭐⭐ -->
+<section class="category-container">
+
+  <!-- SOL TARAF: Filtreler -->
   <aside class="filters">
     <h3>Filters</h3>
 
@@ -55,9 +56,20 @@
     <label><input type="checkbox"> 30€ - 40€</label>
   </aside>
 
-  <!-- PRODUCTS -->
-  <main class="product-list">
 
+
+  <!-- SAĞ TARAF -->
+  <main class="category-main">
+
+    <!-- ÜSTTE ORTADA BAŞLIK -->
+    <h1 class="category-title">T-SHIRTS</h1>
+
+    <!-- SAĞ ÜSTTE ARAMA KUTUSU -->
+    <div class="category-search">
+      <input type="text" class="search-box" placeholder="Search products...">
+    </div>
+
+    <!-- ÜRÜNLER -->
     <div class="product-grid">
 
       <a href="gray-printed.html" class="product-card">
@@ -94,7 +106,28 @@
 
   </main>
 
-</div>
+</section>
+
+
+
+<!-- GERÇEK ARAMA FONKSİYONU -->
+<script>
+const searchInput = document.querySelector(".search-box");
+const productCards = document.querySelectorAll(".product-card");
+
+searchInput.addEventListener("input", () => {
+  const value = searchInput.value.toLowerCase();
+
+  productCards.forEach(card => {
+    const name = card.querySelector("h3").textContent.toLowerCase();
+    const price = card.querySelector("p").textContent.toLowerCase();
+
+    card.style.display = (name.includes(value) || price.includes(value)) 
+      ? "block" 
+      : "none";
+  });
+});
+</script>
 
 </body>
 </html>
