@@ -402,8 +402,10 @@ a {
 .recommended-box {
   width: 100%;
   max-width: 900px;
-  margin: 120px auto 30px;   /* 🔥 50 → 120 yaptım, aşağı indi */
-  padding: 0 20px;
+  padding-top: 120px !important;  /* 🔥 aşağı iter */
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0 auto 30px !important;
 }
 
 
@@ -799,7 +801,4 @@ a {
 .product-card p {
     font-size: 16px;               /* 🔥 fiyat daha okunaklı */
     margin-top: 4px;
-}
-.product-page + .recommended-box {
-    margin-top: 160px !important;
 }
