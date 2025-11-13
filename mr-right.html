@@ -1,76 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Right Tee — North Echo</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mr. Right T-Shirt — North Echo</title>
+
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 </head>
 <body>
 
-<div class="header">
-    <a href="index.html" class="logo">North Echo</a>
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
 </div>
 
-<!-- PRODUCT PAGE -->
-<div class="product-page">
+<main class="product-page">
 
-    <!-- SOL TARAF -->
-    <div class="product-left">
-        <img src="assets/mr-right/main.jpg" id="mainImage" class="product-main-img">
+  <!-- SOL TARAF -->
+  <div class="product-left">
+    <img id="mrMainImg" class="product-main-img"
+         src="assets/mr-right/main.jpg"
+         alt="Mr. Right T-Shirt">
 
-        <div class="product-thumbnails">
-            <img src="assets/mr-right/main.jpg" onclick="changeImage('assets/mr-right/main.jpg')">
-            <img src="assets/mr-right/1.jpg" onclick="changeImage('assets/mr-right/1.jpg')">
-            <img src="assets/mr-right/2.jpg" onclick="changeImage('assets/mr-right/2.jpg')">
-        </div>
+    <div class="product-thumbnails">
+      <img src="assets/mr-right/main.jpg"
+           onclick="setMrImg('assets/mr-right/main.jpg')" alt="">
+      <img src="assets/mr-right/1.jpg"
+           onclick="setMrImg('assets/mr-right/1.jpg')" alt="">
+      <img src="assets/mr-right/2.jpg"
+           onclick="setMrImg('assets/mr-right/2.jpg')" alt="">
+    </div>
+  </div>
+
+  <!-- SAĞ TARAF -->
+  <div class="product-right">
+    <h1 class="product-title">Mr. Right T-Shirt</h1>
+    <p class="price">20€</p>
+
+    <p class="product-desc">
+      Minimal Mr. Right print, high-quality cotton fabric and a comfortable everyday fit.
+    </p>
+
+    <!-- BEDEN -->
+    <div class="size-box">
+      <label for="mrSize">Size</label>
+      <select id="mrSize">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
     </div>
 
-    <!-- SAĞ TARAF -->
-    <div class="product-right">
-        <h2 class="product-title">Mr. Right Tee</h2>
-        
-        <!-- FİYAT DÜZELTİLDİ -->
-        <p class="price">20€</p>
-
-        <label>Beden:</label>
-        <select id="sizeSelect">
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-        </select>
-
-        <button class="add-cart-btn" onclick="addToCart('Mr. Right Tee', 20, 'assets/mr-right/main.jpg')">
-            Add to Cart
-        </button>
+    <!-- ADET -->
+    <div class="qty-box">
+      <span>Quantity</span>
+      <button type="button" onclick="changeMrQty(-1)">-</button>
+      <span id="mrQty">1</span>
+      <button type="button" onclick="changeMrQty(1)">+</button>
     </div>
 
-</div>
+    <!-- SEPETE EKLE -->
+    <button class="add-cart-btn" type="button" onclick="addMrToCart()">
+      Add to Cart
+    </button>
+  </div>
+
+</main>
+
+<!-- RECOMMENDED -->
+<section class="recommended-box">
+  <h2 class="rec-title">You May Also Like</h2>
+  <div class="rec-grid">
+
+    <a class="rec-card" href="gray-printed.html">
+      <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="">
+      <h3>Gray Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="black-printed.html">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="">
+      <h3>Black Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="white-printed.html">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="">
+      <h3>White Printed T-Shirt</h3>
+    </a>
+
+  </div>
+</section>
 
 <script>
-function changeImage(src) {
-    document.getElementById("mainImage").src = src;
+let mrCurrentQty = 1;
+let mrCurrentImg = "assets/mr-right/main.jpg";
+
+function setMrImg(url) {
+  mrCurrentImg = url;
+  document.getElementById("mrMainImg").src = url;
 }
 
-function addToCart(name, price, image) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+function changeMrQty(delta) {
+  mrCurrentQty += delta;
+  if (mrCurrentQty < 1) mrCurrentQty = 1;
+  document.getElementById("mrQty").textContent = mrCurrentQty;
+}
 
-    const existing = cart.find(item => item.name === name);
-
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({
-            name: name,
-            price: price,
-            image: image,
-            quantity: 1
-        });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
+function addMrToCart() {
+  const size = document.getElementById("mrSize").value;
+  addToCart("Mr. Right T-Shirt", 20, mrCurrentImg, size, mrCurrentQty);
 }
 </script>
 
