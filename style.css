@@ -758,3 +758,13 @@ a {
     font-size: 18px;
     font-weight: 600;
 }
+.tshirt-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;   /* 🔥 HİZALAMA BURADA OLDU */
+    gap: 40px;
+}
+
+.filter-side {
+    margin-top: 0 !important;   /* 🔥 ÜSTTEN BOŞLUK YOK */
+}
