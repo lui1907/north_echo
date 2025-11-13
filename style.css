@@ -11,6 +11,11 @@ body {
   color: var(--text);
   margin: 0;
   font-family: "Inter", sans-serif;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+a {
+  color: var(--text);
 }
 
 /* ---------- HEADER ---------- */
