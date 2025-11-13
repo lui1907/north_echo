@@ -121,8 +121,9 @@ document.getElementById("designForm").addEventListener("submit", async function(
             body: JSON.stringify(payload)
         });
 
-        const result = await response.text();
-        document.getElementById("status").textContent = result;
+        const json = await response.json();
+document.getElementById("status").textContent = json.success ? "Uploaded successfully!" : "Error!";
+
     };
 
     reader.readAsDataURL(file);
