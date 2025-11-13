@@ -742,7 +742,8 @@ a {
 
 .category-card:hover {
   transform: scale(1.04);
-  background: #1a1a1a;
+  background: var(--card); /* tema rengine göre koyu/açık */
+  border-color: var(--text); /* hover'da premium efekt için */
 }
 
 .category-card img {
