@@ -730,12 +730,12 @@ a {
 }
 
 .category-card {
-  background: #111;
-  border: 1px solid #222;
+  background: var(--card);      /* ❗ siyah sabit değildi → değiştirildi */
+  border: 1px solid var(--border);
   padding: 18px;
   border-radius: 12px;
   text-decoration: none;
-  color: #fff;
+  color: var(--text);           /* ❗ yazı siyah temada görünür olacak */
   transition: 0.25s;
   text-align: center;
 }
