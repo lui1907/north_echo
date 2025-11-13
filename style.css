@@ -583,3 +583,52 @@ a {
     max-width: 100%;
   }
 }
+/* ========================================================= */
+/* ============= FIX: CART & CHECKOUT IMAGES =============== */
+/* ========================================================= */
+
+/* CART PAGE */
+.cart-item img,
+.cart-img {
+  width: 90px !important;     /* 🔥 Küçük, düzgün boyut */
+  height: 90px !important;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* CART ITEM BOX */
+.cart-item-box {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* CHECKOUT PAGE */
+.co-img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Checkout ürün listesi hizalama */
+.co-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* Responsive düzeltme */
+@media(max-width: 600px) {
+  .cart-item img,
+  .cart-img {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  .co-img {
+    width: 65px !important;
+    height: 65px !important;
+  }
+}
