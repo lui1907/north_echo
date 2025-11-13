@@ -879,3 +879,13 @@ a {
 .footer-link:hover {
     color: #82c3ff;
 }
+.footer a,
+.footer-link {
+    color: #fff !important;     /* yazı beyaz */
+    text-decoration: none !important; /* alt çizgi yok */
+}
+
+.footer a:hover,
+.footer-link:hover {
+    opacity: 0.7;               /* hover efekti */
+}
