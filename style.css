@@ -1,11 +1,20 @@
-/* ---------- GLOBAL ---------- */
-:root {
+/* ---------- THEME VARIABLES ---------- */
+
+:root[data-theme="dark"] {
   --bg: #000;
   --text: #fff;
   --card: #111;
   --border: #222;
-  --bg2: #111;
 }
+
+:root[data-theme="light"] {
+  --bg: #fff;
+  --text: #000;
+  --card: #f2f2f2;
+  --border: #ccc;
+}
+
+/* ---------- GLOBAL ---------- */
 
 body {
   background: var(--bg);
@@ -14,107 +23,64 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-
-
 /* ---------- HEADER ---------- */
+
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 18px 26px;
+  padding: 18px 30px;
   border-bottom: 1px solid var(--border);
 }
 
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.hamburger {
+  cursor: pointer;
+  font-size: 24px;
+  color: var(--text);
+}
+
 .right-buttons {
-  position: absolute;
-  right: 26px;
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
 .cart-icon {
-  text-decoration: none;
   color: var(--text);
-  font-size: 18px;
-}
-
-.cart-icon #cartCount {
-  font-weight: 700;
-  margin-left: 4px;
-}
-.checkout-container {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.checkout-btn {
-  display: inline-block;
-  padding: 14px 28px;
-  background: #fff;
-  color: #000;
-  border-radius: 8px;
-  font-weight: 600;
   text-decoration: none;
-  font-size: 18px;
-  transition: 0.25s;
-}
-
-.checkout-btn:hover {
-  opacity: 0.85;
-}
-
-
-/* Sol hamburger */
-.hamburger {
-  font-size: 26px;
-  cursor: pointer;
-  position: absolute;
-  left: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Logo ortada */
-.logo {
-  font-weight: 700;
   font-size: 20px;
-  letter-spacing: 0.12em;
-  color: var(--text) !important;
-  text-decoration: none;
 }
 
-/* Sağ tema tuşu */
 .theme-btn {
-  position: absolute;
-  right: 26px;
-  top: 50%;
-  transform: translateY(-50%);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: none;
   color: var(--text);
   cursor: pointer;
 }
 
-
 /* ---------- SIDE MENU ---------- */
+
 .side-menu {
   position: fixed;
   top: 0;
-  left: -320px;   /* TAM DIŞARIDA KALIR – hamburgeri engellemez */
+  left: -300px;
   width: 260px;
-  height: 100vh;
-  background: var(--bg2);
+  height: 100%;
+  background: var(--card);
   padding: 25px;
-  transition: 0.35s ease;
+  transition: 0.3s;
   border-right: 1px solid var(--border);
-  z-index: 999;
 }
 
 .side-menu.open {
@@ -127,8 +93,6 @@ body {
   border: none;
   color: var(--text);
   cursor: pointer;
-  margin-bottom: 20px;
-  display: block;
 }
 
 .side-menu a {
@@ -139,9 +103,8 @@ body {
   text-decoration: none;
 }
 
+/* ---------- HOME PAGE ---------- */
 
-
-/* ---------- HOME HERO ---------- */
 .home-hero {
   padding: 80px 40px;
   display: flex;
@@ -169,8 +132,7 @@ body {
 .hero-title {
   font-size: 48px;
   font-weight: 700;
-  line-height: 1.15;
-  margin: 0 0 20px;
+  margin-bottom: 20px;
 }
 
 .hero-sub {
@@ -208,18 +170,12 @@ body {
 
 .hero-btn.alt {
   background: transparent;
-  border: 1px solid #fff;
-  color: #fff;
+  border: 1px solid var(--text);
+  color: var(--text);
 }
-
-.hero-btn.alt:hover {
-  background: #fff;
-  color: #000;
-}
-
-
 
 /* ---------- CATEGORY PAGE ---------- */
+
 .category-page {
   padding: 60px 40px;
 }
@@ -228,6 +184,8 @@ body {
   font-size: 36px;
   margin-bottom: 30px;
 }
+
+/* ---------- CATEGORY GRID (PREMIUM) ---------- */
 
 .product-grid {
   display: grid;
@@ -256,9 +214,18 @@ body {
   margin-bottom: 10px;
 }
 
+.product-card h3 {
+  font-size: 18px;
+  margin: 8px 0 4px;
+}
 
+.product-card p {
+  opacity: 0.8;
+  font-size: 16px;
+}
 
-/* ---------- PRODUCT PAGE (SLIDER) ---------- */
+/* ---------- PRODUCT PAGE ---------- */
+
 .product-page {
   padding: 60px 40px;
   display: flex;
@@ -269,7 +236,7 @@ body {
   max-width: 400px;
 }
 
-.product-gallery img.product-img {
+.product-img {
   width: 100%;
   border-radius: 10px;
 }
@@ -310,69 +277,29 @@ body {
 }
 
 .dot.active {
-  background: #fff;
+  background: var(--text);
 }
 
-
-
-/* ---------- CART PAGE ---------- */
-.cart-page {
-  padding: 60px 40px;
+.price {
+  font-size: 24px;
+  margin: 10px 0 20px;
 }
 
-.cart-items {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.cart-item {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-.cart-summary {
-  margin-top: 30px;
-  font-size: 20px;
-}
-
-
-
-/* ---------- FOOTER ---------- */
-.footer {
-  text-align: center;
-  padding: 40px 30px;
-  background: #111;
-  margin-top: 60px;
-  border-top: 1px solid var(--border);
-}
-
-.footer-logo {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.footer a {
-  color: #fff;
-  text-decoration: none;
-  border-bottom: 1px solid;
-  margin-top: 10px;
-}
 .add-cart {
-  padding: 14px 24px;
+  margin-top: 20px;
+  padding: 12px 24px;
   background: #fff;
-  color: #000;
   border: none;
+  color: #000;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  margin-top: 20px;
 }
 
-.add-cart:hover {
-  opacity: 0.85;
+/* ---------- CART PAGE ---------- */
+
+.cart-page {
+  padding: 60px 40px;
 }
 
 .cart-item {
@@ -407,7 +334,7 @@ body {
   font-weight: 600;
 }
 
-/* ---------- CHECKOUT PAGE ---------- */
+/* ---------- CHECKOUT PAGE (PREMIUM) ---------- */
 
 .checkout-title {
   text-align: center;
@@ -437,9 +364,9 @@ body {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #333;
-  background: #111;
-  color: #fff;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
   font-size: 15px;
 }
 
@@ -452,20 +379,20 @@ body {
   border-radius: 8px;
   cursor: pointer;
   font-size: 17px;
+  transition: 0.2s;
 }
 
 .payment-btn:hover {
   opacity: 0.85;
 }
 
-/* ORDER SUMMARY */
 .checkout-summary {
   width: 300px;
-  background: #111;
-  border: 1px solid #333;
+  background: var(--card);
+  border: 1px solid var(--border);
   padding: 18px;
   border-radius: 12px;
-  height: fit-content; /* KART AŞAĞIYA AKMASIN */
+  height: fit-content;
 }
 
 .checkout-summary h2 {
@@ -495,54 +422,34 @@ body {
   text-align: right;
 }
 
-/* mobile */
 @media (max-width: 900px) {
   .checkout-container {
     flex-direction: column;
     align-items: center;
   }
-
+  
   .checkout-summary {
     width: 100%;
     max-width: 380px;
   }
 }
-/* ---------- CATEGORY PRODUCT GRID ---------- */
 
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 30px;
-  margin-top: 30px;
-}
+/* ---------- FOOTER ---------- */
 
-.product-card {
+.footer {
+  text-align: center;
+  padding: 40px 30px;
   background: var(--card);
-  padding: 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  color: var(--text);
-  border: 1px solid var(--border);
-  transition: 0.25s;
+  border-top: 1px solid var(--border);
 }
 
-.product-card:hover {
-  background: #222;
-  transform: scale(1.03);
-}
-
-.product-card img {
-  width: 100%;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
-
-.product-card h3 {
+.footer-logo {
   font-size: 18px;
-  margin: 8px 0 4px;
+  font-weight: 600;
 }
 
-.product-card p {
-  opacity: 0.8;
-  font-size: 16px;
+.footer a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid;
 }
