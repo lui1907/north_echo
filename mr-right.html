@@ -1,66 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Right Printed T-Shirt — North Echo</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mr. Right Printed T-Shirt — North Echo</title>
+
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 </head>
 <body>
 
-    <header>
-        <a href="index.html" class="logo">North Echo</a>
-    </header>
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
+</header>
 
-    <main class="product-page">
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
+</div>
 
-        <div class="product-images">
-            <img src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg" alt="Mr. Right Tee 1">
-            <img src="https://i.ibb.co/4gw5r0WQ/mr-right-tshirt3.jpg" alt="Mr. Right Tee 2">
-            <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" alt="Mr. Right Tee 3">
-        </div>
+<!-- ================= PRODUCT PAGE ================= -->
+<main class="product-page">
 
-        <div class="product-info">
-            <h1>Mr. Right Printed T-Shirt</h1>
-            <p class="price">29.90€</p>
+  <!-- SOL TARAF -->
+  <div class="product-left">
 
-            <p class="description">
-                Minimalist baskılı tasarım. Yumuşak dokulu premium kumaş ile üretilmiştir.
-                Günlük kullanım için mükemmel bir tercihtir.
-            </p>
+    <!-- 🔥 ANA FOTO -->
+    <img id="mrMainImg" class="product-main-img"
+         src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg"
+         alt="Mr. Right Printed T-Shirt">
 
-            <button class="add-to-cart">Add to Cart</button>
-        </div>
+    <!-- 🔥 THUMBNAILS -->
+    <div class="product-thumbnails">
+      <img src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg"
+           onclick="setMrImg('https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg')" alt="">
 
-    </main>
+      <img src="https://i.ibb.co/4gw5r0WQ/mr-right-tshirt3.jpg"
+           onclick="setMrImg('https://i.ibb.co/4gw5r0WQ/mr-right-tshirt3.jpg')" alt="">
 
-    <section class="suggestions">
-        <h2>You May Also Like</h2>
+      <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg"
+           onclick="setMrImg('https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg')" alt="">
+    </div>
 
-        <div class="suggestion-items">
+  </div>
 
-            <a href="gray-printed-tee.html" class="suggestion-item">
-                <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed Tee">
-                <p>Gray Printed T-Shirt</p>
-            </a>
+  <!-- SAĞ TARAF -->
+  <div class="product-right">
 
-            <a href="black-printed-tee.html" class="suggestion-item">
-                <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed Tee">
-                <p>Black Printed T-Shirt</p>
-            </a>
+    <h1 class="product-title">Mr. Right Printed T-Shirt</h1>
+    <p class="price">20€</p>
 
-            <a href="white-printed-tee.html" class="suggestion-item">
-                <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed Tee">
-                <p>White Printed T-Shirt</p>
-            </a>
+    <p class="product-desc">
+      Clean graphic print, soft cotton touch and a regular fit suitable for daily wear.
+    </p>
 
-            <a href="trust-no-one-tee.html" class="suggestion-item">
-                <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" alt="Trust No One Tee">
-                <p>Trust No One T-Shirt</p>
-            </a>
+    <!-- BEDEN SEÇİMİ -->
+    <div class="size-box">
+      <label for="mrSize">Size</label>
+      <select id="mrSize">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+    </div>
 
-        </div>
-    </section>
+    <!-- ADET -->
+    <div class="qty-box">
+      <span>Quantity</span>
+      <button type="button" onclick="changeMrQty(-1)">-</button>
+      <span id="mrQty">1</span>
+      <button type="button" onclick="changeMrQty(1)">+</button>
+    </div>
+
+    <!-- SEPETE EKLE -->
+    <button class="add-cart-btn" type="button" onclick="addMrToCart()">
+      Add to Cart
+    </button>
+
+  </div>
+
+</main>
+
+
+<!-- ================= RECOMMENDED ================= -->
+<section class="recommended-box">
+  <h2 class="rec-title">You May Also Like</h2>
+
+  <div class="rec-grid">
+
+    <a class="rec-card" href="gray-printed.html">
+      <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" alt="Gray Printed T-Shirt">
+      <h3>Gray Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="black-printed.html">
+      <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" alt="Black Printed T-Shirt">
+      <h3>Black Printed T-Shirt</h3>
+    </a>
+
+    <a class="rec-card" href="white-printed.html">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="White Printed T-Shirt">
+      <h3>White Printed T-Shirt</h3>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ================= SCRIPTLER ================= -->
+<script>
+let mrCurrentQty = 1;
+let mrCurrentImg = "https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg";
+
+function setMrImg(url) {
+  mrCurrentImg = url;
+  document.getElementById("mrMainImg").src = url;
+}
+
+function changeMrQty(delta) {
+  mrCurrentQty += delta;
+  if (mrCurrentQty < 1) mrCurrentQty = 1;
+  document.getElementById("mrQty").textContent = mrCurrentQty;
+}
+
+function addMrToCart() {
+  const size = document.getElementById("mrSize").value;
+  addToCart("Mr. Right Printed T-Shirt", 20, mrCurrentImg, size, mrCurrentQty);
+}
+</script>
 
 </body>
 </html>
