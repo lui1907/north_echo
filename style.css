@@ -744,3 +744,21 @@ h1, .page-title, .cart-title, .checkout-title {
 .thumb:hover {
   border-color: var(--text);
 }
+/* === FORCE THUMBNAIL FIX (HER ȘEYİ EZER) === */
+.product-page .thumb {
+  width: 65px !important;
+  height: 65px !important;
+  object-fit: cover !important;
+  border-radius: 6px !important;
+  border: 2px solid transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: inline-block !important;
+}
+
+.product-page .thumb-list {
+  display: flex !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
