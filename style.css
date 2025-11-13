@@ -29,60 +29,21 @@ a {
   text-decoration: none;
 }
 
-/* ========================================= */
-/* ================= HEADER ================ */
-/* ========================================= */
-
+/* ---------- HEADER ---------- */
 .header {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid var(--border);
+
   position: relative;
+  z-index: 2000;          /* ✅ MENÜ + HERO ÜSTÜNDE */
+  background: var(--bg);  /* açık temada da şerit görünsün */
 }
 
-.hamburger {
-  position: absolute;
-  left: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 26px;
-  cursor: pointer;
-}
 
-.logo {
-  font-weight: 700;
-  font-size: 22px;
-}
-
-.right-buttons {
-  position: absolute;
-  right: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 20px;
-}
-
-.cart-icon {
-  font-size: 20px;
-}
-
-.theme-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text);
-  cursor: pointer;
-}
-
-/* ========================================= */
-/* =============== SIDE MENU =============== */
-/* ========================================= */
-
+/* ---------- SIDE MENU ---------- */
 .side-menu {
   position: fixed;
   top: 0;
@@ -91,10 +52,13 @@ a {
   height: 100%;
   background: var(--card);
   padding: 25px;
-  border-right: 1px solid var(--border);
   transition: 0.35s ease;
+  border-right: 1px solid var(--border);
   pointer-events: none;
+
+  z-index: 3000;   /* ✅ HERO, BANNER, HER ŞEYİN ÜSTÜNDE */
 }
+
 
 .side-menu.open {
   left: 0;
