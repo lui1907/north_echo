@@ -723,3 +723,24 @@ a {
 h1, .page-title, .cart-title, .checkout-title {
   margin-top: 80px !important;
 }
+/* ---- FIX THUMBNAIL SIZE ---- */
+.thumb-list {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  justify-content: center; /* ortala */
+}
+
+.thumb {
+  width: 70px !important;
+  height: 70px !important;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s;
+}
+
+.thumb:hover {
+  border-color: var(--text);
+}
