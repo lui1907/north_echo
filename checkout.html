@@ -36,20 +36,24 @@
 
   <div class="checkout-container">
 
-    <!-- LEFT FORM -->
+    <!-- LEFT SIDE — FORM -->
     <div class="checkout-form">
+      <input type="text" placeholder="Full Name">
+      <input type="text" placeholder="Address">
+      <input type="text" placeholder="City">
+      <input type="text" placeholder="Postal Code">
+      <input type="text" placeholder="Phone Number">
+      <textarea placeholder="Additional Notes" rows="4"></textarea>
 
-      <input type="text" placeholder="Full Name" />
-      <input type="text" placeholder="Address" />
-      <input type="email" placeholder="Email" />
-      <textarea placeholder="Notes (optional)" rows="4"></textarea>
-
-      <button class="payment-btn">Complete Payment</button>
-
+      <button class="payment-btn">Proceed to Payment</button>
     </div>
 
-    <!-- RIGHT SUMMARY -->
-    <div class="checkout-summary" id="checkoutSummary"></div>
+    <!-- RIGHT SIDE — ORDER SUMMARY -->
+    <div class="checkout-summary" id="summaryBox">
+      <h2>Your Order</h2>
+      <div id="summaryItems"></div>
+      <div class="summary-total" id="summaryTotal"></div>
+    </div>
 
   </div>
 
@@ -57,35 +61,35 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    updateCartCount();
 
-    const summaryEl = document.getElementById("checkoutSummary");
-    const cart = getCart();
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const itemsBox = document.getElementById("summaryItems");
+    const totalBox = document.getElementById("summaryTotal");
 
     if (cart.length === 0) {
-        summaryEl.innerHTML = "<p>Your cart is empty.</p>";
+        itemsBox.innerHTML = "<p>Your cart is empty.</p>";
+        totalBox.innerHTML = "";
         return;
     }
 
     let total = 0;
-    let html = `<h2>Order Summary</h2>`;
 
     cart.forEach(item => {
-        html += `
+        itemsBox.innerHTML += `
             <div class="summary-item">
-                <img src="${item.image}" />
+                <img src="${item.image}">
                 <div>
-                  <strong>${item.name}</strong><br>
-                  <span>${item.quantity} × ${item.price}€</span>
+                    <strong>${item.name}</strong><br>
+                    Size: ${item.size}<br>
+                    ${item.price}€ × ${item.quantity}
                 </div>
             </div>
         `;
         total += item.price * item.quantity;
     });
 
-    html += `<div class="summary-total">Total: ${total}€</div>`;
-
-    summaryEl.innerHTML = html;
+    totalBox.textContent = "Total: " + total + "€";
 });
 </script>
 
