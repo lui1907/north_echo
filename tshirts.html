@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>T-Shirts — North Echo</title>
 
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
@@ -36,7 +36,7 @@
 <!-- PAGE TITLE -->
 <h1 class="page-title">T-SHIRTS</h1>
 
-<!-- MAIN LAYOUT -->
+<!-- MAIN PAGE LAYOUT -->
 <div class="tshirt-layout">
 
   <!-- SOL — ÜRÜNLER -->
@@ -44,32 +44,32 @@
 
     <div class="product-grid" id="productList">
 
-      <a href="gray-printed.html" class="product-card">
-        <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" />
+      <a href="gray-printed.html" class="product-card" data-price="20">
+        <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
         <h3>Gray Printed T-Shirt</h3>
         <p>20€</p>
       </a>
 
-      <a href="black-printed.html" class="product-card">
-        <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" />
+      <a href="black-printed.html" class="product-card" data-price="20">
+        <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg">
         <h3>Black Printed T-Shirt</h3>
         <p>20€</p>
       </a>
 
-      <a href="mr-right.html" class="product-card">
-        <img src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg" />
+      <a href="mr-right.html" class="product-card" data-price="20">
+        <img src="https://i.ibb.co/cSgCwzjp/mr-right-tshirt2.jpg">
         <h3>Mr Right T-Shirt</h3>
         <p>20€</p>
       </a>
 
-      <a href="white-printed.html" class="product-card">
-        <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" />
+      <a href="white-printed.html" class="product-card" data-price="20">
+        <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
         <h3>White Printed T-Shirt</h3>
         <p>20€</p>
       </a>
 
-      <a href="trust-no-one.html" class="product-card">
-        <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" />
+      <a href="trust-no-one.html" class="product-card" data-price="20">
+        <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
         <h3>Trust No One T-Shirt</h3>
         <p>20€</p>
       </a>
@@ -81,48 +81,65 @@
   <!-- SAĞ — ARAMA + FİLTRE -->
   <div class="filter-side">
 
-    <!-- ARAMA KUTUSU (DOĞRU YERDE) -->
-    <input
-      type="text"
-      id="searchInput"
-      class="search-box"
-      placeholder="Search products..."
-    />
+    <!-- ARAMA KUTUSU -->
+    <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
 
-    <!-- FILTER BOX -->
+    <!-- FİLTRE KUTUSU -->
     <div class="filter-box">
       <h3>Filters</h3>
 
       <h4>Size</h4>
-      <label class="filter-option"><input type="checkbox" /> S</label>
-      <label class="filter-option"><input type="checkbox" /> M</label>
-      <label class="filter-option"><input type="checkbox" /> L</label>
-      <label class="filter-option"><input type="checkbox" /> XL</label>
+      <label class="filter-option"><input type="checkbox" id="size-s"> S</label>
+      <label class="filter-option"><input type="checkbox" id="size-m"> M</label>
+      <label class="filter-option"><input type="checkbox" id="size-l"> L</label>
+      <label class="filter-option"><input type="checkbox" id="size-xl"> XL</label>
 
       <h4>Price</h4>
-      <label class="filter-option"><input type="checkbox" /> Under 25€</label>
-      <label class="filter-option"><input type="checkbox" /> 25€ - 30€</label>
-      <label class="filter-option"><input type="checkbox" /> 30€ - 40€</label>
+      <label class="filter-option"><input type="checkbox" id="price-under-25"> Under 25€</label>
+      <label class="filter-option"><input type="checkbox" id="price-25-30"> 25€ - 30€</label>
+      <label class="filter-option"><input type="checkbox" id="price-30-40"> 30€ - 40€</label>
     </div>
 
   </div>
 
 </div>
 
-<!-- SEARCH SCRIPT -->
+<!-- SEARCH + FILTER SCRIPT -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("searchInput");
+
+  const searchInput = document.getElementById("searchInput");
   const cards = document.querySelectorAll(".product-card");
 
-  input.addEventListener("input", () => {
-    const q = input.value.toLowerCase();
+  const under25 = document.getElementById("price-under-25");
+  const p25_30 = document.getElementById("price-25-30");
+  const p30_40 = document.getElementById("price-30-40");
+
+  searchInput.addEventListener("input", applyFilters);
+  under25.addEventListener("change", applyFilters);
+  p25_30.addEventListener("change", applyFilters);
+  p30_40.addEventListener("change", applyFilters);
+
+  function applyFilters() {
+
+    const q = searchInput.value.toLowerCase();
 
     cards.forEach(card => {
+
       const name = card.querySelector("h3").textContent.toLowerCase();
-      card.style.display = name.includes(q) ? "block" : "none";
+      const price = parseInt(card.dataset.price);
+
+      let matchesSearch = name.includes(q);
+      let matchesPrice = true;
+
+      if (under25.checked) matchesPrice = price < 25;
+      if (p25_30.checked) matchesPrice = price >= 25 && price <= 30;
+      if (p30_40.checked) matchesPrice = price > 30 && price <= 40;
+
+      card.style.display = (matchesSearch && matchesPrice) ? "block" : "none";
     });
-  });
+  }
+
 });
 </script>
 
