@@ -321,7 +321,9 @@ a {
 
 .product-img {
   width: 100%;
-  border-radius: 14px;
+  max-width: 420px;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 .add-cart-btn {
