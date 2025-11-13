@@ -13,31 +13,40 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* ---------- HEADER ---------- */
+/* ---------- HEADER (FIXED) ---------- */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.hamburger {
+  font-size: 26px;
+  cursor: pointer;
+  position: absolute;
+  left: 30px;               /* SOLA SABİTLE */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .logo {
   font-weight: 700;
-  font-size: 20px;
-  color: var(--text);
+  font-size: 22px;
   text-decoration: none;
-}
-
-.hamburger {
-  font-size: 24px;
-  cursor: pointer;
+  color: var(--text);
+  margin: 0 auto;           /* ORTALA */
 }
 
 .right-buttons {
   display: flex;
-  align-items: center;
   gap: 20px;
+  position: absolute;
+  right: 30px;              /* SAĞA SABİTLE */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .cart-icon {
@@ -55,6 +64,7 @@ body {
   color: var(--text);
   cursor: pointer;
 }
+
 
 /* ---------- SIDE MENU ---------- */
 .side-menu {
