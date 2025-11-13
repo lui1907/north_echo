@@ -785,3 +785,103 @@ h1, .page-title, .cart-title, .checkout-title {
   margin-top: 0 !important; /* 🔥 En önemli satır */
   padding-top: 0 !important;
 }
+/* ============================================ */
+/* === FINAL PRODUCT PAGE LAYOUT FIX (PERFECT) === */
+/* ============================================ */
+
+.product-page {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 40px;
+
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 70px !important;
+}
+
+/* SOL BÜYÜK FOTO VE THUMBNAIL'LER */
+.product-left {
+    max-width: 420px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-img {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+}
+
+/* Thumbnail'ler */
+.thumb-list {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.thumb {
+    width: 85px !important;
+    height: 85px !important;
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.thumb:hover {
+    border-color: #fff;
+}
+
+/* SAĞ TARAF — ÜRÜN DETAY ALANI */
+.product-right {
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 0 !important;
+}
+
+/* Ürün ismi */
+.product-title {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+/* Fiyat */
+.price {
+    font-size: 22px;
+}
+
+/* Beden seçimi */
+.size-box label {
+    font-size: 16px;
+}
+
+/* Sepete ekle butonu */
+.add-cart-btn {
+    padding: 14px;
+    font-weight: 700;
+    background: #fff;
+    color: #000;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+/* Mobil uyumluluk */
+@media(max-width: 900px) {
+    .product-page {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        margin-top: 40px;
+    }
+
+    .product-right {
+        width: 100%;
+        max-width: 420px;
+    }
+}
