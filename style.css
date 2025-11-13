@@ -1,3 +1,36 @@
+/* LIGHT MODE */
+body.light {
+  --bg: #fff;
+  --text: #000;
+  --card: #f5f5f5;
+  --border: #ddd;
+}
+
+body.light .hero-btn.alt {
+  border-color: #000;
+  color: #000;
+}
+
+/* Menü light mode */
+body.light .side-menu {
+  background: #f5f5f5;
+}
+
+body.light .side-menu a {
+  color: #000;
+}
+
+/* Ürün kartları light */
+body.light .product-card {
+  background: #f5f5f5;
+  color: #000;
+}
+
+body.light .rec-card {
+  background: #f5f5f5;
+  color: #000;
+}
+
 /* ---------- GLOBAL ---------- */
 :root {
   --bg: #000;
