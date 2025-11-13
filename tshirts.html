@@ -1,17 +1,20 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>T-Shirts — North Echo</title>
 
-<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="style.css" />
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 
 </head>
+
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -22,6 +25,7 @@
   </div>
 </header>
 
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -30,100 +34,101 @@
   <a href="cart.html">Cart</a>
 </div>
 
-
+<!-- PAGE TITLE -->
 <h1 class="page-title">T-Shirts</h1>
 
+<!-- MAIN LAYOUT -->
 <div class="tshirt-layout">
 
-    <!-- SAĞDAKİ ARAMA + FİLTRELER -->
-    <div class="filter-side">
+  <!-- SOL: ÜRÜNLER -->
+  <div class="product-area" id="productArea">
 
-        <!-- ARAMA -->
-        <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
+    <div class="product-grid">
 
-        <!-- MODERN FİLTRE KUTUSU -->
-        <div class="filter-box">
+      <!-- Gray -->
+      <a href="gray-printed.html" class="product-card" data-name="gray printed" data-price="20">
+        <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg" />
+        <h3>Gray Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-            <h3>Filters</h3>
+      <!-- Black -->
+      <a href="black-printed.html" class="product-card" data-name="black printed" data-price="20">
+        <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg" />
+        <h3>Black Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-            <!-- PRICE SLIDER -->
-            <h4>Price</h4>
-            <div class="price-slider-box">
-                <input type="range" id="priceRange" min="10" max="50" value="50">
-                <div class="price-value">Max: <span id="priceVal">50</span>€</div>
-            </div>
+      <!-- Mr Right -->
+      <a href="mr-right.html" class="product-card" data-name="mr right" data-price="20">
+        <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg" />
+        <h3>Mr Right T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-            <!-- SIZE FILTER -->
-            <h4>Size</h4>
-            <div class="size-filter-box">
-                <div class="size-buttons">
-                    <div class="size-btn" data-size="S">S</div>
-                    <div class="size-btn" data-size="M">M</div>
-                    <div class="size-btn" data-size="L">L</div>
-                    <div class="size-btn" data-size="XL">XL</div>
-                </div>
-            </div>
+      <!-- White -->
+      <a href="white-printed.html" class="product-card" data-name="white printed" data-price="20">
+        <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" />
+        <h3>White Printed T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
-        </div>
-    </div>
-
-
-    <!-- SOLDAKİ ÜRÜNLER -->
-    <div class="product-area" id="productArea">
-
-        <div class="product-grid">
-
-            <!-- 1 -->
-            <a href="gray-printed.html" class="product-card" data-name="gray printed" data-price="20">
-                <img src="https://i.ibb.co/MxG5r37x/gri-tshirt-1.jpg">
-                <h3>Gray Printed T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <!-- 2 -->
-            <a href="black-printed.html" class="product-card" data-name="black printed" data-price="20">
-                <img src="https://i.ibb.co/W4H2vtH1/black-tshirt-2.jpg">
-                <h3>Black Printed T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <!-- 3 -->
-            <a href="mr-right.html" class="product-card" data-name="mr right" data-price="20">
-                <img src="https://i.ibb.co/PsGHNC1J/mr-right-tshirt1.jpg">
-                <h3>Mr Right T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <!-- 4 -->
-            <a href="white-printed.html" class="product-card" data-name="white printed" data-price="20">
-                <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
-                <h3>White Printed T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-            <!-- 5 -->
-            <a href="trust-no-one.html" class="product-card" data-name="trust no one" data-price="20">
-                <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg">
-                <h3>Trust No One T-Shirt</h3>
-                <p>20€</p>
-            </a>
-
-        </div>
+      <!-- Trust No One -->
+      <a href="trust-no-one.html" class="product-card" data-name="trust no one" data-price="20">
+        <img src="https://i.ibb.co/zqq13SZ/trust-no-one-tshirt.jpg" />
+        <h3>Trust No One T-Shirt</h3>
+        <p>20€</p>
+      </a>
 
     </div>
+
+  </div>
+
+
+  <!-- SAĞ: ARAMA + FİLTRELER -->
+  <div class="filter-side">
+
+    <!-- ARAMA -->
+    <input type="text" id="searchInput" class="search-box" placeholder="Search products..." />
+
+    <!-- FİLTRE KUTUSU -->
+    <div class="filter-box">
+
+      <h3>Filters</h3>
+
+      <!-- PRICE -->
+      <h4>Price</h4>
+      <div class="price-slider-box">
+        <input type="range" id="priceRange" min="10" max="50" value="50" />
+        <div class="price-value">Max: <span id="priceVal">50</span>€</div>
+      </div>
+
+      <!-- SIZE -->
+      <h4>Size</h4>
+      <div class="size-filter-box">
+        <div class="size-buttons">
+          <div class="size-btn" data-size="S">S</div>
+          <div class="size-btn" data-size="M">M</div>
+          <div class="size-btn" data-size="L">L</div>
+          <div class="size-btn" data-size="XL">XL</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
 
-<!-- ==================== FİLTRE + ARAMA JS ==================== -->
+<!-- ========== FİLTRE + ARAMA SCRIPTLERİ ========== -->
 <script>
-
 const cards = document.querySelectorAll(".product-card");
 const searchInput = document.getElementById("searchInput");
 const priceRange = document.getElementById("priceRange");
 const priceVal = document.getElementById("priceVal");
 
 let selectedSize = null;
-
 
 // BEDEN BUTONLARI
 const sizeBtns = document.querySelectorAll(".size-btn");
@@ -144,36 +149,32 @@ sizeBtns.forEach(btn => {
   });
 });
 
-
 // FİYAT SLIDER
 priceRange.addEventListener("input", () => {
   priceVal.textContent = priceRange.value;
   applyFilters();
 });
 
-
 // ARAMA
 searchInput.addEventListener("input", applyFilters);
 
-
-// FİLTRE FONKSİYONU
+// FİLTRE UYGULAMA
 function applyFilters() {
 
   const searchText = searchInput.value.toLowerCase();
   const maxPrice = parseInt(priceRange.value);
 
   cards.forEach(card => {
-
     const name = card.dataset.name.toLowerCase();
     const price = parseInt(card.dataset.price);
 
-    let matchesSearch = name.includes(searchText);
-    let matchesPrice = price <= maxPrice;
+    const matchSearch = name.includes(searchText);
+    const matchPrice = price <= maxPrice;
 
-    // BEDEN ileride ürünlere eklenirse buraya bağlayacağız
-    let matchesSize = true;
+    // Şimdilik tüm ürünler her bedende mevcut
+    const matchSize = true;
 
-    if (matchesSearch && matchesPrice && matchesSize) {
+    if (matchSearch && matchPrice && matchSize) {
       card.style.display = "block";
     } else {
       card.style.display = "none";
