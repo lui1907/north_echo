@@ -709,3 +709,33 @@ a {
   font-weight: 700;
   margin-top: 20px;
 }
+/* --------- SIZE FILTER BUTTONS (S / M / L / XL) --------- */
+
+.size-filter-box {
+  margin-top: 20px;
+}
+
+.size-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.size-btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.size-btn:hover {
+  border-color: var(--text);
+}
+
+.size-btn.active {
+  background: var(--text);
+  color: var(--bg) !important;
+}
