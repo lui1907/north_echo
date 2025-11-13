@@ -1,39 +1,53 @@
-
-<!doctype html><html><head>
-<meta charset='utf-8'/><meta name='viewport' content='width=device-width,initial-scale=1'/>
-<title>Trust No One T‑Shirt</title>
-<link rel='stylesheet' href='style.css'/>
-<script src='menu.js' defer></script>
-<script src='theme.js' defer></script>
-<script src='product.js' defer></script>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Trust No One T-Shirt — North Echo</title>
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
 </head>
 <body>
-<header class='header'><div class='logo'>NORTH ECHO</div><div id='menuBtn' class='hamburger'>☰</div><button id='themeToggle' class='theme-btn'>○</button></header>
-<div id='sideMenu' class='side-menu'><button id='closeMenu' class='close-menu'>×</button>
-<a href='index.html'>Home</a><a href='tshirts.html'>T-Shirts</a><a href='sweatshirts.html'>Sweatshirts</a><a href='cart.html'>Cart</a>
+
+<header class="header">
+  <div class="logo">NORTH ECHO</div>
+  <div class="hamburger" id="menuBtn">☰</div>
+  <button id="themeToggle" class="theme-btn">○</button>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
 </div>
 
-<main class='product-page'>
-<div class='slider' data-images="https://i.ibb.co/mffmnH4/">
-<img id='slideImg' class='slide-img' src='https://i.ibb.co/mffmnH4/'/>
-<div id='dots' class='dots'></div>
-</div>
+<main class="product-page">
 
-<div class='info'>
-<h1>Trust No One T‑Shirt</h1>
-<p class='price'>20€</p>
+  <div class="product-left">
+    <img class="product-img" src="https://i.ibb.co/mffmnH4/"/>
+  </div>
 
-<label>Size:</label>
-<select id='size'><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+  <div class="product-right">
+    <h1>Trust No One T-Shirt</h1>
+    <p class="price">20€</p>
 
-<label>Qty:</label>
-<div class='qty'><button id='minus'>−</button><span id='amount'>1</span><button id='plus'>+</button></div>
+    <label>Size:</label>
+    <select>
+      <option>S</option>
+      <option>M</option>
+      <option>L</option>
+      <option>XL</option>
+    </select>
 
-<button class='add-cart' onclick="addToCart('Trust No One T‑Shirt',20)">Add to Cart</button>
-</div>
+    <div style="margin-top:20px;">
+      <a class="hero-btn" href="#">Add to Cart</a>
+    </div>
+  </div>
+
 </main>
 
-<footer class='footer'><div class='footer-logo'>NORTH ECHO</div>
-<p>North Echo delivers minimalist, high‑quality apparel designed for everyday comfort and style.</p>
-<a href='https://instagram.com/northecho.fi'>Instagram</a></footer>
-</body></html>
+</body>
+</html>
