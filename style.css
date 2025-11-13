@@ -762,7 +762,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: flex-start;   /* 🔥 HİZALAMA BURADA OLDU */
-    gap: 40px;
+    gap: 70px;
 }
 
 .filter-side {
