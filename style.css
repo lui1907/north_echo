@@ -47,21 +47,14 @@ body {
 .side-menu {
   position: fixed;
   top: 0;
-  left: -300px;   /* eskiden -260px idi */
+  left: -300px;        /* tam kapanması için genişletildi */
   width: 260px;
   height: 100%;
   background: #111;
   padding: 25px;
-  border-right: 1px solid var(--border);
   transition: 0.3s;
+  border-right: 1px solid var(--border);
   overflow: hidden;
-}
-
-
-.side-menu a {
-  color: var(--text);
-  text-decoration: none;
-  font-size: 18px;
 }
 
 .close-menu {
@@ -71,6 +64,14 @@ body {
   border: none;
   color: var(--text);
   cursor: pointer;
+}
+
+.side-menu a {
+  display: block;          /* linkler alt alta */
+  margin-bottom: 18px;
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
 }
 
 /* ---------- HOME PAGE HERO ---------- */
@@ -147,6 +148,111 @@ body {
 .hero-btn.alt:hover {
   background: #fff;
   color: #000;
+}
+
+/* ---------- CATEGORY PAGE ---------- */
+.category-page {
+  padding: 60px 40px;
+}
+
+.cat-title {
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+
+.cat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cat-item {
+  background: var(--card);
+  padding: 14px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: 0.25s;
+}
+
+.cat-item:hover {
+  background: #222;
+}
+
+/* ---------- PRODUCT PAGE ---------- */
+.product-page {
+  padding: 60px 40px;
+  display: flex;
+  gap: 60px;
+}
+
+.product-left {
+  flex: 1;
+}
+
+.product-img {
+  max-width: 450px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.product-right {
+  flex: 1;
+}
+
+.price {
+  font-size: 24px;
+  margin: 10px 0 20px;
+}
+
+/* ---------- CART PAGE ---------- */
+.cart-page {
+  padding: 60px 40px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.cart-summary {
+  margin-top: 30px;
+  font-size: 20px;
+}
+
+/* ---------- CHECKOUT ---------- */
+.checkout-page {
+  padding: 60px 40px;
+}
+
+.checkout-container {
+  display: flex;
+  gap: 60px;
+}
+
+.checkout-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.checkout-form input,
+.checkout-form textarea {
+  background: #111;
+  border: 1px solid #333;
+  padding: 12px;
+  color: #fff;
+  border-radius: 6px;
 }
 
 /* ---------- FOOTER ---------- */
