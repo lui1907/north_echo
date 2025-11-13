@@ -93,52 +93,36 @@
     <p id="status"></p>
 </div>
 
-<!-- 🔥 SUBMIT CODE (ÇALIŞAN) -->
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwIBSF13uwFkfukHvAEgvf-k-b6DitVoMOeP-ClhFi18Z0IOGQnW8WX-wX2VtX8gAyEyg/exec";
-
-document.getElementById("designForm").addEventListener("submit", function(e) {
+document.getElementById("designForm").addEventListener("submit", async function(e) {
     e.preventDefault();
-
-    document.getElementById("status").textContent = "Sending...";
 
     const file = document.getElementById("file").files[0];
     const reader = new FileReader();
 
-    reader.onload = async function () {
-        const base64 = reader.result.split(",")[1];
+    reader.onload = async function() {
 
-        const data = {
+        const base64File = reader.result.split(",")[1];
+
+        const payload = {
             mode: "submitDesign",
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
             description: document.getElementById("description").value,
             fileName: file.name,
             fileType: file.type,
-            fileData: base64
+            fileData: base64File
         };
 
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
+        document.getElementById("status").textContent = "Sending...";
 
-            const result = await response.json();
+        const response = await fetch("YOUR_SCRIPT_URL", {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
 
-            if (result.success) {
-                document.getElementById("status").textContent =
-                    "Your design has been successfully sent!";
-            } else {
-                document.getElementById("status").textContent =
-                    "Error: " + result.error;
-            }
-
-        } catch (err) {
-            document.getElementById("status").textContent = "Network error!";
-            console.error(err);
-        }
+        const result = await response.text();
+        document.getElementById("status").textContent = result;
     };
 
     reader.readAsDataURL(file);
