@@ -1,22 +1,26 @@
-// --- FIREBASE INIT ---
-const firebaseConfig = {
+// ----------------------------
+// FIREBASE CONFIG
+// ----------------------------
+var firebaseConfig = {
   apiKey: "AIzaSyCbWvQenaRuSp0Op0IJLCl2fjV7I45tMX4",
   authDomain: "northecho-support.firebaseapp.com",
   projectId: "northecho-support",
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
 
-
-// --- PANEL AÇ / KAPAT ---
+// ----------------------------
+// PANEL AÇ / KAPAT
+// ----------------------------
 function toggleSupportPanel() {
-  const panel = document.getElementById("supportPanel");
-  panel.style.display = (panel.style.display === "block") ? "none" : "block";
+  const p = document.getElementById("supportPanel");
+  p.style.display = (p.style.display === "block") ? "none" : "block";
 }
 
-
-// --- MESAJ GÖNDER ---
+// ----------------------------
+// MESAJ GÖNDER
+// ----------------------------
 async function sendSupportMessage() {
 
   const name = document.getElementById("supName").value.trim();
@@ -25,18 +29,24 @@ async function sendSupportMessage() {
   const category = document.getElementById("supCategory").value;
 
   if (!name || !email || !message) {
-    alert("Please fill required fields.");
+    alert("Please fill all required fields!");
     return;
   }
 
-  await db.collection("supportMessages").add({
-    name,
-    email,
-    message,
-    category,
-    date: new Date().toISOString(),
-  });
+  try {
+    await db.collection("supportMessages").add({
+      name: name,
+      email: email,
+      message: message,
+      category: category,
+      date: new Date().toISOString()
+    });
 
-  alert("Your message has been sent!");
-  toggleSupportPanel();
+    alert("Your message was sent successfully!");
+    toggleSupportPanel();
+
+  } catch (err) {
+    console.error("SEND ERROR:", err);
+    alert("Error sending message.");
+  }
 }
