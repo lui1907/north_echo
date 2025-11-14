@@ -20,7 +20,7 @@ body {
   background: #000;
 }
 
-/* ----- PAGE WRAPPER ----- */
+/* WRAPPER */
 .admin-wrapper {
   margin-top: 130px;
   max-width: 1100px;
@@ -35,7 +35,7 @@ body {
   margin-bottom: 25px;
 }
 
-/* ----- MESSAGE CARD ----- */
+/* MESSAGE BOX */
 .msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
@@ -43,49 +43,100 @@ body {
   border-radius: 14px;
   margin-bottom: 18px;
   transition: .25s;
+  position: relative;
 }
 
 .msg-box:hover {
   border-color: #00aa66;
 }
 
-/* Sender name */
-.msg-box .sender {
+/* OKUNDU NOKTASI */
+.read-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 18px;
+  left: -20px;
+  background: #00aa66;
+  cursor: pointer;
+}
+
+/* Sender */
+.sender {
   font-weight: bold;
   color: #00aa66;
 }
 
-/* Message text */
-.msg-box p {
-  opacity: 0.85;
-  margin: 6px 0;
-}
-
-/* Date small text */
+/* date */
 .msg-date {
   font-size: 12px;
   opacity: .6;
-  display: block;
   margin-top: 8px;
 }
 
-/* Preview image */
+/* image */
 .msg-img {
-  width: 180px;
+  width: 160px;
   height: auto;
   border-radius: 10px;
   margin-top: 12px;
   cursor: pointer;
-  transition: .2s;
   border: 1px solid #333;
+  transition: .2s;
 }
-
 .msg-img:hover {
-  transform: scale(1.03);
+  transform: scale(1.05);
   border-color: #00aa66;
 }
 
-/* ----- FULLSCREEN MODAL ----- */
+/* DELETE BUTTON */
+.del-btn {
+  background: #330000;
+  border: 1px solid #660000;
+  color: #ff4d4d;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  float: right;
+  transition: .2s;
+}
+.del-btn:hover {
+  background: #550000;
+}
+
+/* ADMIN NOTE */
+.admin-note-box {
+  margin-top: 12px;
+  padding: 12px;
+  background: #111;
+  border-radius: 10px;
+  border: 1px solid #222;
+}
+
+.note-input {
+  width: 100%;
+  background: #0b0b0b;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 8px;
+  color: white;
+}
+
+.note-save-btn {
+  margin-top: 8px;
+  background: #004422;
+  border: 1px solid #006633;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #00cc77;
+}
+.note-save-btn:hover {
+  background: #005533;
+}
+
+/* FULLSCREEN MODAL */
 #imgModal {
   display: none;
   position: fixed;
@@ -130,7 +181,7 @@ body {
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" class="logout" onclick="logout()">Logout</a>
+      <a href="#" onclick="logout()">Logout</a>
     </div>
   </div>
 </header>
@@ -141,7 +192,6 @@ body {
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
 
@@ -151,69 +201,114 @@ body {
   <div id="adminMessages"></div>
 </div>
 
-<!-- IMAGE MODAL -->
+<!-- MODAL -->
 <div id="imgModal">
   <span id="imgModalClose">✕</span>
   <img id="imgModalImage">
 </div>
 
-<script src="support.js"></script>
-
 <script>
-// ------------------------------------------------
-// 🔒 ADMIN CHECK
-// ------------------------------------------------
-const ADMINS = ["luivoss", "ahmet", "owner", "lui1907", "admin"];
-let loggedUser = localStorage.getItem("loggedInUser");
+// ----------------------------------
+// 🔐 ADMIN CHECK
+// ----------------------------------
+const ADMINS = ["luivoss","ahmet","lui1907","owner","admin"];
+let logged = localStorage.getItem("loggedInUser");
 
-if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
+if (!logged || !ADMINS.includes(logged.toLowerCase())) {
   window.location.href = "index.html";
 }
 
-// ------------------------------------------------
-// 📩 LOAD SUPPORT MESSAGES
-// ------------------------------------------------
+// LOAD AVATAR
+let adminData = JSON.parse(localStorage.getItem("user_" + logged));
+if (adminData && adminData.avatar)
+  document.getElementById("userAvatar").src = adminData.avatar;
+
+
+// ----------------------------------
+// 📩 LOAD MESSAGES
+// ----------------------------------
 let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
 const box = document.getElementById("adminMessages");
 
 if (msgs.length === 0) {
-  box.innerHTML = `<p style="opacity:0.6;">No support messages yet.</p>`;
+  box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
 }
 
-msgs.forEach(msg => {
-  box.innerHTML += `
-    <div class="msg-box">
+function saveMessages() {
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+}
+
+function renderMessages() {
+  box.innerHTML = "";
+
+  msgs.forEach((msg, i) => {
+    box.innerHTML += `
+      <div class="msg-box">
+
+        <div class="read-dot" onclick="toggleRead(${i})"
+             style="background:${msg.read ? '#444' : '#00aa66'}"></div>
+
+        <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
+
         <span class="sender">${msg.name}</span>
-        — <span style="opacity:0.6;">${msg.email}</span>
+        — <span style="opacity:.6;">${msg.email}</span>
 
         <p>${msg.text}</p>
 
-        ${msg.file ? 
-        `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">`
-        : ""}
+        ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
 
         <span class="msg-date">${msg.date}</span>
-    </div>
-  `;
-});
 
-// ------------------------------------------------
-// 👤 LOAD AVATAR
-// ------------------------------------------------
-let uData = JSON.parse(localStorage.getItem("user_" + loggedUser));
-if (uData && uData.avatar) {
-  document.getElementById("userAvatar").src = uData.avatar;
+        <div class="admin-note-box">
+          <p style="opacity:.7;margin:0 0 4px 0;">Admin Note:</p>
+          <input class="note-input" id="note-${i}" value="${msg.adminNote || ""}">
+          <button class="note-save-btn" onclick="saveNote(${i})">Save Note</button>
+        </div>
+
+      </div>
+    `;
+  });
 }
 
-// Avatar menu toggle
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
-};
+renderMessages();
 
-// ------------------------------------------------
-// 🔍 IMAGE MODAL LOGIC
-// ------------------------------------------------
+
+// ----------------------------------
+// 🗑 DELETE MESSAGE
+// ----------------------------------
+function deleteMsg(i) {
+  if (!confirm("Delete this message?")) return;
+
+  msgs.splice(i, 1);
+  saveMessages();
+  renderMessages();
+}
+
+
+// ----------------------------------
+// ✔ TOGGLE READ
+// ----------------------------------
+function toggleRead(i) {
+  msgs[i].read = !msgs[i].read;
+  saveMessages();
+  renderMessages();
+}
+
+
+// ----------------------------------
+// 📝 SAVE ADMIN NOTE
+// ----------------------------------
+function saveNote(i) {
+  let val = document.getElementById("note-" + i).value;
+  msgs[i].adminNote = val;
+  saveMessages();
+  alert("Saved!");
+}
+
+
+// ----------------------------------
+// 🔍 IMAGE MODAL
+// ----------------------------------
 function openImgModal(src) {
   document.getElementById("imgModalImage").src = src;
   document.getElementById("imgModal").style.display = "flex";
@@ -223,15 +318,10 @@ document.getElementById("imgModalClose").onclick = () => {
   document.getElementById("imgModal").style.display = "none";
 };
 
-document.getElementById("imgModal").onclick = (e) => {
-  if (e.target.id === "imgModal") {
-    document.getElementById("imgModal").style.display = "none";
-  }
-};
 
-// ------------------------------------------------
+// ----------------------------------
 // 🚪 LOGOUT
-// ------------------------------------------------
+// ----------------------------------
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
