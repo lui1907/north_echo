@@ -204,16 +204,17 @@ if (username) {
     <label>Your Message *</label>
     <textarea id="supMsg" placeholder="Write your message..."></textarea>
 
-    <!-- 📎 FILE UPLOAD -->
     <label>Attach File (optional)</label>
     <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+
+    <!-- ✅ ADMIN CEVABI KULLANICIYA BURADA GÖRÜNECEK -->
+    <div id="supReplyBox" style="margin-top:15px;"></div>
 
   </div>
 </div>
+
 
 <!-- SUPPORT CSS + JS -->
 <link rel="stylesheet" href="support.css">
