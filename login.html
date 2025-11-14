@@ -17,24 +17,24 @@
     padding: 0;
   }
 
-  /* Sayfanın alanı */
   .page-content {
     width: 100%;
-    min-height: calc(100vh - 80px);
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+    padding-top: 40px;
+    box-sizing: border-box;
   }
 
-  /* Kartı ortala */
   .auth-container {
     width: 360px;
-    margin: 80px auto;         /* ORTALAMA BURADA */
     background: #0d0d0d;
     padding: 30px;
     border-radius: 16px;
     border: 1px solid #222;
     box-shadow: 0 0 25px rgba(0,0,0,0.5);
     text-align: center;
-    box-sizing: border-box;
   }
 
   .auth-container h1 {
@@ -51,7 +51,6 @@
     border-radius: 8px;
     color: white;
     box-sizing: border-box;
-    display: block;
   }
 
   .auth-button {
@@ -63,7 +62,6 @@
     color: white;
     cursor: pointer;
     transition: .2s;
-    box-sizing: border-box;
   }
 
   .auth-button:hover {
@@ -79,7 +77,6 @@
 
 <body>
 
-<!-- HEADER (SİTENİN GERÇEK ÜST BAR'I) -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -91,7 +88,6 @@
   </div>
 </header>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -101,7 +97,6 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- LOGIN FORM KUTUSU -->
 <div class="page-content">
   <div class="auth-container">
 
