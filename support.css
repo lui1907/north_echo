@@ -39,7 +39,7 @@
   width: 400px;
   background: #0d0d0d;
   border-radius: 14px;
-  padding: 0; /* HEADER + BODY ayrı padding */
+  padding: 0;
   border: 1px solid #222;
   display: none;
   z-index: 9999;
@@ -47,26 +47,34 @@
   overflow: hidden;
 }
 
-/* HEADER */
+/* Header */
 .sup-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px 6px 18px; /* üstteki çizgi ile boşluğu düzeltiyor */
-    font-size: 18px;
-    font-weight: 600;
-    border-bottom: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #222;
 }
+
+/* Support yazısını düzgün hizalamak için */
+.sup-title {
+  margin-right: auto;
+  color: white;
+}
+
+/* X Button */
 .sup-header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 22px;
-    cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
 }
 
 
-/* FORM BODY */
+/* Form Body */
 .sup-body {
   padding: 20px;
 }
@@ -78,7 +86,6 @@
   margin-top: 12px;
 }
 
-/* Input + Textarea */
 .sup-body input,
 .sup-body textarea {
   width: 100%;
@@ -97,13 +104,12 @@
   resize: none;
 }
 
-/* Dosya yükleme */
 #supFile {
   padding: 10px;
   cursor: pointer;
 }
 
-/* GÖNDER BUTONU */
+/* Send Button */
 .sup-send {
   width: 100%;
   padding: 12px;
@@ -120,10 +126,7 @@
   background: #009655;
 }
 
-
-/* ============================================
-   📩 ADMIN REPLY (kullanıcıya görünen balon)
-============================================ */
+/* Admin Reply Box */
 #supReplyBox {
   margin-top: 20px;
   padding: 12px;
@@ -136,9 +139,7 @@
 }
 
 
-/* ============================================
-   📱 MOBİL UYUMLULUK
-============================================ */
+/* Mobile */
 @media (max-width: 480px) {
   #supportPanel {
     width: 92%;
