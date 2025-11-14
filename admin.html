@@ -7,17 +7,13 @@
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="support.css">
-<script src="menu.js" defer></script>
-<script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
 
 <style>
-
 body {
   margin: 0;
   padding: 0;
   color: white;
+  background: #000;
 }
 
 /* WRAPPER */
@@ -33,46 +29,62 @@ body {
 .admin-wrapper h1 {
   font-size: 32px;
   font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* FILTER BAR */
+.admin-filters {
+  display: flex;
+  gap: 15px;
   margin-bottom: 25px;
 }
 
-/* MESSAGE CARD */
+.admin-filters select {
+  padding: 12px;
+  background: #0f0f0f;
+  border: 1px solid #333;
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* MESSAGE BOX */
 .msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
-  padding: 20px 20px 25px 20px;
+  padding: 20px;
   border-radius: 14px;
   margin-bottom: 18px;
   position: relative;
 }
 
-/* HEADER LINE */
+/* HEADER */
 .msg-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 10px;
 }
 
-/* READ DOT */
 .read-dot {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   cursor: pointer;
 }
 
-/* SENDER LINE */
 .info-line {
   display: flex;
   align-items: center;
   gap: 6px;
 }
+
 .sender {
   font-weight: 700;
   font-size: 17px;
 }
+
 .email {
   opacity: .6;
   font-size: 14px;
@@ -95,11 +107,10 @@ body {
   background: #660000;
 }
 
-/* MESSAGE TEXT */
+/* TEXT */
 .msg-text {
   opacity: .9;
   margin: 10px 0;
-  white-space: pre-line;
 }
 
 /* IMAGE */
@@ -109,10 +120,9 @@ body {
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid #333;
-  transition: 0.2s;
 }
 .msg-img:hover {
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
 
 /* DATE */
@@ -123,7 +133,7 @@ body {
   font-size: 13px;
 }
 
-/* ADMIN NOTE */
+/* NOTE AREA */
 .admin-note-box {
   margin-top: 14px;
   background: #111;
@@ -155,22 +165,22 @@ body {
   background: #009655;
 }
 
-/* 🔍 IMAGE MODAL */
+/* FULLSCREEN IMAGE PREVIEW */
 #imgModal {
-  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 99999;
-  justify-content: center;
+  background: rgba(0,0,0,.85);
+  display: none;
   align-items: center;
-  cursor: pointer;
+  justify-content: center;
+  z-index: 99999;
 }
+
 #imgModal img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 12px;
-  pointer-events: none; /* tıklama arkadaki div'e gitsin ki kapansın */
+  box-shadow: 0 0 25px rgba(0,0,0,.8);
 }
 
 </style>
@@ -195,145 +205,160 @@ body {
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
-  <button class="close-menu" id="closeMenu">×</button>
+  <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- FULLSCREEN IMAGE -->
+<div id="imgModal" onclick="this.style.display='none'">
+  <img id="imgModalSrc">
+</div>
+
 <!-- ADMIN PANEL -->
 <div class="admin-wrapper">
   <h1>Support Messages</h1>
 
+  <!-- FILTER BAR -->
+  <div class="admin-filters">
+    <select id="filterCategory" onchange="applyFilters()">
+      <option value="all">All Categories</option>
+      <option value="general">General Question</option>
+      <option value="order">Order Issue</option>
+      <option value="product">Product Question</option>
+      <option value="send-design">Send Your Design</option>
+    </select>
+
+    <select id="filterRead" onchange="applyFilters()">
+      <option value="all">All Messages</option>
+      <option value="unread">Unread Only</option>
+      <option value="read">Read Only</option>
+    </select>
+  </div>
+
   <div id="adminMessages"></div>
 </div>
 
-<!-- 🔍 IMAGE MODAL -->
-<div id="imgModal">
-  <img id="modalImage" src="">
-</div>
-
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+/* 🔒 ADMIN CHECK */
+const ADMINS = ["luivoss","lui1907","owner","ahmet","admin"];
+let logged = localStorage.getItem("loggedInUser");
 
-  /* 🔒 ADMIN ACCESS CHECK */
-  const ADMINS = ["luivoss","lui1907","ahmet","owner","admin"];
-  const logged = localStorage.getItem("loggedInUser");
+if (!logged || !ADMINS.includes(logged.toLowerCase())) {
+  window.location.href = "index.html";
+}
 
-  if (!logged || !ADMINS.includes(logged.toLowerCase())) {
-    window.location.href = "index.html";
-    return;
-  }
+/* HEADER AVATAR */
+let uData = JSON.parse(localStorage.getItem("user_" + logged));
+if (uData && uData.avatar) {
+  document.getElementById("userAvatar").src = uData.avatar;
+}
 
-  /* 🧑‍🦱 AVATAR YÜKLE */
-  let uData = JSON.parse(localStorage.getItem("user_" + logged));
-  if (uData && uData.avatar) {
-    const ua = document.getElementById("userAvatar");
-    if (ua) ua.src = uData.avatar;
-  }
+/* ≡ Dropdown */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = m.style.display === "flex" ? "none" : "flex";
+};
 
-  document.getElementById("userAvatar").onclick = () => {
-    const m = document.getElementById("avatarMenu");
-    m.style.display = (m.style.display === "flex") ? "none" : "flex";
-  };
+/* MESSAGE LIST */
+let allMessages = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-  /* 📨 LOAD MESSAGES */
+/* RENDER FUNCTION */
+function render(list) {
   const box = document.getElementById("adminMessages");
-  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-  if (msgs.length === 0) {
-    box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
+  if (list.length === 0) {
+    box.innerHTML = `<p style="opacity:.6;">No messages found.</p>`;
     return;
   }
 
   box.innerHTML = "";
 
-  msgs.forEach((msg, i) => {
-    const text = msg.text || msg.message || "(no message)";
-    const name = msg.name || "Unknown";
-    const email = msg.email || "";
-    const file = msg.file || "";
-    const date = msg.date || "";
-    const adminNote = msg.adminNote || "";
-    const readColor = msg.read ? "#444" : "#00aa66";
+  list.forEach((msg, i) => {
+
+    const color = msg.read ? "#444" : "#00aa66";
 
     box.innerHTML += `
       <div class="msg-box">
-
         <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
 
         <div class="msg-header">
-          <div class="read-dot" onclick="toggleRead(${i})"
-               style="background:${readColor}"></div>
+          <div class="read-dot" style="background:${color}" onclick="toggleRead(${i})"></div>
+
           <div class="info-line">
-            <span class="sender">${name}</span>
-            <span class="email">— ${email}</span>
+            <span class="sender">${msg.name}</span>
+            <span class="email">— ${msg.email}</span>
           </div>
         </div>
 
-        <p class="msg-text">${text}</p>
+        <p class="msg-text">${msg.text}</p>
 
-        ${file ? `<img src="${file}" class="msg-img" onclick="openImgModal('${file}')">` : ""}
+        ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
 
-        <span class="msg-date">${date}</span>
+        <span class="msg-date">${msg.date}</span>
 
         <div class="admin-note-box">
-          <p style="opacity:.7;margin:0 0 4px 0;">Admin Note:</p>
-          <input class="note-input" id="note-${i}" value="${adminNote}">
+          <input class="note-input" id="note-${i}" value="${msg.adminNote || ""}">
           <button class="note-save-btn" onclick="saveNote(${i})">Save Note</button>
         </div>
-
       </div>
     `;
   });
-
-  /* MODAL'A KAPATMA CLICK */
-  const modal = document.getElementById("imgModal");
-  modal.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-});
-
-/* ✔ READ TOGGLE */
-function toggleRead(i) {
-  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-  msgs[i].read = !msgs[i].read;
-  localStorage.setItem("supportMessages", JSON.stringify(msgs));
-  location.reload();
 }
 
-/* 🗑 DELETE */
+/* INITIAL LOAD */
+render(allMessages);
+
+/* FILTERS */
+function applyFilters() {
+  let cat = document.getElementById("filterCategory").value;
+  let rd  = document.getElementById("filterRead").value;
+
+  let filtered = allMessages.filter(m => {
+
+    if (cat !== "all" && m.category !== cat) return false;
+
+    if (rd === "unread" && m.read) return false;
+    if (rd === "read" && !m.read) return false;
+
+    return true;
+  });
+
+  render(filtered);
+}
+
+/* UPDATE READ */
+function toggleRead(i) {
+  allMessages[i].read = !allMessages[i].read;
+  localStorage.setItem("supportMessages", JSON.stringify(allMessages));
+  applyFilters();
+}
+
+/* DELETE */
 function deleteMsg(i) {
   if (!confirm("Delete this message?")) return;
-  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-  msgs.splice(i, 1);
-  localStorage.setItem("supportMessages", JSON.stringify(msgs));
-  location.reload();
+
+  allMessages.splice(i,1);
+  localStorage.setItem("supportMessages", JSON.stringify(allMessages));
+  applyFilters();
 }
 
-/* 📝 SAVE NOTE */
+/* SAVE NOTE */
 function saveNote(i) {
-  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-  msgs[i].adminNote = document.getElementById("note-" + i).value;
-  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  allMessages[i].adminNote =
+    document.getElementById("note-" + i).value;
+  localStorage.setItem("supportMessages", JSON.stringify(allMessages));
   alert("Note saved!");
 }
 
-/* 🔍 IMAGE MODAL OPEN */
-function openImgModal(url) {
-  const modal = document.getElementById("imgModal");
-  const modalImg = document.getElementById("modalImage");
-
-  modalImg.src = url;
-  modal.style.display = "flex";
+/* IMAGE PREVIEW */
+function openImgModal(src) {
+  document.getElementById("imgModalSrc").src = src;
+  document.getElementById("imgModal").style.display = "flex";
 }
 
-/* 🚪 LOGOUT */
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
 </script>
 
 </body>
