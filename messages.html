@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Your Messages — North Echo</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="support.css">
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+
+<style>
+
+body {
+  margin:0;
+  padding:0;
+  color:white;
+}
+
+/* PAGE WRAPPER */
+.msg-wrapper {
+  margin-top:130px;
+  max-width:800px;
+  margin-left:auto;
+  margin-right:auto;
+  padding:20px;
+}
+
+/* MESSAGE CARD */
+.user-msg-box {
+  background:#0d0d0d;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #222;
+  margin-bottom:15px;
+}
+
+.user-msg-box p {
+  margin:5px 0;
+}
+
+/* USER MESSAGE */
+.user-text {
+  background:#111;
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+  border:1px solid #333;
+}
+
+/* ADMIN REPLY */
+.admin-reply {
+  margin-top:10px;
+  background:#00351f;
+  border:1px solid #006f3d;
+  padding:10px;
+  border-radius:10px;
+  color:#00dd88;
+}
+
+/* IMAGE */
+.msg-img {
+  width:140px;
+  border-radius:8px;
+  margin-top:10px;
+  border:1px solid #333;
+  cursor:pointer;
+}
+
+/* DATE */
+.msg-date {
+  opacity:.5;
+  font-size:13px;
+  margin-top:5px;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<div class="msg-wrapper">
+  <h1>Your Messages</h1>
+  <div id="userMessages"></div>
+</div>
+
+<script>
+/* LOGIN CHECK */
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+/* LOAD USER AVATAR */
+let uData = JSON.parse(localStorage.getItem("user_" + username));
+if (uData && uData.avatar)
+  document.getElementById("userAvatar").src = uData.avatar;
+
+/* LOAD ALL SUPPORT MESSAGES */
+let all = JSON.parse(localStorage.getItem("supportMessages")) || [];
+
+/* FILTER ONLY USER'S MESSAGES */
+let msgs = all.filter(m => m.username === username);
+
+const box = document.getElementById("userMessages");
+
+if (msgs.length === 0) {
+  box.innerHTML = `<p style="opacity:.6;">You have no messages yet.</p>`;
+}
+
+/* SHOW MESSAGES */
+msgs.forEach(msg => {
+  box.innerHTML += `
+    <div class="user-msg-box">
+
+      <div class="user-text">${msg.text || "(empty message)"}</div>
+
+      ${msg.file ? `<img src="${msg.file}" class="msg-img">` : ""}
+
+      <div class="msg-date">${msg.date}</div>
+
+      ${msg.adminReply ? `
+        <div class="admin-reply"><b>Admin:</b> ${msg.adminReply}</div>
+      ` : ""}
+
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>
