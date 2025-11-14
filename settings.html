@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Settings — North Echo</title>
+
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+
+<style>
+.settings-container {
+  width: 95%;
+  max-width: 550px;
+  margin: 140px auto;
+  background: #0d0d0d;
+  padding: 30px;
+  border-radius: 22px;
+  border: 1px solid #222;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+}
+
+.settings-title {
+  font-size: 26px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.settings-group {
+  margin-bottom: 25px;
+}
+
+.settings-group h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.settings-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: .2s;
+}
+
+.settings-btn:hover {
+  background: #191919;
+}
+
+.logout-btn {
+  background: #aa0000 !important;
+  border-color: #660000 !important;
+}
+
+.logout-btn:hover {
+  background: #990000 !important;
+}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- SETTINGS CONTENT -->
+<div class="settings-container">
+
+  <h2 class="settings-title">Settings</h2>
+
+  <!-- Tema Ayarları -->
+  <div class="settings-group">
+    <h3>Appearance</h3>
+    <button class="settings-btn" onclick="toggleTheme()">
+      Toggle Theme (Dark / Light)
+    </button>
+  </div>
+
+  <!-- Profil Fotoğrafı -->
+  <div class="settings-group">
+    <h3>Profile</h3>
+    <button class="settings-btn" onclick="goProfile()">Edit Profile</button>
+    <button class="settings-btn" onclick="resetAvatar()">Reset Avatar</button>
+  </div>
+
+  <!-- Hesap -->
+  <div class="settings-group">
+    <h3>Account</h3>
+    <button class="settings-btn logout-btn" onclick="logout()">Log Out</button>
+  </div>
+
+</div>
+
+<script>
+/* Avatar menü açma */
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+avatar.addEventListener("click", () => {
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+});
+
+/* Login kontrol */
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+/* Kullanıcı verisi */
+let data = JSON.parse(localStorage.getItem("user_" + username));
+
+/* Küçük avatarı yükle */
+if (data.avatar) {
+  document.getElementById("userAvatar").src = data.avatar;
+}
+
+/* Tema değiştir */
+function toggleTheme() {
+  let theme = localStorage.getItem("theme");
+
+  if (theme === "light") {
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.classList.add("light");
+    localStorage.setItem("theme", "light");
+  }
+}
+
+/* Profil sayfasına git */
+function goProfile() {
+  window.location.href = "profile.html";
+}
+
+/* Avatarı sıfırla */
+function resetAvatar() {
+  data.avatar = null;
+  localStorage.setItem("user_" + username, JSON.stringify(data));
+
+  document.getElementById("userAvatar").src = "assets/default-avatar.png";
+
+  alert("Avatar reset to default.");
+}
+
+/* Logout */
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
