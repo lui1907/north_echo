@@ -257,5 +257,18 @@ function logout() {
 
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const avatar = document.getElementById("userAvatar");
+  const menu = document.getElementById("avatarMenu");
+
+  if (avatar && menu) {
+    avatar.addEventListener("click", () => {
+      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    });
+  }
+});
+</script>
+  
 </body>
 </html>
