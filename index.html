@@ -126,7 +126,7 @@ if (username) {
 
 <!-- 💬 SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="https://cdn-icons-png.flaticon.com/512/134/134914.png" style="width:28px;filter:invert(1);">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==" />
 </div>
 
 <!-- 💬 SUPPORT PANEL -->
@@ -141,22 +141,14 @@ if (username) {
     <label>Your Name *</label>
     <input type="text" id="supName" placeholder="John Doe">
 
-    <label>Email *</label>
+    <label>Your Email *</label>
     <input type="email" id="supEmail" placeholder="your@mail.com">
-
-    <label>Category *</label>
-    <select id="supCategory">
-      <option>Order</option>
-      <option>Product</option>
-      <option>Support</option>
-      <option>Upload Design</option>
-    </select>
 
     <label>Your Message *</label>
     <textarea id="supMsg" placeholder="Write your message..."></textarea>
 
-    <label>Attach File</label>
-    <input type="file" id="supFile">
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile" accept="image/*">
 
     <button class="sup-send" onclick="sendSupportMessage()">
       Send Message →
@@ -165,19 +157,9 @@ if (username) {
   </div>
 </div>
 
-<!-- SUPPORT CSS -->
+<!-- SUPPORT CSS + JS -->
 <link rel="stylesheet" href="support.css">
-
-<!-- FIREBASE CDN (BUNLAR ÖNCE) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-<!-- SUPPORT JS (EN SON) -->
-<script src="support.js"></script>
-
-
-
-
+<script type="module" src="support.js"></script>
 
   
 </body>
