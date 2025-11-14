@@ -241,7 +241,10 @@ function saveMessages() {
 function renderMessages() {
   box.innerHTML = "";
 
-  msgs.forEach((msg, i) => {
+msgs.forEach((msg, i) => {
+
+    const bodyText = msg.text || msg.message || "(no message)";
+
     box.innerHTML += `
       <div class="msg-box">
 
@@ -250,14 +253,14 @@ function renderMessages() {
 
         <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
 
-        <span class="sender">${msg.name}</span>
-        — <span style="opacity:.6;">${msg.email}</span>
+        <span class="sender">${msg.name || "Unknown"}</span>
+        — <span style="opacity:.6;">${msg.email || ""}</span>
 
-        <p>${msg.text}</p>
+        <p>${bodyText}</p>
 
         ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
 
-        <span class="msg-date">${msg.date}</span>
+        <span class="msg-date">${msg.date || ""}</span>
 
         <div class="admin-note-box">
           <p style="opacity:.7;margin:0 0 4px 0;">Admin Note:</p>
@@ -267,8 +270,8 @@ function renderMessages() {
 
       </div>
     `;
-  });
-}
+});
+
 
 renderMessages();
 
