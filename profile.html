@@ -11,24 +11,48 @@
 <script src="cart.js" defer></script>
 
 <style>
+/* PROFIL CONTAINER */
 .profile-container {
-  width: 90%;
-  max-width: 500px;
-  margin: 120px auto;
+  width: 95%;
+  max-width: 550px;
+  margin: 140px auto;
   background: #0d0d0d;
-  padding: 25px;
-  border-radius: 16px;
+  padding: 35px 25px;
+  border-radius: 22px;
   border: 1px solid #222;
-  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  text-align: center;
 }
 
-.profile-container h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-.profile-item {
+/* Büyük avatar */
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #222;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
   margin-bottom: 15px;
+}
+
+/* Ad Soyad */
+.profile-name {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Kullanıcı adı */
+.profile-username {
+  font-size: 15px;
+  opacity: .7;
+  margin-bottom: 25px;
+}
+
+/* Inputlar */
+.profile-item {
+  margin-bottom: 18px;
+  text-align: left;
 }
 
 .profile-item label {
@@ -40,23 +64,24 @@
 .profile-item input {
   width: 100%;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #333;
   background: #111;
   color: white;
 }
 
+/* Save butonu */
 .save-btn {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background: #00aa66;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   color: white;
-  font-size: 16px;
+  font-size: 17px;
   cursor: pointer;
-  margin-top: 15px;
-  transition: 0.2s;
+  margin-top: 20px;
+  transition: .2s;
 }
 
 .save-btn:hover {
@@ -89,16 +114,18 @@
 
 <!-- PROFILE CONTENT -->
 <div class="profile-container">
-  <h2>Your Profile</h2>
 
+  <!-- Büyük Profil Fotoğrafı -->
+  <img src="assets/default-avatar.png" class="profile-avatar" id="profileAvatar">
+
+  <!-- Kullanıcı Bilgileri -->
+  <div class="profile-name" id="profileName"></div>
+  <div class="profile-username" id="profileUsername"></div>
+
+  <!-- Düzenlenebilir Alanlar -->
   <div class="profile-item">
     <label>Full Name</label>
     <input type="text" id="fullNameInput"/>
-  </div>
-
-  <div class="profile-item">
-    <label>Username</label>
-    <input type="text" id="usernameInput" disabled/>
   </div>
 
   <div class="profile-item">
@@ -110,8 +137,9 @@
 </div>
 
 
+<!-- SCRIPT -->
 <script>
-// Avatar menü açma
+/* Avatar menü açma */
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
 
@@ -121,19 +149,21 @@ if (avatar) {
   });
 }
 
-// LOGIN KONTROLÜ
+/* Login kontrol */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-// Kullanıcı verisini çek
+/* Kullanıcı verisi */
 let data = JSON.parse(localStorage.getItem("user_" + username));
 
-// inputlara at
+/* Bilgileri sayfaya yaz */
+document.getElementById("profileName").innerText = data.fullname;
+document.getElementById("profileUsername").innerText = "@" + data.username;
+
 document.getElementById("fullNameInput").value = data.fullname;
-document.getElementById("usernameInput").value = data.username;
 document.getElementById("passwordInput").value = data.password;
 
-// PROFİLİ KAYDET
+/* Kaydet */
 function saveProfile() {
   data.fullname = document.getElementById("fullNameInput").value;
   data.password = document.getElementById("passwordInput").value;
@@ -143,7 +173,7 @@ function saveProfile() {
   alert("Profile updated!");
 }
 
-// Logout
+/* Logout */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
