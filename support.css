@@ -1,4 +1,4 @@
-/* 💬 DESTEK BUTONU (SİYAH - YEŞİL) */
+/* 💬 SUPPORT BUTTON (SİYAH – YEŞİL) */
 #supportBtn {
   position: fixed;
   bottom: 25px;
@@ -25,26 +25,27 @@
 #supportBtn img {
   width: 28px;
   height: 28px;
+  pointer-events: none;
 }
 
-/* 💬 DESTEK PANELİ (SAĞDA KÜÇÜK KUTU) */
+/* 💬 SUPPORT PANEL */
 #supportPanel {
   position: fixed;
   bottom: 110px;
   right: 25px;
   width: 340px;
   background: #0f0f0f;
-  border-radius: 16px;
   border: 1px solid #262626;
-  box-shadow: 0 0 25px rgba(0,0,0,0.7);
+  border-radius: 16px;
   transform: translateY(20px);
   opacity: 0;
   pointer-events: none;
+  box-shadow: 0 0 25px rgba(0,0,0,0.7);
   transition: 0.25s ease;
   z-index: 9998;
 }
 
-/* AÇILDIĞI HAL */
+/* PANEL AÇIKKEN */
 #supportPanel.open {
   opacity: 1;
   pointer-events: auto;
@@ -72,7 +73,7 @@
   cursor: pointer;
 }
 
-/* PANEL GÖVDE */
+/* PANEL BODY */
 .sup-body {
   padding: 16px;
 }
