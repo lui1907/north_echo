@@ -1,6 +1,4 @@
-/* ============================================
-   💬 SUPPORT BUTTON
-============================================ */
+/* ROUND BUTTON */
 #supportBtn {
   position: fixed;
   bottom: 25px;
@@ -15,7 +13,11 @@
   cursor: pointer;
   z-index: 9999;
   box-shadow: 0 0 15px rgba(0,0,0,0.4);
-  transition: 0.2s;
+  transition: .2s;
+}
+
+#supportBtn:hover {
+  background: #009655;
 }
 
 #supportBtn img {
@@ -24,73 +26,64 @@
   filter: invert(1);
 }
 
-/* ============================================
-   💬 SUPPORT PANEL
-============================================ */
+/* PANEL */
 #supportPanel {
   position: fixed;
   bottom: 95px;
   right: 25px;
-  width: 380px;
+  width: 400px;
   background: #0d0d0d;
   border-radius: 14px;
   border: 1px solid #222;
   display: none;
   z-index: 9999;
-  box-shadow: 0 0 30px rgba(0,0,0,0.55);
   overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,0,0,0.55);
 }
 
-/* -------- HEADER (SUPPORT yazısı burası) ------- */
+/* HEADER */
 .sup-header {
-  width: 100%;
-  padding: 16px 20px;
-  background: #0d0d0d;
+  padding: 14px 18px;
+  font-size: 18px;
+  font-weight: 600;
+  background: #0f0f0f;
   border-bottom: 1px solid #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-sizing: border-box;
-}
-
-.sup-header span {
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
 }
 
 .sup-header button {
   background: none;
   border: none;
+  color: white;
   font-size: 22px;
-  color: #ccc;
   cursor: pointer;
 }
 
-/* -------- BODY -------- */
+/* BODY */
 .sup-body {
-  padding: 18px 20px;
-  box-sizing: border-box;
+  padding: 20px;
 }
 
 .sup-body label {
-  color: white;
-  font-size: 14px;
-  margin-bottom: 6px;
   display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  opacity: .85;
 }
 
 .sup-body input,
+.sup-body select,
 .sup-body textarea {
   width: 100%;
   padding: 12px;
+  margin-top: 6px;
   background: #111;
   border: 1px solid #333;
   border-radius: 8px;
   color: white;
   font-size: 14px;
-  margin-bottom: 12px;
-  box-sizing: border-box;
 }
 
 .sup-body textarea {
@@ -98,16 +91,10 @@
   resize: none;
 }
 
-/* Dosya yükleme */
-#supFile {
-  padding: 10px;
-  cursor: pointer;
-}
-
-/* -------- SEND BUTTON -------- */
 .sup-send {
   width: 100%;
   padding: 12px;
+  margin-top: 18px;
   background: #00aa66;
   border: none;
   border-radius: 10px;
@@ -118,19 +105,4 @@
 
 .sup-send:hover {
   background: #009655;
-}
-
-/* ============================================
-   📱 MOBİL
-============================================ */
-@media (max-width: 480px) {
-  #supportPanel {
-    width: 92%;
-    right: 4%;
-  }
-
-  #supportBtn {
-    width: 55px;
-    height: 55px;
-  }
 }
