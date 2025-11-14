@@ -12,7 +12,6 @@
 
 <style>
 
-/* MAIN LAYOUT */
 .settings-wrapper {
   display: flex;
   width: 95%;
@@ -71,7 +70,7 @@
   margin-bottom: 20px;
 }
 
-/* PREMIUM BUTTONS */
+/* BUTTONS */
 .settings-btn {
   width: 100%;
   background: #141414;
@@ -90,6 +89,7 @@
   background: #1c1c1c;
 }
 
+/* LOGOUT */
 .logout-btn {
   width: 100%;
   background: #b30000;
@@ -99,16 +99,15 @@
   border: 1px solid #660000;
   text-align: center;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 25px;
   font-size: 16px;
-  transition: .2s;
 }
 
 .logout-btn:hover {
   background: #990000;
 }
 
-/* SWITCH ROW */
+/* SWITCH */
 .switch-row {
   display: flex;
   justify-content: space-between;
@@ -119,109 +118,95 @@
   border: 1px solid #333;
 }
 
-/* SWITCH BASE */
 .switch {
   position: relative;
   width: 55px;
   height: 28px;
 }
 
-.switch input {
-  display: none;
-}
+.switch input { display:none; }
 
 .slider {
   position: absolute;
-  cursor: pointer;
   background-color: #444;
   border-radius: 34px;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top:0; left:0; right:0; bottom:0;
   transition: .3s;
+  cursor:pointer;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 22px;
-  left: 3px;
-  top: 3px;
-  background-color: white;
-  border-radius: 50%;
-  transition: .3s;
+  content:"";
+  height:22px;
+  width:22px;
+  left:3px;
+  top:3px;
+  background:white;
+  border-radius:50%;
+  position:absolute;
+  transition:.3s;
 }
 
 .switch input:checked + .slider {
-  background-color: #00aa66;
+  background:#00aa66;
 }
 
 .switch input:checked + .slider:before {
-  transform: translateX(27px);
+  transform:translateX(27px);
 }
 
-/* INPUTS (PASSWORD CHANGE) */
+/* INPUT BOX */
 .input-box {
-  background: #141414;
-  border: 1px solid #2a2a2a;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  color: white;
-  width: 100%;
-  font-size: 16px;
+  background:#141414;
+  border:1px solid #2a2a2a;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:12px;
+  color:white;
+  width:100%;
+  font-size:16px;
 }
 
 /* LIGHT MODE */
-html.light body {
-  background: #f5f5f5;
-  color: #111;
-}
-
 html.light .settings-left,
 html.light .settings-right {
-  background: #ffffff;
-  border-color: #ccc;
+  background:#fff;
+  border-color:#ccc;
 }
 
 html.light .settings-item {
-  background: #f4f4f4;
-  border-color: #ccc;
-  color: #111;
+  background:#f2f2f2;
+  border-color:#ccc;
+  color:#111;
 }
 
 html.light .settings-item.active {
-  background: #00aa66;
-  color: white;
+  background:#00aa66;
+  color:white;
 }
 
 html.light .switch-row {
-  background: #fff;
-  border-color: #ccc;
+  background:#fff;
+  border-color:#ccc;
 }
 
-html.light .slider {
-  background: #ccc;
-}
+html.light .slider { background:#ccc; }
 
 html.light .input-box {
-  background: white;
-  border-color: #bbb;
-  color: #111;
+  background:white;
+  border-color:#bbb;
+  color:#111;
 }
 
-/* MOBILE */
-@media(max-width: 800px) {
-  .settings-wrapper {
-    flex-direction: column;
-  }
-  .settings-left {
-    width: 100%;
-  }
+/* RESPONSIVE */
+@media(max-width:800px){
+  .settings-wrapper { flex-direction:column; }
+  .settings-left { width:100%; }
 }
 
 </style>
-
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -256,7 +241,6 @@ html.light .input-box {
 <!-- SETTINGS PANEL -->
 <div class="settings-wrapper">
 
-  <!-- LEFT -->
   <div class="settings-left">
     <h2>Settings</h2>
     <div class="settings-item active" data-page="appearance">Appearance</div>
@@ -265,9 +249,7 @@ html.light .input-box {
     <div class="settings-item" data-page="notifications">Notifications</div>
   </div>
 
-  <!-- RIGHT -->
   <div class="settings-right" id="settingsContent">
-
     <h3>Appearance</h3>
     <div class="switch-row">
       <span>Theme</span>
@@ -276,33 +258,33 @@ html.light .input-box {
         <span class="slider"></span>
       </label>
     </div>
-
   </div>
 
 </div>
 
-<!-- SCRIPT -->
 <script>
-/* Avatar dropdown */
+/* LOGIN CHECK */
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+/* LOAD USER DATA */
+let user = JSON.parse(localStorage.getItem("user_" + username));
+
+/* AVATAR FIX - ALL PAGES */
 document.addEventListener("DOMContentLoaded", () => {
   const avatar = document.getElementById("userAvatar");
   const menu = document.getElementById("avatarMenu");
+
+  if (user && user.avatar) {
+    avatar.src = user.avatar;
+  }
+
   avatar.addEventListener("click", () => {
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
   });
 });
 
-/* Login check */
-let username = localStorage.getItem("loggedInUser");
-if (!username) window.location.href = "login.html";
-
-let data = JSON.parse(localStorage.getItem("user_" + username));
-
-if (data && data.avatar) {
-  document.getElementById("userAvatar").src = data.avatar;
-}
-
-/* Switching panels */
+/* LEFT MENU CLICK */
 const items = document.querySelectorAll(".settings-item");
 const right = document.getElementById("settingsContent");
 
@@ -314,7 +296,6 @@ items.forEach(item => {
 
     let page = this.getAttribute("data-page");
 
-    /* APPEARANCE */
     if (page === "appearance") {
       right.innerHTML = `
         <h3>Appearance</h3>
@@ -324,139 +305,96 @@ items.forEach(item => {
             <input type="checkbox" id="themeToggleSwitch">
             <span class="slider"></span>
           </label>
-        </div>
-      `;
+        </div>`;
       initThemeSwitch();
     }
 
-    /* PROFILE */
     if (page === "profile") {
       right.innerHTML = `
         <h3>Profile</h3>
-        <button class="settings-btn" onclick="window.location.href='profile.html'">Edit Profile</button>
+        <button class="settings-btn" onclick="window.location.href='profile.html'">Edit Profile</button>`;
+    }
+
+    if (page === "account") {
+      right.innerHTML = `
+        <h3>Account</h3>
+
+        <input id="oldPass" type="password" class="input-box" placeholder="Old Password">
+        <input id="newPass" type="password" class="input-box" placeholder="New Password">
+        <input id="newPass2" type="password" class="input-box" placeholder="Confirm New Password">
+
+        <button class="settings-btn" onclick="changePassword()">Save Password</button>
+
+        <button class="settings-btn" onclick="resetAvatar()">Reset Avatar</button>
+
+        <div class="logout-btn" onclick="logout()">Logout</div>
       `;
     }
 
-    /* ACCOUNT (PASSWORD CHANGE BURADA) */
-<script>
-function changePassword() {
-  let username = localStorage.getItem("loggedInUser");
-  if (!username) {
-    alert("No user logged in.");
-    return;
-  }
-
-  let userDataRaw = localStorage.getItem("user_" + username);
-  if (!userDataRaw) {
-    alert("User data missing.");
-    return;
-  }
-
-  let user = JSON.parse(userDataRaw);
-
-  const oldPass = document.getElementById("oldPass").value.trim();
-  const newPass = document.getElementById("newPass").value.trim();
-  const newPass2 = document.getElementById("newPass2").value.trim();
-
-  // Eski şifre kontrolü
-  if (oldPass !== user.password) {
-    alert("Old password is incorrect.");
-    return;
-  }
-
-  // Yeni şifre minimum uzunluk kontrolü
-  if (newPass.length < 4) {
-    alert("New password must be at least 4 characters.");
-    return;
-  }
-
-  // Yeni şifrelerin eşleşme kontrolü
-  if (newPass !== newPass2) {
-    alert("New password and confirmation do not match.");
-    return;
-  }
-
-  // Şifreyi güncelle
-  user.password = newPass;
-
-  // LocalStorage güncelle
-  localStorage.setItem("user_" + username, JSON.stringify(user));
-
-  alert("Password changed successfully!");
-}
-</script>
-
-
-    /* NOTIFICATIONS */
     if (page === "notifications") {
       right.innerHTML = `
         <h3>Notifications</h3>
-        <p style="opacity:.7;">No notifications available yet.</p>
-      `;
+        <p style="opacity:.7;">No notifications yet.</p>`;
     }
-
   });
 });
 
 /* THEME SWITCH */
-function initThemeSwitch() {
+function initThemeSwitch(){
   const sw = document.getElementById("themeToggleSwitch");
+  sw.checked = (localStorage.getItem("theme") === "light");
 
-  let saved = localStorage.getItem("theme");
-  sw.checked = (saved === "light");
-
-  sw.addEventListener("change", function () {
-    if (this.checked) {
+  sw.addEventListener("change", function(){
+    if(this.checked){
       document.documentElement.classList.add("light");
-      localStorage.setItem("theme", "light");
+      localStorage.setItem("theme","light");
     } else {
       document.documentElement.classList.remove("light");
-      localStorage.setItem("theme", "dark");
+      localStorage.setItem("theme","dark");
     }
-    document.body.style.transition = "0.3s";
   });
 }
 
 initThemeSwitch();
 
 /* RESET AVATAR */
-function resetAvatar() {
-  data.avatar = null;
-  localStorage.setItem("user_" + username, JSON.stringify(data));
+function resetAvatar(){
+  user.avatar = null;
+  localStorage.setItem("user_" + username, JSON.stringify(user));
   document.getElementById("userAvatar").src = "assets/default-avatar.png";
   alert("Avatar reset!");
 }
 
-/* PASSWORD CHANGE */
-function changePassword() {
+/* NEW — ERROR-FREE PASSWORD CHANGE */
+function changePassword(){
 
-  const oldP = document.getElementById("oldPass").value;
-  const newP = document.getElementById("newPass").value;
-  const newP2 = document.getElementById("newPass2").value;
+  const oldPass = document.getElementById("oldPass").value.trim();
+  const newPass = document.getElementById("newPass").value.trim();
+  const newPass2 = document.getElementById("newPass2").value.trim();
 
-  if (oldP !== data.password) {
+  if (oldPass !== user.password) {
     alert("Old password is incorrect.");
     return;
   }
 
-  if (newP.length < 4) {
-    alert("Password must be at least 4 characters.");
+  if (newPass.length < 4) {
+    alert("New password must be at least 4 characters.");
     return;
   }
 
-  if (newP !== newP2) {
-    alert("New passwords do not match.");
+  if (newPass !== newPass2) {
+    alert("New password and confirmation do not match.");
     return;
   }
 
-  data.password = newP;
-  localStorage.setItem("user_" + username, JSON.stringify(data));
+  user.password = newPass;
+  localStorage.setItem("user_" + username, JSON.stringify(user));
 
   alert("Password changed successfully!");
 }
 
 /* LOGOUT */
-function logout() {
+function logout(){
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
