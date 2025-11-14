@@ -2,8 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard — North Echo</title>
+  <title>Login — North Echo</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .auth-container {
+      max-width: 370px;
+      margin: 80px auto;
+      background: #0d0d0d;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      text-align: center;
+      border: 1px solid #222;
+    }
+
+    .auth-container h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 12px;
+      background: black;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: .2s;
+    }
+
+    .auth-button:hover {
+      background: #111;
+    }
+
+    #msg {
+      margin-top: 10px;
+      color: #ff4e4e;
+    }
+  </style>
 </head>
 
 <body>
@@ -21,15 +72,23 @@
 <!-- TOP BAR -->
 <div class="top-bar">
   <button id="openMenu" class="menu-button">☰</button>
-  <h1>Dashboard</h1>
+  <h1>Login</h1>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- PAGE CONTENT -->
 <div class="page-content">
-  <div class="form-box">
-      <p id="welcome"></p>
-      <button onclick="logout()">Logout</button>
+
+  <div class="auth-container">
+    <h1>Welcome Back</h1>
+
+    <input id="username" type="text" class="auth-input" placeholder="Username">
+    <input id="password" type="password" class="auth-input" placeholder="Password">
+
+    <button class="auth-button" onclick="login()">Login</button>
+
+    <p id="msg"></p>
   </div>
+
 </div>
 
 <script src="menu.js"></script>
@@ -37,19 +96,25 @@
 <script src="cart.js"></script>
 
 <script>
-const username = localStorage.getItem("loggedInUser");
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-if (!username) {
-  window.location.href = "login.html";
-}
+  const savedUser = localStorage.getItem("user_" + username);
 
-const data = JSON.parse(localStorage.getItem("user_" + username));
-document.getElementById("welcome").innerText = 
-  "Welcome, " + data.fullname + "!";
+  if (!savedUser) {
+    document.getElementById("msg").innerText = "User not found.";
+    return;
+  }
 
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
+  const data = JSON.parse(savedUser);
+
+  if (password === data.password) {
+    localStorage.setItem("loggedInUser", username);
+    window.location.href = "dashboard.html";
+  } else {
+    document.getElementById("msg").innerText = "Wrong password.";
+  }
 }
 </script>
 
