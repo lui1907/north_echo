@@ -33,7 +33,7 @@ window.sendSupportMessage = async function () {
         const fileName = `${Date.now()}-${file.name}`;
 
         const upload = await supabase.storage
-            .from("uploadsx")
+            .from("uploads")
             .upload(fileName, file);
 
         if (upload.error) {
