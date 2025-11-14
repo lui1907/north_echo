@@ -1,153 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — North Echo</title>
+    <link rel="stylesheet" href="style.css">
 
-<title>Admin Panel — North Echo</title>
+    <style>
+        body {
+            background: #0d0d0d;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="support.css">
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
 
-<style>
-body {
-  background: #000;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-}
+        h1 { margin-bottom: 20px; }
 
-.admin-wrapper {
-  margin-top: 120px;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 20px;
-}
+        .category-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-.admin-wrapper h1 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 25px;
-}
+        .category-btn {
+            padding: 8px 14px;
+            background: #222;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid #333;
+        }
 
-/* FILTER BAR */
-.filter-bar-admin {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+        .category-btn.active {
+            background: #4caf50;
+        }
 
-.filter-btn {
-  padding: 8px 14px;
-  background: #111;
-  border: 1px solid #333;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
+        .message {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            position: relative;
+        }
 
-.filter-btn.active {
-  background: #00aa66;
-  border-color: #00aa66;
-}
+        .name {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-/* MESSAGE CARD */
-.msg-box {
-  background: #0d0d0d;
-  border: 1px solid #222;
-  padding: 20px;
-  border-radius: 14px;
-  margin-bottom: 20px;
-  position: relative;
-}
+        .tick {
+            width: 12px;
+            height: 12px;
+            background: #4caf50;
+            border-radius: 50%;
+        }
 
-.msg-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+        .delete-btn {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: red;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-.msg-sender { font-size: 18px; font-weight: 700; }
-.msg-email { opacity: .7; }
-.msg-category {
-  font-size: 14px;
-  opacity: .6;
-  margin-top: 4px;
-}
-
-.msg-delete {
-  background: #400000;
-  color: #ff6666;
-  border: 1px solid #660000;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.msg-text { margin: 12px 0; opacity: .9; white-space: pre-line; line-height: 1.5; }
-
-.msg-img {
-  width: 180px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 1px solid #333;
-  margin-bottom: 10px;
-  transition: .2s;
-}
-
-.msg-img:hover { transform: scale(1.03); }
-
-.msg-date { opacity: .5; font-size: 14px; margin-bottom: 12px; }
-
-/* IMAGE MODAL */
-#imgModal {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,.85); display: none;
-  align-items: center; justify-content: center; z-index: 999999;
-}
-
-#imgModal img { max-width: 90%; max-height: 90%; border-radius: 12px; }
-
-#imgModalClose {
-  position: fixed; top: 20px; right: 25px;
-  font-size: 32px; color: white; cursor: pointer;
-}
-</style>
-
+        #noMessages {
+            text-align: center;
+            margin-top: 40px;
+            color: #777;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <h1>Admin Panel</h1>
 
-<header class="header">
-  <a href="index.html" class="logo">NORTH ECHO</a>
-</header>
+        <!-- Kategoriler -->
+        <div class="category-bar">
+            <div class="category-btn active" data-category="all">All</div>
+            <div class="category-btn" data-category="order">Order</div>
+            <div class="category-btn" data-category="message">Message</div>
+            <div class="category-btn" data-category="other">Other</div>
+        </div>
 
-<div class="admin-wrapper">
-  
-  <h1>Support Messages</h1>
+        <div id="messageList"></div>
+        <div id="noMessages">No messages found.</div>
+    </div>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar-admin">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="unread">Unread</button>
-      <button class="filter-btn" data-filter="tshirt">T-Shirt</button>
-      <button class="filter-btn" data-filter="sweatshirt">Sweatshirt</button>
-      <button class="filter-btn" data-filter="other">Other</button>
-      <button class="filter-btn" data-filter="withfile">With File</button>
-  </div>
-
-  <div id="adminMessages"></div>
-</div>
-
-<!-- IMAGE MODAL -->
-<div id="imgModal">
-  <div id="imgModalClose" onclick="closeImgModal()">✕</div>
-  <img id="imgModalContent" src="">
-</div>
-
-<script type="module" src="admin.js"></script>
-
+    <script src="admin.js"></script>
 </body>
 </html>
