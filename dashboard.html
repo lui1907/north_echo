@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Dashboard — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
@@ -11,79 +12,89 @@
 <script src="cart.js" defer></script>
 
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
 
-  /* SAYFANIN GENEL KAPSAYICISI */
-  .page-content {
-    width: 100%;
-    min-height: calc(100vh - 80px); /* Header çıkarıldı */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 40px; /* Üste temiz boşluk */
-    box-sizing: border-box;
-  }
+body {
+    margin:0;
+    padding:0;
+    color:white;
+}
 
-  /* DASHBOARD İÇ BLOĞU */
-  .dashboard-container {
-    width: 90%;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  /* HOŞGELDİN KUTUSU */
-  .welcome-box {
-    background: #0d0d0d;
-    padding: 25px;
-    border-radius: 16px;
-    border: 1px solid #222;
-    box-shadow: 0 0 25px rgba(0,0,0,0.4);
-    margin-bottom: 30px;
-    text-align: left;
-  }
-
-  .welcome-box h2 {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  /* KART SYSTEM */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-  }
-
-  .dash-card {
-    background: #101010;
-    border: 1px solid #222;
+/* DASHBOARD WRAPPER */
+.dashboard {
+    max-width: 1200px;
+    margin: 100px auto;
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    transition: 0.2s;
-    cursor: pointer;
-  }
+}
 
-  .dash-card:hover {
-    background: #161616;
-    transform: translateY(-3px);
-  }
+/* WELCOME CARD */
+.welcome-card {
+    background: rgba(15,15,15,0.8);
+    padding: 28px;
+    border-radius: 18px;
+    border: 1px solid #1f1f1f;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-  .dash-card h3 {
-    margin-bottom: 8px;
-    font-size: 18px;
-  }
+/* Avatar */
+.welcome-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #00aa66;
+}
 
-  .dash-card p {
+/* Welcome text */
+.welcome-info h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+}
+.welcome-info p {
     opacity: 0.8;
+    margin: 5px 0 0 0;
+}
+
+/* PANEL CARD GRID */
+.panel-grid {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 25px;
+}
+
+/* Each card */
+.panel-card {
+    background: rgba(18,18,18,0.9);
+    padding: 26px;
+    border-radius: 16px;
+    border: 1px solid #1f1f1f;
+    backdrop-filter: blur(6px);
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+.panel-card:hover {
+    transform: translateY(-4px);
+    border-color: #00aa66;
+}
+
+/* Card title */
+.panel-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+}
+
+/* Card description */
+.panel-card p {
+    opacity: 0.75;
     font-size: 14px;
-  }
+}
+
 </style>
 </head>
 
@@ -95,25 +106,20 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-  <a href="submit-design.html" class="submit-nav">Submit</a>
-  <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
-  <!-- PROFIL FOTOĞRAFI -->
-  <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
-  <!-- AÇILIR MENÜ -->
-  <div class="avatar-menu" id="avatarMenu">
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
-    <a href="#" class="logout" onclick="logout()">Logout</a>
+    <!-- Avatar -->
+    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
+    <div class="avatar-menu" id="avatarMenu">
+        <a href="profile.html">Profile</a>
+        <a href="settings.html">Settings</a>
+        <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
   </div>
-
-</div>
-
 </header>
 
-<!-- SIDE MENU -->
+
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -123,94 +129,61 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- DASHBOARD ORTASINDA DURAN ANA BLOK -->
-<div class="page-content">
 
-  <div class="dashboard-container">
 
-    <div class="welcome-box">
-      <h2 id="welcome"></h2>
+<!-- DASHBOARD -->
+<div class="dashboard">
+
+  <!-- TOP WELCOME CARD -->
+  <div class="welcome-card">
+    <img id="dashAvatar" class="welcome-avatar" src="assets/default-avatar.png">
+
+    <div class="welcome-info">
+      <h2>Welcome back, <span id="dashName"></span> 👋</h2>
       <p>Your personal control panel</p>
     </div>
+  </div>
 
-    <div class="card-grid">
+  <!-- PANEL GRID -->
+  <div class="panel-grid">
 
-      <div class="dash-card" onclick="window.location.href='profile.html'">
-        <h3>Profile</h3>
-        <p>View & edit your personal information</p>
-      </div>
+    <a href="profile.html" class="panel-card">
+      <h3>Profile</h3>
+      <p>View & edit your personal information</p>
+    </a>
 
-      <div class="dash-card" onclick="window.location.href='messages.html'">
-        <h3>Messages</h3>
-        <p>View your messages</p>
-      </div>
+    <a href="messages.html" class="panel-card">
+      <h3>Messages</h3>
+      <p>Check your received messages</p>
+    </a>
 
-      <div class="dash-card" onclick="window.location.href='settings.html'">
-        <h3>Settings</h3>
-        <p>Manage your account settings</p>
-      </div>
-
-      <div class="dash-card" onclick="logout()">
-        <h3>Logout</h3>
-        <p>Sign out of your account</p>
-      </div>
-
-    </div>
+    <a href="settings.html" class="panel-card">
+      <h3>Settings</h3>
+      <p>Manage your account & preferences</p>
+    </a>
 
   </div>
 
 </div>
 
-<script>
-// LOGIN KONTROLÜ
-let username = localStorage.getItem("loggedInUser");
-
-if (!username) {
-  window.location.href = "login.html";
-}
-
-// Kullanıcı verisini çek
-const data = JSON.parse(localStorage.getItem("user_" + username));
-
-// Hoş geldin yazısı
-document.getElementById("welcome").innerText =
-  "Welcome, " + data.fullname + "!";
-
-// Logout
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-</script>
 
 <script>
-const avatar = document.getElementById("userAvatar");
-const menu = document.getElementById("avatarMenu");
+// LOAD USER INFO
+const currentUser = localStorage.getItem("loggedInUser");
+if(!currentUser) window.location.href = "login.html";
 
-if (avatar) {
-  avatar.addEventListener("click", function () {
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-  });
-}
+const userData = JSON.parse(localStorage.getItem("user_" + currentUser));
 
-// Logout fonksiyonu
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
+document.getElementById("dashName").innerText = userData.fullname;
+document.getElementById("dashAvatar").src = userData.avatar || "assets/default-avatar.png";
+document.getElementById("userAvatar").src = userData.avatar || "assets/default-avatar.png";
+
+// Avatar menu
+document.getElementById("userAvatar").addEventListener("click", () => {
+  document.getElementById("avatarMenu").style.display =
+    document.getElementById("avatarMenu").style.display === "flex" ? "none" : "flex";
+});
 </script>
 
-  <script>
-let username = localStorage.getItem("loggedInUser");
-if (username) {
-  let data = JSON.parse(localStorage.getItem("user_" + username));
-  if (data && data.avatar) {
-    let small = document.getElementById("userAvatar");
-    if (small) small.src = data.avatar;
-  }
-}
-</script>
-
-  
 </body>
 </html>
