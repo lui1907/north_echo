@@ -6,9 +6,19 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    body {
+      color: white;
+    }
+
+    .page-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+    }
+
     .auth-container {
       max-width: 370px;
-      margin: 80px auto;
       background: #0d0d0d;
       padding: 30px;
       border-radius: 14px;
@@ -54,6 +64,12 @@
       margin-top: 10px;
       color: #ff4e4e;
     }
+
+    .page-title {
+      font-size: 20px;
+      margin-left: 10px;
+      color: white;
+    }
   </style>
 </head>
 
@@ -72,12 +88,11 @@
 <!-- TOP BAR -->
 <div class="top-bar">
   <button id="openMenu" class="menu-button">☰</button>
-  <h1>Login</h1>
+  <span class="page-title">Login</span>
 </div>
 
 <!-- PAGE CONTENT -->
 <div class="page-content">
-
   <div class="auth-container">
     <h1>Welcome Back</h1>
 
@@ -88,7 +103,6 @@
 
     <p id="msg"></p>
   </div>
-
 </div>
 
 <script src="menu.js"></script>
