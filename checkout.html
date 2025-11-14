@@ -9,6 +9,73 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 
+<style>
+  .checkout-wrapper {
+    margin-top: 120px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .checkout-layout {
+    width: 80%;
+    display: flex;
+    gap: 40px;
+  }
+  .checkout-form {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+  }
+  .checkout-form input,
+  .checkout-form textarea {
+    background:#111;
+    border:1px solid #333;
+    border-radius:10px;
+    padding:12px;
+    color:white;
+    margin-bottom:15px;
+  }
+
+  .placeorder-btn {
+    padding:14px;
+    background:#00aa66;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:10px;
+    font-size:16px;
+  }
+  .placeorder-btn:hover { background:#009655; }
+
+  .checkout-summary {
+    flex: 1;
+    background:#0d0d0d;
+    padding:20px;
+    border-radius:16px;
+    border:1px solid #222;
+    height:max-content;
+  }
+
+  .summary-product {
+    display:flex;
+    gap:12px;
+    margin-bottom:15px;
+  }
+
+  .summary-product img {
+    width:70px;
+    height:70px;
+    border-radius:10px;
+    object-fit:cover;
+  }
+
+  .co-line {
+    display:flex;
+    justify-content:space-between;
+    margin:8px 0;
+  }
+</style>
 </head>
 <body>
 
@@ -16,23 +83,18 @@
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-  <a href="submit-design.html" class="submit-nav">Submit</a>
-  <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
-  <!-- PROFIL FOTOĞRAFI -->
-  <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
-  <!-- AÇILIR MENÜ -->
-  <div class="avatar-menu" id="avatarMenu">
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
-    <a href="#" class="logout" onclick="logout()">Logout</a>
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
   </div>
-
-</div>
-
 </header>
 
 <!-- SIDE MENU -->
@@ -41,144 +103,146 @@
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- ==================== -->
-<!-- CHECKOUT PAGE LAYOUT -->
-<!-- ==================== -->
-
+<!-- PAGE -->
 <main class="checkout-wrapper">
-
-  <h1 class="checkout-title">Checkout</h1>
 
   <div class="checkout-layout">
 
-    <!-- SOL FORM -->
-    <form class="checkout-form">
+    <!-- FORM -->
+    <form class="checkout-form" id="checkoutForm">
 
       <h2>Contact Information</h2>
 
       <label>Name</label>
-      <input type="text" placeholder="Your full name" required>
+      <input id="c_name" type="text" placeholder="Your full name" required>
 
       <label>Email</label>
-      <input type="email" placeholder="your@mail.com" required>
+      <input id="c_email" type="email" placeholder="your@mail.com" required>
 
       <label>Phone Number</label>
-      <input type="text" placeholder="+358 xx xxx xx xx" required>
-
+      <input id="c_phone" type="text" placeholder="+358 xx xxx xx xx" required>
 
       <h2 style="margin-top:30px;">Shipping Address</h2>
 
       <label>Country</label>
-      <input type="text" placeholder="Finland" required>
+      <input id="c_country" type="text" placeholder="Finland" required>
 
       <label>City</label>
-      <input type="text" placeholder="Helsinki" required>
+      <input id="c_city" type="text" placeholder="Helsinki" required>
 
       <label>Full Address</label>
-      <textarea placeholder="Street, building, apartment number..." required></textarea>
+      <textarea id="c_address" placeholder="Street, building, apartment number..." required></textarea>
 
-      <button class="placeorder-btn" type="submit">
-        Complete Order →
-      </button>
+      <button class="placeorder-btn" type="submit">Complete Order →</button>
 
     </form>
 
-    <!-- ORDER SUMMARY -->
-<div class="checkout-summary">
+    <!-- SUMMARY -->
+    <div class="checkout-summary">
 
-    <h2>Order Summary</h2>
+      <h2>Order Summary</h2>
 
-    <div class="summary-product">
-        <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
-        <div class="summary-product-info">
-            <h4>Black Printed Sweatshirt</h4>
-            <p>Size: M</p>
-            <p>35€ × 1</p>
-        </div>
-    </div>
+      <div id="sumItems"></div>
 
-    <div class="summary-line">
+      <div class="co-line">
         <span>Subtotal</span>
-        <span>35€</span>
-    </div>
+        <span id="sumSubtotal">0€</span>
+      </div>
 
-    <div class="summary-line">
+      <div class="co-line">
         <span>Shipping</span>
         <span>Free</span>
+      </div>
+
+      <div class="co-line" style="font-weight:bold;">
+        <span>Total</span>
+        <span id="sumTotal">0€</span>
+      </div>
+
     </div>
 
-    <div class="summary-total">
-        <span>Total</span>
-        <span>35€</span>
-    </div>
   </div>
 </main>
 
-<!-- =========== ORDER SUMMARY SCRIPT =========== -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+/* LOAD ORDER SUMMARY FROM CART */
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const box = document.getElementById("sumItems");
+let subtotal = 0;
 
-    const itemsBox = document.getElementById("summaryItems");
-    const subtotalEl = document.getElementById("summarySubtotal");
-    const totalEl = document.getElementById("summaryTotal");
+cart.forEach(item => {
+  subtotal += item.price * item.quantity;
 
-    itemsBox.innerHTML = "";
-
-    let subtotal = 0;
-
-    cart.forEach(item => {
-        subtotal += item.price * item.quantity;
-
-        itemsBox.innerHTML += `
-            <div class="co-item">
-                <img src="${item.image}" class="co-img" />
-                <div>
-                    <h3>${item.name}</h3>
-                    <p>Size: ${item.size}</p>
-                    <p>${item.price}€ × ${item.quantity}</p>
-                </div>
-            </div>
-        `;
-    });
-
-    subtotalEl.textContent = subtotal + "€";
-    totalEl.textContent = subtotal + "€";
+  box.innerHTML += `
+    <div class="summary-product">
+      <img src="${item.image}">
+      <div>
+        <h4>${item.name}</h4>
+        <p>Size: ${item.size}</p>
+        <p>${item.price}€ × ${item.quantity}</p>
+      </div>
+    </div>
+  `;
 });
-</script>
 
-  <script>
-const avatar = document.getElementById("userAvatar");
-const menu = document.getElementById("avatarMenu");
+document.getElementById("sumSubtotal").textContent = subtotal + "€";
+document.getElementById("sumTotal").textContent = subtotal + "€";
 
-if (avatar) {
-  avatar.addEventListener("click", function () {
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-  });
+/* COMPLETE ORDER */
+document.getElementById("checkoutForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const username = localStorage.getItem("loggedInUser");
+  if (!username) return alert("Please login first.");
+
+  const orderData = {
+    user: username,
+    items: cart,
+    total: subtotal,
+    contact: {
+      name: c_name.value,
+      email: c_email.value,
+      phone: c_phone.value,
+      country: c_country.value,
+      city: c_city.value,
+      address: c_address.value
+    },
+    date: new Date().toLocaleString()
+  };
+
+  /* save order */
+  let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
+  orders.push(orderData);
+  localStorage.setItem("orders_" + username, JSON.stringify(orders));
+
+  /* clear cart */
+  localStorage.removeItem("cart");
+
+  window.location.href = "order-success.html";
+});
+
+/* avatar dropdown */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
 }
 
-// Logout fonksiyonu
+/* logout */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
-</script>
 
-  <script>
-let username = localStorage.getItem("loggedInUser");
-if (username) {
-  let data = JSON.parse(localStorage.getItem("user_" + username));
-  if (data && data.avatar) {
-    let small = document.getElementById("userAvatar");
-    if (small) small.src = data.avatar;
-  }
+/* load small avatar */
+let un = localStorage.getItem("loggedInUser");
+if (un) {
+  let ud = JSON.parse(localStorage.getItem("user_" + un));
+  if (ud && ud.avatar) document.getElementById("userAvatar").src = ud.avatar;
 }
 </script>
-
 
 </body>
 </html>
