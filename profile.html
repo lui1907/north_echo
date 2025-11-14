@@ -32,7 +32,30 @@
   object-fit: cover;
   border: 3px solid #222;
   box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+}
+
+/* + işareti */
+.avatar-plus {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #00aa66;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  cursor: pointer;
+  border: 2px solid #0d0d0d;
+  transition: .2s;
+}
+
+.avatar-plus:hover {
+  background: #009955;
 }
 
 /* Ad Soyad */
@@ -92,7 +115,7 @@
 
 <body>
 
-<!-- HEADER (avatarlı versiyon) -->
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -108,28 +131,25 @@
       <a href="settings.html">Settings</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
-
   </div>
 </header>
 
 <!-- PROFILE CONTENT -->
 <div class="profile-container">
 
-  <!-- Büyük Profil Fotoğrafı -->
+  <!-- Avatar + + Butonu -->
   <div style="position: relative; display: inline-block;">
-  <img src="assets/default-avatar.png" class="profile-avatar" id="profileAvatar">
+    <img src="assets/default-avatar.png" class="profile-avatar" id="profileAvatar">
 
-  <!-- Küçük + ikonu -->
-  <label for="avatarInput" class="avatar-plus">+</label>
-  <input type="file" id="avatarInput" accept="image/*" style="display:none;">
-</div>
+    <label for="avatarInput" class="avatar-plus">+</label>
+    <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+  </div>
 
-
-  <!-- Kullanıcı Bilgileri -->
+  <!-- Kullanıcı bilgileri -->
   <div class="profile-name" id="profileName"></div>
   <div class="profile-username" id="profileUsername"></div>
 
-  <!-- Düzenlenebilir Alanlar -->
+  <!-- Düzenlenebilir bilgiler -->
   <div class="profile-item">
     <label>Full Name</label>
     <input type="text" id="fullNameInput"/>
@@ -163,14 +183,44 @@ if (!username) window.location.href = "login.html";
 /* Kullanıcı verisi */
 let data = JSON.parse(localStorage.getItem("user_" + username));
 
-/* Bilgileri sayfaya yaz */
+/* Bilgileri profile yaz */
 document.getElementById("profileName").innerText = data.fullname;
 document.getElementById("profileUsername").innerText = "@" + data.username;
 
 document.getElementById("fullNameInput").value = data.fullname;
 document.getElementById("passwordInput").value = data.password;
 
-/* Kaydet */
+/* Avatar değişimi */
+document.getElementById("avatarInput").addEventListener("change", function() {
+  const file = this.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const newAvatar = e.target.result;
+
+    // Büyük avatar güncelle
+    document.getElementById("profileAvatar").src = newAvatar;
+
+    // Küçük avatar güncelle
+    document.getElementById("userAvatar").src = newAvatar;
+
+    // Kaydet
+    data.avatar = newAvatar;
+    localStorage.setItem("user_" + username, JSON.stringify(data));
+  }
+
+  reader.readAsDataURL(file);
+});
+
+/* Sayfaya girince avatarı yükle */
+if (data.avatar) {
+  document.getElementById("profileAvatar").src = data.avatar;
+  document.getElementById("userAvatar").src = data.avatar;
+}
+
+/* Profil kaydetme */
 function saveProfile() {
   data.fullname = document.getElementById("fullNameInput").value;
   data.password = document.getElementById("passwordInput").value;
