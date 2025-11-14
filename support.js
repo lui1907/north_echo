@@ -1,11 +1,15 @@
-/* ============================================================
-   FIREBASE BAĞLANTISI
-   ============================================================ */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+// support.js  (FIREBASE + GLOBAL FONKSİYONLAR)
 
-/* -- SENİN CONFIGİN -- */
+// --- Firebase importları (CDN üzerinden) ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// --- SENİN PROJENİN AYNI CONFIG'İ ---
 const firebaseConfig = {
   apiKey: "AIzaSyCbWvQenaRuSp0Op0IJLCl2fjV7I45tMX4",
   authDomain: "northecho-support.firebaseapp.com",
@@ -16,62 +20,86 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+const db  = getFirestore(app);
 
-
-/* ============================================================
-   SUPPPORT PANEL AÇ/KAPAT
-   ============================================================ */
-function toggleSupportPanel() {
-  let panel = document.getElementById("supportPanel");
-  panel.style.display = (panel.style.display === "block") ? "none" : "block";
+// ==============================
+// PANEL AÇ / KAPAT
+// ==============================
+function _toggleSupportPanel () {
+  const p = document.getElementById("supportPanel");
+  if (!p) return;
+  p.style.display = (p.style.display === "block") ? "none" : "block";
 }
-window.toggleSupportPanel = toggleSupportPanel;
 
+// HTML’de onclick="toggleSupportPanel()" çalışsın diye:
+window.toggleSupportPanel = _toggleSupportPanel;
 
-/* ============================================================
-   MESAJ GÖNDERME
-   ============================================================ */
-window.sendSupportMessage = async function () {
+// ==============================
+// DOSYAYI DATA URL'E ÇEVİRME
+// ==============================
+function fileToDataURL(file) {
+  return new Promise((resolve) => {
+    if (!file) return resolve(null);
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
 
-  const name = document.getElementById("supName").value.trim();
-  const email = document.getElementById("supEmail").value.trim();
-  const msg = document.getElementById("supMsg").value.trim();
-  const fileInput = document.getElementById("supFile");
+// ==============================
+// MESAJ GÖNDER
+// ==============================
+async function _sendSupportMessage () {
+  const nameEl  = document.getElementById("supName");
+  const mailEl  = document.getElementById("supEmail");
+  const msgEl   = document.getElementById("supMsg");
+  const fileEl  = document.getElementById("supFile");
 
-  if (!name || !email || !msg) {
+  if (!nameEl || !mailEl || !msgEl) {
+    alert("Form elemanları bulunamadı (supName / supEmail / supMsg).");
+    return;
+  }
+
+  const name  = nameEl.value.trim();
+  const email = mailEl.value.trim();
+  const text  = msgEl.value.trim();
+  const file  = fileEl?.files[0] || null;
+
+  if (!name || !email || !text) {
     alert("Please fill all required fields.");
     return;
   }
 
-  let fileURL = "";
+  try {
+    // Dosya varsa DataURL’e çevir
+    const fileDataUrl = await fileToDataURL(file);
 
-  // ---------- FOTOĞRAF / DOSYA VARSA YÜKLE ----------
-  if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    const filePath = `uploads/${Date.now()}_${file.name}`;
-    const storageRef = ref(storage, filePath);
+    // Firestore’a kaydet
+    await addDoc(collection(db, "messages"), {
+      name,
+      email,
+      text,
+      file: fileDataUrl || null,
+      date: new Date().toLocaleString(),
+      createdAt: serverTimestamp(),
+      read: false,
+      adminNote: ""
+    });
 
-    await uploadBytes(storageRef, file);
-    fileURL = await getDownloadURL(storageRef);
+    // Formu temizle
+    nameEl.value = "";
+    mailEl.value = "";
+    msgEl.value = "";
+    if (fileEl) fileEl.value = "";
+
+    alert("Message sent successfully.");
+    _toggleSupportPanel();
+
+  } catch (err) {
+    console.error("Support send error:", err);
+    alert("Error sending message. Check console.");
   }
+}
 
-  // ---------- FIRESTORE'A KAYDET ----------
-  await addDoc(collection(db, "messages"), {
-    name,
-    email,
-    message: msg,
-    file: fileURL,
-    date: new Date().toISOString()
-  });
-
-  alert("Your message was sent successfully!");
-  toggleSupportPanel();
-
-  // inputları temizle
-  document.getElementById("supName").value = "";
-  document.getElementById("supEmail").value = "";
-  document.getElementById("supMsg").value = "";
-  document.getElementById("supFile").value = "";
-};
+// HTML’de onclick="sendSupportMessage()" çalışsın diye:
+window.sendSupportMessage = _sendSupportMessage;
