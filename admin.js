@@ -1,7 +1,7 @@
 // -----------------------------------------
 // 🔥 Supabase Bağlantısı
 // -----------------------------------------
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.32.0/dist/esm/supabase.js";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabase = createClient(
   "https://xedfviwffpsvbmyqzoof.supabase.co",
