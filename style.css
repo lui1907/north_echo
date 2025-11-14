@@ -940,3 +940,44 @@ body.light .footer-link:hover {
 .submit-nav:hover {
   opacity: 1;
 }
+/* Avatar (profil fotoğrafı) */
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+/* Avatar menüsü (şimdilik görünmez) */
+.avatar-menu {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  min-width: 150px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+.avatar-menu a {
+  padding: 12px;
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 1px solid #222;
+  display: block;
+}
+
+.avatar-menu a:last-child {
+  border-bottom: none;
+}
+
+.avatar-menu a:hover {
+  background: #111;
+}
