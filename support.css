@@ -1,175 +1,147 @@
-/* SUPPORT BUTTON */
+/* ============================================
+   💬 SUPPORT BUTTON (küçük yuvarlak)
+============================================ */
 #supportBtn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 58px;
-    height: 58px;
-    background: #00aa66;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 9999;
-    box-shadow: 0 0 18px rgba(0,0,0,0.4);
-}
-#supportBtn img {
-    width: 30px;
-    height: 30px;
-}
-
-/* PANEL */
-#supportPanel {
-    position: fixed;
-    bottom: 100px;
-    right: 25px;
-    width: 330px;
-    background: #0d0d0d;
-    border: 1px solid #222;
-    padding: 18px;
-    border-radius: 14px;
-    display: none;   /* <-- ÖNEMLİ */
-    flex-direction: column;
-    z-index: 9999;
-    box-shadow: 0 0 25px rgba(0,0,0,0.5);
-}
-
-/* HEADER */
-.sup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-.sup-header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-/* INPUTLAR */
-.sup-body input,
-.sup-body textarea {
-    width: 100%;
-    background: #141414;
-    border: 1px solid #333;
-    padding: 10px;
-    border-radius: 8px;
-    color: white;
-    margin-bottom: 12px;
-}
-.sup-body textarea {
-    height: 90px;
-    resize: none;
-}
-
-/* SEND BUTTON */
-.sup-send {
-    width: 100%;
-    background: #00aa66;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    color: white;
-    font-size: 15px;
-}
-.sup-send:hover {
-    background: #009655;
-}
-.reply-container {
-  background: #111;
-  border: 1px solid #333;
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
-  color: #00cc78;
-}
-/* CHAT WINDOW */
-.chat-window {
-  height: 360px;
-  overflow-y: auto;
-  background: #0f0f0f;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #222;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* BALONLAR */
-.msg-user {
-  max-width: 75%;
-  align-self: flex-start;
-  background: #222;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border-top-left-radius: 0;
-  color: white;
-}
-
-.msg-admin {
-  max-width: 75%;
-  align-self: flex-end;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
   background: #00aa66;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border-top-right-radius: 0;
-  color: white;
-}
-
-/* DOSYA */
-.chat-img {
-  width: 140px;
-  border-radius: 8px;
-  margin-top: 8px;
-  border: 1px solid #333;
-}
-
-/* TARİH */
-.msg-date {
-  opacity: .4;
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-/* INPUT ALANI */
-.chat-input-area {
-  margin-top: 10px;
+  border-radius: 50%;
   display: flex;
-  gap: 8px;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  transition: 0.2s;
 }
 
-.chat-input-area input[type="text"] {
-  flex: 1;
-  padding: 10px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 10px;
+#supportBtn:hover {
+  background: #009655;
+}
+
+#supportBtn img {
+  width: 28px;
+  height: 28px;
+  filter: invert(1);
+}
+
+
+/* ============================================
+   💬 SUPPORT PANEL (açılır kutu)
+============================================ */
+#supportPanel {
+  position: fixed;
+  bottom: 95px;
+  right: 25px;
+  width: 400px;
+  background: #0d0d0d;
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid #222;
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 0 30px rgba(0,0,0,0.55);
+}
+
+/* Header */
+.sup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 10px;
   color: white;
 }
 
-.file-btn {
-  font-size: 22px;
-  cursor: pointer;
-  opacity: .7;
-}
-
-.send-btn {
-  background: #00aa66;
+.sup-header button {
+  background: none;
   border: none;
   color: white;
-  font-size: 18px;
-  padding: 10px 14px;
-  border-radius: 10px;
+  font-size: 22px;
   cursor: pointer;
 }
-.send-btn:hover {
-  background: #009955;
+
+/* Body */
+.sup-body label {
+  color: white;
+  font-size: 14px;
+  display: block;
+  margin-top: 12px;
+}
+
+/* Inputlar + textarea */
+.sup-body input,
+.sup-body textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.sup-body textarea {
+  height: 120px;
+  resize: none;
+}
+
+/* Dosya yükleme */
+#supFile {
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* Gönder Butonu */
+.sup-send {
+  width: 100%;
+  padding: 12px;
+  margin-top: 18px;
+  background: #00aa66;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.sup-send:hover {
+  background: #009655;
+}
+
+
+/* ============================================
+   📩 KULLANICI TARAFINA ADMİN CEVABI (balon)
+============================================ */
+#supReplyBox {
+  margin-top: 20px;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: #00dd88;
+  font-size: 14px;
+  display: none;
+}
+
+
+/* ============================================
+   📱 MOBİL UYUMLULUK
+============================================ */
+@media (max-width: 480px) {
+  #supportPanel {
+    width: 90%;
+    right: 5%;
+    bottom: 90px;
+  }
+
+  #supportBtn {
+    width: 55px;
+    height: 55px;
+  }
 }
