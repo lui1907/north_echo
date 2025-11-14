@@ -1,102 +1,104 @@
-/* SUPPORT BUTTON (Floating Bubble) */
-.support-btn {
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
-  width: 55px;
-  height: 55px;
-  background: #111;
-  border: 1px solid #444;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 9999;
-  transition: .25s;
+/* SUPPORT BUTTON */
+#supportBtn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 70px;
+    height: 70px;
+    background: #00aa66;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 3px solid #0f0f0f;
+    box-shadow: 0 0 15px rgba(0,255,150,0.4);
+    transition: 0.2s;
+    z-index: 9999;
+}
+#supportBtn:hover {
+    transform: scale(1.08);
+    background: #009b5c;
 }
 
-.support-btn:hover {
-  background: #222;
-  border-color: #666;
+/* SUPPORT PANEL */
+#supportPanel {
+    position: fixed;
+    bottom: 110px;
+    right: 25px;
+    width: 340px;
+    background: #111;
+    border: 1px solid #2d2d2d;
+    border-radius: 18px;
+    transform: translateY(30px);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s;
+    z-index: 9998;
 }
 
-/* ICON */
-.support-btn img {
-  filter: invert(1); /* beyaz ikon */
-  width: 28px;
+/* PANEL OPEN */
+#supportPanel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
-/* PANEL */
-.support-panel {
-  position: fixed;
-  right: -420px;
-  bottom: 25px;
-  width: 360px;
-  background: #0d0d0d;
-  border: 1px solid #333;
-  border-radius: 14px;
-  padding: 20px;
-  z-index: 9998;
-  transition: .35s;
+/* HEADER */
+.sup-header {
+    background: #00aa66;
+    padding: 14px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 18px 18px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.sup-header button {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
 }
 
-.support-panel.open { right: 25px; }
-
-.support-panel h2 {
-  margin-top: 0;
-  text-align: center;
-  color: white;
-  font-size: 20px;
+/* BODY */
+.sup-body {
+    padding: 18px;
 }
-
-/* CLOSE BUTTON */
-.sp-close {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  cursor: pointer;
-  font-size: 18px;
-  color: #888;
+.sup-body label {
+    font-size: 14px;
+    opacity: .8;
 }
-.sp-close:hover { color: white; }
-
-/* INPUTS */
-.support-panel input,
-.support-panel select,
-.support-panel textarea {
-  width: 100%;
-  background: #111;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 12px;
-  font-size: 14px;
+.sup-body input,
+.sup-body textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 12px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 15px;
 }
-
-.support-panel textarea {
-  height: 100px;
-  resize: none;
+.sup-body textarea {
+    height: 110px;
+    resize: none;
 }
 
 /* SEND BUTTON */
-.sp-send-btn {
-  width: 100%;
-  padding: 12px;
-  background: #00aa66;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
-  transition: .25s;
+.sup-send {
+    width: 100%;
+    background: #00aa66;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
 }
-.sp-send-btn:hover { background: #009655; }
-
-/* STATUS TEXT */
-#sp_status {
-  text-align: center;
-  margin-top: 8px;
-  font-size: 14px;
+.sup-send:hover {
+    background: #009655;
 }
