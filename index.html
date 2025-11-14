@@ -124,6 +124,12 @@ if (username) {
 }
 </script>
 
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn" onclick="toggleSupportPanel()">
+  <img src="assets/support-icon.png">
+</div>
+
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -138,11 +144,19 @@ if (username) {
     <label>Email *</label>
     <input type="email" id="supEmail">
 
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="T-Shirt">T-Shirt</option>
+      <option value="Sweatshirt">Sweatshirt</option>
+      <option value="Design">Design Submission</option>
+      <option value="Other">Other</option>
+    </select>
+
     <label>Your Message *</label>
     <textarea id="supMsg"></textarea>
 
     <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <input type="file" id="supFile">
 
     <button class="sup-send" onclick="sendSupportMessage()">
       Send Message →
@@ -151,13 +165,7 @@ if (username) {
   </div>
 </div>
 
-<!-- SUPPORT CSS -->
-<link rel="stylesheet" href="support.css">
-
-<!-- SUPPORT JS (SÜPER ÖNEMLİ) -->
 <script type="module" src="support.js"></script>
 
-
-  
 </body>
 </html>
