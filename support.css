@@ -1,4 +1,3 @@
-/* ROUND BUTTON */
 #supportBtn {
   position: fixed;
   bottom: 25px;
@@ -12,95 +11,55 @@
   justify-content: center;
   cursor: pointer;
   z-index: 9999;
-  box-shadow: 0 0 15px rgba(0,0,0,0.4);
-  transition: .2s;
 }
 
-#supportBtn:hover {
-  background: #009655;
-}
-
-#supportBtn img {
-  width: 28px;
-  height: 28px;
-  filter: invert(1);
-}
-
-/* PANEL */
 #supportPanel {
   position: fixed;
-  bottom: 95px;
+  bottom: 100px;
   right: 25px;
-  width: 400px;
+  width: 380px;
   background: #0d0d0d;
   border-radius: 14px;
   border: 1px solid #222;
   display: none;
   z-index: 9999;
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(0,0,0,0.55);
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
 }
 
-/* HEADER */
 .sup-header {
-  padding: 14px 18px;
+  padding: 16px;
   font-size: 18px;
   font-weight: 600;
-  background: #0f0f0f;
   border-bottom: 1px solid #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.sup-header button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* BODY */
 .sup-body {
-  padding: 20px;
-}
-
-.sup-body label {
-  display: block;
-  margin-top: 12px;
-  font-size: 14px;
-  opacity: .85;
+  padding: 16px;
 }
 
 .sup-body input,
-.sup-body select,
-.sup-body textarea {
+.sup-body textarea,
+.sup-body select {
   width: 100%;
-  padding: 12px;
-  margin-top: 6px;
   background: #111;
   border: 1px solid #333;
-  border-radius: 8px;
   color: white;
-  font-size: 14px;
-}
-
-.sup-body textarea {
-  height: 120px;
-  resize: none;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 8px;
 }
 
 .sup-send {
   width: 100%;
-  padding: 12px;
   margin-top: 18px;
   background: #00aa66;
   border: none;
+  padding: 14px;
   border-radius: 10px;
-  color: white;
   cursor: pointer;
-  font-size: 15px;
 }
 
 .sup-send:hover {
