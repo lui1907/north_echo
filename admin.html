@@ -7,18 +7,20 @@
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="support.css">
 
 <style>
+
 body {
+  background: #000;
+  color: #fff;
   margin: 0;
   padding: 0;
-  color: white;
-  background: #000;
 }
 
 /* WRAPPER */
 .admin-wrapper {
-  margin-top: 130px;
+  margin-top: 120px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -29,158 +31,148 @@ body {
 .admin-wrapper h1 {
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 20px;
-}
-
-/* FILTER BAR */
-.admin-filters {
-  display: flex;
-  gap: 15px;
   margin-bottom: 25px;
 }
 
-.admin-filters select {
-  padding: 12px;
-  background: #0f0f0f;
+/* FILTER BAR */
+.filter-bar-admin {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.filter-bar-admin button {
+  padding: 10px 18px;
+  background: #111;
   border: 1px solid #333;
   color: white;
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-/* MESSAGE BOX */
+.filter-bar-admin .active {
+  background: #00aa66;
+  border-color: #00aa66;
+}
+
+/* MESSAGE CARD */
 .msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
-  padding: 20px;
+  padding: 22px;
   border-radius: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   position: relative;
 }
 
-/* HEADER */
-.msg-header {
+/* TOP LINE */
+.msg-top {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
 }
 
-.read-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.info-line {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sender {
+.msg-sender {
+  font-size: 18px;
   font-weight: 700;
-  font-size: 17px;
 }
 
-.email {
-  opacity: .6;
-  font-size: 14px;
+.msg-email {
+  opacity: .7;
 }
 
-/* DELETE BUTTON */
-.del-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: #440000;
+/* DELETE */
+.msg-delete {
+  background: #400000;
+  color: #ff6666;
   border: 1px solid #660000;
   padding: 6px 10px;
   border-radius: 6px;
-  color: #ff6666;
   cursor: pointer;
-  font-size: 12px;
-}
-.del-btn:hover {
-  background: #660000;
 }
 
-/* TEXT */
+/* MESSAGE TEXT */
 .msg-text {
+  margin: 12px 0;
   opacity: .9;
-  margin: 10px 0;
+  white-space: pre-line;
+  line-height: 1.5;
 }
 
 /* IMAGE */
 .msg-img {
-  width: 160px;
-  margin-top: 12px;
+  width: 180px;
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid #333;
+  margin-bottom: 10px;
+  transition: .2s;
 }
+
 .msg-img:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* DATE */
 .msg-date {
-  display: block;
-  margin-top: 6px;
   opacity: .5;
-  font-size: 13px;
+  font-size: 14px;
+  margin-bottom: 12px;
 }
 
-/* NOTE AREA */
-.admin-note-box {
-  margin-top: 14px;
-  background: #111;
+/* REPLY BOX */
+.reply-input {
+  width: 100%;
   padding: 12px;
-  border-radius: 10px;
+  background: #111;
   border: 1px solid #333;
-}
-
-.note-input {
-  width: 100%;
-  padding: 10px;
   border-radius: 8px;
-  border: 1px solid #444;
-  background: #0f0f0f;
   color: white;
+  margin-bottom: 10px;
 }
 
-.note-save-btn {
-  margin-top: 8px;
+.reply-btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: #00aa66;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   color: white;
+  font-size: 15px;
 }
-.note-save-btn:hover {
+
+.reply-btn:hover {
   background: #009655;
 }
 
-/* FULLSCREEN IMAGE PREVIEW */
+/* IMAGE MODAL */
 #imgModal {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,.85);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 99999;
+  z-index: 999999;
 }
 
 #imgModal img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 12px;
-  box-shadow: 0 0 25px rgba(0,0,0,.8);
+}
+
+#imgModalClose {
+  position: fixed;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
 }
 
 </style>
@@ -188,178 +180,45 @@ body {
 
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
-    <div class="avatar-menu" id="avatarMenu">
-      <a href="profile.html">Profile</a>
-      <a href="settings.html">Settings</a>
-      <a href="#" onclick="logout()">Logout</a>
-    </div>
+      <img id="userAvatar" src="assets/default-avatar.png" class="avatar">
   </div>
 </header>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
-  <button id="closeMenu" class="close-menu">×</button>
-  <a href="index.html">Home</a>
-  <a href="tshirts.html">T-Shirts</a>
-  <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="cart.html">Cart</a>
+   <button id="closeMenu" class="close-menu">×</button>
+   <a href="index.html">Home</a>
+   <a href="tshirts.html">T-Shirts</a>
+   <a href="sweatshirts.html">Sweatshirts</a>
+   <a href="cart.html">Cart</a>
 </div>
 
-<!-- FULLSCREEN IMAGE -->
-<div id="imgModal" onclick="this.style.display='none'">
-  <img id="imgModalSrc">
-</div>
-
-<!-- ADMIN PANEL -->
 <div class="admin-wrapper">
+  
   <h1>Support Messages</h1>
 
   <!-- FILTER BAR -->
-  <div class="admin-filters">
-    <select id="filterCategory" onchange="applyFilters()">
-      <option value="all">All Categories</option>
-      <option value="general">General Question</option>
-      <option value="order">Order Issue</option>
-      <option value="product">Product Question</option>
-      <option value="send-design">Send Your Design</option>
-    </select>
-
-    <select id="filterRead" onchange="applyFilters()">
-      <option value="all">All Messages</option>
-      <option value="unread">Unread Only</option>
-      <option value="read">Read Only</option>
-    </select>
+  <div class="filter-bar-admin">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="unread">Unread</button>
+      <button class="filter-btn" data-filter="withfile">With File</button>
   </div>
 
   <div id="adminMessages"></div>
 </div>
 
-<script>
-/* 🔒 ADMIN CHECK */
-const ADMINS = ["fstekin","luivoss","admin"];
-let logged = localStorage.getItem("loggedInUser");
+<!-- IMAGE MODAL -->
+<div id="imgModal">
+  <div id="imgModalClose" onclick="closeImgModal()">✕</div>
+  <img id="imgModalContent" src="">
+</div>
 
-if (!logged || !ADMINS.includes(logged.toLowerCase())) {
-  window.location.href = "index.html";
-}
-
-/* HEADER AVATAR */
-let uData = JSON.parse(localStorage.getItem("user_" + logged));
-if (uData && uData.avatar) {
-  document.getElementById("userAvatar").src = uData.avatar;
-}
-
-/* ≡ Dropdown */
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = m.style.display === "flex" ? "none" : "flex";
-};
-
-/* MESSAGE LIST */
-let allMessages = JSON.parse(localStorage.getItem("supportMessages")) || [];
-
-/* RENDER FUNCTION */
-function render(list) {
-  const box = document.getElementById("adminMessages");
-
-  if (list.length === 0) {
-    box.innerHTML = `<p style="opacity:.6;">No messages found.</p>`;
-    return;
-  }
-
-  box.innerHTML = "";
-
-  list.forEach((msg, i) => {
-
-    const color = msg.read ? "#444" : "#00aa66";
-
-    box.innerHTML += `
-      <div class="msg-box">
-        <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
-
-        <div class="msg-header">
-          <div class="read-dot" style="background:${color}" onclick="toggleRead(${i})"></div>
-
-          <div class="info-line">
-            <span class="sender">${msg.name}</span>
-            <span class="email">— ${msg.email}</span>
-          </div>
-        </div>
-
-        <p class="msg-text">${msg.text}</p>
-
-        ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
-
-        <span class="msg-date">${msg.date}</span>
-
-        <div class="admin-note-box">
-          <input class="note-input" id="note-${i}" value="${msg.adminNote || ""}">
-          <button class="note-save-btn" onclick="saveNote(${i})">Save Note</button>
-        </div>
-      </div>
-    `;
-  });
-}
-
-/* INITIAL LOAD */
-render(allMessages);
-
-/* FILTERS */
-function applyFilters() {
-  let cat = document.getElementById("filterCategory").value;
-  let rd  = document.getElementById("filterRead").value;
-
-  let filtered = allMessages.filter(m => {
-
-    if (cat !== "all" && m.category !== cat) return false;
-
-    if (rd === "unread" && m.read) return false;
-    if (rd === "read" && !m.read) return false;
-
-    return true;
-  });
-
-  render(filtered);
-}
-
-/* UPDATE READ */
-function toggleRead(i) {
-  allMessages[i].read = !allMessages[i].read;
-  localStorage.setItem("supportMessages", JSON.stringify(allMessages));
-  applyFilters();
-}
-
-/* DELETE */
-function deleteMsg(i) {
-  if (!confirm("Delete this message?")) return;
-
-  allMessages.splice(i,1);
-  localStorage.setItem("supportMessages", JSON.stringify(allMessages));
-  applyFilters();
-}
-
-/* SAVE NOTE */
-function saveNote(i) {
-  allMessages[i].adminNote =
-    document.getElementById("note-" + i).value;
-  localStorage.setItem("supportMessages", JSON.stringify(allMessages));
-  alert("Note saved!");
-}
-
-/* IMAGE PREVIEW */
-function openImgModal(src) {
-  document.getElementById("imgModalSrc").src = src;
-  document.getElementById("imgModal").style.display = "flex";
-}
-
-</script>
+<!-- SUPPORT.JS (FIREBASE BAĞLI) -->
+<script type="module" src="admin.js"></script>
 
 </body>
 </html>
