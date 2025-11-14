@@ -1,36 +1,38 @@
-// Destek panelini aç/kapat
 function toggleSupportPanel() {
-    const panel = document.getElementById("supportPanel");
-    panel.classList.toggle("open");
+  const panel = document.getElementById("supportPanel");
+  panel.classList.toggle("open");
 }
 
-// Destek mesajı gönderme
 function sendSupportMessage() {
-    let name = document.getElementById("supName").value.trim();
-    let email = document.getElementById("supEmail").value.trim();
-    let msg = document.getElementById("supMsg").value.trim();
+  const nameInput = document.getElementById("supName");
+  const emailInput = document.getElementById("supEmail");
+  const msgInput = document.getElementById("supMsg");
 
-    if (!name || !email || !msg) {
-        alert("Please fill all required fields.");
-        return;
-    }
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const msg = msgInput.value.trim();
 
-    const data = {
-        name,
-        email,
-        msg,
-        date: new Date().toLocaleString()
-    };
+  if (!name || !email || !msg) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-    // mesajları sakla
-    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
-    messages.push(data);
-    localStorage.setItem("supportMessages", JSON.stringify(messages));
+  const data = {
+    name,
+    email,
+    msg,
+    date: new Date().toLocaleString()
+  };
 
-    alert("Your message has been sent!");
-    toggleSupportPanel();
-    
-    document.getElementById("supName").value = "";
-    document.getElementById("supEmail").value = "";
-    document.getElementById("supMsg").value = "";
+  let messages = JSON.parse(localStorage.getItem("supportMessages") || "[]");
+  messages.push(data);
+  localStorage.setItem("supportMessages", JSON.stringify(messages));
+
+  alert("Your message has been sent!");
+
+  nameInput.value = "";
+  emailInput.value = "";
+  msgInput.value = "";
+
+  toggleSupportPanel();
 }
