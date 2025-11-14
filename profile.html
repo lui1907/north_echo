@@ -11,108 +11,129 @@
 <script src="cart.js" defer></script>
 
 <style>
-/* PROFIL CONTAINER */
-.profile-container {
+
+.profile-wrapper {
   width: 95%;
-  max-width: 550px;
-  margin: 140px auto;
+  max-width: 600px;
+  margin: 130px auto;
   background: #0d0d0d;
-  padding: 35px 25px;
+  padding: 30px;
   border-radius: 22px;
   border: 1px solid #222;
   box-shadow: 0 0 25px rgba(0,0,0,0.4);
-  text-align: center;
 }
 
-/* Büyük avatar */
+/* PROFILE HEADER (Apple Style) */
+.profile-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.profile-avatar-box {
+  position: relative;
+  display: inline-block;
+}
+
 .profile-avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #222;
-  box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  margin-bottom: 5px;
 }
 
-/* + işareti */
-.avatar-plus {
+.avatar-edit-btn {
   position: absolute;
   bottom: 0;
   right: 0;
   background: #00aa66;
-  color: white;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 22px;
+  justify-content: center;
   cursor: pointer;
   border: 2px solid #0d0d0d;
-  transition: .2s;
+  font-size: 18px;
 }
 
-.avatar-plus:hover {
-  background: #009955;
-}
-
-/* Ad Soyad */
+/* NAME TEXT */
 .profile-name {
-  font-size: 26px;
+  margin-top: 15px;
+  font-size: 22px;
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
-/* Kullanıcı adı */
 .profile-username {
-  font-size: 15px;
-  opacity: .7;
-  margin-bottom: 25px;
+  opacity: 0.7;
+  margin-top: 5px;
 }
 
-/* Input alanları */
-.profile-item {
-  margin-bottom: 18px;
-  text-align: left;
-}
-
-.profile-item label {
-  display: block;
-  margin-bottom: 6px;
+/* INPUT SECTIONS (similar to iPhone forms) */
+.section-title {
+  margin-top: 35px;
+  font-size: 18px;
   opacity: 0.8;
+  margin-bottom: 10px;
 }
 
-.profile-item input {
-  width: 100%;
+.input-box {
+  background: #141414;
+  border: 1px solid #2a2a2a;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #333;
-  background: #111;
+  border-radius: 12px;
+  margin-bottom: 12px;
   color: white;
+  width: 100%;
+  font-size: 16px;
 }
 
-/* Save butonu */
+/* SAVE BUTTON */
 .save-btn {
   width: 100%;
-  padding: 14px;
   background: #00aa66;
-  border: none;
+  padding: 14px;
   border-radius: 12px;
-  color: white;
-  font-size: 17px;
-  cursor: pointer;
+  border: none;
   margin-top: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
   transition: .2s;
 }
 
 .save-btn:hover {
   background: #009955;
 }
-</style>
-</head>
 
+html.light .profile-wrapper {
+  background: white;
+  border-color: #ccc;
+}
+
+html.light .input-box {
+  background: white;
+  border-color: #bbb;
+  color: #111;
+}
+
+html.light .save-btn {
+  background: #00aa66;
+}
+
+html.light .profile-avatar {
+  border-color: #ddd;
+}
+
+html.light .section-title {
+  color: #333;
+}
+
+</style>
+
+</head>
 <body>
 
 <!-- HEADER -->
@@ -134,107 +155,106 @@
   </div>
 </header>
 
-<!-- PROFILE CONTENT -->
-<div class="profile-container">
-
-  <!-- Avatar + + Butonu -->
-  <div style="position: relative; display: inline-block;">
-    <img src="assets/default-avatar.png" class="profile-avatar" id="profileAvatar">
-
-    <label for="avatarInput" class="avatar-plus">+</label>
-    <input type="file" id="avatarInput" accept="image/*" style="display:none;">
-  </div>
-
-  <!-- Kullanıcı bilgileri -->
-  <div class="profile-name" id="profileName"></div>
-  <div class="profile-username" id="profileUsername"></div>
-
-  <!-- Düzenlenebilir bilgiler -->
-  <div class="profile-item">
-    <label>Full Name</label>
-    <input type="text" id="fullNameInput"/>
-  </div>
-
-  <div class="profile-item">
-    <label>Password</label>
-    <input type="password" id="passwordInput"/>
-  </div>
-
-  <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
 </div>
 
+<!-- PROFILE CONTENT -->
+<div class="profile-wrapper">
 
-<!-- SCRIPT -->
+  <div class="profile-header">
+    
+    <div class="profile-avatar-box">
+      <img id="profileAvatar" src="assets/default-avatar.png" class="profile-avatar">
+      
+      <div class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">📸</div>
+      <input id="avatarInput" type="file" accept="image/*" style="display:none">
+    </div>
+
+    <div class="profile-name" id="displayFullname">Full Name</div>
+    <div class="profile-username" id="displayUsername">@username</div>
+
+  </div>
+
+  <div class="section-title">Full Name</div>
+  <input id="inputFullname" class="input-box" type="text">
+
+  <div class="section-title">Username</div>
+  <input id="inputUsername" class="input-box" type="text">
+
+  <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+
+</div>
+
 <script>
-/* Avatar menü açma */
-const avatar = document.getElementById("userAvatar");
-const menu = document.getElementById("avatarMenu");
 
-if (avatar) {
-  avatar.addEventListener("click", function () {
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-  });
-}
-
-/* Login kontrol */
+/* USER LOGIN CHECK */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-/* Kullanıcı verisi */
 let data = JSON.parse(localStorage.getItem("user_" + username));
 
-/* Bilgileri profile yaz */
-document.getElementById("profileName").innerText = data.fullname;
-document.getElementById("profileUsername").innerText = "@" + data.username;
+/* PREFILL USER DATA */
+document.getElementById("displayFullname").innerText = data.fullname;
+document.getElementById("displayUsername").innerText = "@" + username;
 
-document.getElementById("fullNameInput").value = data.fullname;
-document.getElementById("passwordInput").value = data.password;
+document.getElementById("inputFullname").value = data.fullname;
+document.getElementById("inputUsername").value = username;
 
-/* 🚀 PROFIL FOTOĞRAFINI DEĞİŞTİRME */
-document.getElementById("avatarInput").addEventListener("change", function() {
-  const file = this.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    const newAvatar = e.target.result;
-
-    // Büyük avatar güncelle
-    document.getElementById("profileAvatar").src = newAvatar;
-
-    // Küçük avatar güncelle
-    document.getElementById("userAvatar").src = newAvatar;
-
-    // Kaydet
-    data.avatar = newAvatar;
-    localStorage.setItem("user_" + username, JSON.stringify(data));
-  }
-
-  reader.readAsDataURL(file);
-});
-
-/* Sayfaya girince avatarı yükle */
 if (data.avatar) {
   document.getElementById("profileAvatar").src = data.avatar;
   document.getElementById("userAvatar").src = data.avatar;
 }
 
-/* Profil kaydetme */
-function saveProfile() {
-  data.fullname = document.getElementById("fullNameInput").value;
-  data.password = document.getElementById("passwordInput").value;
+/* AVATAR UPLOAD */
+document.getElementById("avatarInput").addEventListener("change", function () {
+  let file = this.files[0];
+  if (!file) return;
 
+  let reader = new FileReader();
+  reader.onload = function (e) {
+    data.avatar = e.target.result;
+    document.getElementById("profileAvatar").src = data.avatar;
+    document.getElementById("userAvatar").src = data.avatar;
+
+    localStorage.setItem("user_" + username, JSON.stringify(data));
+  };
+  reader.readAsDataURL(file);
+});
+
+/* SAVE PROFILE */
+function saveProfile() {
+  let newFull = document.getElementById("inputFullname").value;
+  let newUser = document.getElementById("inputUsername").value;
+
+  // Change username means changing storage keys
+  if (newUser !== username) {
+    localStorage.removeItem("user_" + username);
+    username = newUser;
+    localStorage.setItem("loggedInUser", username);
+  }
+
+  data.fullname = newFull;
   localStorage.setItem("user_" + username, JSON.stringify(data));
+
+  document.getElementById("displayFullname").innerText = newFull;
+  document.getElementById("displayUsername").innerText = "@" + username;
 
   alert("Profile updated!");
 }
 
-/* Logout */
+/* LOGOUT */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
 </script>
 
 </body>
