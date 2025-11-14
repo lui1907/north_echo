@@ -11,90 +11,88 @@
 <script src="cart.js" defer></script>
 
 <style>
-.settings-container {
-  width: 95%;
-  max-width: 550px;
-  margin: 140px auto;
-  background: #0d0d0d;
-  padding: 30px;
-  border-radius: 22px;
-  border: 1px solid #222;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-}
 
-.settings-title {
-  font-size: 26px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.settings-group {
-  margin-bottom: 25px;
-}
-
-.settings-group h3 {
-  margin-bottom: 12px;
-  font-size: 18px;
-  opacity: 0.9;
-}
-
-.settings-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #333;
-  background: #111;
-  color: white;
-  font-size: 16px;
-  text-align: left;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: .2s;
-}
-
-.settings-btn:hover {
-  background: #191919;
-}
-
-.logout-btn {
-  background: #aa0000 !important;
-  border-color: #660000 !important;
-}
-
-.logout-btn:hover {
-  background: #990000 !important;
-}
-
-/* THEME SWITCH (Apple style) */
-.theme-switch {
+/* LAYOUT */
+.settings-wrapper {
   display: flex;
-  align-items: center;
+  width: 95%;
+  max-width: 900px;
+  margin: 130px auto;
+  gap: 25px;
+}
+
+/* LEFT MENU */
+.settings-left {
+  width: 220px;
+  background: #0e0e0e;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #222;
+  height: fit-content;
+}
+
+.settings-left h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.settings-item {
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  background: #111;
+  border: 1px solid #222;
+  transition: 0.2s;
+}
+
+.settings-item:hover {
+  background: #1a1a1a;
+}
+
+.settings-item.active {
+  background: #00aa66;
+  border-color: #007744;
+  color: white;
+}
+
+/* RIGHT CONTENT */
+.settings-right {
+  flex: 1;
+  background: #0d0d0d;
+  padding: 25px;
+  border-radius: 18px;
+  border: 1px solid #222;
+  min-height: 350px;
+}
+
+.settings-right h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* SWITCH */
+.switch-row {
+  display: flex;
   justify-content: space-between;
+  align-items: center;
   background: #111;
   padding: 14px;
   border-radius: 14px;
   border: 1px solid #333;
-  margin-bottom: 15px;
 }
 
-.theme-switch .icon {
-  font-size: 22px;
-  opacity: 0.8;
-}
-
-/* Switch body */
+/* Apple style switch */
 .switch {
   position: relative;
   width: 55px;
   height: 28px;
-  display: inline-block;
 }
 
 .switch input {
   display: none;
 }
 
-/* Slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -104,7 +102,6 @@
   transition: .3s;
 }
 
-/* Slider knob */
 .slider:before {
   position: absolute;
   content: "";
@@ -117,7 +114,6 @@
   transition: .3s;
 }
 
-/* Checked = light mode */
 .switch input:checked + .slider {
   background-color: #00aa66;
 }
@@ -126,65 +122,64 @@
   transform: translateX(27px);
 }
 
-/* ⭐ LIGHT MODE TASARIMI ⭐ */
+/* LIGHT MODE */
 html.light body {
   background: #f5f5f5;
   color: #111;
 }
 
-html.light .settings-container {
+html.light .settings-left,
+html.light .settings-right {
   background: #ffffff;
   border-color: #ccc;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-html.light .settings-btn {
-  background: #ffffff;
-  color: #111;
-  border-color: #bbb;
-}
-
-html.light .settings-btn:hover {
-  background: #eaeaea;
-}
-
-html.light .logout-btn {
-  background: #ff4444 !important;
-  color: white !important;
-  border-color: #bb0000 !important;
-}
-
-html.light header {
-  background: white;
-  border-bottom: 1px solid #ddd;
-}
-
-html.light .logo,
-html.light .hamburger {
+html.light .settings-item {
+  background: #f4f4f4;
+  border-color: #ccc;
   color: #111;
 }
 
-html.light .side-menu {
-  background: #ffffff;
-  color: #111;
+html.light .settings-item.active {
+  background: #00aa66;
+  color: white;
 }
 
-html.light .side-menu a {
-  color: #111;
+html.light .switch-row {
+  background: #fff;
+  border-color: #ccc;
 }
 
-html.light .side-menu .close-menu {
-  color: #111;
+html.light .slider {
+  background: #ccc;
 }
 
-html.light .avatar-menu {
-  background: #ffffff;
-  border-color: #ddd;
+/* Logout */
+.logout-btn {
+  background: #aa0000;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #550000;
+  cursor: pointer;
+  color: white;
+  margin-top: 15px;
+  transition: .2s;
 }
 
-html.light .avatar-menu a {
-  color: #111;
+.logout-btn:hover {
+  background: #990000;
 }
+
+/* MOBILE */
+@media(max-width: 800px) {
+  .settings-wrapper {
+    flex-direction: column;
+  }
+  .settings-left {
+    width: 100%;
+  }
+}
+
 </style>
 
 </head>
@@ -209,7 +204,7 @@ html.light .avatar-menu a {
   </div>
 </header>
 
-<!-- ⭐ SOL MENU -->
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -219,37 +214,30 @@ html.light .avatar-menu a {
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- SETTINGS CONTENT -->
-<div class="settings-container">
+<!-- MAIN SETTINGS -->
+<div class="settings-wrapper">
 
-  <h2 class="settings-title">Settings</h2>
+  <!-- LEFT MENU -->
+  <div class="settings-left">
+    <h2>Settings</h2>
+    <div class="settings-item active" data-page="appearance">Appearance</div>
+    <div class="settings-item" data-page="profile">Profile</div>
+    <div class="settings-item" data-page="account">Account</div>
+    <div class="settings-item" data-page="notifications">Notifications</div>
+  </div>
 
-  <!-- Tema Ayarları -->
-  <div class="settings-group">
+  <!-- RIGHT CONTENT -->
+  <div class="settings-right" id="settingsContent">
     <h3>Appearance</h3>
 
-    <!-- Apple Style Theme Switch -->
-    <div class="theme-switch">
-      <span class="icon">🌙</span>
+    <div class="switch-row">
+      <span>Tema</span>
       <label class="switch">
         <input type="checkbox" id="themeToggleSwitch">
         <span class="slider"></span>
       </label>
-      <span class="icon">☀️</span>
     </div>
-  </div>
 
-  <!-- Profil -->
-  <div class="settings-group">
-    <h3>Profile</h3>
-    <button class="settings-btn" onclick="goProfile()">Edit Profile</button>
-    <button class="settings-btn" onclick="resetAvatar()">Reset Avatar</button>
-  </div>
-
-  <!-- Hesap -->
-  <div class="settings-group">
-    <h3>Account</h3>
-    <button class="settings-btn logout-btn" onclick="logout()">Log Out</button>
   </div>
 
 </div>
@@ -257,68 +245,103 @@ html.light .avatar-menu a {
 <!-- SCRIPT -->
 <script>
 /* Avatar menu */
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const avatar = document.getElementById("userAvatar");
   const menu = document.getElementById("avatarMenu");
 
-  if (avatar && menu) {
-    avatar.addEventListener("click", () => {
-      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-    });
-  }
+  avatar.addEventListener("click", () => {
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
 });
 
-/* Login kontrol */
+/* Login check */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
-
-/* User data */
 let data = JSON.parse(localStorage.getItem("user_" + username));
 
-/* Küçük avatar */
+/* Small avatar load */
 if (data && data.avatar) {
   document.getElementById("userAvatar").src = data.avatar;
 }
 
-/* ⭐ THEME SWITCH ⭐ */
-const themeSwitch = document.getElementById("themeToggleSwitch");
+/* LEFT MENU FUNCTION */
+const leftItems = document.querySelectorAll(".settings-item");
+const right = document.getElementById("settingsContent");
 
-// Sayfa açılırken doğru pozisyon
-let savedTheme = localStorage.getItem("theme");
-if (savedTheme === "light") {
-  document.documentElement.classList.add("light");
-  themeSwitch.checked = true;
-} else {
-  document.documentElement.classList.remove("light");
-  themeSwitch.checked = false;
-}
+leftItems.forEach(item => {
+  item.addEventListener("click", function () {
 
-// Switch değiştiğinde tema değiştir
-themeSwitch.addEventListener("change", function () {
+    leftItems.forEach(i => i.classList.remove("active"));
+    this.classList.add("active");
 
-  if (this.checked) {
-    document.documentElement.classList.add("light");
-    localStorage.setItem("theme", "light");
-  } else {
-    document.documentElement.classList.remove("light");
-    localStorage.setItem("theme", "dark");
-  }
+    let page = this.getAttribute("data-page");
 
-  document.body.style.transition = "0.3s";
+    if (page === "appearance") {
+      right.innerHTML = `
+        <h3>Appearance</h3>
+        <div class="switch-row">
+          <span>Tema</span>
+          <label class="switch">
+            <input type="checkbox" id="themeToggleSwitch">
+            <span class="slider"></span>
+          </label>
+        </div>
+      `;
+      initThemeSwitch();
+    }
+
+    if (page === "profile") {
+      right.innerHTML = `
+        <h3>Profile</h3>
+        <button class="settings-btn" onclick="window.location.href='profile.html'">Edit Profile</button>
+      `;
+    }
+
+    if (page === "account") {
+      right.innerHTML = `
+        <h3>Account</h3>
+        <button class="settings-btn" onclick="resetAvatar()">Reset Avatar</button>
+        <div class="logout-btn" onclick="logout()">Logout</div>
+      `;
+    }
+
+    if (page === "notifications") {
+      right.innerHTML = `
+        <h3>Notifications</h3>
+        <p style="opacity:.7;">No notifications available yet.</p>
+      `;
+    }
+
+  });
 });
 
-/* Profil */
-function goProfile() {
-  window.location.href = "profile.html";
+/* THEME SWITCH */
+function initThemeSwitch() {
+
+  const sw = document.getElementById("themeToggleSwitch");
+
+  let t = localStorage.getItem("theme");
+  sw.checked = (t === "light");
+
+  sw.addEventListener("change", function () {
+    if (this.checked) {
+      document.documentElement.classList.add("light");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.remove("light");
+      localStorage.setItem("theme", "dark");
+    }
+    document.body.style.transition = "0.3s";
+  });
 }
 
-/* Avatar sıfırla */
+initThemeSwitch();
+
+/* Reset avatar */
 function resetAvatar() {
   data.avatar = null;
   localStorage.setItem("user_" + username, JSON.stringify(data));
-
   document.getElementById("userAvatar").src = "assets/default-avatar.png";
-
   alert("Avatar reset!");
 }
 
@@ -326,18 +349,6 @@ function resetAvatar() {
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
-}
-</script>
-
-<!-- KÜÇÜK AVATAR SENKRONU -->
-<script>
-let u = localStorage.getItem("loggedInUser");
-if (u) {
-  let d = JSON.parse(localStorage.getItem("user_" + u));
-  if (d && d.avatar) {
-    let small = document.getElementById("userAvatar");
-    if (small) small.src = d.avatar;
-  }
 }
 </script>
 
