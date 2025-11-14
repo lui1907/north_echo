@@ -1,5 +1,5 @@
 // -----------------------------------------
-// 🔥 Supabase Bağlantısı
+// 🔥 Supabase Bağlantısı (ÇALIŞAN SÜRÜM)
 // -----------------------------------------
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -10,10 +10,9 @@ const supabase = createClient(
 
 
 // -----------------------------------------
-// 🔐 Admin Kontrol
+// 🔐 Admin kontrol
 // -----------------------------------------
 const ADMINS = ["owner", "admin", "ahmet", "luivoss", "fstekin"];
-
 let loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
@@ -22,7 +21,7 @@ if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
 
 
 // -----------------------------------------
-// 📩 Mesajları Yükle
+// 📩 Mesajları Supabase'den çek
 // -----------------------------------------
 const msgBox = document.getElementById("adminMessages");
 let ALL_MESSAGES = [];
@@ -36,7 +35,7 @@ async function loadMessages() {
     .order("date", { ascending: false });
 
   if (error) {
-    console.error("Fetch error:", error);
+    console.error(error);
     msgBox.innerHTML = "<p style='color:red;'>Failed to load messages.</p>";
     return;
   }
@@ -47,7 +46,7 @@ async function loadMessages() {
 
 
 // -----------------------------------------
-// 🎛️ Filtreleme
+// 🎛️ FİLTRE
 // -----------------------------------------
 const filterButtons = document.querySelectorAll(".filter-btn");
 
@@ -62,7 +61,7 @@ filterButtons.forEach(btn => {
 
 
 // -----------------------------------------
-// 🖨️ Mesajları Listele
+// 🖨️ Mesajları listele
 // -----------------------------------------
 function renderMessages(filterType) {
   msgBox.innerHTML = "";
@@ -85,16 +84,13 @@ function renderMessages(filterType) {
   list.forEach(msg => {
     msgBox.innerHTML += `
       <div class="msg-box">
-
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name}</div>
             <div class="msg-email">${msg.email}</div>
           </div>
 
-          <button class="msg-delete" onclick="deleteMessage('${msg.id}')">
-            Delete
-          </button>
+          <button class="msg-delete" onclick="deleteMessage('${msg.id}')">Delete</button>
         </div>
 
         <div class="msg-text">${msg.message}</div>
@@ -106,9 +102,11 @@ function renderMessages(filterType) {
 
         <div class="msg-date">${msg.date}</div>
 
-        <textarea id="reply-${msg.id}" class="reply-input" placeholder="Write admin reply...">${msg.reply || ""}</textarea>
+        <textarea id="reply-${msg.id}" class="reply-input">${msg.reply || ""}</textarea>
 
-        <button class="reply-btn" onclick="sendReply('${msg.id}')">Send Reply</button>
+        <button class="reply-btn" onclick="sendReply('${msg.id}')">
+          Send Reply
+        </button>
       </div>
     `;
   });
@@ -116,20 +114,17 @@ function renderMessages(filterType) {
 
 
 // -----------------------------------------
-// 💬 Reply Gönder
+// 💬 Reply kaydet
 // -----------------------------------------
-window.sendReply = async function (id) {
+window.sendReply = async function(id) {
   const replyText = document.getElementById(`reply-${id}`).value;
 
   const { error } = await supabase
     .from("messages")
-    .update({
-      reply: replyText,
-      read: true
-    })
+    .update({ reply: replyText, read: true })
     .eq("id", id);
 
-  if (error) return alert("Error saving reply.");
+  if (error) return alert("Failed to save reply");
 
   alert("Reply saved.");
   loadMessages();
@@ -137,10 +132,10 @@ window.sendReply = async function (id) {
 
 
 // -----------------------------------------
-// 🗑️ Mesaj Sil
+// 🗑️ Silme
 // -----------------------------------------
-window.deleteMessage = async function (id) {
-  if (!confirm("Delete this message?")) return;
+window.deleteMessage = async function(id) {
+  if (!confirm("Delete message?")) return;
 
   const { error } = await supabase
     .from("messages")
@@ -154,19 +149,19 @@ window.deleteMessage = async function (id) {
 
 
 // -----------------------------------------
-// 🖼️ Fotoğraf Modal
+// 🖼️ Modal
 // -----------------------------------------
-window.openImgModal = function (url) {
+window.openImgModal = function(url) {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
 };
 
-window.closeImgModal = function () {
+window.closeImgModal = function() {
   document.getElementById("imgModal").style.display = "none";
 };
 
 
 // -----------------------------------------
-// 🚀 Başlangıç
+// 🚀 Başlat
 // -----------------------------------------
 loadMessages();
