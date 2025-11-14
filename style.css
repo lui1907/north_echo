@@ -466,3 +466,79 @@ a {
   border: 1px solid #333;
   border-radius: 8px;
 }
+/* ===========================================
+   🏠 ANA SAYFA HERO / ANA FOTO
+=========================================== */
+.hero {
+  width: 100%;
+  max-width: 1200px;
+  margin: 120px auto 40px auto;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* ===========================================
+   🛍️ CATEGORIES - BAŞLIK
+=========================================== */
+.categories-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-left: 20px;
+  margin-bottom: 12px;
+  margin-top: 20px;
+}
+
+/* ===========================================
+   🛒 ÜRÜN LİSTESİ GRID
+=========================================== */
+.product-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 60px auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+}
+
+/* ÜRÜN KARTI */
+.product-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 12px;
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: #00aa66;
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* ===========================================
+   📱 MOBİL
+=========================================== */
+@media (max-width: 600px) {
+  .hero {
+    margin-top: 90px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
