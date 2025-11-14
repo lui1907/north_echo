@@ -30,7 +30,7 @@
 
 
 /* ============================================
-   💬 SUPPORT PANEL (açılır kutu)
+   💬 SUPPORT PANEL
 ============================================ */
 #supportPanel {
   position: fixed;
@@ -58,13 +58,11 @@
   border-bottom: 1px solid #222;
 }
 
-/* Support yazısını düzgün hizalamak için */
 .sup-title {
   margin-right: auto;
   color: white;
 }
 
-/* X Button */
 .sup-header button {
   background: none;
   border: none;
@@ -73,8 +71,7 @@
   cursor: pointer;
 }
 
-
-/* Form Body */
+/* Form body */
 .sup-body {
   padding: 20px;
 }
@@ -109,7 +106,7 @@
   cursor: pointer;
 }
 
-/* Send Button */
+/* Button */
 .sup-send {
   width: 100%;
   padding: 12px;
@@ -124,18 +121,6 @@
 
 .sup-send:hover {
   background: #009655;
-}
-
-/* Admin Reply Box */
-#supReplyBox {
-  margin-top: 20px;
-  padding: 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 10px;
-  color: #00dd88;
-  font-size: 14px;
-  display: none;
 }
 
 
