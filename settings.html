@@ -338,23 +338,54 @@ items.forEach(item => {
     }
 
     /* ACCOUNT (PASSWORD CHANGE BURADA) */
-    if (page === "account") {
-      right.innerHTML = `
-        <h3>Account</h3>
+<script>
+function changePassword() {
+  let username = localStorage.getItem("loggedInUser");
+  if (!username) {
+    alert("No user logged in.");
+    return;
+  }
 
-        <div style="margin-bottom:20px; opacity:.8;">Change Password</div>
+  let userDataRaw = localStorage.getItem("user_" + username);
+  if (!userDataRaw) {
+    alert("User data missing.");
+    return;
+  }
 
-        <input id="oldPass" type="password" class="input-box" placeholder="Old Password">
-        <input id="newPass" type="password" class="input-box" placeholder="New Password">
-        <input id="newPass2" type="password" class="input-box" placeholder="Confirm New Password">
+  let user = JSON.parse(userDataRaw);
 
-        <button class="settings-btn" onclick="changePassword()">Save Password</button>
+  const oldPass = document.getElementById("oldPass").value.trim();
+  const newPass = document.getElementById("newPass").value.trim();
+  const newPass2 = document.getElementById("newPass2").value.trim();
 
-        <button class="settings-btn" onclick="resetAvatar()">Reset Avatar</button>
+  // Eski şifre kontrolü
+  if (oldPass !== user.password) {
+    alert("Old password is incorrect.");
+    return;
+  }
 
-        <div class="logout-btn" onclick="logout()">Logout</div>
-      `;
-    }
+  // Yeni şifre minimum uzunluk kontrolü
+  if (newPass.length < 4) {
+    alert("New password must be at least 4 characters.");
+    return;
+  }
+
+  // Yeni şifrelerin eşleşme kontrolü
+  if (newPass !== newPass2) {
+    alert("New password and confirmation do not match.");
+    return;
+  }
+
+  // Şifreyi güncelle
+  user.password = newPass;
+
+  // LocalStorage güncelle
+  localStorage.setItem("user_" + username, JSON.stringify(user));
+
+  alert("Password changed successfully!");
+}
+</script>
+
 
     /* NOTIFICATIONS */
     if (page === "notifications") {
