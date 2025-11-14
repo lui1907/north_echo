@@ -1,6 +1,3 @@
-// -------------------------------------------------------
-// 🔥 SUPABASE BAĞLANTISI
-// -------------------------------------------------------
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
@@ -8,72 +5,61 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-
-// -------------------------------------------------------
-// 🟢 PANELİ AÇ / KAPAT
-// -------------------------------------------------------
-window.toggleSupportPanel = function () {
+// PANEL AÇ/KAPAT
+window.toggleSupportPanel = function() {
     const panel = document.getElementById("supportPanel");
-    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+    panel.style.display = panel.style.display === "block" ? "none" : "block";
 };
 
-
-// -------------------------------------------------------
-// 📩 MESAJ GÖNDER
-// -------------------------------------------------------
+// MESAJ GÖNDER
 window.sendSupportMessage = async function () {
-    const name = document.getElementById("supName").value.trim();
-    const email = document.getElementById("supEmail").value.trim();
-    const message = document.getElementById("supMsg").value.trim();
+
+    const name = document.getElementById("supName").value;
+    const email = document.getElementById("supEmail").value;
+    const category = document.getElementById("supCategory").value;
+    const message = document.getElementById("supMsg").value;
     const fileInput = document.getElementById("supFile");
 
     if (!name || !email || !message) {
-        alert("Please fill in all required fields.");
+        alert("Please fill all required fields.");
         return;
     }
 
-    let fileURL = "";
+    let fileUrl = null;
 
-    // ---------------------------------------------------
-    // 📷 DOSYA YÜKLE (Supabase Storage)
-    // ---------------------------------------------------
+    // DOSYA VARSA STORAGE'A YÜKLE
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        const filePath = `uploads/${Date.now()}-${file.name}`;
+        const fileName = `${Date.now()}-${file.name}`;
 
-        const { data, error } = await supabase.storage
+        const upload = await supabase.storage
             .from("uploads")
-            .upload(filePath, file);
+            .upload(fileName, file);
 
-        if (error) {
-            console.error(error);
-            alert("File upload failed.");
+        if (upload.error) {
+            alert("File upload error!");
             return;
         }
 
-        fileURL = `${SUPABASE_URL}/storage/v1/object/public/uploads/${filePath}`;
+        fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
     }
 
-    // ---------------------------------------------------
-    // 📨 MESAJI VERİTABANINA KAYDET
-    // ---------------------------------------------------
+    // MESAJI VERİTABANINA KAYDET
     const { error } = await supabase
         .from("messages")
-        .insert([
-            {
-                name: name,
-                email: email,
-                message: message,
-                file: fileURL,
-                date: new Date().toLocaleString(),
-                read: false,
-                reply: ""
-            }
-        ]);
+        .insert({
+            name,
+            email,
+            category,
+            message,
+            file: fileUrl,
+            date: new Date().toLocaleString(),
+            reply: "",
+            read: false
+        });
 
     if (error) {
-        console.error(error);
-        alert("Message could not be sent.");
+        alert("Message send failed!");
         return;
     }
 
