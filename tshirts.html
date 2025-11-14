@@ -220,6 +220,17 @@ function logout() {
 }
 </script>
 
+  <script>
+let username = localStorage.getItem("loggedInUser");
+if (username) {
+  let data = JSON.parse(localStorage.getItem("user_" + username));
+  if (data && data.avatar) {
+    let small = document.getElementById("userAvatar");
+    if (small) small.src = data.avatar;
+  }
+}
+</script>
+
   
 </body>
 </html>
