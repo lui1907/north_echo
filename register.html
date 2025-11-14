@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Login — North Echo</title>
+<title>Register — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
@@ -17,16 +17,18 @@
     padding: 0;
   }
 
+  /* Sayfa ortalama alanı */
   .page-content {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 150px); /* HEADER + boşluk */
     padding-top: 40px;
     box-sizing: border-box;
   }
 
+  /* Register kartı */
   .auth-container {
     width: 360px;
     background: #0d0d0d;
@@ -35,6 +37,7 @@
     border: 1px solid #222;
     box-shadow: 0 0 25px rgba(0,0,0,0.5);
     text-align: center;
+    box-sizing: border-box;
   }
 
   .auth-container h1 {
@@ -42,6 +45,7 @@
     margin-bottom: 20px;
   }
 
+  /* Inputlar */
   .auth-input {
     width: 100%;
     padding: 12px;
@@ -51,8 +55,10 @@
     border-radius: 8px;
     color: white;
     box-sizing: border-box;
+    display: block;
   }
 
+  /* Button */
   .auth-button {
     width: 100%;
     padding: 12px;
@@ -62,6 +68,7 @@
     color: white;
     cursor: pointer;
     transition: .2s;
+    box-sizing: border-box;
   }
 
   .auth-button:hover {
@@ -77,6 +84,7 @@
 
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -88,6 +96,7 @@
   </div>
 </header>
 
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -97,41 +106,42 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- REGISTER FORM -->
 <div class="page-content">
   <div class="auth-container">
 
-    <h1>Login</h1>
+    <h1>Register</h1>
 
+    <input id="fullname" type="text" class="auth-input" placeholder="Full Name">
     <input id="username" type="text" class="auth-input" placeholder="Username">
     <input id="password" type="password" class="auth-input" placeholder="Password">
 
-    <button class="auth-button" onclick="login()">Login</button>
+    <button class="auth-button" onclick="register()">Sign Up</button>
 
     <p id="msg"></p>
-
   </div>
 </div>
 
 <script>
-function login() {
+function register() {
+  const fullname = document.getElementById("fullname").value;
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  const savedUser = localStorage.getItem("user_" + username);
-
-  if (!savedUser) {
-    document.getElementById("msg").innerText = "User not found.";
+  if (!fullname || !username || !password) {
+    document.getElementById("msg").innerText = "All fields are required.";
     return;
   }
 
-  const data = JSON.parse(savedUser);
-
-  if (password === data.password) {
-    localStorage.setItem("loggedInUser", username);
-    window.location.href = "dashboard.html";
-  } else {
-    document.getElementById("msg").innerText = "Wrong password.";
+  if (localStorage.getItem("user_" + username)) {
+    document.getElementById("msg").innerText = "Username already exists.";
+    return;
   }
+
+  const userData = { fullname, username, password };
+  localStorage.setItem("user_" + username, JSON.stringify(userData));
+
+  document.getElementById("msg").innerText = "Account created!";
 }
 </script>
 
