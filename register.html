@@ -11,75 +11,100 @@
 <script src="cart.js" defer></script>
 
 <style>
-  body {
-    color: white;
-    margin: 0;
-    padding: 0;
-  }
 
-  /* Sayfa ortalama alanı */
-  .page-content {
+body {
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* PAGE CENTER */
+.page-content {
   width: 100%;
-  min-height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: calc(100vh - 150px);
   padding-top: 40px;
   box-sizing: border-box;
 }
 
-  /* Register kartı */
-  .auth-container {
-    width: 360px;
-    background: #0d0d0d;
-    padding: 30px;
-    border-radius: 16px;
-    border: 1px solid #222;
-    box-shadow: 0 0 25px rgba(0,0,0,0.5);
-    text-align: center;
-    box-sizing: border-box;
-  }
+/* REGISTER BOX */
+.auth-container {
+  width: 360px;
+  background: #0d0d0d;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #222;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  text-align: center;
+}
 
-  .auth-container h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
+.auth-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
 
-  /* Inputlar */
-  .auth-input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 14px;
-    background: #141414;
-    border: 1px solid #333;
-    border-radius: 8px;
-    color: white;
-    box-sizing: border-box;
-    display: block;
-  }
+/* INPUT */
+.auth-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  box-sizing: border-box;
+}
 
-  /* Button */
-  .auth-button {
-    width: 100%;
-    padding: 12px;
-    background: black;
-    border: 1px solid #444;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    transition: .2s;
-    box-sizing: border-box;
-  }
+/* BUTTON */
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  background: #000;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: .2s;
+}
 
-  .auth-button:hover {
-    background: #111;
-  }
+.auth-button:hover {
+  background: #111;
+}
 
-  #msg {
-    margin-top: 10px;
-    color: #ff5757;
-  }
+/* ERROR */
+#msg {
+  margin-top: 10px;
+  color: #ff4d4d;
+  font-size: 14px;
+}
+
+/* LIGHT MODE SUPPORT */
+html.light .auth-container {
+  background: #ffffff;
+  color: #111;
+  border-color: #ccc;
+}
+
+html.light .auth-input {
+  background: #ffffff;
+  border-color: #bbb;
+  color: #111;
+}
+
+html.light .auth-button {
+  background: #f2f2f2;
+  border-color: #bbb;
+  color: #111;
+}
+
+html.light .auth-button:hover {
+  background: #e5e5e5;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -106,11 +131,11 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- REGISTER FORM -->
+<!-- REGISTER BOX -->
 <div class="page-content">
-  <div class="auth-container">
 
-    <h1>Register</h1>
+  <div class="auth-container">
+    <h1>Create Account</h1>
 
     <input id="fullname" type="text" class="auth-input" placeholder="Full Name">
     <input id="username" type="text" class="auth-input" placeholder="Username">
@@ -120,48 +145,43 @@
 
     <p id="msg"></p>
   </div>
+
 </div>
+
+<!-- LOGIN LINK -->
+<p style="text-align:center; margin-top:15px; opacity:0.8;">
+  Already have an account?
+  <a href="login.html" style="color:#00aa66;">Login here</a>
+</p>
 
 <script>
 function register() {
-  const fullname = document.getElementById("fullname").value.trim();
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const fullname = document.getElementById("fullname").value;
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
   if (!fullname || !username || !password) {
-    document.getElementById("msg").innerText = "All fields are required.";
+    document.getElementById("msg").innerText = "Please fill all fields.";
     return;
   }
 
-  // Kullanıcı adı zaten varsa kırmızı uyarı
   if (localStorage.getItem("user_" + username)) {
-    document.getElementById("msg").style.color = "#ff4a4a";
-    document.getElementById("msg").innerText = "This username is already taken.";
+    document.getElementById("msg").innerText = "Username already taken.";
     return;
   }
 
-  // Yeni kullanıcıyı kaydet
   const userData = {
     fullname: fullname,
-    username: username,
-    password: password
+    password: password,
+    avatar: null
   };
 
   localStorage.setItem("user_" + username, JSON.stringify(userData));
-
-  // OTOMATİK GİRİŞ
   localStorage.setItem("loggedInUser", username);
 
-  document.getElementById("msg").style.color = "#00ff99";
-  document.getElementById("msg").innerText = "Account created! Redirecting...";
-
-  // Dashboard’a gönder
-  setTimeout(() => {
-    window.location.href = "dashboard.html";
-  }, 800);
+  window.location.href = "dashboard.html";
 }
 </script>
-
 
 </body>
 </html>
