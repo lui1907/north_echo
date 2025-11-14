@@ -124,12 +124,6 @@ if (username) {
 }
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="https://cdn-icons-png.flaticon.com/512/134/134914.png">
-</div>
-
-<!-- 💬 SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -139,21 +133,13 @@ if (username) {
   <div class="sup-body">
 
     <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com">
-
-    <label>Category *</label>
-    <select id="supCategory">
-      <option value="General">General</option>
-      <option value="Order">Order</option>
-      <option value="UploadDesign">Upload Design</option>
-      <option value="Other">Other</option>
-    </select>
+    <input type="email" id="supEmail">
 
     <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <textarea id="supMsg"></textarea>
 
     <label>Attach File (optional)</label>
     <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
