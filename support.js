@@ -1,4 +1,4 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.32.0/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const supabaseUrl = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
@@ -6,58 +6,54 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 window.sendSupportMessage = async function () {
-    const name = document.getElementById("supName").value.trim();
-    const email = document.getElementById("supEmail").value.trim();
-    const message = document.getElementById("supMsg").value.trim();
-    const fileInput = document.getElementById("supFile");
+
+    const name = supName.value.trim();
+    const email = supEmail.value.trim();
+    const category = supCategory.value;
+    const message = supMsg.value.trim();
+    const fileObj = supFile.files[0];
 
     if (!name || !email || !message) {
-        alert("Please fill in all required fields.");
+        alert("Fill in all fields.");
         return;
     }
 
     let fileUrl = null;
 
-    // Eğer dosya varsa yükle
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const filePath = `messages/${crypto.randomUUID()}-${file.name}`;
+    // File upload
+    if (fileObj) {
+        const path = `messages/${crypto.randomUUID()}-${fileObj.name}`;
 
-        const { data: uploadData, error: uploadError } = await supabase
+        const { error: uploadError } = await supabase
             .storage
             .from("uploads")
-            .upload(filePath, file);
+            .upload(path, fileObj);
 
         if (uploadError) {
-            console.error(uploadError);
             alert("File upload failed.");
             return;
         }
 
-        const { data: publicUrlData } = supabase
-            .storage
-            .from("uploads")
-            .getPublicUrl(filePath);
-
-        fileUrl = publicUrlData.publicUrl;
+        fileUrl = supabase.storage.from("uploads").getPublicUrl(path).data.publicUrl;
     }
 
-    // Mesajı tabloya kaydet
+    // Insert to database
     const { error } = await supabase
         .from("messages")
         .insert({
             name,
             email,
+            category,
             message,
             file: fileUrl,
             date: new Date().toLocaleString("tr-TR")
         });
 
     if (error) {
-        console.error(error);
+        console.log(error);
         alert("Message send failed.");
-        return;
+    } else {
+        alert("Message sent!");
+        toggleSupportPanel();
     }
-
-    alert("Message sent!");
 };
