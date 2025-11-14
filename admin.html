@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Admin Panel — North Echo</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="theme.js" defer></script>
+<script src="menu.js" defer></script>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+.admin-wrapper {
+  margin-top: 120px;
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-box {
+  width: 800px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.admin-box h2 {
+  margin-bottom: 20px;
+}
+
+.message {
+  background: #141414;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.message img {
+  width: 120px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+html.light .admin-box {
+  background: white;
+  color: #111;
+  border-color: #ccc;
+}
+
+html.light .message {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
+  <a href="admin.html">Admin Panel</a>
+</div>
+
+<!-- MAIN -->
+<div class="admin-wrapper">
+  <div class="admin-box">
+    <h2>📩 Support Messages</h2>
+    <div id="msgList"></div>
+  </div>
+</div>
+
+<script>
+// ---------------------------
+//   1) ADMIN YETKİ KONTROL
+// ---------------------------
+
+const ADMINS = ["Ahmet", "admin", "northEcho"]; // buraya adminleri yaz
+
+let username = localStorage.getItem("loggedInUser");
+
+if (!username || !ADMINS.includes(username)) {
+  window.location.href = "login.html";
+}
+
+
+// ---------------------------
+//   2) KÜÇÜK AVATAR LOAD
+// ---------------------------
+let data = JSON.parse(localStorage.getItem("user_" + username));
+if (data && data.avatar) {
+  document.getElementById("userAvatar").src = data.avatar;
+}
+
+
+// ---------------------------
+//   3) MESAJLARI ÇEK VE GÖSTER
+// ---------------------------
+
+function loadMessages() {
+  let list = document.getElementById("msgList");
+  let messages = JSON.parse(localStorage.getItem("support_messages")) || [];
+
+  list.innerHTML = "";
+
+  if (messages.length === 0) {
+    list.innerHTML = "<p>No messages yet.</p>";
+    return;
+  }
+
+  messages.forEach(msg => {
+    list.innerHTML += `
+      <div class="message">
+        <p><b>From:</b> ${msg.name} (${msg.email})</p>
+        <p><b>User:</b> ${msg.from}</p>
+        <p>${msg.message}</p>
+        ${msg.file ? `<img src="${msg.file}">` : ""}
+        <small>${msg.date}</small>
+      </div>
+    `;
+  });
+}
+
+loadMessages();
+
+
+// ---------------------------
+//   4) AVATAR DROPDOWN
+// ---------------------------
+
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+
+// ---------------------------
+//   5) LOGOUT
+// ---------------------------
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
