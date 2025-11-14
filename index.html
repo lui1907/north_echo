@@ -124,58 +124,41 @@ if (username) {
 }
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
+<!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,
-PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9u
-ZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMu b3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9
-IjEyIiByPSIxMiIgZmlsbD0iIzA4MDgiLz48cGF0aCBkPSJNMTIgNUM3LjU4IDUgNCA4LjA4IDQg
-MTIuMjVDNCAxMy41NCA1LjA0IDE0Ljc1IDYuNSAxNC43NWg0LjI1bDIuNjcgMi42N1YxNC43NWgy
-LjVjMi4yMSAwIDQtMS43OSA0LTQuMDV DMTYgOC4wOCAxMi40MiA1IDEyIDVaIiBmaWxsPSIjMDBh
-YTY2Ii8+PC9zdmc+">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIg..."> 
 </div>
 
-<!-- 💬 SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdml..."
-       style="width:28px;">
-</div>
-
-<!-- 💬 SUPPORT PANEL (WHATSAPP STYLE) -->
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
-
   <div class="sup-header">
-    <span>Support Chat</span>
+    <span>Support</span>
     <button onclick="toggleSupportPanel()">✕</button>
   </div>
 
   <div class="sup-body">
 
-    <!-- 📩 MESAJLAR GELECEK -->
-    <div id="chatWindow" class="chat-window"></div>
+    <label>Your Name *</label>
+    <input id="supName" type="text">
 
-    <!-- 📤 MESAJ GÖNDERME ALANI -->
-    <div class="chat-input-area">
+    <label>Email *</label>
+    <input id="supEmail" type="email">
 
-      <input type="text" id="chatInput" placeholder="Type your message...">
+    <label>Your Message *</label>
+    <textarea id="supMsg"></textarea>
 
-      <label for="supFile" class="file-btn">📎</label>
-      <input type="file" id="supFile" accept="image/*" hidden>
+    <label>Attach File</label>
+    <input type="file" id="supFile">
 
-      <button class="send-btn" onclick="sendSupportMessage()">➤</button>
-
-    </div>
+    <button class="sup-send" onclick="sendSupportMessage()">
+      Send →
+    </button>
 
   </div>
 </div>
 
-<!-- SUPPORT CSS -->
 <link rel="stylesheet" href="support.css">
-
-<!-- SUPPORT JS -->
 <script src="support.js"></script>
-
-
 
   
 </body>
