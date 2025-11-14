@@ -89,3 +89,87 @@
   margin-top: 10px;
   color: #00cc78;
 }
+/* CHAT WINDOW */
+.chat-window {
+  height: 360px;
+  overflow-y: auto;
+  background: #0f0f0f;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* BALONLAR */
+.msg-user {
+  max-width: 75%;
+  align-self: flex-start;
+  background: #222;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border-top-left-radius: 0;
+  color: white;
+}
+
+.msg-admin {
+  max-width: 75%;
+  align-self: flex-end;
+  background: #00aa66;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border-top-right-radius: 0;
+  color: white;
+}
+
+/* DOSYA */
+.chat-img {
+  width: 140px;
+  border-radius: 8px;
+  margin-top: 8px;
+  border: 1px solid #333;
+}
+
+/* TARİH */
+.msg-date {
+  opacity: .4;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+/* INPUT ALANI */
+.chat-input-area {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chat-input-area input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: white;
+}
+
+.file-btn {
+  font-size: 22px;
+  cursor: pointer;
+  opacity: .7;
+}
+
+.send-btn {
+  background: #00aa66;
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.send-btn:hover {
+  background: #009955;
+}
