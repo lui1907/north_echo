@@ -989,3 +989,74 @@ body.light .footer-link:hover {
 .avatar-menu a.logout:hover {
   background: #330000;
 }
+.profile-container {
+  width: 95%;
+  max-width: 550px;
+  margin: 120px auto;
+  background: #0d0d0d;
+  padding: 35px 25px;
+  border-radius: 20px;
+  border: 1px solid #222;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+/* Büyük profil fotoğrafı */
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #222;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  margin-bottom: 15px;
+}
+
+.profile-name {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-username {
+  font-size: 15px;
+  opacity: .7;
+  margin-bottom: 25px;
+}
+
+.profile-item {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.profile-item label {
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.profile-item input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 14px;
+  background: #00aa66;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: .2s;
+}
+
+.save-btn:hover {
+  background: #009955;
+}
