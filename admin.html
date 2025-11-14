@@ -20,16 +20,16 @@ body {
   color: white;
 }
 
-/* PAGE WRAPPER */
+/* WRAPPER */
 .admin-wrapper {
   margin-top: 130px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
 }
 
-/* PAGE TITLE */
+/* TITLE */
 .admin-wrapper h1 {
   font-size: 32px;
   font-weight: 700;
@@ -37,43 +37,122 @@ body {
 }
 
 /* MESSAGE CARD */
-.message-box {
+.msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
-  padding: 20px;
+  padding: 20px 20px 25px 20px;
   border-radius: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  position: relative;
 }
 
-.message-box h3 {
-  margin: 0 0 10px 0;
-  font-size: 18px;
+/* HEADER LINE */
+.msg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
-.message-box p {
-  margin: 6px 0;
+/* READ DOT */
+.read-dot {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* SENDER LINE */
+.info-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sender {
+  font-weight: 700;
+  font-size: 17px;
+}
+.email {
+  opacity: .6;
+  font-size: 14px;
+}
+
+/* DELETE BUTTON */
+.del-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #440000;
+  border: 1px solid #660000;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #ff6666;
+  cursor: pointer;
+  font-size: 12px;
+}
+.del-btn:hover {
+  background: #660000;
+}
+
+/* MESSAGE TEXT */
+.msg-text {
   opacity: .9;
+  margin: 10px 0;
+  white-space: pre-line;
 }
 
 /* IMAGE */
 .msg-img {
-  width: 200px;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: 1px solid #333;
+  width: 160px;
+  margin-top: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: .2s;
+  border: 1px solid #333;
+  transition: 0.2s;
 }
-
 .msg-img:hover {
   transform: scale(1.03);
 }
 
 /* DATE */
 .msg-date {
+  display: block;
+  margin-top: 6px;
   opacity: .5;
   font-size: 13px;
-  margin-top: 6px;
+}
+
+/* ADMIN NOTE */
+.admin-note-box {
+  margin-top: 14px;
+  background: #111;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.note-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #0f0f0f;
+  color: white;
+}
+
+.note-save-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  background: #00aa66;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+}
+.note-save-btn:hover {
+  background: #009655;
 }
 
 </style>
@@ -112,61 +191,109 @@ body {
   <div id="adminMessages"></div>
 </div>
 
-
+<!-- ✨ ADMIN PANEL SCRIPT -->
 <script>
-// ---------------------------
-// ADMIN AUTH CONTROL
-// ---------------------------
-const ADMINS = ["luivoss", "lui1907", "ahmet", "owner", "admin"];
-let logged = localStorage.getItem("loggedInUser");
 
-if (!logged || !ADMINS.includes(logged.toLowerCase())) {
-  window.location.href = "index.html";
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-// ---------------------------
-// LOAD SUPPORT MESSAGES
-// ---------------------------
-let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-const box = document.getElementById("adminMessages");
+  /* 🔒 ADMIN ACCESS CHECK */
+  const ADMINS = ["luivoss","lui1907","ahmet","owner","admin"];
+  const logged = localStorage.getItem("loggedInUser");
 
-if (msgs.length === 0) {
-  box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
-}
+  if (!logged || !ADMINS.includes(logged.toLowerCase())) {
+    window.location.href = "index.html";
+    return;
+  }
 
-msgs.forEach(msg => {
-  box.innerHTML += `
-    <div class="message-box">
-      <h3>${msg.name} (${msg.email})</h3>
-      <p>${msg.text}</p>
-      
-      ${msg.file ? `<img src="${msg.file}" class="msg-img">` : ""}
+  /* 📨 LOAD MESSAGES */
+  const box = document.getElementById("adminMessages");
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-      <div class="msg-date">${msg.date}</div>
-    </div>
-  `;
+  if (msgs.length === 0) {
+    box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
+    return;
+  }
+
+  box.innerHTML = "";
+
+  msgs.forEach((msg, i) => {
+    const text = msg.text || msg.message || "(no message)";
+    const name = msg.name || "Unknown";
+    const email = msg.email || "";
+    const file = msg.file || "";
+    const date = msg.date || "";
+    const adminNote = msg.adminNote || "";
+    const readColor = msg.read ? "#444" : "#00aa66";
+
+    box.innerHTML += `
+      <div class="msg-box">
+
+        <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
+
+        <div class="msg-header">
+          <div class="read-dot" onclick="toggleRead(${i})"
+               style="background:${readColor}"></div>
+          <div class="info-line">
+            <span class="sender">${name}</span>
+            <span class="email">— ${email}</span>
+          </div>
+        </div>
+
+        <p class="msg-text">${text}</p>
+
+        ${file ? `<img src="${file}" class="msg-img" onclick="openImgModal('${file}')">` : ""}
+
+        <span class="msg-date">${date}</span>
+
+        <div class="admin-note-box">
+          <p style="opacity:.7;margin:0 0 4px 0;">Admin Note:</p>
+          <input class="note-input" id="note-${i}" value="${adminNote}">
+          <button class="note-save-btn" onclick="saveNote(${i})">Save Note</button>
+        </div>
+
+      </div>
+    `;
+  });
+
 });
 
-// ---------------------------
-// TOP RIGHT AVATAR
-// ---------------------------
-let userData = JSON.parse(localStorage.getItem("user_" + logged));
-if (userData && userData.avatar) {
-  document.getElementById("userAvatar").src = userData.avatar;
+/* ✔ READ TOGGLE */
+function toggleRead(i) {
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+  msgs[i].read = !msgs[i].read;
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  location.reload();
 }
 
-document.getElementById("userAvatar").onclick = () => {
-  const menu = document.getElementById("avatarMenu");
-  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-};
+/* 🗑 DELETE */
+function deleteMsg(i) {
+  if (!confirm("Delete this message?")) return;
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+  msgs.splice(i, 1);
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  location.reload();
+}
 
-// ---------------------------
-// LOGOUT
-// ---------------------------
+/* 📝 SAVE NOTE */
+function saveNote(i) {
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+  msgs[i].adminNote = document.getElementById("note-" + i).value;
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  alert("Note saved!");
+}
+
+/* 🔍 IMAGE MODAL */
+function openImgModal(url) {
+  let win = window.open();
+  win.document.write("<img src='" + url + "' style='width:100%; border-radius:12px;'>");
+}
+
+/* 🚪 LOGOUT */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
 </script>
 
 </body>
