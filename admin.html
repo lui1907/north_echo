@@ -294,7 +294,7 @@ function logout() {
   window.location.href = "login.html";
 }
 
-  // 📌 RESİM BÜYÜT (AYNI SAYFA MODAL)
+// 📌 RESİM AÇ
 function openImgModal(url) {
   const modal = document.getElementById("imgModal");
   const modalImg = document.getElementById("modalImage");
@@ -303,11 +303,11 @@ function openImgModal(url) {
   modal.style.display = "flex";
 }
 
-// 📌 MODAL KAPATMA (HER YERE TIKLANINCA)
-document.getElementById("imgModal").onclick = () => {
+// 📌 MODAL KAPAT — HER TIKTA
+document.getElementById("imgModal").addEventListener("click", () => {
   document.getElementById("imgModal").style.display = "none";
-};
-
+});
+  
 
 </script>
 
