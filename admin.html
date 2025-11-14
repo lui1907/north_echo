@@ -11,63 +11,113 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-  <link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
 
 <style>
 body {
   margin: 0;
   padding: 0;
   color: white;
+  background: #000;
 }
 
-/* PAGE WRAPPER */
+/* ----- PAGE WRAPPER ----- */
 .admin-wrapper {
   margin-top: 130px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
 }
 
-/* TITLE */
 .admin-wrapper h1 {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 25px;
 }
 
-/* MESSAGE BOX */
-.message-box {
+/* ----- MESSAGE CARD ----- */
+.msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
-  padding: 20px;
+  padding: 22px;
   border-radius: 14px;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
+  transition: .25s;
 }
 
-.message-box h3 {
-  margin: 0 0 8px 0;
+.msg-box:hover {
+  border-color: #00aa66;
 }
 
-.message-box p {
-  opacity: 0.8;
-  margin-bottom: 6px;
-}
-
-.message-file {
-  margin-top: 8px;
-  display: inline-block;
-  padding: 6px 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 8px;
-  text-decoration: none;
+/* Sender name */
+.msg-box .sender {
+  font-weight: bold;
   color: #00aa66;
 }
-</style>
 
+/* Message text */
+.msg-box p {
+  opacity: 0.85;
+  margin: 6px 0;
+}
+
+/* Date small text */
+.msg-date {
+  font-size: 12px;
+  opacity: .6;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Preview image */
+.msg-img {
+  width: 180px;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: .2s;
+  border: 1px solid #333;
+}
+
+.msg-img:hover {
+  transform: scale(1.03);
+  border-color: #00aa66;
+}
+
+/* ----- FULLSCREEN MODAL ----- */
+#imgModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.90);
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+#imgModal img {
+  max-width: 85%;
+  max-height: 85%;
+  border-radius: 12px;
+  border: 3px solid #00aa66;
+}
+
+#imgModalClose {
+  position: fixed;
+  top: 25px;
+  right: 40px;
+  font-size: 34px;
+  cursor: pointer;
+  color: white;
+  z-index: 100000;
+}
+</style>
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -91,34 +141,38 @@ body {
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
 
 <!-- ADMIN PANEL -->
 <div class="admin-wrapper">
   <h1>Support Messages</h1>
-
   <div id="adminMessages"></div>
 </div>
 
-<!-- SUPPORT BUTTON + PANEL -->
+<!-- IMAGE MODAL -->
+<div id="imgModal">
+  <span id="imgModalClose">✕</span>
+  <img id="imgModalImage">
+</div>
+
 <script src="support.js"></script>
 
 <script>
-// -------------------------------
-// 🔒 ADMIN ACCESS CHECK
-// -------------------------------
-const ADMINS = ["luivoss", "ahmet", "owner", "lui1907", "admin"]; // hepsini küçük yaz
-
+// ------------------------------------------------
+// 🔒 ADMIN CHECK
+// ------------------------------------------------
+const ADMINS = ["luivoss", "ahmet", "owner", "lui1907", "admin"];
 let loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
   window.location.href = "index.html";
 }
 
-// -------------------------------
-// 📥 LOAD SUPPORT MESSAGES
-// -------------------------------
+// ------------------------------------------------
+// 📩 LOAD SUPPORT MESSAGES
+// ------------------------------------------------
 let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
 const box = document.getElementById("adminMessages");
 
@@ -128,72 +182,61 @@ if (msgs.length === 0) {
 
 msgs.forEach(msg => {
   box.innerHTML += `
-    <div class="message-box">
-      <h3>${msg.name} (${msg.email})</h3>
-      <p><b>Message:</b> ${msg.message}</p>
-      <p><b>Date:</b> ${msg.date}</p>
-      ${msg.file ? `<a class="message-file" href="${msg.file}" download>Download File</a>` : ""}
+    <div class="msg-box">
+        <span class="sender">${msg.name}</span>
+        — <span style="opacity:0.6;">${msg.email}</span>
+
+        <p>${msg.text}</p>
+
+        ${msg.file ? 
+        `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">`
+        : ""}
+
+        <span class="msg-date">${msg.date}</span>
     </div>
   `;
 });
 
-// -------------------------------
-// 👤 LOAD AVATAR TOP RIGHT
-// -------------------------------
+// ------------------------------------------------
+// 👤 LOAD AVATAR
+// ------------------------------------------------
 let uData = JSON.parse(localStorage.getItem("user_" + loggedUser));
 if (uData && uData.avatar) {
   document.getElementById("userAvatar").src = uData.avatar;
 }
 
-// -------------------------------
-// 🔽 AVATAR MENU DROPDOWN
-// -------------------------------
+// Avatar menu toggle
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
 };
 
-// -------------------------------
+// ------------------------------------------------
+// 🔍 IMAGE MODAL LOGIC
+// ------------------------------------------------
+function openImgModal(src) {
+  document.getElementById("imgModalImage").src = src;
+  document.getElementById("imgModal").style.display = "flex";
+}
+
+document.getElementById("imgModalClose").onclick = () => {
+  document.getElementById("imgModal").style.display = "none";
+};
+
+document.getElementById("imgModal").onclick = (e) => {
+  if (e.target.id === "imgModal") {
+    document.getElementById("imgModal").style.display = "none";
+  }
+};
+
+// ------------------------------------------------
 // 🚪 LOGOUT
-// -------------------------------
+// ------------------------------------------------
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    const box = document.getElementById("adminMessages");
-    if (!box) return;
-
-    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
-
-    if (messages.length === 0) {
-        box.innerHTML = "<p>No support messages yet.</p>";
-        return;
-    }
-
-    box.innerHTML = "";
-
-    messages.forEach(msg => {
-
-        box.innerHTML += `
-            <div class="msg-box">
-                <p><b>${msg.name}</b> — ${msg.email}</p>
-                <p>${msg.message}</p>
-
-                ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
-
-                <span class="msg-date">${msg.date}</span>
-            </div>
-        `;
-    });
-
-});
-</script>
-
-  
 </body>
 </html>
