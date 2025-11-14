@@ -49,3 +49,18 @@ function saveMessage(name, email, text, fileData) {
     alert("Message sent!");
     toggleSupportPanel();
 }
+// Kullanıcıya admin cevabını göster
+function updateSupportReply() {
+    let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+    let last = msgs[msgs.length - 1];
+    if (!last || !last.reply) return;
+
+    let replyBox = document.getElementById("supReplyBox");
+    if (replyBox) replyBox.innerHTML = `
+        <div class="reply-container">
+            <b>Admin Reply:</b><br>
+            <p>${last.reply}</p>
+        </div>
+    `;
+}
+updateSupportReply();
