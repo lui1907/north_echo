@@ -11,23 +11,30 @@
 <script src="cart.js" defer></script>
 
 <style>
-  body { color: white; }
-
-  .page-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 80px); /* header yüksekliği */
+  body {
+    color: white;
+    margin: 0;
+    padding: 0;
   }
 
+  /* Sayfa alanı */
+  .page-content {
+    width: 100%;
+    min-height: calc(100vh - 80px); /* header yüksekliği çıkar */
+    display: block;
+  }
+
+  /* Kartı ortala */
   .auth-container {
     width: 360px;
+    margin: 80px auto;             /* HEMEN BURASI ORTALATAN KISIM */
     background: #0d0d0d;
     padding: 30px;
     border-radius: 16px;
     border: 1px solid #222;
     box-shadow: 0 0 25px rgba(0,0,0,0.5);
     text-align: center;
+    box-sizing: border-box;
   }
 
   .auth-container h1 {
@@ -43,6 +50,8 @@
     border: 1px solid #333;
     border-radius: 8px;
     color: white;
+    box-sizing: border-box;
+    display: block;
   }
 
   .auth-button {
@@ -54,9 +63,12 @@
     color: white;
     cursor: pointer;
     transition: .2s;
+    box-sizing: border-box;
   }
 
-  .auth-button:hover { background: #111; }
+  .auth-button:hover {
+    background: #111;
+  }
 
   #msg {
     margin-top: 10px;
@@ -89,11 +101,10 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PAGE CONTENT -->
+<!-- REGISTER FORM -->
 <div class="page-content">
-
   <div class="auth-container">
-    <h1>Create Account</h1>
+    <h1>Register</h1>
 
     <input id="fullname" type="text" class="auth-input" placeholder="Full Name">
     <input id="username" type="text" class="auth-input" placeholder="Username">
@@ -102,7 +113,6 @@
     <button class="auth-button" onclick="register()">Sign Up</button>
     <p id="msg"></p>
   </div>
-
 </div>
 
 <script>
