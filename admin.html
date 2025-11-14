@@ -103,12 +103,14 @@
 // ===============================
 // ✔ ADMIN CHECK — HERE IS THE FIX
 // ===============================
-const ADMIN_USERNAME = "LuiVoss";
 let logged = localStorage.getItem("loggedInUser");
 
-if (logged !== ADMIN_USERNAME) {
+const ADMINS = ["LuiVoss"]; // Buraya istediğin kadar admin ekleyebilirsin
+
+if (!ADMINS.includes(logged)) {
   window.location.href = "index.html";
 }
+
 
 // ===============================
 // LOAD ADMIN AVATAR
