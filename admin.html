@@ -1,66 +1,68 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="support.css">
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    color: white;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
 
-  .admin-wrapper {
-    margin-top: 130px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
+/* PAGE WRAPPER */
+.admin-wrapper {
+  margin-top: 130px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+}
 
-  .admin-card {
-    width: 700px;
-    background: #0d0d0d;
-    padding: 25px;
-    border-radius: 15px;
-    border: 1px solid #222;
-  }
+/* TITLE */
+.admin-wrapper h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
 
-  .admin-msg {
-    background: #141414;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #333;
-    margin-bottom: 20px;
-  }
+/* MESSAGE BOX */
+.message-box {
+  background: #0d0d0d;
+  border: 1px solid #222;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 15px;
+}
 
-  .admin-msg h3 {
-    margin: 0;
-    color: #00aa66;
-  }
+.message-box h3 {
+  margin: 0 0 8px 0;
+}
 
-  .admin-msg img {
-    margin-top: 10px;
-    max-width: 140px;
-    border-radius: 10px;
-  }
+.message-box p {
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
 
-  html.light .admin-card {
-    background: white;
-    color: black;
-    border-color: #ddd;
-  }
-
-  html.light .admin-msg {
-    background: #f3f3f3;
-    color: black;
-    border-color: #ccc;
-  }
+.message-file {
+  margin-top: 8px;
+  display: inline-block;
+  padding: 6px 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #00aa66;
+}
 </style>
 
 </head>
@@ -72,17 +74,16 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
+    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" onclick="logout()">Logout</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
 </header>
 
-<!-- MENU -->
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -93,69 +94,66 @@
 
 <!-- ADMIN PANEL -->
 <div class="admin-wrapper">
-  <div class="admin-card">
-    <h1>Admin Panel — Support Messages</h1>
-    <div id="messagesBox"></div>
-  </div>
+  <h1>Support Messages</h1>
+
+  <div id="adminMessages"></div>
 </div>
 
+<!-- SUPPORT BUTTON + PANEL -->
+<script src="support.js"></script>
+
 <script>
-// ===============================
-// ✔ ADMIN CHECK — HERE IS THE FIX
-// ===============================
-let logged = localStorage.getItem("loggedInUser");
+// -------------------------------
+// 🔒 ADMIN ACCESS CHECK
+// -------------------------------
+const ADMINS = ["luivoss", "ahmet", "owner", "lui1907"]; // hepsini küçük yaz
 
-// Eğer giriş yapılmamışsa --> login'e at
-if (!logged) {
-  window.location.href = "login.html";
-}
+let loggedUser = localStorage.getItem("loggedInUser");
 
-// Birden fazla admin destekli
-const ADMINS = ["LuiVoss"]; // buraya istediğin kadar admin ekleyebilirsin
-
-// Eğer kullanıcı admin değilse --> ana sayfaya at
-if (!ADMINS.includes(logged)) {
+if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
   window.location.href = "index.html";
 }
 
-// ===============================
-// LOAD ADMIN AVATAR
-// ===============================
-if (logged) {
-  let u = JSON.parse(localStorage.getItem("user_" + logged));
-  if (u && u.avatar) {
-    document.getElementById("userAvatar").src = u.avatar;
-  }
+// -------------------------------
+// 📥 LOAD SUPPORT MESSAGES
+// -------------------------------
+let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+const box = document.getElementById("adminMessages");
+
+if (msgs.length === 0) {
+  box.innerHTML = `<p style="opacity:0.6;">No support messages yet.</p>`;
 }
 
-// ===============================
-// LOAD SUPPORT MESSAGES
-// ===============================
-let msgBox = document.getElementById("messagesBox");
-let messages = JSON.parse(localStorage.getItem("support_messages")) || [];
+msgs.forEach(msg => {
+  box.innerHTML += `
+    <div class="message-box">
+      <h3>${msg.name} (${msg.email})</h3>
+      <p><b>Message:</b> ${msg.text}</p>
+      <p><b>Date:</b> ${msg.date}</p>
+      ${msg.file ? `<a class="message-file" href="${msg.file}" download>Download File</a>` : ""}
+    </div>
+  `;
+});
 
-if (messages.length === 0) {
-  msgBox.innerHTML = "<p>No messages found.</p>";
-} else {
-  messages.forEach(m => {
-    msgBox.innerHTML += `
-      <div class="admin-msg">
-        <h3>From: ${m.name} (${m.email})</h3>
-        <p><b>User:</b> ${m.from}</p>
-        <p><b>Message:</b> ${m.message}</p>
-        <p><b>Date:</b> ${m.date}</p>
-        ${m.file ? `<img src="${m.file}">` : ""}
-      </div>
-    `;
-  });
+// -------------------------------
+// 👤 LOAD AVATAR TOP RIGHT
+// -------------------------------
+let uData = JSON.parse(localStorage.getItem("user_" + loggedUser));
+if (uData && uData.avatar) {
+  document.getElementById("userAvatar").src = uData.avatar;
 }
 
-// AVATAR MENU
+// -------------------------------
+// 🔽 AVATAR MENU DROPDOWN
+// -------------------------------
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
 };
 
+// -------------------------------
+// 🚪 LOGOUT
+// -------------------------------
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
