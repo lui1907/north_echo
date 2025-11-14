@@ -81,3 +81,11 @@
 .sup-send:hover {
     background: #009655;
 }
+.reply-container {
+  background: #111;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  color: #00cc78;
+}
