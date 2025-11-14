@@ -1,124 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard — North Echo</title>
-
-<link rel="stylesheet" href="style.css" />
-
-<style>
-.dashboard-box {
-    max-width: 700px;
-    margin: 120px auto;
-    background: var(--card);
-    padding: 30px;
-    border-radius: 14px;
-}
-
-.user-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
-}
-
-.user-header img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-}
-
-.logout-btn {
-    padding: 10px 18px;
-    border-radius: 8px;
-    background: #fff;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.design-card {
-    background: #111;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 12px;
-    border: 1px solid #333;
-}
-
-.design-card p {
-    margin: 4px 0;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <title>Dashboard — North Echo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="dashboard-box">
-
-    <div class="user-header">
-        <img id="userPhoto" src="">
-        <div>
-            <h2 id="userName"></h2>
-            <p id="userEmail"></p>
-        </div>
-    </div>
-
-    <button onclick="logout()" class="logout-btn">Logout</button>
-
-    <h3>Your Designs</h3>
-    <div id="designList">
-        <p>Loading...</p>
-    </div>
-
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
 </div>
 
+<!-- TOP BAR -->
+<div class="top-bar">
+  <button id="openMenu" class="menu-button">☰</button>
+  <h1>Dashboard</h1>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page-content">
+  <div class="form-box">
+      <p id="welcome"></p>
+      <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<script src="menu.js"></script>
+<script src="theme.js"></script>
+<script src="cart.js"></script>
+
 <script>
-// Kullanıcı var mı kontrol et
-const user = JSON.parse(localStorage.getItem("user"));
-if (!user) window.location.href = "login.html";
+const username = localStorage.getItem("loggedInUser");
 
-// Kullanıcı bilgilerini göster
-document.getElementById("userName").textContent = user.name;
-document.getElementById("userEmail").textContent = user.email;
-document.getElementById("userPhoto").src = user.picture;
+if (!username) {
+  window.location.href = "login.html";
+}
 
-// Tasarımları Apps Script'ten çek
-fetch("https://script.google.com/macros/s/AKfycbzUdq_ofy2vixQvHoM_Kd0ISULSq29qqg23waBXg7fUTG1LLrsGOyDpmRFFRHEokpfoPA/exec", {
-    method: "POST",
-    body: JSON.stringify({
-        mode: "getDesigns",
-        email: user.email
-    }),
-    headers: { "Content-Type": "application/json" }
-})
-.then(res => res.json())
-.then(list => {
-    const box = document.getElementById("designList");
-    box.innerHTML = "";
+const data = JSON.parse(localStorage.getItem("user_" + username));
+document.getElementById("welcome").innerText = 
+  "Welcome, " + data.fullname + "!";
 
-    if (list.length === 0) {
-        box.innerHTML = "<p>No designs submitted yet.</p>";
-        return;
-    }
-
-    list.forEach(des => {
-        box.innerHTML += `
-            <div class="design-card">
-                <p><b>Description:</b> ${des.description}</p>
-                <p><b>Status:</b> ${des.status}</p>
-                <p><b>File:</b> <a href="${des.fileUrl}" target="_blank">View file</a></p>
-            </div>
-        `;
-    });
-});
-
-// Logout
 function logout() {
-    localStorage.removeItem("user");
-    window.location.href = "login.html";
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
 }
 </script>
 
