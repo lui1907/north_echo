@@ -88,6 +88,16 @@
   </div>
 </header>
 
+<!-- ⭐ SOL MENU (EKLEMEK ZORUNLU!) -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
+</div>
+
 <!-- SETTINGS CONTENT -->
 <div class="settings-container">
 
@@ -96,12 +106,10 @@
   <!-- Tema Ayarları -->
   <div class="settings-group">
     <h3>Appearance</h3>
-    <button class="settings-btn" onclick="toggleTheme()">
-      Toggle Theme (Dark / Light)
-    </button>
+    <button class="settings-btn" onclick="toggleTheme()">Toggle Theme (Dark / Light)</button>
   </div>
 
-  <!-- Profil Fotoğrafı -->
+  <!-- Profil -->
   <div class="settings-group">
     <h3>Profile</h3>
     <button class="settings-btn" onclick="goProfile()">Edit Profile</button>
@@ -116,28 +124,33 @@
 
 </div>
 
+<!-- SCRIPT -->
 <script>
-/* Avatar menü açma */
-const avatar = document.getElementById("userAvatar");
-const menu = document.getElementById("avatarMenu");
+/* Avatar menüsü (güvenli versiyon) */
+document.addEventListener("DOMContentLoaded", function () {
+  const avatar = document.getElementById("userAvatar");
+  const menu = document.getElementById("avatarMenu");
 
-avatar.addEventListener("click", () => {
-  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  if (avatar && menu) {
+    avatar.addEventListener("click", function () {
+      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    });
+  }
 });
 
 /* Login kontrol */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-/* Kullanıcı verisi */
+/* User data */
 let data = JSON.parse(localStorage.getItem("user_" + username));
 
 /* Küçük avatarı yükle */
-if (data.avatar) {
+if (data && data.avatar) {
   document.getElementById("userAvatar").src = data.avatar;
 }
 
-/* Tema değiştir */
+/* Tema toggle */
 function toggleTheme() {
   let theme = localStorage.getItem("theme");
 
@@ -148,6 +161,8 @@ function toggleTheme() {
     document.documentElement.classList.add("light");
     localStorage.setItem("theme", "light");
   }
+
+  document.body.style.transition = "0.3s";
 }
 
 /* Profil sayfasına git */
@@ -155,7 +170,7 @@ function goProfile() {
   window.location.href = "profile.html";
 }
 
-/* Avatarı sıfırla */
+/* Avatar sıfırla */
 function resetAvatar() {
   data.avatar = null;
   localStorage.setItem("user_" + username, JSON.stringify(data));
@@ -169,6 +184,18 @@ function resetAvatar() {
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
+}
+</script>
+
+<!-- ⭐ TÜM SAYFALARDA KÜÇÜK AVATAR SENKRONU -->
+<script>
+let u = localStorage.getItem("loggedInUser");
+if (u) {
+  let d = JSON.parse(localStorage.getItem("user_" + u));
+  if (d && d.avatar) {
+    let small = document.getElementById("userAvatar");
+    if (small) small.src = d.avatar;
+  }
 }
 </script>
 
