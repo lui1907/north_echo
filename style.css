@@ -1102,3 +1102,102 @@ body.light .footer-link:hover {
     border-color: #555;
 }
 
+/* Floating support button */
+.support-fab {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  background: #5c54ff;
+  color: white;
+  border-radius: 50%;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  z-index: 9999;
+  transition: .25s;
+}
+.support-fab:hover { transform: scale(1.08); }
+
+/* Right slide support panel */
+.support-panel {
+  position: fixed;
+  top: 0;
+  right: -420px;     /* gizli */
+  width: 420px;
+  height: 100vh;
+  background: #0d0d0d;
+  border-left: 1px solid #222;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.4);
+  z-index: 10000;
+  transition: 0.35s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.support-panel.open { right: 0; }
+
+/* header */
+.sp-header {
+  background: linear-gradient(45deg, #5c54ff, #2e38ff);
+  padding: 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+}
+
+.sp-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.sp-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* BODY */
+.sp-content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sp-content input,
+.sp-content select,
+.sp-content textarea {
+  width: 100%;
+  background: #141414;
+  border: 1px solid #333;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+.sp-content textarea {
+  height: 120px;
+}
+
+.sp-send {
+  width: 100%;
+  padding: 12px;
+  background: #5c54ff;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: .2s;
+}
+.sp-send:hover { background: #4b45e0; }
