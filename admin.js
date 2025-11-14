@@ -9,7 +9,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // -----------------------------------------------------
 // 🔐 Admin Kontrolü
 // -----------------------------------------------------
-const ADMINS = ["luivoss", "ahmet", "owner", "admin"];
+const ADMINS = ["fstekin", "luivoss", "owner", "admin"];
 const logged = localStorage.getItem("loggedInUser");
 
 if (!logged || !ADMINS.includes(logged.toLowerCase())) {
