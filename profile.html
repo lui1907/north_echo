@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Profile — North Echo</title>
+
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+
+<style>
+.profile-container {
+  width: 90%;
+  max-width: 500px;
+  margin: 120px auto;
+  background: #0d0d0d;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #222;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.profile-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.profile-item {
+  margin-bottom: 15px;
+}
+
+.profile-item label {
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.profile-item input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00aa66;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: 0.2s;
+}
+
+.save-btn:hover {
+  background: #009955;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER (avatarlı versiyon) -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+
+  </div>
+</header>
+
+<!-- PROFILE CONTENT -->
+<div class="profile-container">
+  <h2>Your Profile</h2>
+
+  <div class="profile-item">
+    <label>Full Name</label>
+    <input type="text" id="fullNameInput"/>
+  </div>
+
+  <div class="profile-item">
+    <label>Username</label>
+    <input type="text" id="usernameInput" disabled/>
+  </div>
+
+  <div class="profile-item">
+    <label>Password</label>
+    <input type="password" id="passwordInput"/>
+  </div>
+
+  <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+</div>
+
+
+<script>
+// Avatar menü açma
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+if (avatar) {
+  avatar.addEventListener("click", function () {
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
+}
+
+// LOGIN KONTROLÜ
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+// Kullanıcı verisini çek
+let data = JSON.parse(localStorage.getItem("user_" + username));
+
+// inputlara at
+document.getElementById("fullNameInput").value = data.fullname;
+document.getElementById("usernameInput").value = data.username;
+document.getElementById("passwordInput").value = data.password;
+
+// PROFİLİ KAYDET
+function saveProfile() {
+  data.fullname = document.getElementById("fullNameInput").value;
+  data.password = document.getElementById("passwordInput").value;
+
+  localStorage.setItem("user_" + username, JSON.stringify(data));
+
+  alert("Profile updated!");
+}
+
+// Logout
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
