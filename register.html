@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register — North Echo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <button id="openMenu" class="menu-button">☰</button>
+  <h1>Register</h1>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page-content">
+  <div class="form-box">
+      <input id="fullname" type="text" placeholder="Full Name">
+      <input id="username" type="text" placeholder="Username">
+      <input id="password" type="password" placeholder="Password">
+      <button onclick="register()">Create Account</button>
+      <p id="msg"></p>
+  </div>
+</div>
+
+<script src="menu.js"></script>
+<script src="theme.js"></script>
+<script src="cart.js"></script>
+
+<script>
+function register() {
+  const fullname = document.getElementById("fullname").value;
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  if (!fullname || !username || !password) {
+    document.getElementById("msg").innerText = "All fields required.";
+    return;
+  }
+
+  if (localStorage.getItem("user_" + username)) {
+    document.getElementById("msg").innerText = "Username already exists.";
+    return;
+  }
+
+  const userData = {
+    fullname: fullname,
+    username: username,
+    password: password
+  };
+
+  localStorage.setItem("user_" + username, JSON.stringify(userData));
+  document.getElementById("msg").innerText = "Account created!";
+}
+</script>
+
+</body>
+</html>
