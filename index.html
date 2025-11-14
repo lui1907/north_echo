@@ -126,7 +126,7 @@ if (username) {
 
 <!-- 💬 SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAA2CAYAAAD8tG/GAAAACXBIWXMAAAsTAAALEwEAmpwYAAAHEElEQVRoge2Zf0yVVRTHP+feCqUPVQxRVKqgQYhE0UkpSg6iMFKkzqgqQ0oNEgucNAyRaSPohtIhoJ0VQIVQloWlIYqVCQqkEhlqJC4VqgVq8eV77P/h9zO7s77szO+Z+c+Z8z3znvO+c75z3/m+37vfve9L7xTEYRiGIYhiGIYhiGIYhiGIYhiGIYhiGIYxmIOQ8F6+nYv8lzRND04Y8nA19AIDwB5TgZ7L2jhUu5V4LOExgmc9gCwQ7w6mF6ccJ4E7iA9VBsuKZ4yNwBmmd7jcTlgVwE7BVh3nFH/FB0Do9vGqCxyN4GzjWgY3cA2wv2NkY0gl8BbBuAg5sP4E3gG1V5vHlhp4IfgU4ka7GzZJjDC3ICQG/VwXcx0X4ExquGz+ZzcDQ19MaN4k3gWgMuSvPpuiXwjF7T3dV78uHQCvrQ0z4gBwHVjgU2J9QHixjo/Gtj5OfCj72pZWEbOAcf8llNV5Vv4Q6JQwUdgA3dXFS4nxEzjkkfBLwI6w+XTjALL7EQSeAT8A0xW4DvIBc1wwJeBy+HpF5s9EY3hvaCeQx4E7mpXE2Az5lXJJoiiZJ8FbgcrV3bxmYBnA7Y0fJEeCBoz5Mw5y9k46YV8bwOvArZRxOYrZXjxkvSfyHYRfB1wC6AAbC3gJmFUzS7SSvAT8CyOWYA3moOAYo5bFVCdwM+Ba5KvFQYCiKoqmvN2FmWiqqr2kPCo7Ax6q/wEPBAMztJEXwvMjOkX8zLe7OJGvnvwKcdD54fUoT3RRnM9t+j/XQGcA5yI34B9macO1d/H49Q7vIISPtQI8Rb/Y/jOYy5spJIpL0t2q/UgY+qqqgprxV63j66zMh4Cmf1yYbVfkF+Pf77puJWJQkSTKtD1K9ufSut7GLgO7WxOhl+H3W7GMFbPBr4HwLmJmhtGz3fM2E+CbC9wJGh4tNz8Twq+1WW2Wtf5uXl0NJzq/TkcB64DxHZ6YHz7ZB7UxFWJikUkpK91Hd9MtnRfjqKoqGnfC+2zE1pGfGYzipmPhN2Dtns7z52VKP7Wy6Yy28btse19nd0X7X15QFKUgo5q/5AU0xHDPR2+RL0HzV/7+Z2YhiGIYhiGIYhiGIYhiGIYhiGIYhiGIdif8ArpknTLaR3rAAAAAASUVORK5CYII=">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
 </div>
 
 <!-- 💬 SUPPORT PANEL -->
@@ -137,6 +137,7 @@ if (username) {
   </div>
 
   <div class="sup-body">
+
     <label>Your Name *</label>
     <input type="text" id="supName" placeholder="John Doe">
 
@@ -146,14 +147,21 @@ if (username) {
     <label>Your Message *</label>
     <textarea id="supMsg" placeholder="Write your message..."></textarea>
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+    <!-- 📎 FILE UPLOAD -->
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+
+    <button class="sup-send" onclick="sendSupportMessage()">
+      Send Message →
+    </button>
+
   </div>
 </div>
 
+<!-- SUPPORT CSS + JS -->
 <link rel="stylesheet" href="support.css">
 <script src="support.js"></script>
-</body>
-</html>
+
 
   
 </body>
