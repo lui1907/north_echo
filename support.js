@@ -1,38 +1,90 @@
-function toggleSupportPanel() {
+/* ===============================
+   SUPPORT PANEL OPEN/CLOSE
+================================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const btn = document.getElementById("supportBtn");
   const panel = document.getElementById("supportPanel");
-  panel.classList.toggle("open");
-}
+  const close = document.getElementById("supportClose");
 
-function sendSupportMessage() {
-  const nameInput = document.getElementById("supName");
-  const emailInput = document.getElementById("supEmail");
-  const msgInput = document.getElementById("supMsg");
-
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const msg = msgInput.value.trim();
-
-  if (!name || !email || !msg) {
-    alert("Please fill all required fields.");
-    return;
+  if (btn) {
+    btn.addEventListener("click", () => {
+      panel.style.display = "flex";
+    });
   }
 
-  const data = {
-    name,
-    email,
-    msg,
-    date: new Date().toLocaleString()
-  };
+  if (close) {
+    close.addEventListener("click", () => {
+      panel.style.display = "none";
+    });
+  }
 
-  let messages = JSON.parse(localStorage.getItem("supportMessages") || "[]");
-  messages.push(data);
-  localStorage.setItem("supportMessages", JSON.stringify(messages));
+});
 
-  alert("Your message has been sent!");
 
-  nameInput.value = "";
-  emailInput.value = "";
-  msgInput.value = "";
+/* ===============================
+   SEND MESSAGE
+================================ */
 
-  toggleSupportPanel();
-}
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("supportForm");
+
+  if (!form) return;
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let username = localStorage.getItem("loggedInUser") || "Guest";
+
+    let name = document.getElementById("sup_name").value.trim();
+    let email = document.getElementById("sup_email").value.trim();
+    let message = document.getElementById("sup_msg").value.trim();
+    let file = document.getElementById("sup_file").files[0];
+
+    if (message === "") {
+      alert("Please write your message.");
+      return;
+    }
+
+    let savedMessages = JSON.parse(localStorage.getItem("support_messages")) || [];
+
+    let fileDataUrl = null;
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function() {
+        fileDataUrl = reader.result;
+
+        saveMessage();
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      saveMessage();
+    }
+
+    function saveMessage() {
+
+      let newMsg = {
+        from: username,
+        name: name,
+        email: email,
+        message: message,
+        file: fileDataUrl,
+        date: new Date().toLocaleString()
+      };
+
+      savedMessages.push(newMsg);
+
+      localStorage.setItem("support_messages", JSON.stringify(savedMessages));
+
+      alert("Your message has been sent.");
+      form.reset();
+    }
+
+  });
+
+});
