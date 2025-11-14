@@ -1,10 +1,6 @@
 /* ============================================================
    FIREBASE BAĞLANTISI (importsuz GitHub uyumlu sürüm)
 ============================================================ */
-
-/* Bu kod, sayfadaki <script src="firebase-app.js"> ve firestore.js
-   dosyalarını kullanarak otomatik çalışır. */
-
 const firebaseConfig = {
     apiKey: "AIzaSyCbWvQenaRuSp0Op0IJLCl2fjV7I45tMX4",
     authDomain: "northecho-support.firebaseapp.com",
