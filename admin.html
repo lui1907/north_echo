@@ -105,12 +105,18 @@
 // ===============================
 let logged = localStorage.getItem("loggedInUser");
 
-const ADMINS = ["LuiVoss"]; // Buraya istediğin kadar admin ekleyebilirsin
+// Eğer giriş yapılmamışsa --> login'e at
+if (!logged) {
+  window.location.href = "login.html";
+}
 
+// Birden fazla admin destekli
+const ADMINS = ["LuiVoss"]; // buraya istediğin kadar admin ekleyebilirsin
+
+// Eğer kullanıcı admin değilse --> ana sayfaya at
 if (!ADMINS.includes(logged)) {
   window.location.href = "index.html";
 }
-
 
 // ===============================
 // LOAD ADMIN AVATAR
