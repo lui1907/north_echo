@@ -96,5 +96,17 @@
 
     </div>
 </footer>
+  <script>
+document.getElementById("userAvatar").addEventListener("click", function () {
+  const menu = document.getElementById("avatarMenu");
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+});
+
+// Logout fonksiyonu
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+</script>
 </body>
 </html>
