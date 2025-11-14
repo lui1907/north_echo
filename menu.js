@@ -18,9 +18,3 @@ document.addEventListener("click", (e) => {
         sideMenu.classList.remove("open");
     }
 });
-document.getElementById("menuBtn").onclick = () => {
-  document.getElementById("sideMenu").style.right = "0";
-};
-document.getElementById("closeMenu").onclick = () => {
-  document.getElementById("sideMenu").style.right = "-260px";
-};
