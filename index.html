@@ -97,10 +97,14 @@
     </div>
 </footer>
   <script>
-document.getElementById("userAvatar").addEventListener("click", function () {
-  const menu = document.getElementById("avatarMenu");
-  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-});
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+if (avatar) {
+  avatar.addEventListener("click", function () {
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
+}
 
 // Logout fonksiyonu
 function logout() {
@@ -108,5 +112,6 @@ function logout() {
   window.location.href = "login.html";
 }
 </script>
+
 </body>
 </html>
