@@ -19,11 +19,12 @@ body {
   color: white;
 }
 
-/* PAGE LAYOUT */
+/* PAGE */
 .profile-wrapper {
   margin-top: 130px;
   display: flex;
   justify-content: center;
+  padding: 20px;
 }
 
 /* CARD */
@@ -34,44 +35,51 @@ body {
   border-radius: 18px;
   padding: 30px;
   text-align: center;
+  position: relative;
 }
 
-/* AVATAR */
+/* AVATAR BIG */
 .profile-avatar {
-  width: 130px;
-  height: 130px;
+  width: 135px;
+  height: 135px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #555;
 }
 
-/* CHANGE AVATAR */
-.avatar-btn {
-  margin-top: 10px;
-  padding: 10px 14px;
-  border-radius: 8px;
+/* SMALL + BUTTON ON AVATAR */
+.avatar-edit-btn {
+  position: absolute;
+  top: 110px;
+  left: 58%;
+  transform: translateX(-50%);
+  width: 38px;
+  height: 38px;
   background: #00aa66;
-  border: none;
   color: white;
+  border-radius: 50%;
+  border: none;
+  font-size: 22px;
   cursor: pointer;
 }
 
-/* INFO BLOCKS */
+/* LABEL */
 .label {
-  margin-top: 20px;
   text-align: left;
+  margin-top: 20px;
   font-size: 14px;
   opacity: .7;
 }
 
+/* INPUT */
 .input-box {
   width: 100%;
   padding: 12px;
+  margin-top: 6px;
   border-radius: 10px;
   background: #141414;
   border: 1px solid #333;
   color: white;
-  margin-bottom: 16px;
   box-sizing: border-box;
 }
 
@@ -80,14 +88,13 @@ body {
   width: 100%;
   padding: 12px;
   background: #00aa66;
-  color: white;
   border: none;
+  color: white;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  margin-top: 20px;
 }
 
-/* LIGHT MODE FIX */
 html.light .profile-card {
   background: white;
   color: #111;
@@ -134,20 +141,24 @@ html.light .input-box {
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PROFILE CARD -->
+<!-- PROFILE -->
 <div class="profile-wrapper">
   <div class="profile-card">
 
+    <!-- AVATAR -->
     <img id="profileAvatarPreview" class="profile-avatar" src="assets/default-avatar.png">
 
+    <!-- + BUTTON -->
+    <button class="avatar-edit-btn" onclick="document.getElementById('uploadAvatar').click()">+</button>
     <input type="file" id="uploadAvatar" accept="image/*" style="display:none;">
-    <button class="avatar-btn" onclick="document.getElementById('uploadAvatar').click()">Change Avatar</button>
 
+    <!-- FULL NAME -->
     <div class="label">Full Name</div>
     <input id="fullNameInput" class="input-box" type="text">
 
+    <!-- USERNAME -->
     <div class="label">Username</div>
-    <input id="usernameInput" class="input-box" type="text" disabled style="opacity:.6;">
+    <input id="usernameInput" class="input-box" type="text" disabled style="opacity:.5;">
 
     <button class="save-btn" onclick="saveProfile()">Save Changes</button>
 
@@ -160,24 +171,24 @@ html.light .input-box {
 if (localStorage.getItem("theme") === "light")
   document.documentElement.classList.add("light");
 
-/* AUTH CHECK */
+/* LOGIN CHECK */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
 /* USER DATA */
 let userData = JSON.parse(localStorage.getItem("user_" + username));
 
-/* PRELOAD PROFILE DATA */
+/* PRE-FILL */
 document.getElementById("profileAvatarPreview").src = userData.avatar || "assets/default-avatar.png";
 document.getElementById("fullNameInput").value = userData.fullname || "";
 document.getElementById("usernameInput").value = username;
 
-/* AVATAR UPLOAD */
+/* CHANGE AVATAR */
 document.getElementById("uploadAvatar").addEventListener("change", function(){
-  let file = this.files[0];
+  const file = this.files[0];
   if (!file) return;
 
-  let reader = new FileReader();
+  const reader = new FileReader();
   reader.onload = function() {
     userData.avatar = reader.result;
     localStorage.setItem("user_" + username, JSON.stringify(userData));
@@ -188,15 +199,15 @@ document.getElementById("uploadAvatar").addEventListener("change", function(){
   reader.readAsDataURL(file);
 });
 
-/* SAVE */
+/* SAVE PROFILE */
 function saveProfile() {
-  userData.fullname = document.getElementById("fullNameInput").value;
-
+  userData.fullname = document.getElementById("fullNameInput").value.trim();
   localStorage.setItem("user_" + username, JSON.stringify(userData));
-  alert("Profile updated.");
+
+  alert("Profile updated successfully.");
 }
 
-/* AVATAR MENU */
+/* AVATAR DROPDOWN */
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
