@@ -1,90 +1,74 @@
-/* ===============================
-   SUPPORT PANEL OPEN/CLOSE
-================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const btn = document.getElementById("supportBtn");
+/* ===========================
+   SUPPORT PANEL TOGGLE
+=========================== */
+function toggleSupportPanel() {
   const panel = document.getElementById("supportPanel");
-  const close = document.getElementById("supportClose");
+  if (!panel) return;
 
-  if (btn) {
-    btn.addEventListener("click", () => {
-      panel.style.display = "flex";
-    });
+  panel.classList.toggle("open");
+}
+
+
+/* ===========================
+   SEND SUPPORT MESSAGE
+=========================== */
+function sendSupportMessage() {
+  const name = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const message = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if (!name || !email || !message) {
+    alert("Please fill in all required fields.");
+    return;
   }
 
-  if (close) {
-    close.addEventListener("click", () => {
-      panel.style.display = "none";
-    });
+  let fileData = null;
+
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      fileData = reader.result;
+      saveSupportMessage(name, email, message, fileData);
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    saveSupportMessage(name, email, message, null);
   }
+}
 
-});
 
+/* ===========================
+   SAVE TO LOCALSTORAGE
+=========================== */
+function saveSupportMessage(name, email, message, fileData) {
+  const loggedUser = localStorage.getItem("loggedInUser") || "Guest";
 
-/* ===============================
-   SEND MESSAGE
-================================ */
+  const newMessage = {
+    id: Date.now(),
+    user: loggedUser,
+    name: name,
+    email: email,
+    message: message,
+    file: fileData,
+    date: new Date().toLocaleString()
+  };
 
-document.addEventListener("DOMContentLoaded", () => {
+  let allMessages = JSON.parse(localStorage.getItem("support_messages")) || [];
+  allMessages.push(newMessage);
 
-  const form = document.getElementById("supportForm");
+  localStorage.setItem("support_messages", JSON.stringify(allMessages));
 
-  if (!form) return;
+  alert("Your message has been sent successfully!");
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
+  // Temizle
+  document.getElementById("supName").value = "";
+  document.getElementById("supEmail").value = "";
+  document.getElementById("supMsg").value = "";
+  document.getElementById("supFile").value = "";
 
-    let username = localStorage.getItem("loggedInUser") || "Guest";
-
-    let name = document.getElementById("sup_name").value.trim();
-    let email = document.getElementById("sup_email").value.trim();
-    let message = document.getElementById("sup_msg").value.trim();
-    let file = document.getElementById("sup_file").files[0];
-
-    if (message === "") {
-      alert("Please write your message.");
-      return;
-    }
-
-    let savedMessages = JSON.parse(localStorage.getItem("support_messages")) || [];
-
-    let fileDataUrl = null;
-
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = function() {
-        fileDataUrl = reader.result;
-
-        saveMessage();
-      };
-
-      reader.readAsDataURL(file);
-    } else {
-      saveMessage();
-    }
-
-    function saveMessage() {
-
-      let newMsg = {
-        from: username,
-        name: name,
-        email: email,
-        message: message,
-        file: fileDataUrl,
-        date: new Date().toLocaleString()
-      };
-
-      savedMessages.push(newMsg);
-
-      localStorage.setItem("support_messages", JSON.stringify(savedMessages));
-
-      alert("Your message has been sent.");
-      form.reset();
-    }
-
-  });
-
-});
+  toggleSupportPanel();
+}
