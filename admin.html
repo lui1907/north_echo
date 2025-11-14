@@ -160,5 +160,38 @@ function logout() {
 }
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const box = document.getElementById("adminMessages");
+    if (!box) return;
+
+    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
+
+    if (messages.length === 0) {
+        box.innerHTML = "<p>No support messages yet.</p>";
+        return;
+    }
+
+    box.innerHTML = "";
+
+    messages.forEach(msg => {
+
+        box.innerHTML += `
+            <div class="msg-box">
+                <p><b>${msg.name}</b> — ${msg.email}</p>
+                <p>${msg.message}</p>
+
+                ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
+
+                <span class="msg-date">${msg.date}</span>
+            </div>
+        `;
+    });
+
+});
+</script>
+
+  
 </body>
 </html>
