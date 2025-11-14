@@ -1,0 +1,102 @@
+/* SUPPORT BUTTON (Floating Bubble) */
+.support-btn {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  width: 55px;
+  height: 55px;
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  transition: .25s;
+}
+
+.support-btn:hover {
+  background: #222;
+  border-color: #666;
+}
+
+/* ICON */
+.support-btn img {
+  filter: invert(1); /* beyaz ikon */
+  width: 28px;
+}
+
+/* PANEL */
+.support-panel {
+  position: fixed;
+  right: -420px;
+  bottom: 25px;
+  width: 360px;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 20px;
+  z-index: 9998;
+  transition: .35s;
+}
+
+.support-panel.open { right: 25px; }
+
+.support-panel h2 {
+  margin-top: 0;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+}
+
+/* CLOSE BUTTON */
+.sp-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+.sp-close:hover { color: white; }
+
+/* INPUTS */
+.support-panel input,
+.support-panel select,
+.support-panel textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.support-panel textarea {
+  height: 100px;
+  resize: none;
+}
+
+/* SEND BUTTON */
+.sp-send-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00aa66;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  transition: .25s;
+}
+.sp-send-btn:hover { background: #009655; }
+
+/* STATUS TEXT */
+#sp_status {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 14px;
+}
