@@ -4,6 +4,61 @@
   <meta charset="UTF-8">
   <title>Register — North Echo</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      color: white;
+    }
+
+    .auth-container {
+      max-width: 370px;
+      margin: 80px auto;
+      background: #0d0d0d;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      text-align: center;
+      border: 1px solid #222;
+    }
+
+    .auth-container h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 12px;
+      background: black;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: .2s;
+    }
+
+    .auth-button:hover {
+      background: #111;
+    }
+
+    #msg {
+      margin-top: 10px;
+      color: #ff4e4e;
+    }
+  </style>
 </head>
 
 <body>
@@ -24,19 +79,25 @@
   <h1>Register</h1>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- PAGE CONTENT -->
 <div class="page-content">
-  <div class="form-box">
-      <input id="fullname" type="text" placeholder="Full Name">
-      <input id="username" type="text" placeholder="Username">
-      <input id="password" type="password" placeholder="Password">
-      <button onclick="register()">Create Account</button>
-      <p id="msg"></p>
+
+  <div class="auth-container">
+    <h1>Create Account</h1>
+
+    <input id="fullname" type="text" class="auth-input" placeholder="Full Name">
+    <input id="username" type="text" class="auth-input" placeholder="Username">
+    <input id="password" type="password" class="auth-input" placeholder="Password">
+
+    <button class="auth-button" onclick="register()">Sign Up</button>
+
+    <p id="msg"></p>
   </div>
+
 </div>
 
 <script src="menu.js"></script>
-<script src="theme.js"></script>
+script src="theme.js"></script>
 <script src="cart.js"></script>
 
 <script>
@@ -46,7 +107,7 @@ function register() {
   const password = document.getElementById("password").value;
 
   if (!fullname || !username || !password) {
-    document.getElementById("msg").innerText = "All fields required.";
+    document.getElementById("msg").innerText = "All fields are required.";
     return;
   }
 
