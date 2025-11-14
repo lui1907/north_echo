@@ -19,9 +19,9 @@ body {
   color: white;
 }
 
-/* WRAPPER */
+/* PAGE */
 .profile-wrapper {
-  margin-top: 40px !important;
+  margin-top: 110px;
   display: flex;
   justify-content: center;
   padding: 20px;
@@ -36,10 +36,9 @@ body {
   padding: 30px;
   text-align: center;
   position: relative;
-  z-index: 1; /* HEADER ALTINDA KALMASI İÇİN */
 }
 
-/* AVATAR */
+/* BIG AVATAR */
 .profile-avatar {
   width: 135px;
   height: 135px;
@@ -48,11 +47,11 @@ body {
   border: 3px solid #555;
 }
 
-/* AVATAR EDIT BUTTON */
+/* + BUTTON */
 .avatar-edit-btn {
     position: absolute;
-    top: 135px;
-    left: 165px;
+    top: 150px;
+    left: 235px;
     width: 38px;
     height: 38px;
     background: #00aa66;
@@ -64,14 +63,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10 !important; /* ARTIK HEADER'I BASTIRMAYACAK */
+    z-index: 9999;
     transition: 0.2s;
 }
 .avatar-edit-btn:hover {
     background: #009655;
 }
 
-/* DASHBOARD BUTTON */
+/* Go to Dashboard */
 .go-dashboard-btn {
   display: block;
   width: 100%;
@@ -83,12 +82,10 @@ body {
   color: white;
   margin-top: 35px;
   margin-bottom: 15px;
-  transition: 0.25s;
-  font-size: 15px;
 }
-.go-dashboard-btn:hover { background: #222; }
+.go-dashboard-btn:hover { background:#222; }
 
-/* LABELS */
+/* LABEL */
 .label {
   text-align: left;
   margin-top: 15px;
@@ -105,10 +102,9 @@ body {
   background: #141414;
   border: 1px solid #333;
   color: white;
-  box-sizing: border-box;
 }
 
-/* SAVE */
+/* SAVE BUTTON */
 .save-btn {
   width: 100%;
   padding: 12px;
@@ -120,37 +116,13 @@ body {
   margin-top: 10px;
   font-size: 16px;
 }
-.save-btn:hover { background: #009655; }
+.save-btn:hover { background:#009655; }
 
-/* LIGHT MODE */
-html.light .profile-card {
-  background: white;
-  color: #111;
-  border-color: #ccc;
-}
-html.light .input-box {
-  background: #fff;
-  border-color: #ccc;
-  color: #111;
-}
-html.light .go-dashboard-btn {
-  background: #f0f0f0;
-  border-color: #ccc;
-  color: #111;
-}
-html.light .go-dashboard-btn:hover {
-  background: #e5e5e5;
-}
-
-/* HEADER MENÜ HER ŞEYİN ÜSTÜNDE OLSUN */
-.right-buttons {
-  position: relative;
-  z-index: 9999;
-}
-
-.avatar-menu {
-  z-index: 99999 !important;
-}
+/* LIGHT MODE FIX */
+html.light .profile-card { background:white; color:#111; border-color:#ccc; }
+html.light .input-box { background:#fff; border-color:#ccc; color:#111; }
+html.light .go-dashboard-btn { background:#f0f0f0; border-color:#ccc; color:#111; }
+html.light .go-dashboard-btn:hover { background:#e5e5e5; }
 
 </style>
 </head>
@@ -160,6 +132,7 @@ html.light .go-dashboard-btn:hover {
 <!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
+
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
@@ -184,89 +157,80 @@ html.light .go-dashboard-btn:hover {
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PROFILE -->
+<!-- PROFILE CARD -->
 <div class="profile-wrapper">
   <div class="profile-card">
 
-    <!-- AVATAR -->
     <img id="profileAvatarPreview" class="profile-avatar" src="assets/default-avatar.png">
 
-    <!-- AVATAR EDIT -->
     <button class="avatar-edit-btn" onclick="document.getElementById('uploadAvatar').click()">+</button>
     <input type="file" id="uploadAvatar" accept="image/*" style="display:none;">
 
-   <!-- FULL NAME -->
-<div class="label">Full Name</div>
-<input id="fullNameInput" class="input-box" type="text">
+    <div class="label">Full Name</div>
+    <input id="fullNameInput" class="input-box" type="text">
 
-<!-- USERNAME -->
-<div class="label">Username</div>
-<input id="usernameInput" class="input-box" type="text" disabled style="opacity:.5;">
+    <div class="label">Username</div>
+    <input id="usernameInput" class="input-box" type="text" disabled style="opacity:.5;">
 
-<!-- GO TO DASHBOARD -->
-<a href="dashboard.html" class="go-dashboard-btn">Go to Dashboard</a>
+    <a href="dashboard.html" class="go-dashboard-btn">Go to Dashboard</a>
 
-<!-- SAVE -->
-<button class="save-btn" onclick="saveProfile()">Save Changes</button>
+    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
 
   </div>
 </div>
 
-
 <script>
-
-/* THEME LOAD */
-if (localStorage.getItem("theme") === "light")
+// THEME
+if(localStorage.getItem("theme")==="light")
   document.documentElement.classList.add("light");
 
-/* LOGIN CHECK */
+// LOGIN CHECK
 let username = localStorage.getItem("loggedInUser");
-if (!username) window.location.href = "login.html";
+if(!username) window.location.href="login.html";
 
-/* GET USER */
-let userData = JSON.parse(localStorage.getItem("user_" + username));
+// DATA
+let userData = JSON.parse(localStorage.getItem("user_"+username));
 
-/* FILL DATA */
+// FILL
 document.getElementById("profileAvatarPreview").src = userData.avatar || "assets/default-avatar.png";
 document.getElementById("userAvatar").src = userData.avatar || "assets/default-avatar.png";
 document.getElementById("fullNameInput").value = userData.fullname || "";
 document.getElementById("usernameInput").value = username;
 
-/* CHANGE AVATAR */
-document.getElementById("uploadAvatar").addEventListener("change", function(){
-  const file = this.files[0];
-  if (!file) return;
+// AVATAR CHANGE
+document.getElementById("uploadAvatar").addEventListener("change",function(){
+  const file=this.files[0];
+  if(!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function() {
-    userData.avatar = reader.result;
-    localStorage.setItem("user_" + username, JSON.stringify(userData));
+  const reader=new FileReader();
+  reader.onload=function(){
+    userData.avatar=reader.result;
+    localStorage.setItem("user_"+username,JSON.stringify(userData));
 
-    document.getElementById("profileAvatarPreview").src = reader.result;
-    document.getElementById("userAvatar").src = reader.result;
+    document.getElementById("profileAvatarPreview").src=reader.result;
+    document.getElementById("userAvatar").src=reader.result;
   }
   reader.readAsDataURL(file);
 });
 
-/* SAVE */
-function saveProfile() {
-  userData.fullname = document.getElementById("fullNameInput").value.trim();
-  localStorage.setItem("user_" + username, JSON.stringify(userData));
+// SAVE NAME
+function saveProfile(){
+  userData.fullname=document.getElementById("fullNameInput").value.trim();
+  localStorage.setItem("user_"+username,JSON.stringify(userData));
   alert("Profile updated successfully.");
 }
 
-/* AVATAR MENU TOGGLE */
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+// DROPDOWN
+document.getElementById("userAvatar").onclick=()=>{
+  const m=document.getElementById("avatarMenu");
+  m.style.display=(m.style.display==="flex")?"none":"flex";
 };
 
-/* LOGOUT */
-function logout() {
+// LOGOUT
+function logout(){
   localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
-
 </script>
 
 </body>
