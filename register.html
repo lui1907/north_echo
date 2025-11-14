@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Register — North Echo</title>
+
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
@@ -16,7 +17,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px); /* header yüksekliği */
   }
 
   .auth-container {
@@ -88,8 +89,7 @@
   <a href="cart.html">Cart</a>
 </div>
 
-
-<!-- MAIN CONTENT -->
+<!-- PAGE CONTENT -->
 <div class="page-content">
 
   <div class="auth-container">
@@ -100,7 +100,6 @@
     <input id="password" type="password" class="auth-input" placeholder="Password">
 
     <button class="auth-button" onclick="register()">Sign Up</button>
-
     <p id="msg"></p>
   </div>
 
@@ -125,4 +124,9 @@ function register() {
   const userData = { fullname, username, password };
   localStorage.setItem("user_" + username, JSON.stringify(userData));
 
-  document.getEl
+  document.getElementById("msg").innerText = "Account created!";
+}
+</script>
+
+</body>
+</html>
