@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Login — North Echo</title>
+
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
@@ -12,28 +13,35 @@
 <style>
   body { color: white; }
 
+  /* İçeriği ortalayan alan */
   .page-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px); /* header + margin */
   }
 
+  /* Login kutusu */
   .auth-container {
-    width: 360px;
+    width: 370px;
     background: #0d0d0d;
     padding: 30px;
     border-radius: 16px;
     border: 1px solid #222;
     box-shadow: 0 0 25px rgba(0,0,0,0.5);
-    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* KUTU İÇERİĞİNİ ORTALAR */
+    text-align: center;    /* Başlık ortalanır */
   }
 
   .auth-container h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 26px;
+    margin-bottom: 25px;
   }
 
+  /* Inputlar ORTADA ve KUTU İÇİNDE ORTALANMIŞ */
   .auth-input {
     width: 100%;
     padding: 12px;
@@ -55,7 +63,9 @@
     transition: .2s;
   }
 
-  .auth-button:hover { background: #111; }
+  .auth-button:hover {
+    background: #111;
+  }
 
   #msg {
     margin-top: 10px;
@@ -66,7 +76,7 @@
 
 <body>
 
-<!-- HEADER (HER SAYFADA OLMASI GEREKEN) -->
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -88,10 +98,8 @@
   <a href="cart.html">Cart</a>
 </div>
 
-
-<!-- MAIN CONTENT -->
+<!-- LOGIN FORM -->
 <div class="page-content">
-
   <div class="auth-container">
     <h1>Welcome Back</h1>
 
@@ -102,7 +110,6 @@
 
     <p id="msg"></p>
   </div>
-
 </div>
 
 <script>
