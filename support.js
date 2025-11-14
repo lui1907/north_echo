@@ -1,64 +1,67 @@
-/* SUPPORT PANEL AÇ KAPAT */
+/* =========================================================
+   SUPPORT PANEL TOGGLE
+========================================================= */
 function toggleSupportPanel() {
-  const panel = document.getElementById("supportPanel");
-  panel.style.display = (panel.style.display === "flex") ? "none" : "flex";
+    const panel = document.getElementById("supportPanel");
+    if (panel.style.display === "block") {
+        panel.style.display = "none";
+    } else {
+        panel.style.display = "block";
+    }
 }
 
-/* MESAJ GÖNDER */
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
 function sendSupportMessage() {
-  const name = document.getElementById("supName").value.trim();
-  const email = document.getElementById("supEmail").value.trim();
-  const text = document.getElementById("supMsg").value.trim();
-  const fileInput = document.getElementById("supFile");
-  const file = fileInput.files[0];
+    let name = document.getElementById("supName").value.trim();
+    let email = document.getElementById("supEmail").value.trim();
+    let text = document.getElementById("supMsg").value.trim();
+    let category = document.getElementById("supCategory").value;
+    let fileInput = document.getElementById("supFile");
 
-  if (!name || !email || !text) {
-    alert("Please fill all required fields.");
-    return;
-  }
+    if (!name || !email || !text) {
+        alert("Please fill all required fields.");
+        return;
+    }
 
-  let fileData = "";
-
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      fileData = reader.result;
-      saveMessage(name, email, text, fileData);
-    };
-    reader.readAsDataURL(file);
-  } else {
-    saveMessage(name, email, text, "");
-  }
+    // Dosya eklenmişse okuyacağız
+    if (fileInput.files.length > 0) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            saveMessage(name, email, text, category, e.target.result);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        saveMessage(name, email, text, category, "");
+    }
 }
 
-/* MESAJ KAYDET */
-function saveMessage(name, email, text, fileData) {
-  const msg = {
-    name: name,
-    email: email,
-    text: text,
-    file: fileData,
-    date: new Date().toLocaleString(),
-    read: false,
-    adminNote: ""
-  };
+/* =========================================================
+   SAVE MESSAGE TO LOCAL STORAGE
+========================================================= */
+function saveMessage(name, email, text, category, fileData) {
+    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-  let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
-  messages.push(msg);
-  localStorage.setItem("supportMessages", JSON.stringify(messages));
+    messages.push({
+        name: name,
+        email: email,
+        text: text,
+        category: category,
+        file: fileData,
+        date: new Date().toLocaleString(),
+        read: false,
+        adminNote: ""
+    });
 
-  alert("Your message has been sent!");
-  toggleSupportPanel();
+    localStorage.setItem("supportMessages", JSON.stringify(messages));
 
-  // inputları temizle
-  document.getElementById("supName").value = "";
-  document.getElementById("supEmail").value = "";
-  document.getElementById("supMsg").value = "";
-  document.getElementById("supFile").value = "";
-}
+    alert("Your message has been sent!");
+    toggleSupportPanel();
 
-/* IMAGE MODAL */
-function openImgModal(url) {
-  let win = window.open();
-  win.document.write("<img src='" + url + "' style='width:100%; border-radius:12px;'>");
+    // form temizleme
+    document.getElementById("supName").value = "";
+    document.getElementById("supEmail").value = "";
+    document.getElementById("supMsg").value = "";
+    document.getElementById("supFile").value = "";
 }
