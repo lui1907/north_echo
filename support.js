@@ -1,42 +1,36 @@
-const supportBtn = document.getElementById("supportBtn");
-const supportPanel = document.getElementById("supportPanel");
-const spClose = document.getElementById("spClose");
+// Destek panelini aç/kapat
+function toggleSupportPanel() {
+    const panel = document.getElementById("supportPanel");
+    panel.classList.toggle("open");
+}
 
-supportBtn.onclick = () => supportPanel.classList.add("open");
-spClose.onclick = () => supportPanel.classList.remove("open");
-
+// Destek mesajı gönderme
 function sendSupportMessage() {
+    let name = document.getElementById("supName").value.trim();
+    let email = document.getElementById("supEmail").value.trim();
+    let msg = document.getElementById("supMsg").value.trim();
 
-  let name = sp_name.value.trim();
-  let email = sp_email.value.trim();
-  let subject = sp_subject.value;
-  let message = sp_message.value.trim();
-  let file = sp_file.files[0];
+    if (!name || !email || !msg) {
+        alert("Please fill all required fields.");
+        return;
+    }
 
-  if (!name || !email || !message) {
-    sp_status.innerHTML = "⚠ Please fill all required fields.";
-    sp_status.style.color = "#ffbb55";
-    return;
-  }
+    const data = {
+        name,
+        email,
+        msg,
+        date: new Date().toLocaleString()
+    };
 
-  let username = localStorage.getItem("loggedInUser") || "GUEST";
+    // mesajları sakla
+    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
+    messages.push(data);
+    localStorage.setItem("supportMessages", JSON.stringify(messages));
 
-  let msgObj = {
-    user: username,
-    name, email, subject, message,
-    date: new Date().toLocaleString(),
-    fileName: file ? file.name : null
-  };
-
-  let all = JSON.parse(localStorage.getItem("support_messages")) || [];
-  all.push(msgObj);
-  localStorage.setItem("support_messages", JSON.stringify(all));
-
-  sp_status.innerHTML = "✔ Your support message has been sent!";
-  sp_status.style.color = "#00ff99";
-
-  sp_name.value = "";
-  sp_email.value = "";
-  sp_message.value = "";
-  sp_file.value = "";
+    alert("Your message has been sent!");
+    toggleSupportPanel();
+    
+    document.getElementById("supName").value = "";
+    document.getElementById("supEmail").value = "";
+    document.getElementById("supMsg").value = "";
 }
