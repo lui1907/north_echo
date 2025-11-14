@@ -1,1104 +1,142 @@
-/* ========================================= */
-/* ============ THEME COLORS =============== */
-/* ========================================= */
-
-:root {
-  --bg: #111;
-  --text: #f2f2f2;
-  --card: #1a1a1a;
-  --border: #333;
-}
-
-.light {
-  --bg: #f2f2f2;
-  --text: #111;
-  --card: #ffffff;
-  --border: #ccc;
-}
-
-/* ========================================= */
-/* ============ GLOBAL SETTINGS ============ */
-/* ========================================= */
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  transition: background 0.25s ease, color 0.25s ease;
-}
-
-a {
-  color: var(--text);
-  text-decoration: none;
-}
-
-.page-title {
-  margin-top: 90px;
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 30px;
-}
-
-/* ========================================= */
-/* ============ FIXED HEADER =============== */
-/* ========================================= */
-
-.header {
+/* ============================================
+   💬 SUPPORT BUTTON
+============================================ */
+#supportBtn {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
   height: 60px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9000;
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 22px;
-}
-
-.hamburger {
-  position: absolute;
-  left: 20px;
-  font-size: 28px;
-  cursor: pointer;
-}
-
-.right-buttons {
-  position: absolute;
-  right: 20px;
-  display: flex;
-  gap: 20px;
-}
-
-.theme-btn {
-  width: 32px;
-  height: 32px;
+  background: #00aa66;
   border-radius: 50%;
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-}
-
-/* ========================================= */
-/* ================ SIDE MENU ============== */
-/* ========================================= */
-
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: -320px;
-  width: 260px;
-  height: 100%;
-  background: var(--card);
-  padding: 25px;
-  transition: 0.35s ease;
-  border-right: 1px solid var(--border);
-  pointer-events: none;
   z-index: 9999;
-}
-
-.side-menu.open {
-  left: 0;
-  pointer-events: auto;
-}
-
-.close-menu {
-  font-size: 32px;
-  background: none;
-  border: none;
-  color: var(--text);
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
-.side-menu a {
-  display: block;
-  margin: 18px 0;
-  font-size: 20px;
-}
-
-/* ========================================= */
-/* ================== HERO ================= */
-/* ========================================= */
-
-.full-hero {
-  width: 100%;
-  height: 32vh;
-  background-image: url("https://i.ibb.co/DNJdMBr/white-tshirt1.jpg");
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  margin-top: 60px;
-}
-
-.hero-overlay {
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(8px);
-  padding: 25px 40px;
-  border-radius: 16px;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.15);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.fh-title {
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.fh-sub {
-  font-size: 17px;
-  opacity: 0.85;
-  margin-bottom: 20px;
-}
-
-.fh-buttons {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-}
-
-.fh-btn {
-  padding: 12px 24px;
-  border-radius: 10px;
-  background: #fff;
-  color: #000;
-  font-weight: 600;
-}
-
-.fh-btn.alt {
-  background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
-}
-
-/* ========================================= */
-/* ============ HOME CATEGORIES ============ */
-/* ========================================= */
-
-.categories-section {
-  max-width: 1200px;
-  margin: 60px auto 90px;
-  padding: 0 40px;
-}
-
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 30px;
-}
-
-.category-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 18px;
-  border-radius: 12px;
-  text-align: center;
-  transition: 0.25s;
-}
-
-.category-card img {
-  width: 100%;
-  height: 200px;          /* 🔥 Category foto sabit, küçük */
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.category-card:hover {
-  transform: scale(1.04);
-  border-color: var(--text);
-}
-
-/* ========================================= */
-/* ========== CATEGORY PRODUCT GRID ========= */
-/* ========== (T-Shirts, Sweatshirts) =======*/
-/* ========================================= */
-
-.tshirt-layout {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 0 40px;
-}
-
-.product-area {
-  flex: 1;
-  max-width: 900px;
-}
-
-/* ====== PRODUCT GRID FIX (T-Shirts / Sweatshirts) ====== */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-/* ÜRÜN SAYFASINDAKİ RECOMMENDED GRID BOZULMASIN */
-.recommended-box .rec-grid {
-    display: grid;
-}
-
-.product-card {
-  background: #111;
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-  transition: 0.2s ease;
-  border: 1px solid var(--border);
-}
-
-.product-card img {
-  width: 100%;
-  height: 210px;              /* 🔥 KÜÇÜK FOTO (T-Shirts ve Sweatshirts) */
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.product-card h3 {
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-.product-card p {
-  font-size: 14px;
-  color: #ccc;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  background: #1a1a1a;
-}
-/* ========================================= */
-/* ============= PRODUCT PAGE ============== */
-/* ========================================= */
-
-.product-page {
-  max-width: 1200px;
-  margin: 70px auto;
-  padding: 0 40px;
-  display: flex;
-  gap: 60px;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-/* SOL TARAF: Büyük ürün fotoğrafı */
-.product-left {
-  max-width: 420px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.product-main-img {
-  width: 100%;
-  height: 420px;              /* 🔥 Sabit & düzgün büyük foto */
-  object-fit: cover;          /* Foto bozulmaz */
-  border-radius: 12px;
-}
-
-/* Thumbnail’ler */
-.product-thumbnails {
-  margin-top: 14px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.product-thumbnails img {
-  width: 65px;
-  height: 65px;
-  border-radius: 8px;
-  object-fit: cover;
-  cursor: pointer;
-  opacity: 0.75;
-  transition: 0.2s;
-  border: 2px solid transparent;
-}
-
-.product-thumbnails img:hover {
-  opacity: 1;
-  border-color: var(--text);
-}
-
-/* SAĞ TARAF: Ürün bilgileri */
-.product-right {
-  max-width: 420px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.product-title {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.price {
-  font-size: 22px;
-}
-
-/* Beden kutusu */
-.size-box select {
-  padding: 10px;
-  border-radius: 8px;
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-/* Adet kontrol kutusu */
-.qty-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.qty-box button {
-  padding: 6px 13px;
-  background: var(--text);
-  color: var(--bg);
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-/* Sepete ekleme butonu */
-.add-cart-btn {
-  padding: 14px;
-  background: #fff;
-  color: #000;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
   transition: 0.2s;
 }
 
-.add-cart-btn:hover {
-  background: #ddd;
-}
-/* ========================================= */
-/* ========= YOU MAY ALSO LIKE (REC) ======= */
-/* ========================================= */
-
-.recommended-box {
-  width: 100%;
-  max-width: 900px;
-  padding-top: 170px !important;   /* 🔥 120 → 170 yap = daha aşağı */
-  padding-left: 20px;
-  padding-right: 20px;
-  margin: 0 auto 30px !important;
+#supportBtn img {
+  width: 28px;
+  height: 28px;
+  filter: invert(1);
 }
 
 
-
-.rec-title {
-  font-size: 22px;
-  margin-bottom: 15px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.rec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); /* 🔥 Daha küçük */
-  gap: 18px;
-}
-
-.rec-card {
-  background: #111;
-  padding: 12px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid var(--border);
-  transition: 0.2s ease;
-}
-
-.rec-card img {
-  width: 100%;
-  height: 200px;                /* 🔥 Küçük & sabit */
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.rec-card h3 {
-  font-size: 15px;
-  margin-top: 8px;
-  color: #ddd;
-}
-
-.rec-card:hover {
-  transform: translateY(-4px);
-  background: #1a1a1a;
-}
-/* ========================================= */
-/* ================ CART ==================== */
-/* ========================================= */
-
-.cart-wrapper {
-  max-width: 1200px;
-  margin: 70px auto;
-  padding: 0 40px;
-}
-
-.cart-layout {
-  display: flex;
-  gap: 60px;
-  justify-content: center;
-}
-
-/* ===== SOL TARAF: ÜRÜNLER ===== */
-
-.cart-products {
-  flex: 1.6;                    /* 🔥 Sol taraf sağdan geniş */
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-left: 20px;            /* Hafif sağa kaydırma */
-  max-width: 650px;
-}
-
-/* Ürün kutusu */
-.cart-item-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 16px;
+/* ============================================
+   💬 SUPPORT PANEL
+============================================ */
+#supportPanel {
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  width: 380px;
+  background: #0d0d0d;
   border-radius: 14px;
+  border: 1px solid #222;
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 0 30px rgba(0,0,0,0.55);
+  overflow: hidden;
 }
 
-/* Ürün foto */
-.cart-img {
-  width: 70px;                  /* 🔥 Küçük & sabit */
-  height: 70px;
-  object-fit: cover;
-  border-radius: 10px;
-}
 
-/* Ürün bilgileri */
-.cart-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.cart-info h3 {
-  font-size: 17px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.cart-info p {
-  font-size: 14px;
-  margin: 0;
-  opacity: 0.85;
-}
-
-/* Adet kontrolü */
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.quantity-controls button {
-  padding: 5px 10px;
-  background: var(--text);
-  color: var(--bg);
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* ===== SAĞ TARAF: ORDER SUMMARY ===== */
-
-.cart-summary-box {
-  width: 260px;                 /* 🔥 Daraltıldı (çok büyük olmayacak) */
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 25px;
-  height: fit-content;
-}
-
-.cart-summary-box h2 {
-  font-size: 20px;
-  margin-bottom: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-/* Satır yazıları */
-.summary-line,
-.summary-total-line {
+/* --------------------------------------------
+   HEADER  (ASIL SIKINTI BURASIYDI - DÜZELTİLDİ)
+---------------------------------------------*/
+.sup-header {
+  width: 100%;
+  padding: 18px 20px;        /* düzgün hizalama */
+  background: #0d0d0d;       /* kutu görünümü */
   display: flex;
   justify-content: space-between;
-  margin: 10px 0;
+  align-items: center;
+  border-bottom: 1px solid #222;
+  box-sizing: border-box;    /* TAŞMA ENGELİ */
 }
 
-.summary-line span:first-child {
-  font-size: 14px;
-  opacity: 0.75;
-}
-
-.summary-line span:last-child {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-/* Total satırı */
-.summary-total-line {
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-  margin-top: 15px;
-}
-
-.summary-total-line span:last-child {
+.sup-header span {
   font-size: 18px;
-  font-weight: 700;
-}
-
-/* Checkout butonu */
-.checkout-final-btn {
-  display: block;
-  background: #fff;
-  color: #000;
-  text-align: center;
-  padding: 12px 0;
-  border-radius: 10px;
-  margin-top: 18px;
   font-weight: 600;
-  transition: 0.2s ease;
+  color: white;
 }
 
-.checkout-final-btn:hover {
-  background: #e6e6e6;
-}
-/* ========================================= */
-/* ================ CHECKOUT =============== */
-/* ========================================= */
-
-.checkout-wrapper {
-  max-width: 1200px;
-  margin: 80px auto;
-  padding: 0 40px;
+.sup-header button {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 22px;
+  cursor: pointer;
 }
 
-.checkout-layout {
-  display: flex;
-  gap: 60px;
-  justify-content: center;
+
+/* --------------------------------------------
+   BODY
+---------------------------------------------*/
+.sup-body {
+  padding: 18px 20px;
+  box-sizing: border-box;
 }
 
-/* ================= LEFT SIDE FORM ================= */
-
-.checkout-form {
-  flex: 1.7;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+.sup-body label {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
 }
 
-.checkout-form input,
-.checkout-form textarea {
+.sup-body input,
+.sup-body textarea {
   width: 100%;
   padding: 12px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 15px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
 }
 
-.checkout-form textarea {
+.sup-body textarea {
   height: 120px;
   resize: none;
 }
 
-.placeorder-btn {
-  margin-top: 15px;
-  padding: 14px;
-  background: var(--text);
-  color: var(--bg);
-  font-weight: 700;
-  border-radius: 10px;
-  font-size: 15px;
+/* Dosya */
+#supFile {
+  padding: 10px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.placeorder-btn:hover {
-  opacity: 0.85;
-}
-.search-box {
-    width: 100%;
-    padding: 12px 14px;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s ease;
-}
 
-.search-box:focus {
-    border-color: #fff;
-    background: #181818;
-}
-.size-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.size-btn {
-    padding: 10px 20px;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.2s ease;
-    user-select: none;
-}
-
-.size-btn:hover {
-    border-color: #fff;
-}
-
-.size-btn.active {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
-}
-/* ===== ÜRÜN SAYFASINI AŞAĞI İTME ===== */
-.product-page {
-    margin-top: 120px !important;
-}
-/* === FILTER PANEL — KUTU TASARIMI === */
-
-.filter-side {
-    width: 260px;
-    margin-top: 20px;
-}
-
-.filter-box {
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(255,255,255,0.05);
-}
-
-.filter-box h3 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    font-weight: 600;
-}
-.tshirt-layout {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 70px;   /* 🔥 BOŞLUK ARTIRILDI */
-}
-
-.filter-side {
-    margin-top: 0 !important;   /* 🔥 ÜSTTEN BOŞLUK YOK */
-}
-/* ==== T-Shirts ürün kartlarını büyütme ==== */
-.tshirt-layout .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* 🔥 kart genişledi */
-    gap: 30px; /* kartlar arası daha ferah */
-    max-width: 1100px;
-}
-
-.product-card {
-    padding: 16px;                 /* kart içi daha ferah */
-    border-radius: 14px;           /* daha modern */
-}
-
-/* Ürün fotoğraflarını büyüt */
-.product-card img {
-    width: 100%;
-    height: 280px;                 /* 🔥 görsel YÜKSELTİLDİ */
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-/* Başlık ve fiyat boyutunu büyüt */
-.product-card h3 {
-    font-size: 18px;               /* 🔥 daha büyük başlık */
-    margin-top: 12px;
-}
-
-.product-card p {
-    font-size: 16px;               /* 🔥 fiyat daha okunaklı */
-    margin-top: 4px;
-}
-.product-grid .product-card {
-    width: 230px !important;
-    height: auto !important;
-}
-
-.product-card img {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-/* ==== SWEATSHIRTS - Tek ürün ortaya gelsin ==== */
-.sweatshirt-page .product-grid {
-    display: flex !important;
-    justify-content: center !important;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-/* ===================== */
-/*   CHECKOUT SUMMARY    */
-/* ===================== */
-
-.checkout-summary {
-    background: #111;
-    border: 1px solid #333;
-    padding: 22px 26px;
-    border-radius: 14px;
-    width: 300px;
-    color: #fff;
-}
-
-.checkout-summary h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 18px;
-    letter-spacing: 0.3px;
-}
-
-/* Ürün üst kısmı */
-.summary-product {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 18px;
-}
-
-.summary-product img {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    object-fit: cover;
-}
-
-.summary-product-info h4 {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.summary-product-info p {
-    margin: 2px 0;
-    font-size: 14px;
-    color: #bbb;
-}
-
-/* Alt çizgili bölümler */
-.summary-line {
-    display: flex;
-    justify-content: space-between;
-    margin: 8px 0;
-    font-size: 15px;
-}
-
-.summary-line span:first-child {
-    color: #aaa;
-}
-
-.summary-total {
-    border-top: 1px solid #333;
-    margin-top: 15px;
-    padding-top: 12px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 17px;
-    font-weight: 700;
-}
-/* ===== FOOTER ===== */
-.footer {
-    width: 100%;
-    margin-top: 80px;
-    padding: 40px 20px;
-    background: transparent;
-    text-align: center;
-    color: #ccc;
-    border-top: 1px solid #222;
-}
-
-.footer-content h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: white;
-}
-
-.footer-content p {
-    font-size: 14px;
-    opacity: 0.8;
-    margin-bottom: 12px;
-}
-
-.footer-link {
-    font-size: 14px;
-    color: #4ea3ff;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.footer-link:hover {
-    color: #82c3ff;
-}
-/* Ortak footer link stili */
-.footer a,
-.footer-link {
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-/* Footer genel yazı rengi (paragraf) */
-.footer p {
-    margin: 0;
-    font-size: 13px;
-    opacity: 0.8;
-}
-
-/* 🌙 Dark mode (default) */
-body:not(.light) .footer a,
-body:not(.light) .footer-link {
-    color: #ccc;
-}
-
-body:not(.light) .footer a:hover,
-body:not(.light) .footer-link:hover {
-    color: #fff;
-}
-
-/* ☀️ Light mode */
-body.light .footer a,
-body.light .footer-link {
-    color: #000;
-}
-
-body.light .footer a:hover,
-body.light .footer-link:hover {
-    opacity: 0.6;
-}
-.submit-btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 14px 28px;
-  background: #fff;
-  color: #000;
-  border-radius: 12px;
-  font-weight: 700;
-  transition: 0.2s;
-}
-
-.submit-btn:hover {
-  opacity: 0.8;
-}
-.submit-nav {
-  color: var(--text);
-  font-size: 17px;
-  text-decoration: none;
-  margin-right: 12px;
-  opacity: 0.8;
-  transition: 0.2s;
-}
-
-.submit-nav:hover {
-  opacity: 1;
-}
-/* Avatar (profil fotoğrafı) */
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-  margin-left: 15px;
-}
-
-/* Avatar menüsü (şimdilik görünmez) */
-.avatar-menu {
-  position: absolute;
-  top: 50px;
-  right: 20px;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 10px;
-  display: none;
-  flex-direction: column;
-  min-width: 150px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.4);
-  z-index: 999;
-}
-
-.avatar-menu a {
-  padding: 12px;
-  color: white;
-  font-size: 14px;
-  text-decoration: none;
-  border-bottom: 1px solid #222;
-  display: block;
-}
-
-.avatar-menu a:last-child {
-  border-bottom: none;
-}
-
-.avatar-menu a:hover {
-  background: #111;
-}
-.avatar-menu a.logout {
-  color: #ff4a4a;
-  font-weight: bold;
-}
-
-.avatar-menu a.logout:hover {
-  background: #330000;
-}
-.profile-container {
-  width: 95%;
-  max-width: 550px;
-  margin: 120px auto;
-  background: #0d0d0d;
-  padding: 35px 25px;
-  border-radius: 20px;
-  border: 1px solid #222;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-  text-align: center;
-}
-
-/* Büyük profil fotoğrafı */
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #222;
-  box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  margin-bottom: 15px;
-}
-
-.profile-name {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.profile-username {
-  font-size: 15px;
-  opacity: .7;
-  margin-bottom: 25px;
-}
-
-.profile-item {
-  margin-bottom: 18px;
-  text-align: left;
-}
-
-.profile-item label {
-  display: block;
-  margin-bottom: 6px;
-  opacity: 0.8;
-}
-
-.profile-item input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #333;
-  background: #111;
-  color: white;
-}
-
-.save-btn {
+/* --------------------------------------------
+   SEND BUTTON
+---------------------------------------------*/
+.sup-send {
   width: 100%;
   padding: 14px;
   background: #00aa66;
+  color: white;
   border: none;
-  border-radius: 12px;
-  color: white;
-  font-size: 17px;
+  border-radius: 10px;
   cursor: pointer;
-  margin-top: 20px;
-  transition: .2s;
+  font-size: 15px;
 }
 
-.save-btn:hover {
-  background: #009955;
-}
-.avatar-plus {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: #00aa66;
-  color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
-  cursor: pointer;
-  border: 2px solid #0d0d0d;
-  transition: 0.2s;
+.sup-send:hover {
+  background: #009655;
 }
 
-.avatar-plus:hover {
-  background: #009955;
-}
-.go-dashboard-btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 12px;              
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 10px;
-    color: white;
-    margin-top: 20px;
-    margin-bottom: 15px;
-    transition: 0.25s;
-    font-size: 16px;
-    box-sizing: border-box;    /* ÖNEMLİ: SaveChanges ile aynı yapar */
-}
 
-.go-dashboard-btn:hover {
-    background: #222;
-    border-color: #555;
+/* ============================================
+   📱 MOBİL
+============================================ */
+@media (max-width: 480px) {
+  #supportPanel {
+    width: 92%;
+    right: 4%;
+  }
 }
-
