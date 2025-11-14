@@ -39,33 +39,43 @@
   width: 400px;
   background: #0d0d0d;
   border-radius: 14px;
-  padding: 20px;
+  padding: 0; /* HEADER + BODY ayrı padding */
   border: 1px solid #222;
   display: none;
   z-index: 9999;
   box-shadow: 0 0 30px rgba(0,0,0,0.55);
+  overflow: hidden;
 }
 
-/* Header */
+/* HEADER */
 .sup-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    font-size: 18px;
-    font-weight: 600;
-    border-bottom: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #222;
+}
+
+.sup-header span {
+  color: white;
 }
 
 .sup-header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 22px;
-    cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
 }
 
-/* Body */
+
+/* FORM BODY */
+.sup-body {
+  padding: 20px;
+}
+
 .sup-body label {
   color: white;
   font-size: 14px;
@@ -73,7 +83,7 @@
   margin-top: 12px;
 }
 
-/* Inputlar + textarea */
+/* Input + Textarea */
 .sup-body input,
 .sup-body textarea {
   width: 100%;
@@ -98,7 +108,7 @@
   cursor: pointer;
 }
 
-/* Gönder Butonu */
+/* GÖNDER BUTONU */
 .sup-send {
   width: 100%;
   padding: 12px;
@@ -117,7 +127,7 @@
 
 
 /* ============================================
-   📩 KULLANICI TARAFINA ADMİN CEVABI (balon)
+   📩 ADMIN REPLY (kullanıcıya görünen balon)
 ============================================ */
 #supReplyBox {
   margin-top: 20px;
@@ -136,8 +146,8 @@
 ============================================ */
 @media (max-width: 480px) {
   #supportPanel {
-    width: 90%;
-    right: 5%;
+    width: 92%;
+    right: 4%;
     bottom: 90px;
   }
 
