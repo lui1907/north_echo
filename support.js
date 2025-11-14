@@ -15,7 +15,7 @@ function sendSupportMessage() {
 
   if (!name || !email || !message) {
     sp_status.innerHTML = "⚠ Please fill all required fields.";
-    sp_status.style.color = "orange";
+    sp_status.style.color = "#ffbb55";
     return;
   }
 
@@ -32,8 +32,8 @@ function sendSupportMessage() {
   all.push(msgObj);
   localStorage.setItem("support_messages", JSON.stringify(all));
 
-  sp_status.innerHTML = "✔ Your support message has been sent.";
-  sp_status.style.color = "#00ff88";
+  sp_status.innerHTML = "✔ Your support message has been sent!";
+  sp_status.style.color = "#00ff99";
 
   sp_name.value = "";
   sp_email.value = "";
