@@ -1,3 +1,4 @@
+/* SUPPORT BUTTON */
 #supportBtn {
   position: fixed;
   bottom: 25px;
@@ -7,72 +8,117 @@
   background: #00aa66;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 9999;
-  transition: 0.2s;
+  box-shadow: 0 0 15px rgba(0,0,0,.4);
+  transition: .2s;
 }
-#supportBtn img { width: 28px; filter: invert(1); }
 
+#supportBtn img {
+  width: 28px;
+  height: 28px;
+  filter: invert(1);
+}
+
+#supportBtn:hover {
+  background: #009655;
+}
+
+
+/* SUPPORT PANEL */
 #supportPanel {
   position: fixed;
-  bottom: 90px;
+  bottom: 95px;
   right: 25px;
-  width: 380px;
+  width: 400px;
   background: #0d0d0d;
-  border: 1px solid #222;
   border-radius: 14px;
+  border: 1px solid #222;
   display: none;
   z-index: 9999;
+  box-shadow: 0 0 30px rgba(0,0,0,.55);
+  overflow: hidden;
 }
 
 .sup-header {
-  padding: 14px 18px;
-  font-size: 18px;
-  border-bottom: 1px solid #222;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-}
-.sup-header button {
-  background: none; border: none; color: white; cursor: pointer;
+  padding: 16px 20px;
+  border-bottom: 1px solid #222;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.sup-body { padding: 18px; }
-.sup-body label { margin-top: 10px; display: block; }
+.sup-header button {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+
+/* BODY */
+.sup-body {
+  padding: 20px;
+}
+
+.sup-body label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
 
 .sup-body input,
-.sup-body textarea,
-.sup-body select {
+.sup-body select,
+.sup-body textarea {
   width: 100%;
-  margin-top: 6px;
   padding: 12px;
-  border-radius: 8px;
   background: #111;
   border: 1px solid #333;
+  border-radius: 8px;
   color: white;
+  font-size: 14px;
 }
 
+.sup-body textarea {
+  height: 120px;
+  resize: none;
+}
+
+#supFile {
+  padding: 10px;
+}
+
+
+/* SEND BUTTON */
 .sup-send {
-  margin-top: 15px;
   width: 100%;
-  padding: 12px;
+  padding: 14px;
+  margin-top: 18px;
   background: #00aa66;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
 }
-#supportBtn {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
-  background: #00aa66;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 9999;
+
+.sup-send:hover {
+  background: #009655;
+}
+
+
+/* MOBILE */
+@media (max-width: 480px) {
+  #supportPanel {
+    width: 90%;
+    right: 5%;
+    bottom: 90px;
+  }
 }
