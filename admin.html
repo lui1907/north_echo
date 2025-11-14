@@ -3,75 +3,82 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="support.css">
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 
 <style>
-body { margin:0; padding:0; color:white; }
 
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+/* PAGE WRAPPER */
 .admin-wrapper {
-  margin-top:130px;
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
+  margin-top: 130px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
 }
 
-.msg-box {
-  background:#0d0d0d;
-  border:1px solid #222;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:18px;
-  position:relative;
+/* PAGE TITLE */
+.admin-wrapper h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 25px;
 }
 
-.msg-img { width:140px; margin-top:10px; border-radius:10px; cursor:pointer; }
-
-.reply-box {
-  margin-top:15px;
-  background:#111;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #333;
+/* MESSAGE CARD */
+.message-box {
+  background: #0d0d0d;
+  border: 1px solid #222;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
 }
 
-.reply-input {
-  width:100%;
-  padding:10px;
-  background:#0f0f0f;
-  border:1px solid #444;
-  border-radius:8px;
-  color:white;
+.message-box h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
 }
 
-.reply-send {
-  margin-top:8px;
-  padding:10px;
-  width:100%;
-  background:#00aa66;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  color:white;
+.message-box p {
+  margin: 6px 0;
+  opacity: .9;
 }
 
-.reply-send:hover { background:#009655; }
-
-.reply-item {
-  background:#101010;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #333;
-  margin-top:8px;
-  font-size:14px;
+/* IMAGE */
+.msg-img {
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: .2s;
 }
+
+.msg-img:hover {
+  transform: scale(1.03);
+}
+
+/* DATE */
+.msg-date {
+  opacity: .5;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
 </style>
-
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -80,98 +87,82 @@ body { margin:0; padding:0; color:white; }
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <img id="userAvatar" class="avatar" src="assets/default-avatar.png">
+    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
       <a href="#" onclick="logout()">Logout</a>
     </div>
   </div>
 </header>
 
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
 </div>
 
+<!-- ADMIN PANEL -->
 <div class="admin-wrapper">
   <h1>Support Messages</h1>
-  <div id="adminMessages">Loading...</div>
+
+  <div id="adminMessages"></div>
 </div>
 
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+// ---------------------------
+// ADMIN AUTH CONTROL
+// ---------------------------
+const ADMINS = ["luivoss", "lui1907", "ahmet", "owner", "admin"];
+let logged = localStorage.getItem("loggedInUser");
 
-  const ADMINS = ["luivoss","lui1907","ahmet","owner","admin"];
-  let logged = localStorage.getItem("loggedInUser");
-  if (!logged || !ADMINS.includes(logged.toLowerCase()))
-      return window.location.href = "index.html";
+if (!logged || !ADMINS.includes(logged.toLowerCase())) {
+  window.location.href = "index.html";
+}
 
-  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-  const box = document.getElementById("adminMessages");
+// ---------------------------
+// LOAD SUPPORT MESSAGES
+// ---------------------------
+let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+const box = document.getElementById("adminMessages");
 
-  if (msgs.length === 0) {
-    box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
-    return;
-  }
+if (msgs.length === 0) {
+  box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
+}
 
-  box.innerHTML = "";
+msgs.forEach(msg => {
+  box.innerHTML += `
+    <div class="message-box">
+      <h3>${msg.name} (${msg.email})</h3>
+      <p>${msg.text}</p>
+      
+      ${msg.file ? `<img src="${msg.file}" class="msg-img">` : ""}
 
-  msgs.forEach((msg, i) => {
-
-    box.innerHTML += `
-      <div class="msg-box">
-
-        <h3>${msg.name} (${msg.email})</h3>
-        <p>${msg.text}</p>
-
-        ${msg.file ? `<img class="msg-img" src="${msg.file}" onclick="openImg('${msg.file}')">` : ""}
-
-        <div style="opacity:.6; font-size:13px; margin-top:6px;">
-          ${msg.date}
-        </div>
-
-        <!-- EXISTING ADMIN REPLIES -->
-        ${msg.replies?.map(r => 
-          `<div class='reply-item'>Admin: ${r.text} <br><span style='opacity:.5;font-size:11px;'>${r.date}</span></div>`
-        ).join("") || ""}
-
-        <!-- REPLY BOX -->
-        <div class="reply-box">
-          <input class="reply-input" id="reply-${i}" placeholder="Write admin reply...">
-          <button class="reply-send" onclick="sendReply(${i})">Send Reply</button>
-        </div>
-
-      </div>
-    `;
-  });
-
+      <div class="msg-date">${msg.date}</div>
+    </div>
+  `;
 });
 
-// SEND REPLY
-function sendReply(i) {
-  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-  let input = document.getElementById("reply-" + i);
-
-  if (!input.value.trim()) return alert("Please write something.");
-
-  if (!msgs[i].replies) msgs[i].replies = [];
-
-  msgs[i].replies.push({
-    text: input.value,
-    date: new Date().toLocaleString()
-  });
-
-  localStorage.setItem("supportMessages", JSON.stringify(msgs));
-  location.reload();
+// ---------------------------
+// TOP RIGHT AVATAR
+// ---------------------------
+let userData = JSON.parse(localStorage.getItem("user_" + logged));
+if (userData && userData.avatar) {
+  document.getElementById("userAvatar").src = userData.avatar;
 }
 
-// OPEN IMAGE
-function openImg(url) {
-  let w = window.open();
-  w.document.write(`<img src="${url}" style="width:100%;">`);
-}
+document.getElementById("userAvatar").onclick = () => {
+  const menu = document.getElementById("avatarMenu");
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+};
 
+// ---------------------------
 // LOGOUT
+// ---------------------------
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
