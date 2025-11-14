@@ -7,165 +7,132 @@
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="support.css">
+<link rel="stylesheet" href="support.css"> <!-- Sadece tasarım için -->
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
 
 <style>
+
 body {
   margin: 0;
   padding: 0;
   color: white;
-  background: #000;
 }
 
 /* WRAPPER */
 .admin-wrapper {
   margin-top: 130px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
 }
 
+/* PAGE TITLE */
 .admin-wrapper h1 {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 25px;
 }
 
-/* MESSAGE BOX */
+/* MESSAGE CARD */
 .msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
-  padding: 22px;
+  padding: 20px;
   border-radius: 14px;
   margin-bottom: 18px;
-  transition: .25s;
   position: relative;
 }
 
-.msg-box:hover {
-  border-color: #00aa66;
+.msg-box p {
+  opacity: .9;
+  margin: 8px 0;
 }
 
-/* OKUNDU NOKTASI */
+.sender {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+/* READ DOT */
 .read-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   position: absolute;
   top: 18px;
-  left: -20px;
-  background: #00aa66;
+  left: 18px;
   cursor: pointer;
-}
-
-/* Sender */
-.sender {
-  font-weight: bold;
-  color: #00aa66;
-}
-
-/* date */
-.msg-date {
-  font-size: 12px;
-  opacity: .6;
-  margin-top: 8px;
-}
-
-/* image */
-.msg-img {
-  width: 160px;
-  height: auto;
-  border-radius: 10px;
-  margin-top: 12px;
-  cursor: pointer;
-  border: 1px solid #333;
-  transition: .2s;
-}
-.msg-img:hover {
-  transform: scale(1.05);
-  border-color: #00aa66;
 }
 
 /* DELETE BUTTON */
 .del-btn {
-  background: #330000;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #440000;
   border: 1px solid #660000;
-  color: #ff4d4d;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #ff6666;
   cursor: pointer;
-  float: right;
-  transition: .2s;
+  font-size: 12px;
 }
 .del-btn:hover {
-  background: #550000;
+  background: #660000;
+}
+
+/* IMAGE */
+.msg-img {
+  width: 140px;
+  margin-top: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #333;
+}
+
+/* DATE */
+.msg-date {
+  display: block;
+  margin-top: 6px;
+  opacity: .5;
+  font-size: 13px;
 }
 
 /* ADMIN NOTE */
 .admin-note-box {
   margin-top: 12px;
-  padding: 12px;
   background: #111;
+  padding: 12px;
   border-radius: 10px;
-  border: 1px solid #222;
+  border: 1px solid #333;
 }
 
 .note-input {
   width: 100%;
-  background: #0b0b0b;
-  border: 1px solid #333;
+  padding: 10px;
   border-radius: 8px;
-  padding: 8px;
+  border: 1px solid #444;
+  background: #0f0f0f;
   color: white;
 }
 
 .note-save-btn {
   margin-top: 8px;
-  background: #004422;
-  border: 1px solid #006633;
-  padding: 8px 14px;
+  width: 100%;
+  padding: 10px;
+  background: #00aa66;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
-  color: #00cc77;
+  color: white;
 }
 .note-save-btn:hover {
-  background: #005533;
+  background: #009655;
 }
 
-/* FULLSCREEN MODAL */
-#imgModal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,.90);
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-}
-
-#imgModal img {
-  max-width: 85%;
-  max-height: 85%;
-  border-radius: 12px;
-  border: 3px solid #00aa66;
-}
-
-#imgModalClose {
-  position: fixed;
-  top: 25px;
-  right: 40px;
-  font-size: 34px;
-  cursor: pointer;
-  color: white;
-  z-index: 100000;
-}
 </style>
 </head>
 
@@ -198,65 +165,51 @@ body {
 <!-- ADMIN PANEL -->
 <div class="admin-wrapper">
   <h1>Support Messages</h1>
+
   <div id="adminMessages"></div>
 </div>
 
-<!-- MODAL -->
-<div id="imgModal">
-  <span id="imgModalClose">✕</span>
-  <img id="imgModalImage">
-</div>
-
+<!-- ✨ ADMIN PANEL SCRIPT (ÇAKIŞMASIZ) -->
 <script>
-// ----------------------------------
-// 🔐 ADMIN CHECK
-// ----------------------------------
-const ADMINS = ["luivoss","ahmet","lui1907","owner","admin"];
-let logged = localStorage.getItem("loggedInUser");
+document.addEventListener("DOMContentLoaded", () => {
 
-if (!logged || !ADMINS.includes(logged.toLowerCase())) {
-  window.location.href = "index.html";
-}
+  /* 🔒 ADMIN KONTROLÜ */
+  const ADMINS = ["luivoss","lui1907","ahmet","owner","admin"];
+  const logged = localStorage.getItem("loggedInUser");
 
-// LOAD AVATAR
-let adminData = JSON.parse(localStorage.getItem("user_" + logged));
-if (adminData && adminData.avatar)
-  document.getElementById("userAvatar").src = adminData.avatar;
+  if (!logged || !ADMINS.includes(logged.toLowerCase())) {
+    window.location.href = "index.html";
+    return;
+  }
 
+  /* 📨 MESAJLARI GETİR */
+  const box = document.getElementById("adminMessages");
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-// ----------------------------------
-// 📩 LOAD MESSAGES
-// ----------------------------------
-let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-const box = document.getElementById("adminMessages");
+  if (msgs.length === 0) {
+    box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
+    return;
+  }
 
-if (msgs.length === 0) {
-  box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
-}
-
-function saveMessages() {
-  localStorage.setItem("supportMessages", JSON.stringify(msgs));
-}
-
-function renderMessages() {
   box.innerHTML = "";
 
-msgs.forEach((msg, i) => {
-
-    const bodyText = msg.text || msg.message || "(no message)";
+  msgs.forEach((msg, i) => {
+    const text = msg.text || msg.message || "(no message)";
 
     box.innerHTML += `
       <div class="msg-box">
 
-        <div class="read-dot" onclick="toggleRead(${i})"
-             style="background:${msg.read ? '#444' : '#00aa66'}"></div>
+        <div class="read-dot"
+          onclick="toggleRead(${i})"
+          style="background:${msg.read ? '#444' : '#00aa66'}">
+        </div>
 
         <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
 
         <span class="sender">${msg.name || "Unknown"}</span>
         — <span style="opacity:.6;">${msg.email || ""}</span>
 
-        <p>${bodyText}</p>
+        <p>${text}</p>
 
         ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
 
@@ -270,61 +223,42 @@ msgs.forEach((msg, i) => {
 
       </div>
     `;
+  });
+
 });
 
+/* ✔ OKUNDU */
+function toggleRead(i) {
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+  msgs[i].read = !msgs[i].read;
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  location.reload();
+}
 
-renderMessages();
-
-
-// ----------------------------------
-// 🗑 DELETE MESSAGE
-// ----------------------------------
+/* 🗑 SİL */
 function deleteMsg(i) {
   if (!confirm("Delete this message?")) return;
-
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
   msgs.splice(i, 1);
-  saveMessages();
-  renderMessages();
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  location.reload();
 }
 
-
-// ----------------------------------
-// ✔ TOGGLE READ
-// ----------------------------------
-function toggleRead(i) {
-  msgs[i].read = !msgs[i].read;
-  saveMessages();
-  renderMessages();
-}
-
-
-// ----------------------------------
-// 📝 SAVE ADMIN NOTE
-// ----------------------------------
+/* 📝 NOT KAYDET */
 function saveNote(i) {
-  let val = document.getElementById("note-" + i).value;
-  msgs[i].adminNote = val;
-  saveMessages();
-  alert("Saved!");
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+  msgs[i].adminNote = document.getElementById("note-" + i).value;
+  localStorage.setItem("supportMessages", JSON.stringify(msgs));
+  alert("Note saved!");
 }
 
-
-// ----------------------------------
-// 🔍 IMAGE MODAL
-// ----------------------------------
-function openImgModal(src) {
-  document.getElementById("imgModalImage").src = src;
-  document.getElementById("imgModal").style.display = "flex";
+/* 🔍 RESİM BÜYÜTME */
+function openImgModal(url) {
+  let win = window.open();
+  win.document.write("<img src='" + url + "' style='width:100%; border-radius:12px;'>");
 }
 
-document.getElementById("imgModalClose").onclick = () => {
-  document.getElementById("imgModal").style.display = "none";
-};
-
-
-// ----------------------------------
-// 🚪 LOGOUT
-// ----------------------------------
+/* 🚪 LOGOUT */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
