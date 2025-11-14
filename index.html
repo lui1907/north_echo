@@ -124,6 +124,48 @@ if (username) {
 }
 </script>
 
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn" class="support-fab">💬</div>
 
+<!-- SLIDE PANEL -->
+<div id="supportPanel" class="support-panel">
+
+  <div class="sp-header">
+    <img src="assets/logo.svg" class="sp-logo">
+    <span>North Echo Support</span>
+    <button id="spClose" class="sp-close">×</button>
+  </div>
+
+  <div class="sp-content">
+
+    <label>Full Name *</label>
+    <input type="text" id="sp_name" placeholder="Enter your full name">
+
+    <label>Email *</label>
+    <input type="email" id="sp_email" placeholder="email@example.com">
+
+    <label>Subject *</label>
+    <select id="sp_subject">
+      <option>Order Issue</option>
+      <option>Payment Problem</option>
+      <option>Account Question</option>
+      <option>Other</option>
+    </select>
+
+    <label>Your Message *</label>
+    <textarea id="sp_message" placeholder="Write your message..."></textarea>
+
+    <label>Attachment (optional)</label>
+    <input type="file" id="sp_file">
+
+    <button class="sp-send" onclick="sendSupportMessage()">Send Support Ticket</button>
+
+    <p id="sp_status" style="margin-top:10px;"></p>
+
+  </div>
+
+</div>
+
+  
 </body>
 </html>
