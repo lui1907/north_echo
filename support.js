@@ -1,19 +1,25 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
     // PANEL AÇ/KAPA
     window.toggleSupportPanel = function () {
         const panel = document.getElementById("supportPanel");
         if (!panel) return;
-        panel.style.display = (panel.style.display === "flex") ? "none" : "flex";
+
+        if (panel.style.display === "flex") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "flex";
+        }
     };
+
 
     // MESAJ GÖNDER
     window.sendSupportMessage = function () {
 
-        let name = document.getElementById("supName")?.value.trim();
-        let email = document.getElementById("supEmail")?.value.trim();
-        let message = document.getElementById("supMsg")?.value.trim();
-        let file = document.getElementById("supFile")?.files[0];
+        const name = document.getElementById("supName")?.value.trim();
+        const email = document.getElementById("supEmail")?.value.trim();
+        const message = document.getElementById("supMsg")?.value.trim();
+        const file = document.getElementById("supFile")?.files[0];
 
         if (!name || !email || !message) {
             alert("Please fill all required fields.");
@@ -31,15 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // KAYDETME FUNC
+
+    // MESAJI LOCALSTORAGE’A KAYDET
     function saveSupportMessage(name, email, message, fileData) {
 
         let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
         messages.push({
-            name,
-            email,
-            message,
+            name: name,
+            email: email,
+            message: message,
             file: fileData,
             date: new Date().toLocaleString()
         });
@@ -47,14 +54,16 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("supportMessages", JSON.stringify(messages));
 
         alert("Message sent!");
-        const panel = document.getElementById("supportPanel");
-        if (panel) panel.style.display = "none";
 
-        // Formu temizle
+        // FORM TEMİZLEME
         document.getElementById("supName").value = "";
         document.getElementById("supEmail").value = "";
         document.getElementById("supMsg").value = "";
         document.getElementById("supFile").value = "";
+
+        // PANEL KAPAT
+        const panel = document.getElementById("supportPanel");
+        if (panel) panel.style.display = "none";
     }
 
 });
