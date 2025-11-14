@@ -953,7 +953,7 @@ body.light .footer-link:hover {
 /* Avatar menüsü (şimdilik görünmez) */
 .avatar-menu {
   position: absolute;
-  top: 60px;
+  top: 50px;
   right: 20px;
   background: #0d0d0d;
   border: 1px solid #222;
@@ -980,4 +980,12 @@ body.light .footer-link:hover {
 
 .avatar-menu a:hover {
   background: #111;
+}
+.avatar-menu a.logout {
+  color: #ff4a4a;
+  font-weight: bold;
+}
+
+.avatar-menu a.logout:hover {
+  background: #330000;
 }
