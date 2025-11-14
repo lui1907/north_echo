@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>My Orders — North Echo</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+
+<style>
+
+body {
+  color:white;
+  margin:0;
+  padding:0;
+}
+
+/* PAGE WRAPPER */
+.orders-wrapper {
+  margin-top:130px;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+/* CARD */
+.orders-card {
+  width:700px;
+  background:#0d0d0d;
+  border:1px solid #222;
+  border-radius:18px;
+  padding:25px;
+}
+
+/* ORDER ITEM */
+.order-box {
+  background:#141414;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.order-header {
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.order-status {
+  color:#00aa66;
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.order-item {
+  font-size:14px;
+  opacity:0.85;
+}
+
+.no-orders {
+  text-align:center;
+  margin-top:40px;
+  font-size:16px;
+  opacity:0.7;
+}
+
+html.light .orders-card {
+  background:white;
+  color:#111;
+  border-color:#ccc;
+}
+
+html.light .order-box {
+  background:#f1f1f1;
+  border-color:#ccc;
+}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="settings.html">Settings</a>
+      <a href="profile.html">Profile</a>
+      <a href="orders.html">My Orders</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
+</div>
+
+<div class="orders-wrapper">
+  <div class="orders-card">
+    <h2>My Orders</h2>
+    <div id="ordersList"></div>
+  </div>
+</div>
+
+<script>
+
+/* THEME LOAD */
+if (localStorage.getItem("theme") === "light")
+  document.documentElement.classList.add("light");
+
+/* LOGIN CHECK */
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+/* LOAD USER DATA */
+let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
+
+/* PRINT ORDERS */
+let container = document.getElementById("ordersList");
+
+if (orders.length === 0) {
+  container.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
+} else {
+  orders.reverse().forEach(order => {
+
+    let html = `
+      <div class="order-box">
+        <div class="order-header">Order #${order.orderId}</div>
+        <div class="order-status">${order.status}</div>
+        <div class="order-date">${order.date}</div>
+        <hr style="opacity:0.2;margin:10px 0;">
+        ${order.items.map(i => `
+          <div class="order-item">
+            ${i.qty}× ${i.productName} — ${i.price}₺
+          </div>
+        `).join("")}
+        <hr style="opacity:0.2;margin:10px 0;">
+        <div class="order-total"><b>Total:</b> ${order.total}₺</div>
+      </div>
+    `;
+
+    container.innerHTML += html;
+  });
+}
+
+/* AVATAR DROPDOWN */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+/* LOGOUT */
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>
