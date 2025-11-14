@@ -128,7 +128,7 @@ msgs.forEach(msg => {
   box.innerHTML += `
     <div class="message-box">
       <h3>${msg.name} (${msg.email})</h3>
-      <p><b>Message:</b> ${msg.text}</p>
+      <p><b>Message:</b> ${msg.message}</p>
       <p><b>Date:</b> ${msg.date}</p>
       ${msg.file ? `<a class="message-file" href="${msg.file}" download>Download File</a>` : ""}
     </div>
