@@ -1,55 +1,57 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.32.0/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const supabaseUrl = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Mesajları çek
-async function loadMessages() {
-    const msgBox = document.getElementById("adminMessages");
-    msgBox.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
+const msgBox = document.getElementById("adminMessages");
 
+// Load messages
+async function loadMessages() {
     const { data, error } = await supabase
         .from("messages")
         .select("*")
         .order("date", { ascending: false });
 
     if (error) {
-        console.error(error);
-        msgBox.innerHTML = "Error loading messages";
+        msgBox.innerHTML = "Failed to load messages.";
         return;
     }
 
     msgBox.innerHTML = "";
 
-    data.forEach(msg => {
+    data.forEach(m => {
         msgBox.innerHTML += `
             <div class="msg-box">
+
                 <div class="msg-top">
                     <div>
-                        <div class="msg-sender">${msg.name}</div>
-                        <div class="msg-email">${msg.email}</div>
+                        <div class="msg-sender">${m.name}</div>
+                        <div class="msg-email">${m.email}</div>
+                        <div class="msg-category">Category: ${m.category}</div>
                     </div>
                 </div>
 
-                <div class="msg-text">${msg.message}</div>
+                <div class="msg-text">${m.message}</div>
 
-                ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
+                ${m.file ? `<img src="${m.file}" class="msg-img" onclick="openImg('${m.file}')">` : ""}
 
-                <div class="msg-date">${msg.date}</div>
+                <div class="msg-date">${m.date}</div>
+
             </div>
         `;
     });
 }
 
-window.openImgModal = function(url) {
-    document.getElementById("imgModalContent").src = url;
-    document.getElementById("imgModal").style.display = "flex";
+// Image modal
+window.openImg = function(url) {
+    imgModalContent.src = url;
+    imgModal.style.display = "flex";
 };
 
 window.closeImgModal = function() {
-    document.getElementById("imgModal").style.display = "none";
+    imgModal.style.display = "none";
 };
 
 loadMessages();
