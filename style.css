@@ -1043,3 +1043,21 @@ html.light .footer {
     right:4%;
   }
 }
+.filter-bar {
+  margin-top: 140px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.filter-bar input {
+  width: 300px;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: white;
+}
