@@ -124,12 +124,12 @@ if (username) {
 }
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
+<!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="https://cdn-icons-png.flaticon.com/512/134/134914.png" style="width:28px; filter:invert(1);">
+  <img src="https://cdn-icons-png.flaticon.com/512/134/134914.png" style="width:28px;filter:invert(1);">
 </div>
 
-<!-- 💬 SUPPORT PANEL -->
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -158,20 +158,18 @@ if (username) {
     <label>Attach File (optional)</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
-
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
   </div>
 </div>
 
 <link rel="stylesheet" href="support.css">
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<!-- FIREBASE CDN -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script src="support.js"></script>
+
 
 
   
