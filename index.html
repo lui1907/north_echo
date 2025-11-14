@@ -141,8 +141,17 @@ if (username) {
     <label>Your Name *</label>
     <input type="text" id="supName" placeholder="John Doe">
 
-    <label>Your Email *</label>
+    <label>Email *</label>
     <input type="email" id="supEmail" placeholder="your@mail.com">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="General">General</option>
+      <option value="Order">Order Issue</option>
+      <option value="Design">Submit Design</option>
+      <option value="Product">Product Question</option>
+      <option value="Other">Other</option>
+    </select>
 
     <label>Your Message *</label>
     <textarea id="supMsg" placeholder="Write your message..."></textarea>
@@ -157,7 +166,6 @@ if (username) {
   </div>
 </div>
 
-<!-- SUPPORT CSS + JS -->
 <link rel="stylesheet" href="support.css">
 <script type="module" src="support.js"></script>
 
