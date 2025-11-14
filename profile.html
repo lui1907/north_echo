@@ -17,57 +17,87 @@ body {
   margin: 0;
   padding: 0;
   color: white;
+}
+
+/* PAGE LAYOUT */
+.profile-wrapper {
+  margin-top: 130px;
+  display: flex;
+  justify-content: center;
+}
+
+/* CARD */
+.profile-card {
+  width: 400px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 18px;
+  padding: 30px;
   text-align: center;
 }
 
-/* PAGE WRAPPER */
-.profile-wrapper {
-  margin-top: 140px;
-}
-
-/* PROFILE CARD */
-.profile-card {
-  width: 360px;
-  margin: auto;
-  padding: 25px;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 16px;
-}
-
+/* AVATAR */
 .profile-avatar {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  border: 3px solid #555;
   object-fit: cover;
+  border: 3px solid #555;
 }
 
+/* CHANGE AVATAR */
 .avatar-btn {
-  margin-top: 12px;
-  background: #00aa66;
-  border: none;
+  margin-top: 10px;
   padding: 10px 14px;
   border-radius: 8px;
+  background: #00aa66;
+  border: none;
   color: white;
   cursor: pointer;
 }
 
-.profile-info {
+/* INFO BLOCKS */
+.label {
   margin-top: 20px;
-  font-size: 18px;
+  text-align: left;
+  font-size: 14px;
+  opacity: .7;
+}
+
+.input-box {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background: #141414;
+  border: 1px solid #333;
+  color: white;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* SAVE BUTTON */
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00aa66;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 /* LIGHT MODE FIX */
 html.light .profile-card {
   background: white;
-  border-color: #ccc;
   color: #111;
+  border-color: #ccc;
 }
 
-html.light .avatar-btn {
-  background: #00aa66;
-  color: white;
+html.light .input-box {
+  background: #fff;
+  border-color: #ccc;
+  color: #111;
 }
 
 </style>
@@ -104,9 +134,8 @@ html.light .avatar-btn {
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PROFILE CONTENT -->
+<!-- PROFILE CARD -->
 <div class="profile-wrapper">
-
   <div class="profile-card">
 
     <img id="profileAvatarPreview" class="profile-avatar" src="assets/default-avatar.png">
@@ -114,52 +143,64 @@ html.light .avatar-btn {
     <input type="file" id="uploadAvatar" accept="image/*" style="display:none;">
     <button class="avatar-btn" onclick="document.getElementById('uploadAvatar').click()">Change Avatar</button>
 
-    <div class="profile-info" id="profileInfo"></div>
+    <div class="label">Full Name</div>
+    <input id="fullNameInput" class="input-box" type="text">
+
+    <div class="label">Username</div>
+    <input id="usernameInput" class="input-box" type="text" disabled style="opacity:.6;">
+
+    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
 
   </div>
-
 </div>
 
 <script>
 
-/* THEME LOAD */
-let theme = localStorage.getItem("theme");
-if (theme === "light") document.documentElement.classList.add("light");
+/* LOAD THEME */
+if (localStorage.getItem("theme") === "light")
+  document.documentElement.classList.add("light");
 
-/* LOGIN CHECK */
+/* AUTH CHECK */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-/* LOAD USER DATA */
+/* USER DATA */
 let userData = JSON.parse(localStorage.getItem("user_" + username));
 
+/* PRELOAD PROFILE DATA */
 document.getElementById("profileAvatarPreview").src = userData.avatar || "assets/default-avatar.png";
-
-document.getElementById("profileInfo").innerHTML = `
-  <div><b>Full Name:</b> ${userData.fullname}</div>
-  <div><b>Username:</b> ${username}</div>
-`;
+document.getElementById("fullNameInput").value = userData.fullname || "";
+document.getElementById("usernameInput").value = username;
 
 /* AVATAR UPLOAD */
 document.getElementById("uploadAvatar").addEventListener("change", function(){
-  const file = this.files[0];
+  let file = this.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
+  let reader = new FileReader();
   reader.onload = function() {
     userData.avatar = reader.result;
     localStorage.setItem("user_" + username, JSON.stringify(userData));
+
     document.getElementById("profileAvatarPreview").src = reader.result;
     document.getElementById("userAvatar").src = reader.result;
   }
   reader.readAsDataURL(file);
 });
 
+/* SAVE */
+function saveProfile() {
+  userData.fullname = document.getElementById("fullNameInput").value;
+
+  localStorage.setItem("user_" + username, JSON.stringify(userData));
+  alert("Profile updated.");
+}
+
 /* AVATAR MENU */
-document.getElementById("userAvatar").addEventListener("click", () => {
+document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
-});
+};
 
 /* LOGOUT */
 function logout() {
