@@ -47,26 +47,29 @@ body {
   border: 3px solid #555;
 }
 
-/* + BUTTON — PROFIL FOTONUN SOL ALTINA YAPIŞIK */
+/* + BUTTON (FOTOĞRAFIN SOL ALT KÖŞESİNE SABİTLENMİŞ) */
 .avatar-edit-btn {
-  position: absolute;
-  top: 230px; /* PROFIL FOTONUN ALTINA HIZALANDI */
-  left: calc(50% - 75px); /* PROFILI MERKEZ ALIP SOL ALTINA GETIRIYOR */
-  width: 38px;
-  height: 38px;
-  background: #00aa66;
-  color: white;
-  border-radius: 50%;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
+    position: absolute;
+    left: 50%;
+    top: 185px;              /* PROFİL FOTO ALTINA UYGUN YÜKSEKLİK */
+    transform: translateX(-85px);  /* SOLA KAYDIRIR – PROFİLİN SOL ALTINA KESİN OTURUR */
+    width: 38px;
+    height: 38px;
+    background: #00aa66;
+    color: white;
+    border-radius: 50%;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    z-index: 10;   /* ÜSTE ÇIKMASI İÇİN ÇOK ÖNEMLİ */
 }
+
 .avatar-edit-btn:hover {
-  background: #009655;
+    background: #009655;
 }
 
 /* GO TO DASHBOARD — SAVE’IN ÜSTÜNDE */
