@@ -185,22 +185,20 @@ html.light .go-dashboard-btn:hover {
     <!-- AVATAR -->
     <img id="profileAvatarPreview" class="profile-avatar" src="assets/default-avatar.png">
 
-    <!-- + BUTTON (SOL ALT) -->
-    <button class="avatar-edit-btn" onclick="document.getElementById('uploadAvatar').click()">+</button>
-    <input type="file" id="uploadAvatar" accept="image/*" style="display:none;">
+   <!-- FULL NAME -->
+<div class="label">Full Name</div>
+<input id="fullNameInput" class="input-box" type="text">
 
-    <!-- GO TO DASHBOARD — SAVE’S USTUNDE -->
-    <a href="dashboard.html" class="go-dashboard-btn">Go to Dashboard</a>
+<!-- USERNAME -->
+<div class="label">Username</div>
+<input id="usernameInput" class="input-box" type="text" disabled style="opacity:.5;">
 
-    <!-- FULL NAME -->
-    <div class="label">Full Name</div>
-    <input id="fullNameInput" class="input-box" type="text">
+<!-- GO TO DASHBOARD (username'in ALTINDA) -->
+<a href="dashboard.html" class="go-dashboard-btn">Go to Dashboard</a>
 
-    <!-- USERNAME -->
-    <div class="label">Username</div>
-    <input id="usernameInput" class="input-box" type="text" disabled style="opacity:.5;">
+<!-- SAVE BUTTON -->
+<button class="save-btn" onclick="saveProfile()">Save Changes</button>
 
-    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
 
   </div>
 </div>
