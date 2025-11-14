@@ -395,3 +395,34 @@ a {
     align-items: center;
   }
 }
+/* ===============================
+   FIX — Product Grid Image Sizes
+   =============================== */
+
+.product-card img,
+.tshirt-card img,
+.sweatshirt-card img {
+  width: 100%;
+  height: 260px;      /* sabit premium yükseklik */
+  object-fit: cover;
+  border-radius: 12px;
+  transition: .25s;
+}
+
+.product-card img:hover {
+  transform: scale(1.03);
+}
+
+/* Ürün kutularını toparlama */
+.product-card, .tshirt-card, .sweatshirt-card {
+  border: 1px solid #222;
+  padding: 15px;
+  border-radius: 14px;
+  background: #0f0f0f;
+  transition: .25s;
+}
+
+.product-card:hover {
+  border-color: #00aa66;
+  transform: translateY(-4px);
+}
