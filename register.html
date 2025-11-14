@@ -133,13 +133,14 @@ function register() {
     return;
   }
 
-  // Kullanıcı var mı kontrol et
+  // Kullanıcı adı zaten varsa kırmızı uyarı
   if (localStorage.getItem("user_" + username)) {
-    document.getElementById("msg").innerText = "Username already exists.";
+    document.getElementById("msg").style.color = "#ff4a4a";
+    document.getElementById("msg").innerText = "This username is already taken.";
     return;
   }
 
-  // KAYIT OL
+  // Yeni kullanıcıyı kaydet
   const userData = {
     fullname: fullname,
     username: username,
@@ -148,11 +149,16 @@ function register() {
 
   localStorage.setItem("user_" + username, JSON.stringify(userData));
 
-  // Debug için ekrana yazalım
-  console.log("Saved:", localStorage.getItem("user_" + username));
+  // OTOMATİK GİRİŞ
+  localStorage.setItem("loggedInUser", username);
 
-  document.getElementById("msg").style.color = "#00ff88"
-  document.getElementById("msg").innerText = "Account created successfully!";
+  document.getElementById("msg").style.color = "#00ff99";
+  document.getElementById("msg").innerText = "Account created! Redirecting...";
+
+  // Dashboard’a gönder
+  setTimeout(() => {
+    window.location.href = "dashboard.html";
+  }, 800);
 }
 </script>
 
