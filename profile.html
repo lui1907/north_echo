@@ -3,137 +3,76 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
 <title>Profile — North Echo</title>
 
-<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="style.css">
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
 
 <style>
 
-.profile-wrapper {
-  width: 95%;
-  max-width: 600px;
-  margin: 130px auto;
-  background: #0d0d0d;
-  padding: 30px;
-  border-radius: 22px;
-  border: 1px solid #222;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-}
-
-/* PROFILE HEADER (Apple Style) */
-.profile-header {
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
   text-align: center;
-  margin-bottom: 25px;
 }
 
-.profile-avatar-box {
-  position: relative;
-  display: inline-block;
+/* PAGE WRAPPER */
+.profile-wrapper {
+  margin-top: 140px;
+}
+
+/* PROFILE CARD */
+.profile-card {
+  width: 360px;
+  margin: auto;
+  padding: 25px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 16px;
 }
 
 .profile-avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
+  border: 3px solid #555;
   object-fit: cover;
-  border: 3px solid #222;
 }
 
-.avatar-edit-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+.avatar-btn {
+  margin-top: 12px;
   background: #00aa66;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 2px solid #0d0d0d;
-  font-size: 18px;
-}
-
-/* NAME TEXT */
-.profile-name {
-  margin-top: 15px;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.profile-username {
-  opacity: 0.7;
-  margin-top: 5px;
-}
-
-/* INPUT SECTIONS (similar to iPhone forms) */
-.section-title {
-  margin-top: 35px;
-  font-size: 18px;
-  opacity: 0.8;
-  margin-bottom: 10px;
-}
-
-.input-box {
-  background: #141414;
-  border: 1px solid #2a2a2a;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  color: white;
-  width: 100%;
-  font-size: 16px;
-}
-
-/* SAVE BUTTON */
-.save-btn {
-  width: 100%;
-  background: #00aa66;
-  padding: 14px;
-  border-radius: 12px;
   border: none;
-  margin-top: 20px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 8px;
   color: white;
-  transition: .2s;
+  cursor: pointer;
 }
 
-.save-btn:hover {
-  background: #009955;
+.profile-info {
+  margin-top: 20px;
+  font-size: 18px;
 }
 
-html.light .profile-wrapper {
+/* LIGHT MODE FIX */
+html.light .profile-card {
   background: white;
   border-color: #ccc;
-}
-
-html.light .input-box {
-  background: white;
-  border-color: #bbb;
   color: #111;
 }
 
-html.light .save-btn {
+html.light .avatar-btn {
   background: #00aa66;
-}
-
-html.light .profile-avatar {
-  border-color: #ddd;
-}
-
-html.light .section-title {
-  color: #333;
+  color: white;
 }
 
 </style>
-
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -150,7 +89,7 @@ html.light .section-title {
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" class="logout" onclick="logout()">Logout</a>
+      <a href="#" onclick="logout()">Logout</a>
     </div>
   </div>
 </header>
@@ -168,86 +107,59 @@ html.light .section-title {
 <!-- PROFILE CONTENT -->
 <div class="profile-wrapper">
 
-  <div class="profile-header">
-    
-    <div class="profile-avatar-box">
-      <img id="profileAvatar" src="assets/default-avatar.png" class="profile-avatar">
-      
-      <div class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">📸</div>
-      <input id="avatarInput" type="file" accept="image/*" style="display:none">
-    </div>
+  <div class="profile-card">
 
-    <div class="profile-name" id="displayFullname">Full Name</div>
-    <div class="profile-username" id="displayUsername">@username</div>
+    <img id="profileAvatarPreview" class="profile-avatar" src="assets/default-avatar.png">
+
+    <input type="file" id="uploadAvatar" accept="image/*" style="display:none;">
+    <button class="avatar-btn" onclick="document.getElementById('uploadAvatar').click()">Change Avatar</button>
+
+    <div class="profile-info" id="profileInfo"></div>
 
   </div>
-
-  <div class="section-title">Full Name</div>
-  <input id="inputFullname" class="input-box" type="text">
-
-  <div class="section-title">Username</div>
-  <input id="inputUsername" class="input-box" type="text">
-
-  <button class="save-btn" onclick="saveProfile()">Save Changes</button>
 
 </div>
 
 <script>
 
-/* USER LOGIN CHECK */
+/* THEME LOAD */
+let theme = localStorage.getItem("theme");
+if (theme === "light") document.documentElement.classList.add("light");
+
+/* LOGIN CHECK */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-let data = JSON.parse(localStorage.getItem("user_" + username));
+/* LOAD USER DATA */
+let userData = JSON.parse(localStorage.getItem("user_" + username));
 
-/* PREFILL USER DATA */
-document.getElementById("displayFullname").innerText = data.fullname;
-document.getElementById("displayUsername").innerText = "@" + username;
+document.getElementById("profileAvatarPreview").src = userData.avatar || "assets/default-avatar.png";
 
-document.getElementById("inputFullname").value = data.fullname;
-document.getElementById("inputUsername").value = username;
-
-if (data.avatar) {
-  document.getElementById("profileAvatar").src = data.avatar;
-  document.getElementById("userAvatar").src = data.avatar;
-}
+document.getElementById("profileInfo").innerHTML = `
+  <div><b>Full Name:</b> ${userData.fullname}</div>
+  <div><b>Username:</b> ${username}</div>
+`;
 
 /* AVATAR UPLOAD */
-document.getElementById("avatarInput").addEventListener("change", function () {
-  let file = this.files[0];
+document.getElementById("uploadAvatar").addEventListener("change", function(){
+  const file = this.files[0];
   if (!file) return;
 
-  let reader = new FileReader();
-  reader.onload = function (e) {
-    data.avatar = e.target.result;
-    document.getElementById("profileAvatar").src = data.avatar;
-    document.getElementById("userAvatar").src = data.avatar;
-
-    localStorage.setItem("user_" + username, JSON.stringify(data));
-  };
+  const reader = new FileReader();
+  reader.onload = function() {
+    userData.avatar = reader.result;
+    localStorage.setItem("user_" + username, JSON.stringify(userData));
+    document.getElementById("profileAvatarPreview").src = reader.result;
+    document.getElementById("userAvatar").src = reader.result;
+  }
   reader.readAsDataURL(file);
 });
 
-/* SAVE PROFILE */
-function saveProfile() {
-  let newFull = document.getElementById("inputFullname").value;
-  let newUser = document.getElementById("inputUsername").value;
-
-  // Change username means changing storage keys
-  if (newUser !== username) {
-    localStorage.removeItem("user_" + username);
-    username = newUser;
-    localStorage.setItem("loggedInUser", username);
-  }
-
-  data.fullname = newFull;
-  localStorage.setItem("user_" + username, JSON.stringify(data));
-
-  document.getElementById("displayFullname").innerText = newFull;
-  document.getElementById("displayUsername").innerText = "@" + username;
-
-  alert("Profile updated!");
-}
+/* AVATAR MENU */
+document.getElementById("userAvatar").addEventListener("click", () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+});
 
 /* LOGOUT */
 function logout() {
@@ -257,18 +169,5 @@ function logout() {
 
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const avatar = document.getElementById("userAvatar");
-  const menu = document.getElementById("avatarMenu");
-
-  if (avatar && menu) {
-    avatar.addEventListener("click", () => {
-      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-    });
-  }
-});
-</script>
-  
 </body>
 </html>
