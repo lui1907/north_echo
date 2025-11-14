@@ -206,8 +206,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
 
+        <div class="msg-header">
+    <div class="read-dot" onclick="toggleRead(${i})"
+         style="background:${msg.read ? '#444' : '#00aa66'}"></div>
+
+    <div class="info-line">
         <span class="sender">${msg.name || "Unknown"}</span>
-        — <span style="opacity:.6;">${msg.email || ""}</span>
+        <span class="email">— ${msg.email || ""}</span>
+    </div>
+</div>
+
 
         <p>${text}</p>
 
