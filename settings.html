@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
 <title>Settings — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
@@ -12,101 +13,122 @@
 
 <style>
 
-body {
-  margin: 0;
-  padding: 0;
-  color: white;
-  min-height: 100vh;
-}
-
-/* PAGE LAYOUT */
+/* LAYOUT */
 .settings-wrapper {
-  width: 100%;
+  max-width: 1100px;
+  margin: 120px auto;
   display: flex;
-  justify-content: center;
-  padding-top: 90px;
-  box-sizing: border-box;
-  gap: 40px;
+  gap: 25px;
+  padding: 20px;
 }
 
-/* LEFT MENU */
+/* LEFT */
 .settings-left {
-  width: 220px;
+  width: 240px;
   background: #0d0d0d;
-  padding: 20px;
-  border-radius: 14px;
   border: 1px solid #222;
+  border-radius: 14px;
+  padding: 18px;
 }
 
 .settings-item {
-  background: #121212;
+  padding: 12px 14px;
+  background: #141414;
   border: 1px solid #222;
-  padding: 12px;
-  margin-bottom: 10px;
   border-radius: 10px;
+  margin-bottom: 10px;
   cursor: pointer;
   transition: .2s;
 }
 
 .settings-item:hover {
-  background: #1a1a1a;
+  background: #1b1b1b;
 }
 
 .settings-item.active {
   background: #00aa66;
-  color: #fff;
-}
-
-/* RIGHT PANEL */
-.settings-right {
-  width: 560px;
-  background: #0d0d0d;
-  border-radius: 14px;
-  border: 1px solid #222;
-  padding: 25px;
-  box-sizing: border-box;
   color: white;
 }
 
-/* SWITCH (THEME) */
-.switch-row {
-  background: #121212;
+/* RIGHT */
+.settings-right {
+  background: #0d0d0d;
   border: 1px solid #222;
-  padding: 14px;
-  border-radius: 12px;
+  border-radius: 14px;
+  flex: 1;
+  padding: 25px;
+}
+
+/* TITLE */
+.settings-title {
+  font-size: 22px;
   margin-bottom: 20px;
+}
+
+/* SWITCH */
+.switch-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.switch-label {
-  font-size: 18px;
+  background: #141414;
+  border: 1px solid #222;
+  padding: 14px;
+  border-radius: 12px;
 }
 
 .theme-toggle-container {
-  width: 60px;
-  height: 30px;
-  background: #333;
+  width: 58px;
+  height: 28px;
+  background: #444;
   border-radius: 20px;
   position: relative;
   cursor: pointer;
+  transition: .2s;
 }
 
 .theme-knob {
-  width: 26px;
-  height: 26px;
-  background: white;
+  width: 24px;
+  height: 24px;
+  background: #fff;
   border-radius: 50%;
   position: absolute;
   top: 2px;
   left: 2px;
-  transition: .2s;
+  transition: .25s;
 }
 
-/* LIGHT MODE FIXES */
+/* INPUTS */
+.input-box {
+  width: 100%;
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+  color: white;
+}
+
+/* BUTTONS */
+.settings-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00aa66;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.logout-btn {
+  background: #cc0000 !important;
+  margin-top: 20px;
+}
+
+/* LIGHT MODE */
 html.light body {
-  background: #f4f4f4;
+  background: #f2f2f2;
   color: #111;
 }
 
@@ -124,7 +146,7 @@ html.light .settings-item {
 }
 
 html.light .settings-item:hover {
-  background: #e2e2e2;
+  background: #e4e4e4;
 }
 
 html.light .switch-row {
@@ -136,58 +158,10 @@ html.light .theme-toggle-container {
   background: #bbb;
 }
 
-html.light .theme-knob {
-  background: #fff;
-}
-
-/* INPUT STYLING */
-.input-box {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  background: #121212;
-  border: 1px solid #333;
-  color: white;
-  margin-bottom: 14px;
-  box-sizing: border-box;
-}
-
 html.light .input-box {
   background: #fff;
   border-color: #ccc;
   color: #111;
-}
-
-/* BUTTON */
-.settings-btn {
-  width: 100%;
-  padding: 12px;
-  background: #00aa66;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  transition: .2s;
-}
-
-.settings-btn:hover {
-  background: #009a5e;
-}
-
-.logout-btn {
-  width: 100%;
-  padding: 12px;
-  background: #cc0000;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.logout-btn:hover {
-  background: #b00000;
 }
 
 </style>
@@ -201,7 +175,6 @@ html.light .input-box {
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-
     <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
@@ -210,9 +183,8 @@ html.light .input-box {
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" class="logout" onclick="logout()">Logout</a>
+      <a href="#" onclick="logout()">Logout</a>
     </div>
-
   </div>
 </header>
 
@@ -226,118 +198,127 @@ html.light .input-box {
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- SETTINGS BODY -->
+<!-- MAIN SETTINGS -->
 <div class="settings-wrapper">
 
-  <!-- LEFT -->
+  <!-- LEFT NAV -->
   <div class="settings-left">
-    <div class="settings-item active" onclick="showSection('appearance')">Appearance</div>
-    <div class="settings-item" onclick="showSection('profile')">Profile</div>
-    <div class="settings-item" onclick="showSection('account')">Account</div>
+    <div class="settings-item active" onclick="showTab('appearance')">Appearance</div>
+    <div class="settings-item" onclick="showTab('profile')">Profile</div>
+    <div class="settings-item" onclick="showTab('account')">Account</div>
   </div>
 
-  <!-- RIGHT -->
-  <div class="settings-right" id="settingsContent">
-
-    <!-- DEFAULT: APPEARANCE -->
-    <div id="appearanceSection">
-      <div class="switch-row">
-        <span class="switch-label">Theme</span>
-
-        <div class="theme-toggle-container" onclick="toggleTheme()">
-          <div class="theme-knob" id="themeKnob"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROFILE SETTINGS -->
-    <div id="profileSection" style="display:none;">
-      <h2>Edit Profile</h2>
-      <p style="opacity:.7;">Profile editing soon...</p>
-    </div>
-
-    <!-- ACCOUNT SETTINGS -->
-    <div id="accountSection" style="display:none;">
-      <h2>Change Password</h2>
-
-      <input id="oldPass" type="password" class="input-box" placeholder="Current password">
-      <input id="newPass" type="password" class="input-box" placeholder="New password">
-      <input id="newPass2" type="password" class="input-box" placeholder="Confirm new password">
-
-      <button class="settings-btn" onclick="changePassword()">Save</button>
-
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-
-  </div>
+  <!-- RIGHT CONTENT -->
+  <div class="settings-right" id="settingsContent"></div>
 
 </div>
 
-<!-- JAVASCRIPT -->
 <script>
 
-/* LEFT MENU TABS */
-function showSection(tab) {
-  document.getElementById("appearanceSection").style.display = "none";
-  document.getElementById("profileSection").style.display = "none";
-  document.getElementById("accountSection").style.display = "none";
-
-  document.getElementById(tab + "Section").style.display = "block";
-
-  document.querySelectorAll(".settings-item").forEach(el => el.classList.remove("active"));
-  event.target.classList.add("active");
+/* LOAD THEME ON OPEN */
+if (localStorage.getItem("theme") === "light") {
+  document.documentElement.classList.add("light");
 }
 
-/* THEME */
-function applyTheme() {
-  let t = localStorage.getItem("theme");
-  if (t === "light") {
-    document.documentElement.classList.add("light");
-    document.getElementById("themeKnob").style.left = "32px";
+/* LOAD AVATAR */
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+let userData = JSON.parse(localStorage.getItem("user_" + username));
+document.getElementById("userAvatar").src = userData.avatar || "assets/default-avatar.png";
+
+/* AVATAR MENU */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+/* TABS */
+function showTab(tab) {
+  document.querySelectorAll(".settings-item").forEach(x => x.classList.remove("active"));
+  event.target.classList.add("active");
+
+  if (tab === "appearance") loadAppearance();
+  if (tab === "profile") loadProfile();
+  if (tab === "account") loadAccount();
+}
+
+/* ========== APPEARANCE TAB ========== */
+function loadAppearance() {
+  settingsContent.innerHTML = `
+    <h2 class="settings-title">Appearance</h2>
+
+    <div class="switch-row">
+      <span>Theme</span>
+
+      <div class="theme-toggle-container" onclick="toggleTheme()">
+        <div class="theme-knob" id="themeKnob"></div>
+      </div>
+    </div>
+  `;
+
+  updateThemeKnob();
+}
+
+/* THEME FIX */
+function updateThemeKnob() {
+  const knob = document.getElementById("themeKnob");
+  if (!knob) return;
+
+  if (localStorage.getItem("theme") === "light") {
+    knob.style.left = "32px";
   } else {
-    document.documentElement.classList.remove("light");
-    document.getElementById("themeKnob").style.left = "2px";
+    knob.style.left = "2px";
   }
 }
 
 function toggleTheme() {
-  let current = localStorage.getItem("theme");
-  let newTheme = current === "light" ? "dark" : "light";
-  localStorage.setItem("theme", newTheme);
-  applyTheme();
-}
-
-applyTheme();
-
-/* AVATAR MENU */
-document.getElementById("userAvatar").addEventListener("click", function(){
-  const menu = document.getElementById("avatarMenu");
-  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-});
-
-/* LOGOUT */
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-/* CHANGE PASSWORD */
-function changePassword() {
-
-  let username = localStorage.getItem("loggedInUser");
-  if (!username) {
-    alert("You must be logged in.");
-    return;
+  if (localStorage.getItem("theme") === "light") {
+    localStorage.setItem("theme", "dark");
+    document.documentElement.classList.remove("light");
+  } else {
+    localStorage.setItem("theme", "light");
+    document.documentElement.classList.add("light");
   }
+  updateThemeKnob();
+}
 
-  let userData = JSON.parse(localStorage.getItem("user_" + username));
+/* ========== PROFILE TAB ========== */
+function loadProfile() {
+  settingsContent.innerHTML = `
+    <h2 class="settings-title">Profile</h2>
+    <p>Open your profile page to change your avatar or view your details.</p>
+    <a href="profile.html"><button class="settings-btn">Open Profile</button></a>
+  `;
+}
 
-  let oldP = document.getElementById("oldPass").value.trim();
-  let newP = document.getElementById("newPass").value.trim();
-  let new2 = document.getElementById("newPass2").value.trim();
+/* ========== ACCOUNT TAB (PASSWORD) ========== */
+function loadAccount() {
+  settingsContent.innerHTML = `
+    <h2 class="settings-title">Change Password</h2>
+
+    <input id="oldPass" class="input-box" type="password" placeholder="Current password">
+    <input id="newPass" class="input-box" type="password" placeholder="New password">
+    <input id="newPass2" class="input-box" type="password" placeholder="Confirm new password">
+
+    <button class="settings-btn" onclick="changePassword()">Save</button>
+
+    <button class="logout-btn settings-btn" onclick="logout()">Logout</button>
+  `;
+}
+
+function changePassword() {
+  let oldP = oldPass.value.trim();
+  let newP = newPass.value.trim();
+  let new2 = newPass2.value.trim();
 
   if (oldP !== userData.password) {
     alert("Current password is incorrect.");
+    return;
+  }
+
+  if (newP.length < 3) {
+    alert("New password must be at least 3 characters.");
     return;
   }
 
@@ -346,16 +327,20 @@ function changePassword() {
     return;
   }
 
-  if (newP.length < 3) {
-    alert("Password must be at least 3 characters.");
-    return;
-  }
-
   userData.password = newP;
   localStorage.setItem("user_" + username, JSON.stringify(userData));
 
   alert("Password changed successfully.");
 }
+
+/* LOGOUT */
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+/* DEFAULT TAB */
+loadAppearance();
 
 </script>
 
