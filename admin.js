@@ -28,7 +28,7 @@ const db = getFirestore(app);
 // -----------------------------------------
 // 🔐 Admin Login Kontrolü
 // -----------------------------------------
-const ADMINS = ["luivoss", "lui1907", "ahmet", "owner", "admin"];
+const ADMINS = ["fstekin", "luivoss", "ahmet", "owner", "admin"];
 
 let loggedUser = localStorage.getItem("loggedInUser");
 
