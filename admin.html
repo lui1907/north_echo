@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="support.css">
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 
 <style>
 
@@ -28,6 +29,7 @@ body {
   padding: 20px;
 }
 
+/* TITLE */
 .admin-wrapper h1 {
   font-size: 32px;
   font-weight: 700;
@@ -38,40 +40,39 @@ body {
 .msg-box {
   background: #0d0d0d;
   border: 1px solid #222;
-  padding: 20px;
+  padding: 20px 20px 25px 20px;
   border-radius: 14px;
   margin-bottom: 18px;
+  position: relative;
 }
 
 /* HEADER LINE */
 .msg-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
-/* DOT */
+/* READ DOT */
 .read-dot {
+  flex-shrink: 0;
   width: 14px;
   height: 14px;
   border-radius: 50%;
   cursor: pointer;
-  flex-shrink: 0;
 }
 
-/* NAME + EMAIL */
+/* SENDER LINE */
 .info-line {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-
 .sender {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
 }
-
 .email {
   opacity: .6;
   font-size: 14px;
@@ -79,12 +80,14 @@ body {
 
 /* DELETE BUTTON */
 .del-btn {
-  float: right;
+  position: absolute;
+  top: 15px;
+  right: 15px;
   background: #440000;
   border: 1px solid #660000;
   padding: 6px 10px;
   border-radius: 6px;
-  color: #ff7777;
+  color: #ff6666;
   cursor: pointer;
   font-size: 12px;
 }
@@ -94,24 +97,29 @@ body {
 
 /* MESSAGE TEXT */
 .msg-text {
-  opacity: 0.9;
+  opacity: .9;
   margin: 10px 0;
+  white-space: pre-line;
 }
 
 /* IMAGE */
 .msg-img {
-  width: 150px;
-  margin-top: 10px;
+  width: 160px;
+  margin-top: 12px;
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid #333;
+  transition: 0.2s;
+}
+.msg-img:hover {
+  transform: scale(1.03);
 }
 
 /* DATE */
 .msg-date {
   display: block;
+  margin-top: 6px;
   opacity: .5;
-  margin-top: 8px;
   font-size: 13px;
 }
 
@@ -179,67 +187,77 @@ body {
 <!-- ADMIN PANEL -->
 <div class="admin-wrapper">
   <h1>Support Messages</h1>
+
   <div id="adminMessages"></div>
 </div>
 
+<!-- ✨ ADMIN PANEL SCRIPT -->
 <script>
-// ------------------------------------------------
-// 🔒 ADMIN CHECK
-// ------------------------------------------------
-const ADMINS = ["luivoss","lui1907","ahmet","owner","admin"];
-const logged = localStorage.getItem("loggedInUser");
 
-if (!logged || !ADMINS.includes(logged.toLowerCase())) {
-  window.location.href = "index.html";
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-// ------------------------------------------------
-// 📩 LOAD MESSAGES
-// ------------------------------------------------
-const box = document.getElementById("adminMessages");
-let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
+  /* 🔒 ADMIN ACCESS CHECK */
+  const ADMINS = ["luivoss","lui1907","ahmet","owner","admin"];
+  const logged = localStorage.getItem("loggedInUser");
 
-if (msgs.length === 0) {
-  box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
-}
+  if (!logged || !ADMINS.includes(logged.toLowerCase())) {
+    window.location.href = "index.html";
+    return;
+  }
 
-msgs.forEach((msg, i) => {
-  const text = msg.text || msg.message || "(no message)";
+  /* 📨 LOAD MESSAGES */
+  const box = document.getElementById("adminMessages");
+  let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-  box.innerHTML += `
-    <div class="msg-box">
+  if (msgs.length === 0) {
+    box.innerHTML = `<p style="opacity:.6;">No support messages yet.</p>`;
+    return;
+  }
 
-      <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
+  box.innerHTML = "";
 
-      <div class="msg-header">
-        <div class="read-dot" onclick="toggleRead(${i})"
-          style="background:${msg.read ? '#444' : '#00aa66'}"></div>
+  msgs.forEach((msg, i) => {
+    const text = msg.text || msg.message || "(no message)";
+    const name = msg.name || "Unknown";
+    const email = msg.email || "";
+    const file = msg.file || "";
+    const date = msg.date || "";
+    const adminNote = msg.adminNote || "";
+    const readColor = msg.read ? "#444" : "#00aa66";
 
-        <div class="info-line">
-          <span class="sender">${msg.name || "Unknown"}</span>
-          <span class="email">— ${msg.email || ""}</span>
+    box.innerHTML += `
+      <div class="msg-box">
+
+        <button class="del-btn" onclick="deleteMsg(${i})">Delete</button>
+
+        <div class="msg-header">
+          <div class="read-dot" onclick="toggleRead(${i})"
+               style="background:${readColor}"></div>
+          <div class="info-line">
+            <span class="sender">${name}</span>
+            <span class="email">— ${email}</span>
+          </div>
         </div>
+
+        <p class="msg-text">${text}</p>
+
+        ${file ? `<img src="${file}" class="msg-img" onclick="openImgModal('${file}')">` : ""}
+
+        <span class="msg-date">${date}</span>
+
+        <div class="admin-note-box">
+          <p style="opacity:.7;margin:0 0 4px 0;">Admin Note:</p>
+          <input class="note-input" id="note-${i}" value="${adminNote}">
+          <button class="note-save-btn" onclick="saveNote(${i})">Save Note</button>
+        </div>
+
       </div>
+    `;
+  });
 
-      <p class="msg-text">${text}</p>
-
-      ${msg.file ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">` : ""}
-
-      <span class="msg-date">${msg.date || ""}</span>
-
-      <div class="admin-note-box">
-        <p style="opacity:.7;margin-bottom:4px;">Admin Note:</p>
-        <input class="note-input" id="note-${i}" value="${msg.adminNote || ""}">
-        <button class="note-save-btn" onclick="saveNote(${i})">Save Note</button>
-      </div>
-
-    </div>
-  `;
 });
 
-// ------------------------------------------------
-// ✔ OKUNDU
-// ------------------------------------------------
+/* ✔ READ TOGGLE */
 function toggleRead(i) {
   let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
   msgs[i].read = !msgs[i].read;
@@ -247,9 +265,7 @@ function toggleRead(i) {
   location.reload();
 }
 
-// ------------------------------------------------
-// 🗑 DELETE
-// ------------------------------------------------
+/* 🗑 DELETE */
 function deleteMsg(i) {
   if (!confirm("Delete this message?")) return;
   let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
@@ -258,9 +274,7 @@ function deleteMsg(i) {
   location.reload();
 }
 
-// ------------------------------------------------
-// 📝 ADMIN NOTE SAVE
-// ------------------------------------------------
+/* 📝 SAVE NOTE */
 function saveNote(i) {
   let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
   msgs[i].adminNote = document.getElementById("note-" + i).value;
@@ -268,19 +282,18 @@ function saveNote(i) {
   alert("Note saved!");
 }
 
-// ------------------------------------------------
-// 🔍 IMAGE VIEW
-// ------------------------------------------------
+/* 🔍 IMAGE MODAL */
 function openImgModal(url) {
-  const win = window.open();
-  win.document.write("<img src='" + url + "' style='width:100%; border-radius:14px;'>");
+  let win = window.open();
+  win.document.write("<img src='" + url + "' style='width:100%; border-radius:12px;'>");
 }
 
-// ------------------------------------------------
+/* 🚪 LOGOUT */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
 </script>
 
 </body>
