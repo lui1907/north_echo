@@ -1,108 +1,172 @@
 // -----------------------------------------
 // 🔥 Supabase Bağlantısı
 // -----------------------------------------
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.32.0/dist/esm/supabase.js";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
 
 
 // -----------------------------------------
-// 📥 MESAJLARI YÜKLE
+// 🔐 Admin Kontrol
 // -----------------------------------------
+const ADMINS = ["owner", "admin", "ahmet", "luivoss", "fstekin"];
+
+let loggedUser = localStorage.getItem("loggedInUser");
+
+if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
+  window.location.href = "index.html";
+}
+
+
+// -----------------------------------------
+// 📩 Mesajları Yükle
+// -----------------------------------------
+const msgBox = document.getElementById("adminMessages");
+let ALL_MESSAGES = [];
+
 async function loadMessages() {
+  msgBox.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
 
-    const { data, error } = await supabase
-        .from("messages")
-        .select("*")
-        .order("date", { ascending: false });
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .order("date", { ascending: false });
 
-    if (error) {
-        console.error(error);
-        return;
-    }
+  if (error) {
+    console.error("Fetch error:", error);
+    msgBox.innerHTML = "<p style='color:red;'>Failed to load messages.</p>";
+    return;
+  }
 
-    renderMessages(data);
+  ALL_MESSAGES = data;
+  renderMessages("all");
 }
 
 
 // -----------------------------------------
-// 🧹 MESAJLARI ADMİN PANELDE GÖSTER
+// 🎛️ Filtreleme
 // -----------------------------------------
-function renderMessages(messages) {
-    const box = document.getElementById("adminMessages");
-    box.innerHTML = "";
+const filterButtons = document.querySelectorAll(".filter-btn");
 
-    if (!messages.length) {
-        box.innerHTML = "<p>No messages.</p>";
-        return;
-    }
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
 
-    messages.forEach(msg => {
-        box.innerHTML += `
-          <div class="msg-box">
+    renderMessages(btn.dataset.filter);
+  });
+});
 
-            <div class="msg-top">
-              <div>
-                <div class="msg-sender">${msg.name}</div>
-                <div class="msg-email">${msg.email}</div>
-                <div class="msg-cat">Category: <b>${msg.category}</b></div>
-              </div>
 
-              <button class="msg-delete" onclick="deleteMessage('${msg.id}')">
-                Delete
-              </button>
-            </div>
+// -----------------------------------------
+// 🖨️ Mesajları Listele
+// -----------------------------------------
+function renderMessages(filterType) {
+  msgBox.innerHTML = "";
 
-            <div class="msg-text">${msg.message}</div>
+  let list = [...ALL_MESSAGES];
 
-            ${msg.file ? `<img src="${msg.file}" class="msg-img">` : ""}
+  if (filterType === "unread") {
+    list = list.filter(msg => msg.read === false);
+  }
 
-            <div class="msg-date">${msg.date}</div>
+  if (filterType === "withfile") {
+    list = list.filter(msg => msg.file && msg.file !== "");
+  }
 
-            <textarea id="reply-${msg.id}" class="reply-input" placeholder="Reply...">${msg.reply || ""}</textarea>
+  if (list.length === 0) {
+    msgBox.innerHTML = "<p style='opacity:.6;'>No messages.</p>";
+    return;
+  }
 
-            <button class="reply-btn" onclick="sendReply('${msg.id}')">
-              Save Reply
-            </button>
+  list.forEach(msg => {
+    msgBox.innerHTML += `
+      <div class="msg-box">
+
+        <div class="msg-top">
+          <div>
+            <div class="msg-sender">${msg.name}</div>
+            <div class="msg-email">${msg.email}</div>
           </div>
-        `;
-    });
+
+          <button class="msg-delete" onclick="deleteMessage('${msg.id}')">
+            Delete
+          </button>
+        </div>
+
+        <div class="msg-text">${msg.message}</div>
+
+        ${msg.file ? 
+          `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">`
+          : ""
+        }
+
+        <div class="msg-date">${msg.date}</div>
+
+        <textarea id="reply-${msg.id}" class="reply-input" placeholder="Write admin reply...">${msg.reply || ""}</textarea>
+
+        <button class="reply-btn" onclick="sendReply('${msg.id}')">Send Reply</button>
+      </div>
+    `;
+  });
 }
 
 
 // -----------------------------------------
-// ✉️ REPLY SEND
+// 💬 Reply Gönder
 // -----------------------------------------
-window.sendReply = async function(id) {
-    const text = document.getElementById(`reply-${id}`).value;
+window.sendReply = async function (id) {
+  const replyText = document.getElementById(`reply-${id}`).value;
 
-    await supabase
-        .from("messages")
-        .update({
-            reply: text,
-            read: true
-        })
-        .eq("id", id);
+  const { error } = await supabase
+    .from("messages")
+    .update({
+      reply: replyText,
+      read: true
+    })
+    .eq("id", id);
 
-    loadMessages();
+  if (error) return alert("Error saving reply.");
+
+  alert("Reply saved.");
+  loadMessages();
 };
 
 
 // -----------------------------------------
-// ❌ DELETE MESSAGE
+// 🗑️ Mesaj Sil
 // -----------------------------------------
-window.deleteMessage = async function(id) {
-    await supabase
-        .from("messages")
-        .delete()
-        .eq("id", id);
+window.deleteMessage = async function (id) {
+  if (!confirm("Delete this message?")) return;
 
-    loadMessages();
+  const { error } = await supabase
+    .from("messages")
+    .delete()
+    .eq("id", id);
+
+  if (error) return alert("Delete failed.");
+
+  loadMessages();
 };
 
 
 // -----------------------------------------
-// 🚀 BAŞLAT
+// 🖼️ Fotoğraf Modal
+// -----------------------------------------
+window.openImgModal = function (url) {
+  document.getElementById("imgModalContent").src = url;
+  document.getElementById("imgModal").style.display = "flex";
+};
+
+window.closeImgModal = function () {
+  document.getElementById("imgModal").style.display = "none";
+};
+
+
+// -----------------------------------------
+// 🚀 Başlangıç
 // -----------------------------------------
 loadMessages();
