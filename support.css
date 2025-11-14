@@ -1,104 +1,119 @@
-/* SUPPORT BUTTON */
+/* 💬 DESTEK BUTONU (SİYAH - YEŞİL) */
 #supportBtn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 70px;
-    height: 70px;
-    background: #00aa66;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 3px solid #0f0f0f;
-    box-shadow: 0 0 15px rgba(0,255,150,0.4);
-    transition: 0.2s;
-    z-index: 9999;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 64px;
+  height: 64px;
+  background: #00aa66;
+  border-radius: 50%;
+  border: 2px solid #0b0b0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(0, 255, 150, 0.4);
+  transition: 0.2s;
+  z-index: 9999;
 }
+
 #supportBtn:hover {
-    transform: scale(1.08);
-    background: #009b5c;
+  transform: scale(1.07);
+  background: #009658;
 }
 
-/* SUPPORT PANEL */
+#supportBtn img {
+  width: 28px;
+  height: 28px;
+}
+
+/* 💬 DESTEK PANELİ (SAĞDA KÜÇÜK KUTU) */
 #supportPanel {
-    position: fixed;
-    bottom: 110px;
-    right: 25px;
-    width: 340px;
-    background: #111;
-    border: 1px solid #2d2d2d;
-    border-radius: 18px;
-    transform: translateY(30px);
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.25s;
-    z-index: 9998;
+  position: fixed;
+  bottom: 110px;
+  right: 25px;
+  width: 340px;
+  background: #0f0f0f;
+  border-radius: 16px;
+  border: 1px solid #262626;
+  box-shadow: 0 0 25px rgba(0,0,0,0.7);
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s ease;
+  z-index: 9998;
 }
 
-/* PANEL OPEN */
+/* AÇILDIĞI HAL */
 #supportPanel.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
-/* HEADER */
+/* PANEL HEADER */
 .sup-header {
-    background: #00aa66;
-    padding: 14px;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 18px 18px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.sup-header button {
-    background: transparent;
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
+  background: #00aa66;
+  padding: 14px 16px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-/* BODY */
+.sup-header button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* PANEL GÖVDE */
 .sup-body {
-    padding: 18px;
+  padding: 16px;
 }
+
 .sup-body label {
-    font-size: 14px;
-    opacity: .8;
+  font-size: 13px;
+  opacity: 0.8;
 }
+
 .sup-body input,
 .sup-body textarea {
-    width: 100%;
-    margin-top: 5px;
-    padding: 12px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 10px;
-    color: white;
-    margin-bottom: 15px;
-}
-.sup-body textarea {
-    height: 110px;
-    resize: none;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  background: #151515;
+  border: 1px solid #333;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-/* SEND BUTTON */
-.sup-send {
-    width: 100%;
-    background: #00aa66;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+.sup-body textarea {
+  height: 110px;
+  resize: none;
 }
+
+/* GÖNDER BUTONU */
+.sup-send {
+  width: 100%;
+  background: #00aa66;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 11px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
 .sup-send:hover {
-    background: #009655;
+  background: #009557;
 }
