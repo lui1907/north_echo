@@ -1,79 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login — North Echo</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Login — North Echo</title>
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
 
-  <style>
-    body {
-      color: white;
-    }
+<style>
+  body { color: white; }
 
-    .page-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 60px);
-    }
+  .page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+  }
 
-    .auth-container {
-      max-width: 370px;
-      background: #0d0d0d;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 0 25px rgba(0,0,0,0.4);
-      text-align: center;
-      border: 1px solid #222;
-    }
+  .auth-container {
+    width: 360px;
+    background: #0d0d0d;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #222;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    text-align: center;
+  }
 
-    .auth-container h1 {
-      font-size: 26px;
-      margin-bottom: 20px;
-      color: white;
-    }
+  .auth-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
 
-    .auth-input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      background: #141414;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: white;
-      font-size: 15px;
-    }
+  .auth-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    background: #141414;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
+  }
 
-    .auth-button {
-      width: 100%;
-      padding: 12px;
-      background: black;
-      border: 1px solid #444;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: .2s;
-    }
+  .auth-button {
+    width: 100%;
+    padding: 12px;
+    background: black;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: .2s;
+  }
 
-    .auth-button:hover {
-      background: #111;
-    }
+  .auth-button:hover { background: #111; }
 
-    #msg {
-      margin-top: 10px;
-      color: #ff4e4e;
-    }
-
-    .page-title {
-      font-size: 20px;
-      margin-left: 10px;
-      color: white;
-    }
-  </style>
+  #msg {
+    margin-top: 10px;
+    color: #ff5757;
+  }
+</style>
 </head>
 
 <body>
+
+<!-- HEADER (HER SAYFADA OLMASI GEREKEN) -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <button id="themeToggle" class="theme-btn">○</button>
+  </div>
+</header>
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
@@ -85,14 +88,10 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <button id="openMenu" class="menu-button">☰</button>
-  <span class="page-title">Login</span>
-</div>
 
-<!-- PAGE CONTENT -->
+<!-- MAIN CONTENT -->
 <div class="page-content">
+
   <div class="auth-container">
     <h1>Welcome Back</h1>
 
@@ -103,11 +102,8 @@
 
     <p id="msg"></p>
   </div>
-</div>
 
-<script src="menu.js"></script>
-<script src="theme.js"></script>
-<script src="cart.js"></script>
+</div>
 
 <script>
 function login() {
