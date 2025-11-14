@@ -163,5 +163,23 @@ function applyFilters() {
 <script src="theme.js"></script>
 <script src="cart.js"></script>
 
+  <script>
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+if (avatar) {
+  avatar.addEventListener("click", function () {
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
+}
+
+// Logout fonksiyonu
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+</script>
+
+  
 </body>
 </html>
