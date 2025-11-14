@@ -12,44 +12,52 @@
 
 <style>
   body {
-    color: white;
     margin: 0;
     padding: 0;
+    background: #000;
+    color: white;
+    font-family: Arial, sans-serif;
   }
 
+  /* SAYFANIN GENEL KAPSAYICISI */
   .page-content {
     width: 100%;
-    min-height: calc(100vh - 80px);
-    display: block;
+    min-height: calc(100vh - 80px); /* Header çıkarıldı */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px; /* Üste temiz boşluk */
+    box-sizing: border-box;
   }
 
-  /* Dashboard container */
+  /* DASHBOARD İÇ BLOĞU */
   .dashboard-container {
     width: 90%;
     max-width: 900px;
-    margin: 40px auto;
+    margin: 0 auto;
   }
 
-  /* Welcome box */
+  /* HOŞGELDİN KUTUSU */
   .welcome-box {
     background: #0d0d0d;
     padding: 25px;
     border-radius: 16px;
     border: 1px solid #222;
     box-shadow: 0 0 25px rgba(0,0,0,0.4);
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    text-align: left;
   }
 
   .welcome-box h2 {
-    font-size: 24px;
     margin: 0;
+    font-size: 24px;
   }
 
-  /* Card grid */
+  /* KART SYSTEM */
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
   }
 
   .dash-card {
@@ -58,17 +66,17 @@
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    transition: .2s;
+    transition: 0.2s;
     cursor: pointer;
   }
 
   .dash-card:hover {
     background: #161616;
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 
   .dash-card h3 {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 18px;
   }
 
@@ -76,7 +84,6 @@
     opacity: 0.8;
     font-size: 14px;
   }
-
 </style>
 </head>
 
@@ -104,7 +111,7 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- DASHBOARD CONTENT -->
+<!-- DASHBOARD ORTASINDA DURAN ANA BLOK -->
 <div class="page-content">
 
   <div class="dashboard-container">
@@ -143,27 +150,21 @@
 </div>
 
 <script>
-/* LOGIN KONTROLÜ — DOĞRU HALİ */
-let username = null;
-
-try {
-  username = localStorage.getItem("loggedInUser");
-} catch(e) {
-  console.error("LocalStorage error:", e);
-}
+// LOGIN KONTROLÜ
+let username = localStorage.getItem("loggedInUser");
 
 if (!username) {
   window.location.href = "login.html";
 }
 
-/* Kullanıcıyı getir */
+// Kullanıcı verisini çek
 const data = JSON.parse(localStorage.getItem("user_" + username));
 
-/* Karşılama metni */
+// Hoş geldin yazısı
 document.getElementById("welcome").innerText =
   "Welcome, " + data.fullname + "!";
 
-/* Çıkış */
+// Logout
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
