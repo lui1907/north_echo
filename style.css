@@ -1081,3 +1081,21 @@ body.light .footer-link:hover {
 .avatar-plus:hover {
   background: #009955;
 }
+.go-dashboard-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px;          /* Save Changes ile aynı */
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    transition: 0.25s;
+    font-size: 16px;        /* Save Changes ile aynı */
+}
+.go-dashboard-btn:hover {
+    background: #222;
+    border-color: #555;
+}
