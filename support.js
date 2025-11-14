@@ -1,74 +1,46 @@
-/* ===========================
-   SUPPORT PANEL TOGGLE
-=========================== */
+/* SUPPORT PANEL AÇ/KAPA */
 function toggleSupportPanel() {
-  const panel = document.getElementById("supportPanel");
-  if (!panel) return;
-
-  panel.classList.toggle("open");
+    const panel = document.getElementById("supportPanel");
+    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
 }
 
-
-/* ===========================
-   SEND SUPPORT MESSAGE
-=========================== */
+/* MESAJ GÖNDERME */
 function sendSupportMessage() {
-  const name = document.getElementById("supName").value.trim();
-  const email = document.getElementById("supEmail").value.trim();
-  const message = document.getElementById("supMsg").value.trim();
-  const fileInput = document.getElementById("supFile");
+    let name = document.getElementById("supName").value.trim();
+    let email = document.getElementById("supEmail").value.trim();
+    let message = document.getElementById("supMsg").value.trim();
+    let file = document.getElementById("supFile").files[0];
 
-  if (!name || !email || !message) {
-    alert("Please fill in all required fields.");
-    return;
-  }
+    if (!name || !email || !message) {
+        alert("Please fill all required fields.");
+        return;
+    }
 
-  let fileData = null;
-
-  if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function () {
-      fileData = reader.result;
-      saveSupportMessage(name, email, message, fileData);
-    };
-
-    reader.readAsDataURL(file);
-  } else {
-    saveSupportMessage(name, email, message, null);
-  }
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            saveSupportMessage(name, email, message, reader.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        saveSupportMessage(name, email, message, null);
+    }
 }
 
-
-/* ===========================
-   SAVE TO LOCALSTORAGE
-=========================== */
 function saveSupportMessage(name, email, message, fileData) {
-  const loggedUser = localStorage.getItem("loggedInUser") || "Guest";
 
-  const newMessage = {
-    id: Date.now(),
-    user: loggedUser,
-    name: name,
-    email: email,
-    message: message,
-    file: fileData,
-    date: new Date().toLocaleString()
-  };
+    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-  let allMessages = JSON.parse(localStorage.getItem("support_messages")) || [];
-  allMessages.push(newMessage);
+    messages.push({
+        name,
+        email,
+        message,
+        file: fileData,
+        date: new Date().toLocaleString()
+    });
 
-  localStorage.setItem("support_messages", JSON.stringify(allMessages));
+    localStorage.setItem("supportMessages", JSON.stringify(messages));
 
-  alert("Your message has been sent successfully!");
-
-  // Temizle
-  document.getElementById("supName").value = "";
-  document.getElementById("supEmail").value = "";
-  document.getElementById("supMsg").value = "";
-  document.getElementById("supFile").value = "";
-
-  toggleSupportPanel();
+    alert("Message sent!");
+    toggleSupportPanel();
 }
