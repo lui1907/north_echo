@@ -159,6 +159,18 @@
   transform: translateX(27px);
 }
 
+/* INPUTS (PASSWORD CHANGE) */
+.input-box {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  color: white;
+  width: 100%;
+  font-size: 16px;
+}
+
 /* LIGHT MODE */
 html.light body {
   background: #f5f5f5;
@@ -191,12 +203,17 @@ html.light .slider {
   background: #ccc;
 }
 
+html.light .input-box {
+  background: white;
+  border-color: #bbb;
+  color: #111;
+}
+
 /* MOBILE */
 @media(max-width: 800px) {
   .settings-wrapper {
     flex-direction: column;
   }
-
   .settings-left {
     width: 100%;
   }
@@ -216,10 +233,8 @@ html.light .slider {
     <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-    <!-- AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
-    <!-- AVATAR MENU -->
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -241,7 +256,7 @@ html.light .slider {
 <!-- SETTINGS PANEL -->
 <div class="settings-wrapper">
 
-  <!-- LEFT MENU -->
+  <!-- LEFT -->
   <div class="settings-left">
     <h2>Settings</h2>
     <div class="settings-item active" data-page="appearance">Appearance</div>
@@ -250,12 +265,10 @@ html.light .slider {
     <div class="settings-item" data-page="notifications">Notifications</div>
   </div>
 
-  <!-- RIGHT CONTENT -->
+  <!-- RIGHT -->
   <div class="settings-right" id="settingsContent">
 
-    <!-- DEFAULT PAGE (Appearance) -->
     <h3>Appearance</h3>
-
     <div class="switch-row">
       <span>Theme</span>
       <label class="switch">
@@ -270,7 +283,7 @@ html.light .slider {
 
 <!-- SCRIPT -->
 <script>
-/* AVATAR dropdown */
+/* Avatar dropdown */
 document.addEventListener("DOMContentLoaded", () => {
   const avatar = document.getElementById("userAvatar");
   const menu = document.getElementById("avatarMenu");
@@ -282,19 +295,18 @@ document.addEventListener("DOMContentLoaded", () => {
 /* Login check */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
+
 let data = JSON.parse(localStorage.getItem("user_" + username));
 
-/* Load avatar */
 if (data && data.avatar) {
   document.getElementById("userAvatar").src = data.avatar;
 }
 
-/* LEFT MENU LOGIC */
+/* Switching panels */
 const items = document.querySelectorAll(".settings-item");
 const right = document.getElementById("settingsContent");
 
 items.forEach(item => {
-
   item.addEventListener("click", function () {
 
     items.forEach(i => i.classList.remove("active"));
@@ -302,7 +314,7 @@ items.forEach(item => {
 
     let page = this.getAttribute("data-page");
 
-    // APPEARANCE
+    /* APPEARANCE */
     if (page === "appearance") {
       right.innerHTML = `
         <h3>Appearance</h3>
@@ -317,7 +329,7 @@ items.forEach(item => {
       initThemeSwitch();
     }
 
-    // PROFILE
+    /* PROFILE */
     if (page === "profile") {
       right.innerHTML = `
         <h3>Profile</h3>
@@ -325,16 +337,26 @@ items.forEach(item => {
       `;
     }
 
-    // ACCOUNT
+    /* ACCOUNT (PASSWORD CHANGE BURADA) */
     if (page === "account") {
       right.innerHTML = `
         <h3>Account</h3>
+
+        <div style="margin-bottom:20px; opacity:.8;">Change Password</div>
+
+        <input id="oldPass" type="password" class="input-box" placeholder="Old Password">
+        <input id="newPass" type="password" class="input-box" placeholder="New Password">
+        <input id="newPass2" type="password" class="input-box" placeholder="Confirm New Password">
+
+        <button class="settings-btn" onclick="changePassword()">Save Password</button>
+
         <button class="settings-btn" onclick="resetAvatar()">Reset Avatar</button>
+
         <div class="logout-btn" onclick="logout()">Logout</div>
       `;
     }
 
-    // NOTIFICATIONS
+    /* NOTIFICATIONS */
     if (page === "notifications") {
       right.innerHTML = `
         <h3>Notifications</h3>
@@ -343,10 +365,9 @@ items.forEach(item => {
     }
 
   });
-
 });
 
-/* THEME SWITCH SYSTEM */
+/* THEME SWITCH */
 function initThemeSwitch() {
   const sw = document.getElementById("themeToggleSwitch");
 
@@ -367,7 +388,7 @@ function initThemeSwitch() {
 
 initThemeSwitch();
 
-/* Reset avatar */
+/* RESET AVATAR */
 function resetAvatar() {
   data.avatar = null;
   localStorage.setItem("user_" + username, JSON.stringify(data));
@@ -375,11 +396,40 @@ function resetAvatar() {
   alert("Avatar reset!");
 }
 
-/* Logout */
+/* PASSWORD CHANGE */
+function changePassword() {
+
+  const oldP = document.getElementById("oldPass").value;
+  const newP = document.getElementById("newPass").value;
+  const newP2 = document.getElementById("newPass2").value;
+
+  if (oldP !== data.password) {
+    alert("Old password is incorrect.");
+    return;
+  }
+
+  if (newP.length < 4) {
+    alert("Password must be at least 4 characters.");
+    return;
+  }
+
+  if (newP !== newP2) {
+    alert("New passwords do not match.");
+    return;
+  }
+
+  data.password = newP;
+  localStorage.setItem("user_" + username, JSON.stringify(data));
+
+  alert("Password changed successfully!");
+}
+
+/* LOGOUT */
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
 </script>
 
 </body>
