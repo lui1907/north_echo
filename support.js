@@ -1,123 +1,48 @@
-/* ============================
-   SUPPORT CHAT PANEL AÇ / KAPAT
-============================ */
+// PANEL AÇ / KAPAT
 function toggleSupportPanel() {
     const panel = document.getElementById("supportPanel");
-    panel.style.display = (panel.style.display === "flex") ? "none" : "flex";
-
-    loadChatMessages(); // Açıldığında mesajları yükle
+    panel.classList.toggle("open");
 }
 
-
-/* ============================
-   MESAJ GÖNDER (KULLANICI)
-============================ */
+// MESAJ GÖNDER
 function sendSupportMessage() {
-    let input = document.getElementById("chatInput");
+    let name = document.getElementById("supName").value.trim();
+    let email = document.getElementById("supEmail").value.trim();
+    let msg = document.getElementById("supMsg").value.trim();
     let fileInput = document.getElementById("supFile");
 
-    let text = input.value.trim();
-    let file = fileInput.files[0];
-
-    if (!text && !file) return; // Boş mesaj yok
-
-    const username = localStorage.getItem("loggedInUser") || "guest";
+    if (!name || !email || !msg) {
+        alert("Please fill all required fields.");
+        return;
+    }
 
     let fileData = null;
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
+    if (fileInput.files.length > 0) {
+        let reader = new FileReader();
+        reader.onload = function() {
             fileData = reader.result;
-            saveSupportMessage(username, text, fileData);
+            saveMessage(name, email, msg, fileData);
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(fileInput.files[0]);
     } else {
-        saveSupportMessage(username, text, null);
+        saveMessage(name, email, msg, null);
     }
-
-    input.value = "";
-    fileInput.value = "";
 }
 
+function saveMessage(name, email, msg, file) {
+    let messages = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-/* ============================
-   MESAJI LOCALSTORAGE'A KAYDET
-============================ */
-function saveSupportMessage(username, text, fileData) {
-    let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-
-    msgs.push({
-        user: username,
-        text: text || "",
-        file: fileData || null,
-        fromAdmin: false,
-        date: new Date().toLocaleString(),
-        adminReply: null
+    messages.push({
+        name: name,
+        email: email,
+        text: msg,
+        file: file,
+        date: new Date().toLocaleString()
     });
 
-    localStorage.setItem("supportMessages", JSON.stringify(msgs));
+    localStorage.setItem("supportMessages", JSON.stringify(messages));
 
-    loadChatMessages();
+    alert("Message sent successfully!");
+    document.getElementById("supportPanel").classList.remove("open");
 }
-
-
-/* ============================
-   WHATSAPP CHAT GÖRÜNÜMÜ
-============================ */
-function loadChatMessages() {
-    const chat = document.getElementById("chatWindow");
-    if (!chat) return;
-
-    const username = localStorage.getItem("loggedInUser") || "guest";
-    let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-
-    // Sadece bu kullanıcıya ait mesajlar + admin cevapları
-    let userMsgs = msgs.filter(m => m.user === username);
-
-    chat.innerHTML = "";
-
-    userMsgs.forEach(m => {
-        let cls = m.fromAdmin ? "msg admin-msg" : "msg user-msg";
-
-        chat.innerHTML += `
-            <div class="${cls}">
-                ${m.text ? `<p>${m.text}</p>` : ""}
-                ${m.file ? `<img src="${m.file}" class="chat-img">` : ""}
-                <span class="chat-date">${m.date}</span>
-            </div>
-        `;
-
-        if (m.adminReply) {
-            chat.innerHTML += `
-                <div class="msg admin-msg">
-                    <p>${m.adminReply}</p>
-                </div>
-            `;
-        }
-    });
-
-    chat.scrollTop = chat.scrollHeight;
-}
-
-
-/* ============================
-   ADMIN PANELDEN CEVAP YAZMA
-============================ */
-function adminReply(index, replyText) {
-    let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-    if (!msgs[index]) return;
-
-    msgs[index].adminReply = replyText;
-    msgs[index].fromAdmin = true;
-
-    localStorage.setItem("supportMessages", JSON.stringify(msgs));
-}
-
-
-/* ============================
-   PANEL OTOMATİK YÜKLEME
-============================ */
-document.addEventListener("DOMContentLoaded", () => {
-    loadChatMessages();
-});
