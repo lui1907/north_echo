@@ -124,26 +124,38 @@
 
 <script>
 function register() {
-  const fullname = document.getElementById("fullname").value;
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const fullname = document.getElementById("fullname").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
 
   if (!fullname || !username || !password) {
     document.getElementById("msg").innerText = "All fields are required.";
     return;
   }
 
+  // Kullanıcı var mı kontrol et
   if (localStorage.getItem("user_" + username)) {
     document.getElementById("msg").innerText = "Username already exists.";
     return;
   }
 
-  const userData = { fullname, username, password };
+  // KAYIT OL
+  const userData = {
+    fullname: fullname,
+    username: username,
+    password: password
+  };
+
   localStorage.setItem("user_" + username, JSON.stringify(userData));
 
-  document.getElementById("msg").innerText = "Account created!";
+  // Debug için ekrana yazalım
+  console.log("Saved:", localStorage.getItem("user_" + username));
+
+  document.getElementById("msg").style.color = "#00ff88"
+  document.getElementById("msg").innerText = "Account created successfully!";
 }
 </script>
+
 
 </body>
 </html>
