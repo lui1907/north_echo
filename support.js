@@ -50,17 +50,25 @@ function saveMessage(name, email, text, fileData) {
     toggleSupportPanel();
 }
 // Kullanıcıya admin cevabını göster
-function updateSupportReply() {
+function loadAdminReply() {
     let msgs = JSON.parse(localStorage.getItem("supportMessages")) || [];
-    let last = msgs[msgs.length - 1];
-    if (!last || !last.reply) return;
+    
+    if (msgs.length === 0) return;
 
-    let replyBox = document.getElementById("supReplyBox");
-    if (replyBox) replyBox.innerHTML = `
-        <div class="reply-container">
-            <b>Admin Reply:</b><br>
-            <p>${last.reply}</p>
-        </div>
-    `;
+    let last = msgs[msgs.length - 1];
+
+    if (!last.reply) return;
+
+    let box = document.getElementById("supReplyBox");
+    if (box) {
+        box.innerHTML = `
+            <div class="reply-container">
+                <b>Admin Reply:</b>
+                <p>${last.reply}</p>
+            </div>
+        `;
+    }
 }
-updateSupportReply();
+
+document.addEventListener("DOMContentLoaded", loadAdminReply);
+
