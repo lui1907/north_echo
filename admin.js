@@ -6,95 +6,89 @@ const SUPABASE_KEY =
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔒 Admin kullanıcıları
-const ADMINS = ["fstekin", "luivoss", "owner", "admin"];
-const user = localStorage.getItem("loggedInUser");
+const msgContainer = document.getElementById("adminMessages");
+const filterSelect = document.getElementById("filterCategory");
+const sortButton = document.getElementById("sortButton");
 
-if (!user || !ADMINS.includes(user.toLowerCase())) {
-  alert("Access denied.");
-  window.location.href = "index.html";
-}
-
-const msgBox = document.getElementById("adminMessages");
 let allMessages = [];
+let sortOrder = "desc";
 
-// 🔄 Mesajları yükle
+// 🔹 Mesajları yükle
 async function loadMessages() {
-  msgBox.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
-
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .order("id", { ascending: false });
+  const { data, error } = await supabase.from("messages").select("*");
 
   if (error) {
     console.error(error);
-    msgBox.innerHTML = "<p style='color:red;'>Failed to load messages.</p>";
+    msgContainer.innerHTML = "<p>Error loading messages.</p>";
     return;
   }
 
-  if (!data || data.length === 0) {
-    msgBox.innerHTML = "<p style='opacity:.6;'>No support messages yet.</p>";
-    return;
-  }
-
-  allMessages = data;
-  renderMessages("all");
+  allMessages = data || [];
+  renderMessages();
 }
 
-// 🎛 Filtre butonları
-document.querySelectorAll(".filter-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    renderMessages(btn.dataset.filter);
+// 🔹 Mesajları listele
+function renderMessages() {
+  msgContainer.innerHTML = "";
+
+  let list = [...allMessages];
+
+  // Kategori filtresi
+  const category = filterSelect.value;
+  if (category !== "All") list = list.filter((m) => m.category === category);
+
+  // Tarihe göre sırala
+  list.sort((a, b) => {
+    const dA = new Date(a.date);
+    const dB = new Date(b.date);
+    return sortOrder === "desc" ? dB - dA : dA - dB;
   });
-});
 
-// 🖼 Mesajları görüntüle
-function renderMessages(filter) {
-  let list = allMessages;
-
-  if (filter === "withfile") list = list.filter((m) => m.file);
-
-  msgBox.innerHTML = "";
+  if (list.length === 0) {
+    msgContainer.innerHTML = "<p style='opacity:.6;'>No messages found.</p>";
+    return;
+  }
 
   list.forEach((msg) => {
-    msgBox.innerHTML += `
+    msgContainer.innerHTML += `
       <div class="msg-box">
-        <button class="msg-delete" onclick="deleteMsg(${msg.id})">Delete</button>
-        <div class="msg-content">
-          <h3>${msg.name}</h3>
-          <div class="msg-email">${msg.email}</div>
-          <div class="msg-category">Category: ${msg.category || "Unknown"}</div>
-          <div class="msg-text">${msg.message || "(empty)"}</div>
-          ${
-            msg.file
-              ? `<img src="${msg.file}" class="msg-img" onclick="openImgModal('${msg.file}')">`
-              : ""
-          }
-          <div class="msg-date">${msg.date}</div>
+        <div class="msg-top">
+          <div>
+            <div class="msg-sender">${msg.name}</div>
+            <div class="msg-email" style="opacity:.7;">${msg.email}</div>
+            <div class="msg-category">${msg.category}</div>
+            <div class="msg-date">${msg.date}</div>
+          </div>
+          <button class="msg-delete" onclick="deleteMessage('${msg.id}')">Delete</button>
         </div>
+
+        <div class="msg-text">${msg.message}</div>
+
+        ${
+          msg.file
+            ? `<img src="${msg.file}" class="msg-img" onclick="window.open('${msg.file}', '_blank')">`
+            : ""
+        }
       </div>
     `;
   });
 }
 
-// 🗑 Mesaj sil
-window.deleteMsg = async function (id) {
+// 🔹 Mesaj silme
+window.deleteMessage = async function (id) {
   if (!confirm("Delete this message?")) return;
   await supabase.from("messages").delete().eq("id", id);
   loadMessages();
 };
 
-// 📸 Görsel modal
-window.openImgModal = function (url) {
-  document.getElementById("imgModalContent").src = url;
-  document.getElementById("imgModal").style.display = "flex";
-};
-window.closeImgModal = function () {
-  document.getElementById("imgModal").style.display = "none";
-};
+// 🔹 Filtre / sıralama butonları
+filterSelect.addEventListener("change", renderMessages);
+sortButton.addEventListener("click", () => {
+  sortOrder = sortOrder === "desc" ? "asc" : "desc";
+  sortButton.textContent =
+    sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
+  renderMessages();
+});
 
-// 🔁 Başlat
+// 🔹 Başlangıçta yükle
 loadMessages();
