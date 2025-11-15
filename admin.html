@@ -20,14 +20,16 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
+      width: calc(100% - 0px);
       height: 60px;
       background: #0a0a0a;
       border-bottom: 1px solid #111;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 25px;
+      padding: 0 20px;
+      box-sizing: border-box;
+      overflow: hidden;
       z-index: 1000;
     }
 
@@ -35,11 +37,16 @@
       font-size: 18px;
       letter-spacing: 1px;
       color: #00ff99;
+      margin: 0;
     }
 
-    header .header-buttons {
+    .header-buttons {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      max-width: 250px;
     }
 
     header button {
@@ -50,10 +57,18 @@
       color: #fff;
       cursor: pointer;
       transition: 0.2s;
+      white-space: nowrap;
     }
 
     header button:hover {
       background: #00cc88;
+    }
+
+    .logout-btn {
+      background: #ff3333;
+    }
+    .logout-btn:hover {
+      background: #ff5555;
     }
 
     /* SIDEBAR */
@@ -204,7 +219,7 @@
     <h1>North Echo — Admin</h1>
     <div class="header-buttons">
       <button onclick="window.location.href='index.html'">🏠 Website</button>
-      <button onclick="logout()">🚪 Logout</button>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
     </div>
   </header>
 
