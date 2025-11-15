@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NORTH ECHO — Admin</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       margin: 0;
@@ -15,35 +15,65 @@
       height: 100vh;
     }
 
-    /* Sidebar */
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: #0a0a0a;
+      border-bottom: 1px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: #00ff99;
+    }
+
+    header .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    header button {
+      background: #00aa66;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    header button:hover {
+      background: #00cc88;
+    }
+
+    /* SIDEBAR */
     .sidebar {
-      width: 220px;
+      width: 230px;
       background: #0b0b0b;
       border-right: 1px solid #111;
-      padding-top: 20px;
+      margin-top: 60px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-    }
-
-    .sidebar h2 {
-      font-size: 15px;
-      margin-bottom: 25px;
-      color: #0f0;
-      text-align: center;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-      width: 100%;
+      align-items: stretch;
     }
 
     .sidebar li {
-      padding: 12px 20px;
+      padding: 14px 20px;
       cursor: pointer;
       color: #ccc;
-      transition: 0.2s;
+      list-style: none;
+      border-bottom: 1px solid #111;
+      transition: 0.25s;
     }
 
     .sidebar li:hover,
@@ -52,50 +82,30 @@
       color: #fff;
     }
 
-    /* Main content */
+    /* CONTENT */
     .content {
       flex: 1;
-      padding: 35px 40px;
+      padding: 90px 40px 40px;
       overflow-y: auto;
     }
 
-    /* Header (Go Home button) */
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .admin-header h1 {
-      margin: 0;
+    h2 {
+      margin-top: 0;
       font-size: 20px;
       color: #00ff99;
+      border-bottom: 1px solid #222;
+      padding-bottom: 5px;
     }
 
-    .admin-header button {
-      background: #00aa66;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      color: #fff;
-      transition: 0.2s;
-    }
-
-    .admin-header button:hover {
-      background: #00cc88;
-    }
-
-    /* Inputs */
     input, textarea {
       width: 100%;
-      background: #0f0f0f;
-      color: #fff;
+      background: #111;
       border: 1px solid #333;
-      padding: 8px;
+      color: #fff;
+      padding: 10px;
       border-radius: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      font-size: 14px;
     }
 
     button {
@@ -104,31 +114,34 @@
       padding: 8px 14px;
       border-radius: 6px;
       cursor: pointer;
-      transition: 0.2s;
       color: white;
+      transition: 0.2s;
     }
 
-    button:hover {
-      background: #00cc88;
-    }
+    button:hover { background: #00cc88; }
 
     .card {
       background: #0f0f0f;
       border: 1px solid #222;
       border-radius: 8px;
+      padding: 12px 15px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 15px;
       margin-bottom: 10px;
     }
 
     .card img {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
+      border-radius: 6px;
       object-fit: cover;
-      border-radius: 5px;
-      margin-right: 15px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .card img:hover {
+      transform: scale(1.05);
     }
 
     .delete-btn {
@@ -141,44 +154,77 @@
       color: #fff;
     }
 
-    .delete-btn:hover {
-      background: #cc0000;
+    .delete-btn:hover { background: #cc0000; }
+
+    /* IMAGE MODAL */
+    .img-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.25s ease;
     }
 
-    /* Responsive scroll */
-    #productsList, #messagesList {
-      margin-top: 15px;
+    .img-modal.active {
+      visibility: visible;
+      opacity: 1;
     }
+
+    .img-modal img {
+      max-width: 85%;
+      max-height: 85%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .img-modal .close-btn {
+      position: absolute;
+      top: 25px;
+      right: 40px;
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="sidebar">
-    <h2>NORTH ECHO — ADMIN</h2>
-    <ul>
-      <li id="menuProducts" class="active">Products</li>
-      <li id="menuMessages">Messages</li>
-    </ul>
-  </div>
+  <header>
+    <h1>North Echo — Admin</h1>
+    <div class="header-buttons">
+      <button onclick="window.location.href='index.html'">🏠 Website</button>
+      <button onclick="logout()">🚪 Logout</button>
+    </div>
+  </header>
+
+  <ul class="sidebar">
+    <li id="menuProducts" class="active">Products</li>
+    <li id="menuMessages">Messages</li>
+  </ul>
 
   <div class="content">
-    <div class="admin-header">
-      <h1>Admin Panel</h1>
-      <button onclick="window.location.href='index.html'">🏠 Go to Website</button>
-    </div>
-
     <!-- PRODUCTS -->
     <div id="sectionProducts">
-      <h2>Add Product</h2>
-      <div style="margin-top:15px;">
-        <input id="pName" placeholder="Product name">
-        <input id="pPrice" placeholder="Price (₺)" type="number">
-        <input id="pCategory" placeholder="Category (e.g. T-Shirts)">
-        <textarea id="pDescription" placeholder="Description"></textarea>
-        <input id="pImages" placeholder="Image URLs (comma-separated)">
-        <input id="pSizes" placeholder="Sizes (S,M,L,XL)">
-        <button id="btnAddProduct">Add Product</button>
-      </div>
+      <h2>Manage Products</h2>
+      <input id="pName" placeholder="Product name">
+      <input id="pPrice" placeholder="Price (₺)" type="number">
+      <input id="pCategory" placeholder="Category (e.g. T-Shirts)">
+      <textarea id="pDescription" placeholder="Description"></textarea>
+      <input id="pImages" placeholder="Image URLs (comma-separated)">
+      <input id="pSizes" placeholder="Sizes (S,M,L,XL)">
+      <button id="btnAddProduct">Add Product</button>
+      <button onclick="refreshProducts()" style="margin-left:10px;">🔄 Refresh</button>
 
       <h2 style="margin-top:30px;">Product List</h2>
       <div id="productsList"></div>
@@ -187,8 +233,15 @@
     <!-- MESSAGES -->
     <div id="sectionMessages" style="display:none;">
       <h2>Messages</h2>
-      <div id="messagesList"></div>
+      <button onclick="refreshMessages()">🔄 Refresh</button>
+      <div id="messagesList" style="margin-top:15px;"></div>
     </div>
+  </div>
+
+  <!-- IMAGE MODAL -->
+  <div class="img-modal" id="imgModal">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <img src="" alt="preview" id="modalImage">
   </div>
 
   <script type="module" src="admin.js"></script>
