@@ -1,105 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel — North Echo</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Panel</title>
 
-    <style>
-        body {
-            background: #0d0d0d;
-            color: #fff;
-            font-family: Arial, sans-serif;
-        }
+<link rel="stylesheet" href="style.css">
 
-        .container {
-            width: 90%;
-            max-width: 900px;
-            margin: 40px auto;
-        }
+<style>
+body { background:black; color:white; }
 
-        h1 { margin-bottom: 20px; }
+.admin-wrapper {
+  margin-top:120px;
+  max-width:900px;
+  margin:auto;
+}
 
-        .category-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+.msg-box {
+  background:#0d0d0d;
+  border:1px solid #222;
+  padding:20px;
+  margin-bottom:15px;
+  border-radius:12px;
+  position:relative;
+}
 
-        .category-btn {
-            padding: 8px 14px;
-            background: #222;
-            color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 1px solid #333;
-        }
+.read-dot {
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#00aa66;
+  position:absolute;
+  left:15px;
+  top:15px;
+}
 
-        .category-btn.active {
-            background: #4caf50;
-        }
+.read-dot.read {
+  background:#444;
+}
 
-        .message {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            position: relative;
-        }
+.msg-delete {
+  position:absolute;
+  right:15px;
+  top:15px;
+  background:#400000;
+  padding:6px 10px;
+  border-radius:7px;
+  border:1px solid #660000;
+  cursor:pointer;
+  color:#ff6666;
+}
 
-        .name {
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.msg-img {
+  width:160px;
+  border-radius:10px;
+  margin-top:10px;
+  cursor:pointer;
+}
 
-        .tick {
-            width: 12px;
-            height: 12px;
-            background: #4caf50;
-            border-radius: 50%;
-        }
+.msg-date { opacity:.6; margin-top:6px; }
 
-        .delete-btn {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            background: red;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.msg-category { opacity:.7; font-size:13px; margin-top:4px; }
 
-        #noMessages {
-            text-align: center;
-            margin-top: 40px;
-            color: #777;
-            display: none;
-        }
-    </style>
+#imgModal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+#imgModal img { max-width:90%; border-radius:12px; }
+#imgModalClose {
+  position:fixed; top:20px; right:20px;
+  font-size:32px; cursor:pointer;
+}
+</style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Admin Panel</h1>
 
-        <!-- Kategoriler -->
-        <div class="category-bar">
-            <div class="category-btn active" data-category="all">All</div>
-            <div class="category-btn" data-category="order">Order</div>
-            <div class="category-btn" data-category="message">Message</div>
-            <div class="category-btn" data-category="other">Other</div>
-        </div>
+<div class="admin-wrapper">
+  <h1>Support Messages</h1>
+  <div id="adminMessages"></div>
+</div>
 
-        <div id="messageList"></div>
-        <div id="noMessages">No messages found.</div>
-    </div>
+<div id="imgModal">
+  <div id="imgModalClose" onclick="closeImgModal()">✕</div>
+  <img id="imgModalContent">
+</div>
 
-    <script src="admin.js"></script>
+<script type="module" src="admin.js"></script>
 </body>
 </html>
