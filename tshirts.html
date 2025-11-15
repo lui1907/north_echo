@@ -28,7 +28,6 @@
   max-width: 1200px;
 }
 
-/* Ürünler alanı */
 .product-area {
   flex: 3;
 }
@@ -66,7 +65,6 @@
   font-size: 14px;
 }
 
-/* Sağ filtre */
 .filter-side {
   flex: 1;
   background: #0d0d0d;
@@ -217,7 +215,7 @@ const sizeBtns = document.querySelectorAll(".size-btn");
 let allProducts = [];
 let selectedSize = null;
 
-// 🔹 Sadece kategori "T-Shirt" olan ürünleri çek
+// 🔹 Tüm T-shirt ürünlerini yükle
 async function loadProducts() {
   const { data, error } = await supabase
     .from("products")
@@ -234,7 +232,7 @@ async function loadProducts() {
   renderProducts();
 }
 
-// 🔹 Ürünleri listele
+// 🔹 Ürünleri göster
 function renderProducts() {
   productGrid.innerHTML = "";
   const searchText = searchInput.value.toLowerCase();
@@ -255,7 +253,7 @@ function renderProducts() {
   filtered.forEach(p => {
     const img = p.images ? p.images.split(",")[0] : "assets/default-product.png";
     const html = `
-      <a class="product-card" href="#">
+      <a class="product-card" href="product.html?id=${p.id}">
         <img src="${img}" alt="${p.name}">
         <h3>${p.name}</h3>
         <p>${p.price}€</p>
