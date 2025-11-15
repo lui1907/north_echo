@@ -5,15 +5,14 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔒 Admin kontrolü
+// 🔒 Admin kontrol
 const ADMINS = ["luivoss", "fisami"];
-const loggedUser = localStorage.getItem("loggedInUser");
-
-if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
+const user = localStorage.getItem("loggedInUser");
+if (!user || !ADMINS.includes(user.toLowerCase())) {
   window.location.href = "index.html";
 }
 
-// 🔹 Menü geçişleri
+// Menü geçişleri
 const btnProducts = document.getElementById("btnProducts");
 const btnMessages = document.getElementById("btnMessages");
 const sectionProducts = document.getElementById("sectionProducts");
@@ -26,7 +25,6 @@ btnProducts.onclick = () => {
   btnMessages.classList.remove("active");
   loadProducts();
 };
-
 btnMessages.onclick = () => {
   sectionProducts.style.display = "none";
   sectionMessages.style.display = "block";
@@ -35,7 +33,7 @@ btnMessages.onclick = () => {
   loadMessages();
 };
 
-// 🧾 ÜRÜN EKLE
+// ÜRÜN EKLE
 document.getElementById("btnAddProduct").onclick = async () => {
   const name = document.getElementById("pName").value.trim();
   const price = parseFloat(document.getElementById("pPrice").value);
@@ -60,35 +58,27 @@ document.getElementById("btnAddProduct").onclick = async () => {
   }
 };
 
-// 📦 ÜRÜNLERİ LİSTELE
+// ÜRÜNLERİ LİSTELE
 async function loadProducts() {
   const container = document.getElementById("productsList");
   container.innerHTML = "<p>Loading...</p>";
-
   const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
-  if (error) {
-    container.innerHTML = "<p>Error loading products ❌</p>";
-    return;
-  }
+  if (error) return (container.innerHTML = "<p>Error loading products ❌</p>");
+  if (!data.length) return (container.innerHTML = "<p>No products yet.</p>");
 
-  if (!data.length) {
-    container.innerHTML = "<p>No products yet.</p>";
-    return;
-  }
-
-  container.innerHTML = data
-    .map(p => `
-      <div class="card">
-        <img src="${(p.images || '').split(',')[0]}" alt="${p.name}">
+  container.innerHTML = data.map(p => `
+    <div class="card">
+      <img src="${(p.images || '').split(',')[0]}" alt="${p.name}">
+      <div class="card-content">
         <h3>${p.name}</h3>
         <p>${p.category} — ₺${p.price}</p>
-        <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
       </div>
-    `)
-    .join("");
+      <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+    </div>
+  `).join("");
 }
 
-// 🗑 ÜRÜN SİL
+// ÜRÜN SİL
 window.deleteProduct = async (id) => {
   if (!confirm("Delete this product?")) return;
   const { error } = await supabase.from("products").delete().eq("id", id);
@@ -96,37 +86,28 @@ window.deleteProduct = async (id) => {
   else loadProducts();
 };
 
-// 💬 MESAJLARI LİSTELE
+// MESAJLARI LİSTELE
 async function loadMessages() {
   const container = document.getElementById("messagesList");
   container.innerHTML = "<p>Loading...</p>";
-
   const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
-  if (error) {
-    container.innerHTML = "<p>Error loading messages ❌</p>";
-    return;
-  }
+  if (error) return (container.innerHTML = "<p>Error loading messages ❌</p>");
+  if (!data.length) return (container.innerHTML = "<p>No messages yet.</p>");
 
-  if (!data.length) {
-    container.innerHTML = "<p>No messages yet.</p>";
-    return;
-  }
-
-  container.innerHTML = data
-    .map(
-      (m) => `
-      <div class="card">
+  container.innerHTML = data.map(m => `
+    <div class="card">
+      <div class="card-content">
         <h3>${m.name} (${m.email})</h3>
         <p><b>${m.category}</b></p>
         <p>${m.message}</p>
         ${m.file ? `<a href="${m.file}" target="_blank">📎 File</a>` : ""}
-        <button class="delete-btn" onclick="deleteMessage(${m.id})">Delete</button>
-      </div>`
-    )
-    .join("");
+      </div>
+      <button class="delete-btn" onclick="deleteMessage(${m.id})">Delete</button>
+    </div>
+  `).join("");
 }
 
-// 🗑 MESAJ SİL
+// MESAJ SİL
 window.deleteMessage = async (id) => {
   if (!confirm("Delete this message?")) return;
   const { error } = await supabase.from("messages").delete().eq("id", id);
@@ -134,5 +115,5 @@ window.deleteMessage = async (id) => {
   else loadMessages();
 };
 
-// 🔄 İlk yükleme
+// İlk yükleme
 loadProducts();
