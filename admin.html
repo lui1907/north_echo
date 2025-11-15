@@ -12,99 +12,46 @@
 body {
   background: #000;
   color: #fff;
-  font-family: 'Poppins', sans-serif;
   margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* --- HEADER --- */
+/* HEADER */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 30px;
-  background: #0a0a0a;
+  padding: 15px 25px;
+  background: #0d0d0d;
   border-bottom: 1px solid #222;
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 1000;
+  z-index: 9999;
 }
-.logo {
-  font-weight: 700;
-  color: white;
-  text-decoration: none;
-  font-size: 20px;
-}
-.right-buttons {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid #333;
-}
+.logo { color: #fff; text-decoration: none; font-weight: 700; font-size: 20px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #333; }
 
-/* --- SIDE MENU --- */
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: -260px;
-  width: 240px;
-  height: 100%;
-  background: #0d0d0d;
-  border-right: 1px solid #222;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  transition: 0.3s;
-  z-index: 999;
-}
-.side-menu.show {
-  left: 0;
-}
-.side-menu a {
-  color: white;
-  text-decoration: none;
-  margin-bottom: 12px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  transition: 0.2s;
-}
-.side-menu a:hover {
-  background: #00aa66;
-}
-.close-menu {
-  align-self: flex-end;
-  background: none;
-  border: none;
-  color: #888;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* --- ADMIN LAYOUT --- */
+/* LAYOUT */
 .admin-wrapper {
   display: flex;
   max-width: 1200px;
-  margin: 120px auto 50px;
-  gap: 25px;
-  padding: 20px;
+  margin: 110px auto 50px;
+  gap: 20px;
+  padding: 0 20px;
 }
 .admin-left {
-  width: 240px;
+  width: 230px;
   background: #0d0d0d;
   border: 1px solid #222;
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 18px;
+  height: fit-content;
 }
 .admin-item {
-  padding: 12px 14px;
+  padding: 12px;
   background: #141414;
-  border: 1px solid #222;
+  border: 1px solid #333;
   border-radius: 10px;
   margin-bottom: 10px;
   cursor: pointer;
@@ -112,6 +59,7 @@ body {
 }
 .admin-item:hover { background: #1b1b1b; }
 .admin-item.active { background: #00aa66; color: white; }
+
 .admin-right {
   flex: 1;
   background: #0d0d0d;
@@ -121,41 +69,69 @@ body {
   min-height: 600px;
 }
 
-/* --- FORM STYLES --- */
-.input-box {
-  width: 100%;
-  background: #141414;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 14px;
-  color: white;
-}
-textarea { min-height: 80px; resize: vertical; }
-.save-btn {
-  width: 100%;
-  padding: 12px;
-  background: #00aa66;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-}
-.save-btn:hover { background: #009655; }
-
-/* --- MESSAGES BOX --- */
+/* MESSAGE BOX */
 .msg-box {
   background: #111;
   border: 1px solid #333;
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
 }
-.msg-box strong { color: #00ff99; }
-.msg-box small { color: #888; }
+.msg-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.msg-sender { font-weight: 700; font-size: 18px; }
+.msg-email { opacity: 0.7; font-size: 14px; }
+.msg-category { font-size: 13px; opacity: .8; }
+.msg-date { opacity: .6; font-size: 12px; margin-top: 5px; }
+.msg-text { margin-top: 10px; line-height: 1.5; opacity: .9; }
+.msg-img {
+  margin-top: 10px;
+  width: 200px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: .2s;
+}
+.msg-img:hover { transform: scale(1.03); }
 
-/* --- TOAST --- */
+/* CONFIRM POPUP */
+.confirm-popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  opacity: 0;
+  z-index: 999999;
+  transition: 0.2s;
+}
+.confirm-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.confirm-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.confirm-buttons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+}
+.confirm-yes { background: #00aa66; }
+.confirm-no { background: #400; }
+
+/* TOAST */
 .toast {
   position: fixed;
   top: 50%;
@@ -171,10 +147,7 @@ textarea { min-height: 80px; resize: vertical; }
   z-index: 999999;
   font-size: 15px;
 }
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%,-50%) scale(1);
-}
+.toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
 .toast.success { border-color:#00aa66; color:#00ff99; }
 .toast.error { border-color:#aa0000; color:#ff6666; }
 
@@ -182,25 +155,11 @@ textarea { min-height: 80px; resize: vertical; }
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
-  <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-  <div class="right-buttons">
-    <img id="userAvatar" src="assets/default-avatar.png" class="avatar">
-  </div>
+  <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
 </header>
 
-<!-- SIDE MENU -->
-<div class="side-menu" id="sideMenu">
-   <button id="closeMenu" class="close-menu">×</button>
-   <a href="index.html">Home</a>
-   <a href="tshirts.html">T-Shirts</a>
-   <a href="sweatshirts.html">Sweatshirts</a>
-   <a href="cart.html">Cart</a>
-</div>
-
-<!-- MAIN PANEL -->
 <div class="admin-wrapper">
   <div class="admin-left">
     <div class="admin-item active" onclick="showTab('messages')">Messages</div>
@@ -209,129 +168,34 @@ textarea { min-height: 80px; resize: vertical; }
 
   <div class="admin-right" id="adminContent">
     <h2>Messages</h2>
+    <div class="admin-toolbar">
+      <select id="filterCategory">
+        <option>All</option>
+        <option>Product</option>
+        <option>Order</option>
+        <option>Design</option>
+        <option>Other</option>
+      </select>
+    </div>
     <div id="adminMessages"></div>
   </div>
 </div>
 
-<script type="module">
-// -----------------------------------------
-// 🔥 Supabase Connection
-// -----------------------------------------
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+<!-- IMAGE MODAL -->
+<div id="imgModal" style="display:none;justify-content:center;align-items:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:99999;">
+  <span id="imgModalClose" style="position:fixed;top:20px;right:30px;font-size:30px;cursor:pointer;">✕</span>
+  <img id="imgModalContent" src="" style="max-width:90%;max-height:90%;border-radius:12px;">
+</div>
 
-// -----------------------------------------
-// 🔐 Admin Access
-// -----------------------------------------
-const ADMINS = ["luivoss", "fisami"];
-const loggedUser = localStorage.getItem("loggedInUser");
-if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  window.location.href = "index.html";
-}
+<!-- CONFIRM POPUP -->
+<div id="confirmPopup" class="confirm-popup">
+  <p id="confirmText">Are you sure?</p>
+  <div class="confirm-buttons">
+    <button class="confirm-yes" id="confirmYes">Yes</button>
+    <button class="confirm-no" id="confirmNo">No</button>
+  </div>
+</div>
 
-// -----------------------------------------
-// 🧭 Tab Switching
-// -----------------------------------------
-window.showTab = function(tab) {
-  document.querySelectorAll(".admin-item").forEach(x => x.classList.remove("active"));
-  event.target.classList.add("active");
-
-  const content = document.getElementById("adminContent");
-  if (tab === "messages") loadMessagesTab(content);
-  if (tab === "addProduct") loadAddProductTab(content);
-};
-
-// -----------------------------------------
-// 💬 Messages Tab
-// -----------------------------------------
-async function loadMessagesTab(content) {
-  content.innerHTML = "<h2>Messages</h2><p>Loading...</p>";
-  const { data, error } = await supabase.from("messages").select("*");
-  if (error) return (content.innerHTML = "<p>Error loading messages.</p>");
-  if (!data.length) {
-    content.innerHTML = "<h2>Messages</h2><p>No messages yet.</p>";
-    return;
-  }
-
-  content.innerHTML = "<h2>Messages</h2>";
-  data.forEach(msg => {
-    content.innerHTML += `
-      <div class="msg-box">
-        <strong>${msg.name}</strong> <small>(${msg.email})</small><br>
-        <em>${msg.category}</em><br>
-        <p>${msg.message}</p>
-      </div>`;
-  });
-}
-
-// -----------------------------------------
-// 🛍️ Add Product Tab
-// -----------------------------------------
-function loadAddProductTab(content) {
-  content.innerHTML = `
-    <h2>Add Product</h2>
-    <input id="prodName" class="input-box" placeholder="Product Name">
-    <input id="prodPrice" class="input-box" type="number" placeholder="Price (€)">
-    <input id="prodCategory" class="input-box" placeholder="Category (e.g. T-Shirts)">
-    <textarea id="prodDesc" class="input-box" placeholder="Description"></textarea>
-    <input id="prodImages" class="input-box" placeholder="Image URLs (comma separated)">
-    <input id="prodSizes" class="input-box" placeholder="Sizes (e.g. S,M,L,XL)">
-    <button class="save-btn" id="saveProductBtn">Save Product</button>
-  `;
-  document.getElementById("saveProductBtn").onclick = saveProduct;
-}
-
-// -----------------------------------------
-// 💾 Save Product to Supabase
-// -----------------------------------------
-async function saveProduct() {
-  const name = document.getElementById("prodName").value.trim();
-  const price = parseFloat(document.getElementById("prodPrice").value);
-  const category = document.getElementById("prodCategory").value.trim();
-  const description = document.getElementById("prodDesc").value.trim();
-  const images = document.getElementById("prodImages").value.trim();
-  const sizes = document.getElementById("prodSizes").value.trim();
-
-  if (!name || !price || !category || !images) {
-    showToast("Please fill all required fields ❌", "error");
-    return;
-  }
-
-  const { error } = await supabase.from("products").insert([
-    { name, price, category, description, images, sizes }
-  ]);
-
-  if (error) {
-    console.error(error);
-    showToast("Error saving product ❌", "error");
-  } else {
-    showToast("✅ Product added successfully!", "success");
-    document.querySelectorAll(".input-box").forEach(i => i.value = "");
-  }
-}
-
-// -----------------------------------------
-// 🔔 Toast
-// -----------------------------------------
-function showToast(msg, type = "info") {
-  let toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  toast.textContent = msg;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.classList.add("show"), 100);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 400);
-  }, 2000);
-}
-
-// -----------------------------------------
-// 🚀 Default Load
-// -----------------------------------------
-loadMessagesTab(document.getElementById("adminContent"));
-</script>
+<script type="module" src="admin.js"></script>
 </body>
 </html>
