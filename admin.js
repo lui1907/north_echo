@@ -11,16 +11,15 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // -----------------------------------------
 // 🔐 Admin Access Check
 // -----------------------------------------
-const ADMINS = ["luivoss", "fisami"]; // 👈 Supabase'deki username'lerle birebir aynı olmalı!
+const ADMINS = ["luivoss", "fisami"];
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  // 👇 Uyarı göstermeden direkt ana sayfaya yönlendir
   window.location.href = "index.html";
 }
 
 // -----------------------------------------
-// 📥 Load Messages
+// 📥 Elements
 // -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
@@ -34,7 +33,9 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🔄 Fetch messages
+// -----------------------------------------
+// 🔄 Fetch Messages
+// -----------------------------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
@@ -50,7 +51,7 @@ async function loadMessages() {
 }
 
 // -----------------------------------------
-// 🧾 Render messages
+// 🧾 Render Messages
 // -----------------------------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
@@ -59,9 +60,10 @@ function renderMessages() {
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
+  // 📅 Sort fix (string tarihleri Date objesine dönüştür)
   list.sort((a, b) => {
-    const dA = new Date(a.date);
-    const dB = new Date(b.date);
+    const dA = new Date(a.date || 0);
+    const dB = new Date(b.date || 0);
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -71,7 +73,9 @@ function renderMessages() {
   }
 
   list.forEach((msg) => {
-    const html = `
+    msgContainer.insertAdjacentHTML(
+      "beforeend",
+      `
       <div class="msg-box" id="msg-${msg.id}">
         <div class="msg-top">
           <div>
@@ -88,29 +92,27 @@ function renderMessages() {
             ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" />`
             : ""
         }
-      </div>
-    `;
-    msgContainer.insertAdjacentHTML("beforeend", html);
+      </div>`
+    );
   });
 
-  bindEvents();
+  bindMessageEvents();
 }
 
 // -----------------------------------------
-// 🖱️ Events
+// 🖱️ Bind Message Events
 // -----------------------------------------
-function bindEvents() {
+function bindMessageEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
-
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
 // -----------------------------------------
-// 🧨 Delete Confirmation
+// 🧨 Confirm Delete Popup
 // -----------------------------------------
 function openConfirmPopup(id) {
   deleteTarget = id;
@@ -147,25 +149,30 @@ window.closeImgModal = () => {
 };
 
 // -----------------------------------------
-// 🔁 Sorting & Filtering
+// 🔁 Sorting & Filtering FIX
 // -----------------------------------------
-sortButton.onclick = () => {
-  sortOrder = sortOrder === "desc" ? "asc" : "desc";
-  sortButton.textContent =
-    sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
-  renderMessages();
-};
-filterSelect.onchange = renderMessages;
+if (sortButton) {
+  sortButton.addEventListener("click", () => {
+    sortOrder = sortOrder === "desc" ? "asc" : "desc";
+    sortButton.textContent =
+      sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
+    renderMessages();
+  });
+}
+
+if (filterSelect) {
+  filterSelect.addEventListener("change", renderMessages);
+}
 
 // -----------------------------------------
 // 🔔 Toast Notification
 // -----------------------------------------
 function showToast(msg, type = "info") {
-  let toast = document.createElement("div");
+  const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.textContent = msg;
   document.body.appendChild(toast);
-  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => toast.classList.add("show"), 50);
   setTimeout(() => {
     toast.classList.remove("show");
     setTimeout(() => toast.remove(), 400);
