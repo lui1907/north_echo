@@ -1,5 +1,5 @@
 // 🧩 Allowed Admin Usernames
-const ADMIN_USERS = ["ahmet", "berkay", "eren"]; // sadece bunlar admin paneli görebilir
+const ADMIN_USERS = ["fisami", "luivoss", "eren"]; // sadece bunlar admin paneli görebilir
 
 // Giriş yapan kullanıcıyı al (örnek: login sonrası kaydedilmiş username)
 const currentUser = localStorage.getItem("username");
