@@ -13,23 +13,23 @@ if (!user || !ADMINS.includes(user.toLowerCase())) {
 }
 
 // Menü geçişleri
-const btnProducts = document.getElementById("btnProducts");
-const btnMessages = document.getElementById("btnMessages");
+const menuProducts = document.getElementById("menuProducts");
+const menuMessages = document.getElementById("menuMessages");
 const sectionProducts = document.getElementById("sectionProducts");
 const sectionMessages = document.getElementById("sectionMessages");
 
-btnProducts.onclick = () => {
+menuProducts.onclick = () => {
   sectionProducts.style.display = "block";
   sectionMessages.style.display = "none";
-  btnProducts.classList.add("active");
-  btnMessages.classList.remove("active");
+  menuProducts.classList.add("active");
+  menuMessages.classList.remove("active");
   loadProducts();
 };
-btnMessages.onclick = () => {
+menuMessages.onclick = () => {
   sectionProducts.style.display = "none";
   sectionMessages.style.display = "block";
-  btnMessages.classList.add("active");
-  btnProducts.classList.remove("active");
+  menuMessages.classList.add("active");
+  menuProducts.classList.remove("active");
   loadMessages();
 };
 
@@ -62,6 +62,7 @@ document.getElementById("btnAddProduct").onclick = async () => {
 async function loadProducts() {
   const container = document.getElementById("productsList");
   container.innerHTML = "<p>Loading...</p>";
+
   const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
   if (error) return (container.innerHTML = "<p>Error loading products ❌</p>");
   if (!data.length) return (container.innerHTML = "<p>No products yet.</p>");
@@ -90,17 +91,18 @@ window.deleteProduct = async (id) => {
 async function loadMessages() {
   const container = document.getElementById("messagesList");
   container.innerHTML = "<p>Loading...</p>";
+
   const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
   if (error) return (container.innerHTML = "<p>Error loading messages ❌</p>");
   if (!data.length) return (container.innerHTML = "<p>No messages yet.</p>");
 
   container.innerHTML = data.map(m => `
     <div class="card">
+      ${m.file ? `<img src="${m.file}" alt="attachment">` : ""}
       <div class="card-content">
         <h3>${m.name} (${m.email})</h3>
         <p><b>${m.category}</b></p>
         <p>${m.message}</p>
-        ${m.file ? `<a href="${m.file}" target="_blank">📎 File</a>` : ""}
       </div>
       <button class="delete-btn" onclick="deleteMessage(${m.id})">Delete</button>
     </div>
