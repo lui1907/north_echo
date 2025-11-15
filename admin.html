@@ -6,7 +6,6 @@
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="support.css" />
 
 <style>
 body {
@@ -16,26 +15,71 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+/* Ana layout */
 .admin-wrapper {
   max-width: 1100px;
   margin: 120px auto 40px;
   padding: 20px;
+  display: flex;
+  gap: 20px;
 }
 
-h1 {
-  font-size: 32px;
+/* SOL MENÜ (sekme gibi) */
+.admin-menu {
+  width: 220px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 15px;
+  height: fit-content;
+}
+
+.admin-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 14px;
+}
+.admin-menu button:hover {
+  background: #00aa66;
+}
+.admin-menu button.active {
+  background: #00aa66;
+}
+
+/* SAĞ PANEL */
+.admin-main {
+  flex: 1;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 25px;
+  min-height: 300px;
+}
+
+.admin-main h1 {
+  font-size: 28px;
+  margin-top: 0;
   margin-bottom: 20px;
   font-weight: 700;
 }
 
-/* Toolbar */
+/* MESAJLAR TOOLBAR */
 .admin-toolbar {
   display: flex;
   gap: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
-select, button {
+.admin-toolbar select {
   background: #111;
   border: 1px solid #333;
   color: white;
@@ -45,17 +89,13 @@ select, button {
   font-size: 14px;
 }
 
-button:hover {
-  background: #00aa66;
-  border-color: #00aa66;
-}
-
+/* MESAJ KUTUSU */
 .msg-box {
-  background: #0d0d0d;
+  background: #050505;
   border: 1px solid #222;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 18px;
+  margin-bottom: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
 
@@ -69,20 +109,17 @@ button:hover {
   font-weight: 700;
   font-size: 18px;
 }
-
 .msg-email {
   opacity: 0.7;
-  font-size: 14px;
+  font-size: 13px;
 }
-
 .msg-category {
-  font-size: 14px;
+  font-size: 13px;
   opacity: 0.8;
 }
-
 .msg-date {
-  opacity: 0.5;
-  font-size: 13px;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
 .msg-text {
@@ -109,10 +146,48 @@ button:hover {
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 13px;
 }
 .msg-delete:hover { background: #660000; }
 
-/* Modal (image viewer) */
+/* PRODUCTS FORM */
+label {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+input, textarea, select {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+textarea {
+  min-height: 90px;
+}
+
+.save-btn {
+  margin-top: 20px;
+  width: 100%;
+  background: #00aa66;
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.save-btn:hover {
+  background: #009655;
+}
+
+/* Image Modal */
 #imgModal {
   position: fixed;
   top: 0; left: 0;
@@ -121,7 +196,7 @@ button:hover {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 99999;
+  z-index: 9999;
 }
 #imgModal img {
   max-width: 90%;
@@ -147,7 +222,7 @@ button:hover {
   padding: 25px;
   text-align: center;
   opacity: 0;
-  z-index: 999999;
+  z-index: 10000;
   transition: 0.2s;
 }
 .confirm-popup.show {
@@ -162,7 +237,35 @@ button:hover {
 }
 .confirm-buttons button {
   padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
 }
+.confirm-yes { background:#00aa66; color:white; }
+.confirm-no { background:#400; color:white; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.9);
+  background: rgba(20,20,20,0.95);
+  border: 1px solid #333;
+  padding: 16px 22px;
+  color: white;
+  border-radius: 10px;
+  opacity: 0;
+  transition: all .3s;
+  z-index: 10001;
+  font-size: 15px;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%,-50%) scale(1);
+}
+.toast.success { border-color:#00aa66; color:#00ff99; }
+.toast.error { border-color:#aa0000; color:#ff6666; }
 </style>
 </head>
 <body>
@@ -184,19 +287,60 @@ button:hover {
 </div>
 
 <div class="admin-wrapper">
-  <h1>Support Messages</h1>
 
-  <div class="admin-toolbar">
-    <select id="filterCategory">
-      <option>All</option>
-      <option>Product</option>
-      <option>Order</option>
-      <option>Design</option>
-      <option>Other</option>
-    </select>
+  <!-- SOL: sekmeler -->
+  <div class="admin-menu">
+    <button id="tabMessages" class="active">Messages</button>
+    <button id="tabProducts">Products</button>
   </div>
 
-  <div id="adminMessages"></div>
+  <!-- SAĞ: içerik -->
+  <div class="admin-main">
+
+    <!-- MESSAGES VIEW -->
+    <div id="messagesView">
+      <h1>Support Messages</h1>
+
+      <div class="admin-toolbar">
+        <select id="filterCategory">
+          <option>All</option>
+          <option>Product</option>
+          <option>Order</option>
+          <option>Design</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div id="adminMessages"></div>
+    </div>
+
+    <!-- PRODUCTS VIEW -->
+    <div id="productsView" style="display:none;">
+      <h1>Add New Product</h1>
+
+      <label>Product Name</label>
+      <input id="prodName" type="text" placeholder="Black Printed T-Shirt" />
+
+      <label>Category</label>
+      <select id="prodCategory">
+        <option value="T-Shirts">T-Shirts</option>
+        <option value="Sweatshirts">Sweatshirts</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Price (€)</label>
+      <input id="prodPrice" type="number" step="0.01" placeholder="20" />
+
+      <label>Description</label>
+      <textarea id="prodDesc" placeholder="Write product description..."></textarea>
+
+      <label>Image URL(s) (separate by comma)</label>
+      <textarea id="prodImages" placeholder="https://i.ibb.co/example1.jpg, https://i.ibb.co/example2.jpg"></textarea>
+
+      <button class="save-btn" id="saveProduct">Save Product</button>
+    </div>
+
+  </div>
 </div>
 
 <!-- Image Modal -->
@@ -209,8 +353,8 @@ button:hover {
 <div id="confirmPopup" class="confirm-popup">
   <p id="confirmText">Are you sure?</p>
   <div class="confirm-buttons">
-    <button id="confirmYes" style="background:#00aa66;">Yes</button>
-    <button id="confirmNo" style="background:#400;">No</button>
+    <button id="confirmYes" class="confirm-yes">Yes</button>
+    <button id="confirmNo" class="confirm-no">No</button>
   </div>
 </div>
 
