@@ -13,171 +13,175 @@ const imgModal = document.getElementById("imgModal");
 const imgContent = document.getElementById("imgModalContent");
 
 let allMessages = [];
-let sortOrder = "desc"; // newest first
+let sortOrder = "desc";
 
-// ----------------------
-// 🔔 Toast Bildirim
-// ----------------------
-function showToast(text, type = "info") {
-  const oldToast = document.querySelector(".toast");
-  if (oldToast) oldToast.remove();
-
-  const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  toast.textContent = text;
+// ----------------------------------------
+// 🔔 Modern Toast Bildirim
+// ----------------------------------------
+function showToast(msg, type = "info") {
+  let toast = document.createElement("div");
+  toast.className = `custom-toast ${type}`;
+  toast.textContent = msg;
   document.body.appendChild(toast);
-
+  setTimeout(() => toast.classList.add("show"), 100);
   setTimeout(() => {
-    toast.style.opacity = "0";
-    setTimeout(() => toast.remove(), 300);
-  }, 2300);
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 2400);
 }
 
-// Toast CSS'i otomatik ekle
+// CSS ekle
 const style = document.createElement("style");
 style.innerHTML = `
-.toast {
+.custom-toast {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: #111;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(20,20,20,0.95);
   border: 1px solid #333;
   color: white;
-  padding: 14px 20px;
-  border-radius: 10px;
+  padding: 14px 22px;
+  border-radius: 12px;
   z-index: 999999;
-  opacity: 0.95;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
-  font-size: 15px;
-  transition: opacity .3s;
+  opacity: 0;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
-.toast.success { border-color: #00aa66; color: #00dd88; }
-.toast.error { border-color: #660000; color: #ff6666; }
+.custom-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.custom-toast.success { border-color: #00aa66; color: #00ff99; }
+.custom-toast.error { border-color: #880000; color: #ff6666; }
 `;
 document.head.appendChild(style);
 
-// ----------------------
+// ----------------------------------------
 // 📩 MESAJLARI YÜKLE
-// ----------------------
+// ----------------------------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
 
   const { data, error } = await supabase.from("messages").select("*");
   if (error) {
     console.error(error);
-    showToast("Error loading messages", "error");
+    showToast("Failed to load messages", "error");
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
     return;
   }
 
-  allMessages = data || [];
+  allMessages = Array.isArray(data) ? data : [];
   renderMessages();
 }
 
-// ----------------------
-// 🖼️ MESAJLARI LİSTELE
-// ----------------------
+// ----------------------------------------
+// 🖼️ MESAJLARI GÖSTER
+// ----------------------------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
 
   let list = [...allMessages];
 
-  const category = filterSelect.value;
-  if (category !== "All") list = list.filter((m) => m.category === category);
+  // kategori filtresi
+  const cat = filterSelect.value;
+  if (cat !== "All") list = list.filter((m) => m.category === cat);
 
+  // sıralama
   list.sort((a, b) => {
     const dA = new Date(a.date);
     const dB = new Date(b.date);
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
-  if (list.length === 0) {
+  if (!list.length) {
     msgContainer.innerHTML = "<p style='opacity:.6;'>No messages found.</p>";
     return;
   }
 
   for (const msg of list) {
-    const safeMsg = msg.message?.replace(/\n/g, "<br>") || "";
-
-    const card = document.createElement("div");
-    card.className = "msg-box";
-    card.innerHTML = `
-      <div class="msg-top">
-        <div>
-          <div class="msg-sender">${msg.name || "Unknown"}</div>
-          <div class="msg-email" style="opacity:.7;">${msg.email || ""}</div>
-          <div class="msg-category">${msg.category || "No Category"}</div>
-          <div class="msg-date">${msg.date || ""}</div>
+    const safeText = msg.message?.replace(/\n/g, "<br>") || "";
+    const html = `
+      <div class="msg-box" id="msg-${msg.id}">
+        <div class="msg-top">
+          <div>
+            <div class="msg-sender">${msg.name || "Unknown"}</div>
+            <div class="msg-email" style="opacity:.7;">${msg.email || ""}</div>
+            <div class="msg-category">${msg.category || "No Category"}</div>
+            <div class="msg-date">${msg.date || ""}</div>
+          </div>
+          <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
-        <button class="msg-delete" data-id="${msg.id}">Delete</button>
+        <div class="msg-text">${safeText}</div>
+        ${
+          msg.file
+            ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" alt="attachment">`
+            : ""
+        }
       </div>
-      <div class="msg-text">${safeMsg}</div>
-      ${
-        msg.file
-          ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" alt="attachment">`
-          : ""
-      }
     `;
-    msgContainer.appendChild(card);
+    msgContainer.insertAdjacentHTML("beforeend", html);
   }
 
-  bindEvents();
+  attachEvents();
 }
 
-// ----------------------
-// ⚡ BUTONLARI BAĞLA
-// ----------------------
-function bindEvents() {
-  // DELETE
+// ----------------------------------------
+// 🎛️ EVENTLER
+// ----------------------------------------
+function attachEvents() {
+  // delete
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = async () => {
-      const id = btn.getAttribute("data-id");
-      if (!confirm("Are you sure you want to delete this message?")) return;
+      const id = btn.dataset.id;
+      const ok = confirm("Are you sure you want to delete this message?");
+      if (!ok) return;
 
       const { error } = await supabase.from("messages").delete().eq("id", id);
       if (error) {
         console.error(error);
-        showToast("Failed to delete message", "error");
+        showToast("Delete failed!", "error");
       } else {
-        showToast("Message deleted", "success");
+        showToast("Message deleted ✅", "success");
         allMessages = allMessages.filter((m) => m.id !== id);
         renderMessages();
       }
     };
   });
 
-  // IMAGE MODAL
+  // image modal
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => {
-      imgContent.src = img.getAttribute("data-url");
+      imgContent.src = img.dataset.url;
       imgModal.style.display = "flex";
     };
   });
 }
 
-// ----------------------
-// ✕ MODAL KAPAT
-// ----------------------
+// ----------------------------------------
+// ✖ MODAL KAPAT
+// ----------------------------------------
 window.closeImgModal = function () {
   imgModal.style.display = "none";
 };
 
-// ----------------------
-// 🔁 SIRALAMA BUTONU
-// ----------------------
-sortButton.addEventListener("click", () => {
+// ----------------------------------------
+// 🔁 SIRALAMA
+// ----------------------------------------
+sortButton.onclick = async () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
     sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
   renderMessages();
-});
+};
 
-// ----------------------
+// ----------------------------------------
 // 🧩 FİLTRE
-// ----------------------
-filterSelect.addEventListener("change", renderMessages);
+// ----------------------------------------
+filterSelect.onchange = renderMessages;
 
-// ----------------------
+// ----------------------------------------
 // 🚀 BAŞLAT
-// ----------------------
+// ----------------------------------------
 loadMessages();
