@@ -9,9 +9,11 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
 const sortButton = document.getElementById("sortButton");
+const imgModal = document.getElementById("imgModal");
+const imgContent = document.getElementById("imgModalContent");
 
 let allMessages = [];
-let sortOrder = "desc"; // varsayılan: yeni → eski
+let sortOrder = "desc"; // desc = newest first
 
 // 🔹 MESAJLARI YÜKLE
 async function loadMessages() {
@@ -25,25 +27,26 @@ async function loadMessages() {
     return;
   }
 
-  allMessages = data || [];
+  // Güncel listeyi kaydet
+  allMessages = Array.isArray(data) ? data : [];
   renderMessages();
 }
 
-// 🔹 MESAJLARI LİSTELE
+// 🔹 MESAJLARI GÖSTER
 function renderMessages() {
   msgContainer.innerHTML = "";
 
   let list = [...allMessages];
 
-  // Filtreleme (kategori)
+  // Kategori filtresi
   const category = filterSelect.value;
   if (category !== "All") list = list.filter((m) => m.category === category);
 
-  // Sıralama
+  // Tarihe göre sırala
   list.sort((a, b) => {
-    const dA = new Date(a.date);
-    const dB = new Date(b.date);
-    return sortOrder === "desc" ? dB - dA : dA - dB;
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
   });
 
   if (list.length === 0) {
@@ -51,9 +54,12 @@ function renderMessages() {
     return;
   }
 
+  // Mesajları render et
   list.forEach((msg) => {
-    msgContainer.innerHTML += `
-      <div class="msg-box">
+    const safeMessage = msg.message ? msg.message.replace(/\n/g, "<br>") : "";
+
+    const html = `
+      <div class="msg-box" id="msg-${msg.id}">
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
@@ -64,36 +70,59 @@ function renderMessages() {
           <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
 
-        <div class="msg-text">${msg.message || ""}</div>
+        <div class="msg-text">${safeMessage}</div>
 
         ${
           msg.file
-            ? `<img src="${msg.file}" class="msg-img" onclick="window.open('${msg.file}', '_blank')">`
+            ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" alt="attachment">`
             : ""
         }
       </div>
     `;
+
+    msgContainer.insertAdjacentHTML("beforeend", html);
   });
 
-  // 🔹 Her render'dan sonra delete butonlarını aktif et
+  // Her render'dan sonra butonları yeniden bağla
+  bindEvents();
+}
+
+// 🔹 BUTON EVENTLERİ
+function bindEvents() {
+  // Delete
   document.querySelectorAll(".msg-delete").forEach((btn) => {
-    btn.addEventListener("click", async () => {
+    btn.onclick = async () => {
       const id = btn.getAttribute("data-id");
-      if (confirm("Delete this message?")) {
-        const { error } = await supabase.from("messages").delete().eq("id", id);
-        if (error) {
-          alert("Failed to delete message.");
-          console.error(error);
-        } else {
-          alert("Message deleted.");
-          loadMessages();
-        }
+      if (!confirm("Delete this message?")) return;
+
+      const { error } = await supabase.from("messages").delete().eq("id", id);
+      if (error) {
+        console.error(error);
+        alert("Failed to delete message.");
+      } else {
+        alert("Message deleted.");
+        // Anında listeden kaldır
+        allMessages = allMessages.filter((m) => m.id !== id);
+        renderMessages();
       }
-    });
+    };
+  });
+
+  // Image modal
+  document.querySelectorAll(".msg-img").forEach((img) => {
+    img.onclick = () => {
+      imgContent.src = img.getAttribute("data-url");
+      imgModal.style.display = "flex";
+    };
   });
 }
 
-// 🔹 SIRALAMA DÜĞMESİ
+// 🔹 MODAL KAPATMA
+window.closeImgModal = function () {
+  imgModal.style.display = "none";
+};
+
+// 🔹 SIRALAMA BUTONU
 sortButton.addEventListener("click", () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
@@ -104,5 +133,5 @@ sortButton.addEventListener("click", () => {
 // 🔹 FİLTRE MENÜSÜ
 filterSelect.addEventListener("change", renderMessages);
 
-// 🔹 BAŞLANGIÇTA YÜKLE
+// 🔹 SAYFA YÜKLENİNCE BAŞLAT
 loadMessages();
