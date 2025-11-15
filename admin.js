@@ -13,40 +13,82 @@ const imgModal = document.getElementById("imgModal");
 const imgContent = document.getElementById("imgModalContent");
 
 let allMessages = [];
-let sortOrder = "desc"; // desc = newest first
+let sortOrder = "desc"; // newest first
 
-// 🔹 MESAJLARI YÜKLE
+// ----------------------
+// 🔔 Toast Bildirim
+// ----------------------
+function showToast(text, type = "info") {
+  const oldToast = document.querySelector(".toast");
+  if (oldToast) oldToast.remove();
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = text;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 300);
+  }, 2300);
+}
+
+// Toast CSS'i otomatik ekle
+const style = document.createElement("style");
+style.innerHTML = `
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  z-index: 999999;
+  opacity: 0.95;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  font-size: 15px;
+  transition: opacity .3s;
+}
+.toast.success { border-color: #00aa66; color: #00dd88; }
+.toast.error { border-color: #660000; color: #ff6666; }
+`;
+document.head.appendChild(style);
+
+// ----------------------
+// 📩 MESAJLARI YÜKLE
+// ----------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
 
   const { data, error } = await supabase.from("messages").select("*");
-
   if (error) {
-    console.error("Load error:", error);
+    console.error(error);
+    showToast("Error loading messages", "error");
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
     return;
   }
 
-  // Güncel listeyi kaydet
-  allMessages = Array.isArray(data) ? data : [];
+  allMessages = data || [];
   renderMessages();
 }
 
-// 🔹 MESAJLARI GÖSTER
+// ----------------------
+// 🖼️ MESAJLARI LİSTELE
+// ----------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
 
   let list = [...allMessages];
 
-  // Kategori filtresi
   const category = filterSelect.value;
   if (category !== "All") list = list.filter((m) => m.category === category);
 
-  // Tarihe göre sırala
   list.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+    const dA = new Date(a.date);
+    const dB = new Date(b.date);
+    return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
   if (list.length === 0) {
@@ -54,61 +96,57 @@ function renderMessages() {
     return;
   }
 
-  // Mesajları render et
-  list.forEach((msg) => {
-    const safeMessage = msg.message ? msg.message.replace(/\n/g, "<br>") : "";
+  for (const msg of list) {
+    const safeMsg = msg.message?.replace(/\n/g, "<br>") || "";
 
-    const html = `
-      <div class="msg-box" id="msg-${msg.id}">
-        <div class="msg-top">
-          <div>
-            <div class="msg-sender">${msg.name || "Unknown"}</div>
-            <div class="msg-email" style="opacity:.7;">${msg.email || ""}</div>
-            <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${msg.date || ""}</div>
-          </div>
-          <button class="msg-delete" data-id="${msg.id}">Delete</button>
+    const card = document.createElement("div");
+    card.className = "msg-box";
+    card.innerHTML = `
+      <div class="msg-top">
+        <div>
+          <div class="msg-sender">${msg.name || "Unknown"}</div>
+          <div class="msg-email" style="opacity:.7;">${msg.email || ""}</div>
+          <div class="msg-category">${msg.category || "No Category"}</div>
+          <div class="msg-date">${msg.date || ""}</div>
         </div>
-
-        <div class="msg-text">${safeMessage}</div>
-
-        ${
-          msg.file
-            ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" alt="attachment">`
-            : ""
-        }
+        <button class="msg-delete" data-id="${msg.id}">Delete</button>
       </div>
+      <div class="msg-text">${safeMsg}</div>
+      ${
+        msg.file
+          ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" alt="attachment">`
+          : ""
+      }
     `;
+    msgContainer.appendChild(card);
+  }
 
-    msgContainer.insertAdjacentHTML("beforeend", html);
-  });
-
-  // Her render'dan sonra butonları yeniden bağla
   bindEvents();
 }
 
-// 🔹 BUTON EVENTLERİ
+// ----------------------
+// ⚡ BUTONLARI BAĞLA
+// ----------------------
 function bindEvents() {
-  // Delete
+  // DELETE
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = async () => {
       const id = btn.getAttribute("data-id");
-      if (!confirm("Delete this message?")) return;
+      if (!confirm("Are you sure you want to delete this message?")) return;
 
       const { error } = await supabase.from("messages").delete().eq("id", id);
       if (error) {
         console.error(error);
-        alert("Failed to delete message.");
+        showToast("Failed to delete message", "error");
       } else {
-        alert("Message deleted.");
-        // Anında listeden kaldır
+        showToast("Message deleted", "success");
         allMessages = allMessages.filter((m) => m.id !== id);
         renderMessages();
       }
     };
   });
 
-  // Image modal
+  // IMAGE MODAL
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => {
       imgContent.src = img.getAttribute("data-url");
@@ -117,12 +155,16 @@ function bindEvents() {
   });
 }
 
-// 🔹 MODAL KAPATMA
+// ----------------------
+// ✕ MODAL KAPAT
+// ----------------------
 window.closeImgModal = function () {
   imgModal.style.display = "none";
 };
 
-// 🔹 SIRALAMA BUTONU
+// ----------------------
+// 🔁 SIRALAMA BUTONU
+// ----------------------
 sortButton.addEventListener("click", () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
@@ -130,8 +172,12 @@ sortButton.addEventListener("click", () => {
   renderMessages();
 });
 
-// 🔹 FİLTRE MENÜSÜ
+// ----------------------
+// 🧩 FİLTRE
+// ----------------------
 filterSelect.addEventListener("change", renderMessages);
 
-// 🔹 SAYFA YÜKLENİNCE BAŞLAT
+// ----------------------
+// 🚀 BAŞLAT
+// ----------------------
 loadMessages();
