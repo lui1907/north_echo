@@ -5,154 +5,134 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔐 Admin kontrol
+// 🔒 Admin kontrolü
 const ADMINS = ["luivoss", "fisami"];
-let loggedUser = localStorage.getItem("loggedInUser");
+const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
   window.location.href = "index.html";
 }
 
-// ELEMENTLER
-const msgContainer = document.getElementById("adminMessages");
-const filterSelect = document.getElementById("filterCategory");
-const confirmPopup = document.getElementById("confirmPopup");
-const confirmYes = document.getElementById("confirmYes");
-const confirmNo = document.getElementById("confirmNo");
-const confirmText = document.getElementById("confirmText");
+// 🔹 Menü geçişleri
+const btnProducts = document.getElementById("btnProducts");
+const btnMessages = document.getElementById("btnMessages");
+const sectionProducts = document.getElementById("sectionProducts");
+const sectionMessages = document.getElementById("sectionMessages");
 
-let allMessages = [];
-let deleteTarget = null;
+btnProducts.onclick = () => {
+  sectionProducts.style.display = "block";
+  sectionMessages.style.display = "none";
+  btnProducts.classList.add("active");
+  btnMessages.classList.remove("active");
+  loadProducts();
+};
 
-// MESAJLARI ÇEK
+btnMessages.onclick = () => {
+  sectionProducts.style.display = "none";
+  sectionMessages.style.display = "block";
+  btnMessages.classList.add("active");
+  btnProducts.classList.remove("active");
+  loadMessages();
+};
+
+// 🧾 ÜRÜN EKLE
+document.getElementById("btnAddProduct").onclick = async () => {
+  const name = document.getElementById("pName").value.trim();
+  const price = parseFloat(document.getElementById("pPrice").value);
+  const category = document.getElementById("pCategory").value.trim();
+  const description = document.getElementById("pDescription").value.trim();
+  const images = document.getElementById("pImages").value.trim();
+  const sizes = document.getElementById("pSizes").value.trim();
+
+  if (!name || !price || !category || !description || !images) {
+    alert("Please fill all fields ❌");
+    return;
+  }
+
+  const { error } = await supabase.from("products").insert([{ 
+    name, price, category, description, images, sizes 
+  }]);
+
+  if (error) alert("Error adding product ❌");
+  else {
+    alert("✅ Product added successfully!");
+    loadProducts();
+  }
+};
+
+// 📦 ÜRÜNLERİ LİSTELE
+async function loadProducts() {
+  const container = document.getElementById("productsList");
+  container.innerHTML = "<p>Loading...</p>";
+
+  const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
+  if (error) {
+    container.innerHTML = "<p>Error loading products ❌</p>";
+    return;
+  }
+
+  if (!data.length) {
+    container.innerHTML = "<p>No products yet.</p>";
+    return;
+  }
+
+  container.innerHTML = data
+    .map(p => `
+      <div class="card">
+        <img src="${(p.images || '').split(',')[0]}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p>${p.category} — ₺${p.price}</p>
+        <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+      </div>
+    `)
+    .join("");
+}
+
+// 🗑 ÜRÜN SİL
+window.deleteProduct = async (id) => {
+  if (!confirm("Delete this product?")) return;
+  const { error } = await supabase.from("products").delete().eq("id", id);
+  if (error) alert("Delete failed ❌");
+  else loadProducts();
+};
+
+// 💬 MESAJLARI LİSTELE
 async function loadMessages() {
-  msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
-  const { data, error } = await supabase.from("messages").select("*");
+  const container = document.getElementById("messagesList");
+  container.innerHTML = "<p>Loading...</p>";
+
+  const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
   if (error) {
-    console.error(error);
-    msgContainer.innerHTML = "<p>Error loading messages.</p>";
-    return;
-  }
-  allMessages = data;
-  renderMessages();
-}
-
-// MESAJ GÖSTER
-function renderMessages() {
-  msgContainer.innerHTML = "";
-  let list = [...allMessages];
-  const cat = filterSelect.value;
-  if (cat !== "All") list = list.filter((m) => m.category === cat);
-
-  if (!list.length) {
-    msgContainer.innerHTML = "<p style='opacity:.6;'>No messages found.</p>";
+    container.innerHTML = "<p>Error loading messages ❌</p>";
     return;
   }
 
-  list.forEach((msg) => {
-    const html = `
-      <div class="msg-box" id="msg-${msg.id}">
-        <div class="msg-top">
-          <div>
-            <div class="msg-sender">${msg.name || "Unknown"}</div>
-            <div class="msg-email">${msg.email || ""}</div>
-            <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${msg.date || ""}</div>
-          </div>
-          <button class="msg-delete" data-id="${msg.id}">Delete</button>
-        </div>
-        <div class="msg-text">${msg.message || ""}</div>
-        ${
-          msg.file
-            ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" />`
-            : ""
-        }
-      </div>`;
-    msgContainer.insertAdjacentHTML("beforeend", html);
-  });
-
-  bindEvents();
-}
-
-// EVENTLER
-function bindEvents() {
-  document.querySelectorAll(".msg-delete").forEach((btn) => {
-    btn.onclick = () => openConfirmPopup(btn.dataset.id);
-  });
-  document.querySelectorAll(".msg-img").forEach((img) => {
-    img.onclick = () => openImage(img.dataset.url);
-  });
-}
-
-// SİLME ONAYI
-function openConfirmPopup(id) {
-  deleteTarget = id;
-  confirmText.textContent = "Delete this message?";
-  confirmPopup.classList.add("show");
-}
-confirmYes.onclick = async () => {
-  if (!deleteTarget) return;
-  confirmPopup.classList.remove("show");
-  const { error } = await supabase.from("messages").delete().eq("id", deleteTarget);
-  if (error) {
-    console.error(error);
-    showToast("Delete failed ❌", "error");
+  if (!data.length) {
+    container.innerHTML = "<p>No messages yet.</p>";
     return;
   }
-  allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
-  renderMessages();
-  showToast("Deleted permanently ✅", "success");
-};
-confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// GÖRSEL MODAL
-window.openImage = (url) => {
-  document.getElementById("imgModalContent").src = url;
-  document.getElementById("imgModal").style.display = "flex";
-};
-window.closeImgModal = () => {
-  document.getElementById("imgModal").style.display = "none";
-};
-
-// TOAST
-function showToast(msg, type = "info") {
-  let toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  toast.textContent = msg;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.classList.add("show"), 100);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 400);
-  }, 2000);
+  container.innerHTML = data
+    .map(
+      (m) => `
+      <div class="card">
+        <h3>${m.name} (${m.email})</h3>
+        <p><b>${m.category}</b></p>
+        <p>${m.message}</p>
+        ${m.file ? `<a href="${m.file}" target="_blank">📎 File</a>` : ""}
+        <button class="delete-btn" onclick="deleteMessage(${m.id})">Delete</button>
+      </div>`
+    )
+    .join("");
 }
 
-const style = document.createElement("style");
-style.innerHTML = `
-.toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%) scale(0.9);
-  background: rgba(20,20,20,0.95);
-  border: 1px solid #333;
-  padding: 16px 22px;
-  color: white;
-  border-radius: 10px;
-  opacity: 0;
-  transition: all .3s;
-  z-index: 999999;
-  font-size: 15px;
-}
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%,-50%) scale(1);
-}
-.toast.success { border-color:#00aa66; color:#00ff99; }
-.toast.error { border-color:#aa0000; color:#ff6666; }
-`;
-document.head.appendChild(style);
+// 🗑 MESAJ SİL
+window.deleteMessage = async (id) => {
+  if (!confirm("Delete this message?")) return;
+  const { error } = await supabase.from("messages").delete().eq("id", id);
+  if (error) alert("Delete failed ❌");
+  else loadMessages();
+};
 
-// YÜKLE
-filterSelect.onchange = renderMessages;
-loadMessages();
+// 🔄 İlk yükleme
+loadProducts();
