@@ -16,12 +16,12 @@ const ADMINS = ["luivoss", "fisami"];
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  // Uyarısız direkt ana sayfaya
+  // Uyarı göstermeden direkt ana sayfaya
   window.location.href = "index.html";
 }
 
 // -----------------------------------------
-// 📥 Elements
+// 📥 DOM Elements
 // -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
@@ -36,15 +36,12 @@ let sortOrder = "desc"; // desc = newest first
 let deleteTarget = null;
 
 // -----------------------------------------
-// 🔄 Load Messages (default: newest first)
+// 🔄 Load Messages (tek sefer, sonra sadece JS ile sırala)
 // -----------------------------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
 
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .order("created_at", { ascending: false }); // 🔑 burada DB tarafında da yeni → eski
+  const { data, error } = await supabase.from("messages").select("*");
 
   if (error) {
     console.error("Load error:", error);
@@ -52,7 +49,12 @@ async function loadMessages() {
     return;
   }
 
-  allMessages = data || [];
+  // Her mesaja kendi index'ini koyuyoruz (hangi sırada geldiyse)
+  allMessages = (data || []).map((m, index) => ({
+    ...m,
+    _i: index, // 🔑 sadece buna göre sıralayacağız
+  }));
+
   renderMessages();
 }
 
@@ -70,15 +72,14 @@ function renderMessages() {
     list = list.filter((m) => m.category === cat);
   }
 
-  // 🔑 Sıralama sadece created_at üzerinden
+  // 🔑 Sıralama SIRF _i'ye göre (created_at yok, date parse yok)
   list.sort((a, b) => {
-    const dA = new Date(a.created_at || 0);
-    const dB = new Date(b.created_at || 0);
-
     if (sortOrder === "desc") {
-      return dB - dA; // yeni → eski
+      // En son gelen en üstte
+      return b._i - a._i;
     } else {
-      return dA - dB; // eski → yeni
+      // İlk gelen en üstte
+      return a._i - b._i;
     }
   });
 
@@ -114,7 +115,7 @@ function renderMessages() {
 }
 
 // -----------------------------------------
-// 🖱️ Bind Events
+// 🖱️ Button / Image Events
 // -----------------------------------------
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
@@ -127,7 +128,7 @@ function bindEvents() {
 }
 
 // -----------------------------------------
-// 🧨 Delete Confirmation
+// 🧨 Delete Confirmation Popup
 // -----------------------------------------
 function openConfirmPopup(id) {
   deleteTarget = id;
@@ -177,7 +178,7 @@ if (sortButton) {
     sortOrder = sortOrder === "desc" ? "asc" : "desc";
     sortButton.textContent =
       sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
-    renderMessages(); // sadece array üzerinde yeniden sırala
+    renderMessages(); // sadece JS içinde yeniden sırala
   };
 }
 
