@@ -94,33 +94,54 @@ function openConfirmPopup(id) {
   confirmPopup.classList.add("show");
 }
 
-// ✅ Kalıcı silme (Supabase tablosundan da)
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
 
-  // int veya uuid fark etmez
-  let condition = deleteTarget;
-  if (!isNaN(deleteTarget)) condition = parseInt(deleteTarget);
+  // ✅ Supabase'den kalıcı olarak sil
+  try {
+    // 1️⃣ Önce kontrol edelim kayıt var mı
+    const { data: existing, error: fetchError } = await supabase
+      .from("messages")
+      .select("*")
+      .eq("id", deleteTarget);
 
-  const { error } = await supabase
-    .from("messages")
-    .delete()
-    .eq("id", condition);
+    if (fetchError) {
+      console.error("Fetch error:", fetchError);
+      showToast("Fetch failed ❌", "error");
+      confirmPopup.classList.remove("show");
+      return;
+    }
 
-  confirmPopup.classList.remove("show");
+    if (!existing || existing.length === 0) {
+      showToast("Message not found ❌", "error");
+      confirmPopup.classList.remove("show");
+      return;
+    }
 
-  if (error) {
-    console.error("Delete error:", error);
-    showToast("Failed to delete ❌", "error");
-    return;
+    // 2️⃣ Şimdi gerçekten sil
+    const { error: deleteError } = await supabase
+      .from("messages")
+      .delete()
+      .eq("id", deleteTarget);
+
+    confirmPopup.classList.remove("show");
+
+    if (deleteError) {
+      console.error("Delete error:", deleteError);
+      showToast("Supabase delete failed ❌", "error");
+      return;
+    }
+
+    // 3️⃣ Arayüzü yenile
+    allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
+    renderMessages();
+    showToast("Message deleted permanently ✅", "success");
+  } catch (e) {
+    console.error("Unexpected error:", e);
+    showToast("Unexpected error ❌", "error");
+    confirmPopup.classList.remove("show");
   }
-
-  allMessages = allMessages.filter((m) => m.id !== condition);
-  renderMessages();
-  showToast("Message deleted ✅", "success");
 };
-
-confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
 // 🖼️ Image modal
 window.openImage = (url) => {
