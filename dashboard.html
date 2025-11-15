@@ -1,33 +1,29 @@
 <!doctype html>
 <html lang="en">
-    <link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Dashboard — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
+<link rel="stylesheet" href="support.css">
+<script src="support.js" defer></script>
 
 <style>
-
 body {
     margin:0;
     padding:0;
     color:white;
 }
-
 /* DASHBOARD WRAPPER */
 .dashboard {
     max-width: 1200px;
     margin: 100px auto;
     padding: 20px;
 }
-
 /* WELCOME CARD */
 .welcome-card {
     background: rgba(15,15,15,0.8);
@@ -40,7 +36,6 @@ body {
     align-items: center;
     gap: 20px;
 }
-
 /* Avatar */
 .welcome-avatar {
     width: 72px;
@@ -49,7 +44,6 @@ body {
     object-fit: cover;
     border: 3px solid #00aa66;
 }
-
 /* Welcome text */
 .welcome-info h2 {
     margin: 0;
@@ -60,7 +54,6 @@ body {
     opacity: 0.8;
     margin: 5px 0 0 0;
 }
-
 /* PANEL CARD GRID */
 .panel-grid {
     margin-top: 40px;
@@ -68,7 +61,6 @@ body {
     grid-template-columns: repeat(3,1fr);
     gap: 25px;
 }
-
 /* Each card */
 .panel-card {
     background: rgba(18,18,18,0.9);
@@ -79,24 +71,20 @@ body {
     transition: 0.25s;
     cursor: pointer;
 }
-
 .panel-card:hover {
     transform: translateY(-4px);
     border-color: #00aa66;
 }
-
 /* Card title */
 .panel-card h3 {
     margin: 0 0 8px 0;
     font-size: 20px;
 }
-
 /* Card description */
 .panel-card p {
     opacity: 0.75;
     font-size: 14px;
 }
-
 </style>
 </head>
 
@@ -121,7 +109,7 @@ body {
   </div>
 </header>
 
-
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -130,8 +118,6 @@ body {
   <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
-
-
 
 <!-- DASHBOARD -->
 <div class="dashboard">
@@ -148,46 +134,23 @@ body {
 
   <!-- PANEL GRID -->
   <div class="panel-grid">
-
     <a href="profile.html" class="panel-card">
       <h3>Profile</h3>
       <p>View & edit your personal information</p>
     </a>
-
     <a href="messages.html" class="panel-card">
       <h3>Messages</h3>
       <p>Check your received messages</p>
     </a>
-
     <a href="settings.html" class="panel-card">
       <h3>Settings</h3>
       <p>Manage your account & preferences</p>
     </a>
-
   </div>
 
 </div>
 
-
-<script>
-// LOAD USER INFO
-const currentUser = localStorage.getItem("loggedInUser");
-if(!currentUser) window.location.href = "login.html";
-
-const userData = JSON.parse(localStorage.getItem("user_" + currentUser));
-
-document.getElementById("dashName").innerText = userData.fullname;
-document.getElementById("dashAvatar").src = userData.avatar || "assets/default-avatar.png";
-document.getElementById("userAvatar").src = userData.avatar || "assets/default-avatar.png";
-
-// Avatar menu
-document.getElementById("userAvatar").addEventListener("click", () => {
-  document.getElementById("avatarMenu").style.display =
-    document.getElementById("avatarMenu").style.display === "flex" ? "none" : "flex";
-});
-</script>
-
-    <!-- 💬 SUPPORT BUTTON -->
+<!-- 💬 SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
   <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
 </div>
@@ -200,7 +163,6 @@ document.getElementById("userAvatar").addEventListener("click", () => {
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
     <input type="text" id="supName" placeholder="John Doe">
 
@@ -217,14 +179,55 @@ document.getElementById("userAvatar").addEventListener("click", () => {
     <button class="sup-send" onclick="sendSupportMessage()">
       Send Message →
     </button>
-
   </div>
 </div>
 
-<!-- SUPPORT CSS + JS -->
-<link rel="stylesheet" href="support.css">
-<script src="support.js"></script>
+<!-- 💡 Supabase + User Info Script -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 🟩 Get logged-in username
+const currentUser = localStorage.getItem("loggedInUser");
+if (!currentUser) {
+  window.location.href = "login.html";
+}
+
+// 🟦 Fetch fullname from Supabase
+const { data, error } = await supabase
+  .from("users")
+  .select("fullname")
+  .eq("username", currentUser)
+  .single();
+
+if (error) {
+  console.error(error);
+  document.getElementById("dashName").innerText = currentUser;
+} else {
+  document.getElementById("dashName").innerText = data.fullname || currentUser;
+}
+
+// 🟢 Avatar defaults
+document.getElementById("dashAvatar").src = "assets/default-avatar.png";
+document.getElementById("userAvatar").src = "assets/default-avatar.png";
+
+// 🔴 Logout
+window.logout = function () {
+  localStorage.removeItem("loggedInUser");
+  localStorage.removeItem("loggedInFullName");
+  window.location.href = "login.html";
+};
+
+// ⚪ Avatar menu toggle
+document.getElementById("userAvatar").addEventListener("click", () => {
+  const menu = document.getElementById("avatarMenu");
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+});
+</script>
 
 </body>
 </html>
