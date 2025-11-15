@@ -17,19 +17,55 @@ body {
   padding: 0;
 }
 
+/* === HEADER === */
+.header {
+  background: #0d0d0d;
+  border-bottom: 1px solid #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+}
+.header .logo {
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+.header .right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.header .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* === PANEL === */
+.admin-wrapper {
+  margin-top: 90px;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 20px;
+}
+
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #222;
+  margin-bottom: 20px;
 }
-
 .admin-header h1 {
-  margin: 0;
   font-size: 22px;
+  margin: 0;
 }
-
 select {
   background: #141414;
   color: white;
@@ -38,8 +74,11 @@ select {
   padding: 6px 10px;
 }
 
+/* === MESSAGES === */
 #adminMessages {
-  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .msg-box {
@@ -47,9 +86,7 @@ select {
   border: 1px solid #333;
   border-radius: 12px;
   padding: 15px;
-  margin-bottom: 15px;
   transition: .2s;
-  cursor: pointer;
 }
 .msg-box:hover { background: #181818; }
 
@@ -57,9 +94,7 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
 }
-
 .msg-sender {
   font-weight: bold;
   font-size: 16px;
@@ -83,36 +118,21 @@ select {
 }
 .msg-img {
   width: 100%;
-  max-width: 400px;
+  max-width: 250px;
   border-radius: 10px;
   margin-top: 10px;
+  display: block;
 }
-
-.msg-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.msg-delete {
-  background: #b30000;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: .2s;
-}
-.msg-delete:hover { background: #d00000; }
 
 /* 🔘 unread indicator */
 .unread-dot {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: white;
   border-radius: 50%;
-  margin-right: 5px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* ✅ read/unread visuals */
@@ -121,7 +141,7 @@ select {
   background: #111;
 }
 .msg-box.read {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* 🧨 confirm popup */
@@ -175,23 +195,34 @@ select {
 
 <body>
 
-<div class="admin-header">
-  <h1>Admin Panel</h1>
-  <div>
-    <label for="filterCategory">Filter:</label>
-    <select id="filterCategory">
-      <option>All</option>
-      <option>Design Upload</option>
-      <option>Order</option>
-      <option>Product</option>
-      <option>Website</option>
-      <option>Other</option>
-    </select>
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒</a>
+    <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
   </div>
-</div>
+</header>
 
-<!-- Messages -->
-<div id="adminMessages"></div>
+<!-- ADMIN CONTENT -->
+<div class="admin-wrapper">
+  <div class="admin-header">
+    <h1>Admin Panel</h1>
+    <div>
+      <label for="filterCategory">Filter:</label>
+      <select id="filterCategory">
+        <option>All</option>
+        <option>Design Upload</option>
+        <option>Order</option>
+        <option>Product</option>
+        <option>Website</option>
+        <option>Other</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="adminMessages"></div>
+</div>
 
 <!-- Confirm Popup -->
 <div id="confirmPopup">
