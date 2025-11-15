@@ -37,9 +37,11 @@ function renderMessages() {
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
+  // ✅ Tarih sıralaması düzgün çalışır (ISO tarih destekli)
   list.sort((a, b) => {
     const dA = new Date(a.date);
     const dB = new Date(b.date);
+    if (isNaN(dA) || isNaN(dB)) return 0;
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -56,7 +58,7 @@ function renderMessages() {
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${msg.date || ""}</div>
+            <div class="msg-date">${new Date(msg.date).toLocaleString() || ""}</div>
           </div>
           <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
@@ -91,19 +93,34 @@ function openConfirmPopup(id) {
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
+
+// ✅ Kalıcı silme (Supabase tablosundan da)
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
+
+  // int veya uuid fark etmez
+  let condition = deleteTarget;
+  if (!isNaN(deleteTarget)) condition = parseInt(deleteTarget);
+
   const { error } = await supabase
     .from("messages")
     .delete()
-    .eq("id", deleteTarget);
+    .eq("id", condition);
+
   confirmPopup.classList.remove("show");
-  if (error) console.error(error);
-  allMessages = allMessages.filter((m) => m.id !== deleteTarget);
+
+  if (error) {
+    console.error("Delete error:", error);
+    showToast("Failed to delete ❌", "error");
+    return;
+  }
+
+  allMessages = allMessages.filter((m) => m.id !== condition);
   renderMessages();
   showToast("Message deleted ✅", "success");
 };
-confirmNo.onclick = () => (confirmPopup.classList.remove("show"));
+
+confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
 // 🖼️ Image modal
 window.openImage = (url) => {
