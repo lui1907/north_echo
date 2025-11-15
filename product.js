@@ -1,63 +1,72 @@
-// Ürün veri listesi (örnek)
-const products = {
-    "white_tshirt": {
-        name: "White Minimal Tee",
-        price: 459,
-        images: [
-            "assets/white/main.jpg",
-            "assets/white/1.jpg",
-            "assets/white/2.jpg",
-            "assets/white/3.jpg"
-        ]
-    }
-};
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// URL’den ürün ID al
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// URL'den ürün id'si al
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
 
-// Ürün bilgisi
-const product = products[productId];
+// Ana container
+const container = document.querySelector(".product-page");
 
-if (!product) {
-    document.querySelector(".product-page").innerHTML = "<h2>Product not found</h2>";
-} else {
+// Ürünü getir
+async function loadProduct() {
+  if (!productId) {
+    container.innerHTML = "<h2>Product not found ❌</h2>";
+    return;
+  }
 
-    // HTML oluştur
-    document.querySelector(".product-page").innerHTML = `
-        <div class="product-left">
-            <img src="${product.images[0]}" id="mainImage" class="product-main-img">
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", productId)
+    .single();
 
-            <div class="product-thumbnails">
-                ${product.images.map(img => `
-                    <img src="${img}" onclick="changeImage('${img}')">
-                `).join("")}
-            </div>
-        </div>
+  if (error || !data) {
+    console.error("Product fetch error:", error);
+    container.innerHTML = "<h2>Product not found ❌</h2>";
+    return;
+  }
 
-        <div class="product-right">
-            <h2 class="product-title">${product.name}</h2>
-            <p class="price">₺${product.price}</p>
+  const product = data;
+  const images = product.images ? product.images.split(",") : [];
 
-            <label>Beden:</label>
-            <select id="sizeSelect">
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-            </select>
+  container.innerHTML = `
+    <div class="product-left">
+      <img src="${images[0] || 'assets/default-product.png'}" id="mainImage" class="product-main-img">
 
-            <button class="add-cart-btn" onclick="addToCart('${product.name}', ${product.price}, '${product.images[0]}')">
-                Add to Cart
-            </button>
-        </div>
-    `;
+      <div class="product-thumbnails">
+        ${images.map(img => `
+          <img src="${img}" onclick="changeImage('${img}')">
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="product-right">
+      <h2 class="product-title">${product.name}</h2>
+      <p class="price">€${product.price}</p>
+
+      <p class="product-desc">${product.description || ""}</p>
+
+      <label>Size:</label>
+      <select id="sizeSelect">
+        ${(product.sizes || "S,M,L,XL").split(",").map(s => `<option>${s.trim()}</option>`).join("")}
+      </select>
+
+      <button class="add-cart-btn" onclick="addToCart('${product.name}', ${product.price}, '${images[0]}')">
+        Add to Cart
+      </button>
+    </div>
+  `;
 }
 
-// Thumbnail tıklayınca büyük resmi değiştir
-function changeImage(src) {
-    document.getElementById("mainImage").src = src;
-}
+// Thumbnail tıklayınca ana görseli değiştir
+window.changeImage = (src) => {
+  document.getElementById("mainImage").src = src;
+};
 
-
-//
+// Ürünü yükle
+loadProduct();
