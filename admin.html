@@ -1,191 +1,290 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Admin Panel — North Echo</title>
 
-<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="support.css" />
+
 <style>
 body {
-  margin: 0;
   background: #000;
   color: #fff;
   font-family: 'Poppins', sans-serif;
+  margin: 0;
+  overflow-x: hidden;
 }
 
-/* HEADER */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* === HEADER === */
+header {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 60px;
   background: #0d0d0d;
   border-bottom: 1px solid #222;
-  padding: 15px 25px;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 999;
-}
-.logo { color: #fff; text-decoration: none; font-size: 20px; font-weight: 700; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #333; }
-
-/* LAYOUT */
-.admin-wrapper {
-  display: flex;
-  max-width: 1200px;
-  margin: 100px auto 50px;
-  gap: 20px;
-  padding: 0 20px;
-}
-.admin-left {
-  width: 230px;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 15px;
-  height: fit-content;
-}
-.admin-item {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #333;
-  background: #141414;
-  text-align: center;
-  cursor: pointer;
-  transition: .2s;
-}
-.admin-item:hover { background: #1b1b1b; }
-.admin-item.active { background: #00aa66; color: white; }
-
-.admin-right {
-  flex: 1;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 14px;
-  padding: 25px;
-  min-height: 600px;
-}
-
-/* FORM STYLING */
-.input-box {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  margin-bottom: 10px;
-  background: #111;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 10px;
-}
-textarea.input-box { min-height: 80px; resize: vertical; }
-
-.save-btn {
-  background: #00aa66;
-  border: none;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* MESSAGE BOX */
-.msg-box {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 15px;
-}
-.msg-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px;
+  z-index: 99;
 }
-.msg-img { margin-top:10px; width:200px; border-radius:10px; cursor:pointer; }
+.logo { color: #fff; font-weight: 700; font-size: 20px; text-decoration: none; }
+.avatar { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; }
 
-/* PRODUCTS */
-.product-box {
+/* === LAYOUT === */
+.admin-container {
   display: flex;
+  margin-top: 70px;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: 220px;
+  background: #0d0d0d;
+  border-right: 1px solid #222;
+  height: calc(100vh - 70px);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sidebar button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.sidebar button:hover, .sidebar button.active {
+  background: #00aa66;
+  color: #fff;
+}
+
+/* === CONTENT === */
+.admin-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  max-height: calc(100vh - 70px);
+}
+
+/* === MESSAGE CARDS === */
+.message-card {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+.message-card h3 { margin: 0; font-size: 18px; }
+.message-card p { opacity: 0.9; margin: 6px 0; }
+.message-card img {
+  width: 140px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.delete-btn {
+  background: #400000;
+  border: 1px solid #660000;
+  color: #ff6666;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.delete-btn:hover { background: #660000; }
+
+/* === TOAST === */
+.toast {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(20,20,20,0.95);
+  border: 1px solid #333;
+  padding: 16px 22px;
+  color: white;
+  border-radius: 10px;
+  opacity: 0;
+  transition: all .3s;
+  z-index: 9999;
+  font-size: 15px;
+}
+.toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.toast.success { border-color:#00aa66; color:#00ff99; }
+.toast.error { border-color:#aa0000; color:#ff5555; }
+
+/* === CONFIRM POPUP === */
+.confirm-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
   align-items: center;
+  z-index: 99999;
+}
+.confirm-box {
   background: #111;
   border: 1px solid #333;
   border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 25px 30px;
+  text-align: center;
 }
-.product-box img {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
-  margin-right: 10px;
-  object-fit: cover;
-}
-.product-box button {
-  background: #400;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  margin-left: auto;
-  cursor: pointer;
-}
-.toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%) scale(.9);
-  background: #111;
-  padding: 14px 22px;
-  border: 1px solid #333;
-  color: #fff;
-  border-radius: 8px;
-  opacity: 0;
-  transition: .2s;
-  z-index: 9999;
-}
-.toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-.toast.success { border-color: #00aa66; color: #00ff99; }
-.toast.error { border-color: #a00; color: #ff6666; }
-
-select {
-  background: #111;
+.confirm-box p { margin-bottom: 20px; }
+.confirm-buttons { display: flex; gap: 10px; justify-content: center; }
+.confirm-buttons button {
+  background: #222;
+  border: 1px solid #444;
+  padding: 8px 16px;
   color: white;
-  border: 1px solid #333;
-  padding: 8px 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.confirm-buttons button:hover {
+  background: #00aa66;
+  border-color: #00ff99;
 }
 </style>
 </head>
-<body>
 
-<header class="header">
-  <a href="index.html" class="logo">NORTH ECHO</a>
-  <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+<body>
+<header>
+  <a href="#" class="logo">NORTH ECHO — Admin</a>
+  <img src="assets/default-avatar.png" class="avatar" id="adminAvatar">
 </header>
 
-<div class="admin-wrapper">
-  <div class="admin-left">
-    <div class="admin-item active" onclick="showTab('messages')">Messages</div>
-    <div class="admin-item" onclick="showTab('products')">Add Product</div>
+<div class="admin-container">
+  <div class="sidebar">
+    <button class="active" id="btnMessages">📨 Messages</button>
+    <button id="btnProducts">🛍️ Products</button>
   </div>
 
-  <div class="admin-right" id="adminContent">
-    <h2>Messages</h2>
-    <select id="filterCategory">
-      <option>All</option>
-      <option>Product</option>
-      <option>Order</option>
-      <option>Design</option>
-      <option>Other</option>
-    </select>
-    <div id="adminMessages"></div>
+  <div class="admin-content">
+    <div id="messagesPanel">
+      <h2>Support Messages</h2>
+      <div id="messagesList"><p>Loading messages...</p></div>
+    </div>
+
+    <div id="productsPanel" style="display:none;">
+      <h2>Products</h2>
+      <p>Product management panel coming soon 👕</p>
+    </div>
   </div>
 </div>
 
-<script type="module" src="admin.js"></script>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// === ELEMENTLER ===
+const messagesList = document.getElementById("messagesList");
+const btnMessages = document.getElementById("btnMessages");
+const btnProducts = document.getElementById("btnProducts");
+const messagesPanel = document.getElementById("messagesPanel");
+const productsPanel = document.getElementById("productsPanel");
+
+// === PANEL GEÇİŞİ ===
+btnMessages.onclick = () => {
+  btnMessages.classList.add("active");
+  btnProducts.classList.remove("active");
+  messagesPanel.style.display = "block";
+  productsPanel.style.display = "none";
+  loadMessages();
+};
+btnProducts.onclick = () => {
+  btnProducts.classList.add("active");
+  btnMessages.classList.remove("active");
+  messagesPanel.style.display = "none";
+  productsPanel.style.display = "block";
+};
+
+// === MESAJLARI YÜKLE ===
+async function loadMessages() {
+  messagesList.innerHTML = "<p>Loading...</p>";
+  const { data, error } = await supabase.from("messages").select("*").order("date", { ascending: false });
+  if (error) {
+    console.error("Load error:", error);
+    messagesList.innerHTML = "<p>Error loading messages ❌</p>";
+    return;
+  }
+
+  if (!data.length) {
+    messagesList.innerHTML = "<p>No messages found.</p>";
+    return;
+  }
+
+  messagesList.innerHTML = "";
+  data.forEach(msg => {
+    const img = msg.file ? `<img src="${msg.file}" alt="attachment">` : "";
+    messagesList.innerHTML += `
+      <div class="message-card">
+        <h3>${msg.name}</h3>
+        <p><b>Email:</b> ${msg.email}</p>
+        <p><b>Category:</b> ${msg.category}</p>
+        <p>${msg.message}</p>
+        ${img}
+        <p style="opacity:.6;font-size:13px;">${msg.date}</p>
+        <button class="delete-btn" onclick="deleteMessage('${msg.id}')">Delete</button>
+      </div>`;
+  });
+}
+
+// === MESAJ SİL ===
+window.deleteMessage = async function (id) {
+  const popup = document.createElement("div");
+  popup.className = "confirm-popup";
+  popup.innerHTML = `
+    <div class="confirm-box">
+      <p>Delete this message?</p>
+      <div class="confirm-buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+      </div>
+    </div>`;
+  document.body.appendChild(popup);
+
+  document.getElementById("noBtn").onclick = () => popup.remove();
+  document.getElementById("yesBtn").onclick = async () => {
+    const { error } = await supabase.from("messages").delete().eq("id", id);
+    popup.remove();
+    if (error) {
+      showToast("Failed to delete ❌", "error");
+    } else {
+      showToast("Deleted successfully ✅", "success");
+      loadMessages();
+    }
+  };
+};
+
+// === TOAST ===
+function showToast(msg, type = "info") {
+  const t = document.createElement("div");
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add("show"), 50);
+  setTimeout(() => {
+    t.classList.remove("show");
+    setTimeout(() => t.remove(), 400);
+  }, 2000);
+}
+
+// === BAŞLAT ===
+loadMessages();
+</script>
 </body>
 </html>
