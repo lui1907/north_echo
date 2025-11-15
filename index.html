@@ -130,6 +130,7 @@ if (username) {
 <div id="supportBtn" onclick="toggleSupportPanel()">
   <img
     src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg=="
+    alt="support"
   />
 </div>
 
@@ -149,12 +150,18 @@ if (username) {
 
     <label>Category *</label>
     <select id="supCategory">
-      <option value="Design Upload">Design Upload</option>
+      <option value="Design">Design / Custom Request</option>
+      <option value="Order">Order or Delivery</option>
+      <option value="Product">Product Information</option>
+      <option value="Website">Website Issue</option>
       <option value="Other">Other</option>
     </select>
 
     <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <textarea
+      id="supMsg"
+      placeholder="Write your message..."
+    ></textarea>
 
     <label>Attach File (optional)</label>
     <input
@@ -169,9 +176,13 @@ if (username) {
   </div>
 </div>
 
-<!-- SUPPORT CSS + JS -->
-<link rel="stylesheet" href="support.css" />
+<!-- SUPPORT JS -->
 <script type="module" src="support.js"></script>
+
+
+<!-- SUPPORT CSS -->
+<link rel="stylesheet" href="support.css" />
+
 
 
 </body>
