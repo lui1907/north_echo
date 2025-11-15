@@ -9,28 +9,23 @@ const SUPABASE_KEY =
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // -----------------------------------------
-// 🔐 Admin Access Check
+// 🔐 Admin Access
 // -----------------------------------------
 const ADMINS = ["luivoss", "fisami"];
-let loggedUser = localStorage.getItem("loggedInUser");
-
+const loggedUser = localStorage.getItem("loggedInUser");
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
   window.location.href = "index.html";
 }
 
 // -----------------------------------------
-// 📥 Elements
+// 📨 Fetch Messages
 // -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
 let allMessages = [];
 
-// -----------------------------------------
-// 📦 Load Messages
-// -----------------------------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
-
   const { data, error } = await supabase.from("messages").select("*");
 
   if (error) {
@@ -59,14 +54,10 @@ function renderMessages() {
   }
 
   list.forEach((msg) => {
-    const readClass = msg.read ? "read" : "unread";
-    const dot = msg.read ? "" : `<span class="unread-dot"></span>`;
-
     const html = `
-      <div class="msg-box ${readClass}" id="msg-${msg.id}">
+      <div class="msg-box" id="msg-${msg.id}">
         <div class="msg-top">
-          <div onclick="markAsRead('${msg.id}')" style="cursor:pointer;">
-            ${dot}
+          <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
@@ -89,11 +80,11 @@ function renderMessages() {
 }
 
 // -----------------------------------------
-// 🔘 Bind Events
+// 🖱️ Events
 // -----------------------------------------
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
-    btn.onclick = () => confirmDelete(btn.dataset.id);
+    btn.onclick = () => deleteMessage(btn.dataset.id);
   });
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
@@ -101,25 +92,9 @@ function bindEvents() {
 }
 
 // -----------------------------------------
-// ✅ Mark as Read (Supabase Save)
-// -----------------------------------------
-window.markAsRead = async function (id) {
-  const msgEl = document.getElementById(`msg-${id}`);
-  if (msgEl && msgEl.classList.contains("read")) return; // zaten okunmuş
-
-  // frontend değiştir
-  msgEl.classList.remove("unread");
-  msgEl.classList.add("read");
-
-  // Supabase'e kaydet
-  const { error } = await supabase.from("messages").update({ read: true }).eq("id", id);
-  if (error) console.error("Read update error:", error);
-};
-
-// -----------------------------------------
 // 🗑️ Delete Message
 // -----------------------------------------
-async function confirmDelete(id) {
+async function deleteMessage(id) {
   if (!confirm("Delete this message?")) return;
 
   const { error } = await supabase.from("messages").delete().eq("id", id);
