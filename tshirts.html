@@ -1,224 +1,216 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>T-Shirts — North Echo</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>T-Shirts — North Echo</title>
 
-  <style>
-    body {
-      background: #000;
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
-      background: #0a0a0a;
-      border-bottom: 1px solid #111;
-    }
-
-    header .logo {
-      font-size: 20px;
-      color: #00ff99;
-      font-weight: bold;
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
-
-    nav a {
-      margin-left: 20px;
-      color: #ccc;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-    nav a:hover { color: #00ff99; }
-
-    .filter-bar {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 30px 0;
-      flex-wrap: wrap;
-    }
-
-    .filter-bar button {
-      background: #0f0f0f;
-      border: 1px solid #222;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: 0.25s;
-    }
-
-    .filter-bar button:hover,
-    .filter-bar button.active {
-      background: #00aa66;
-      color: #fff;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 25px;
-      padding: 0 40px 100px;
-    }
-
-    .product-card {
-      background: #0f0f0f;
-      border: 1px solid #1a1a1a;
-      border-radius: 12px;
-      overflow: hidden;
-      text-align: center;
-      padding-bottom: 15px;
-      transition: transform 0.3s ease;
-    }
-
-    .product-card:hover { transform: translateY(-5px); }
-
-    .product-card img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-bottom: 1px solid #111;
-    }
-
-    .product-card h3 {
-      margin: 15px 0 5px;
-      font-size: 16px;
-      color: #00ff99;
-    }
-
-    .product-card p {
-      font-size: 14px;
-      color: #ccc;
-      margin: 0 15px 10px;
-    }
-
-    .product-card .price {
-      color: #fff;
-      font-weight: bold;
-      font-size: 15px;
-    }
-
-    /* Support button */
-    .support-btn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #00aa66;
-      color: #fff;
-      border: none;
-      padding: 14px 20px;
-      border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(0,255,150,0.3);
-      transition: 0.3s;
-      z-index: 999;
-    }
-
-    .support-btn:hover {
-      background: #00cc88;
-      transform: scale(1.05);
-    }
-  </style>
+<link rel="stylesheet" href="style.css" />
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<link rel="stylesheet" href="support.css">
+<script src="support.js" defer></script>
 </head>
 
 <body>
-  <header>
-    <a href="index.html" class="logo">NORTH ECHO</a>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="tshirts.html" style="color:#00ff99;">T-Shirts</a>
-      <a href="sweatshirts.html">Sweatshirts</a>
-      <a href="submit-design.html">Submit</a>
-    </nav>
-  </header>
 
-  <div class="filter-bar">
-    <button class="active" onclick="filterCategory('T-Shirts')">All T-Shirts</button>
-    <button onclick="filterCategory('White')">White</button>
-    <button onclick="filterCategory('Black')">Black</button>
-    <button onclick="filterCategory('Printed')">Printed</button>
-    <button onclick="filterCategory('Minimal')">Minimal</button>
+<!-- HEADER -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<!-- PAGE TITLE -->
+<h1 class="page-title">T-Shirts</h1>
+
+<!-- LAYOUT -->
+<div class="tshirt-layout sweatshirt-page">
+  <!-- SOL: ÜRÜNLER -->
+  <div class="product-area">
+    <div class="product-grid" id="productGrid"></div>
   </div>
 
-  <div class="product-grid" id="productGrid"></div>
+  <!-- SAĞ: ARAMA + FİLTRE -->
+  <div class="filter-side">
+    <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
 
-  <button class="support-btn" onclick="window.location.href='support.html'">💬 Support</button>
+    <div class="filter-box">
+      <h3>Filters</h3>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+      <h4>Price</h4>
+      <div class="price-slider-box">
+        <input type="range" id="priceRange" min="0" max="500" value="500">
+        <div class="price-value">Max: <span id="priceVal">500</span>₺</div>
+      </div>
 
-    const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-    const SUPABASE_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+      <h4>Size</h4>
+      <div class="size-filter-box">
+        <div class="size-buttons">
+          <div class="size-btn" data-size="S">S</div>
+          <div class="size-btn" data-size="M">M</div>
+          <div class="size-btn" data-size="L">L</div>
+          <div class="size-btn" data-size="XL">XL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    const grid = document.getElementById("productGrid");
-    let allProducts = [];
+<!-- 💬 SUPPORT BUTTON -->
+<div id="supportBtn" onclick="toggleSupportPanel()">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
+</div>
 
-    async function loadProducts() {
-      grid.innerHTML = "<p style='text-align:center;color:#555;'>Loading...</p>";
+<!-- 💬 SUPPORT PANEL -->
+<div id="supportPanel">
+  <div class="sup-header">
+    <span>Support</span>
+    <button onclick="toggleSupportPanel()">✕</button>
+  </div>
+  <div class="sup-body">
+    <label>Your Name *</label>
+    <input type="text" id="supName" placeholder="John Doe">
+    <label>Email *</label>
+    <input type="email" id="supEmail" placeholder="your@mail.com">
+    <label>Your Message *</label>
+    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+  </div>
+</div>
 
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("category", "T-Shirts")
-        .order("id", { ascending: false });
+<!-- 🔥 JS -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-      if (error) {
-        grid.innerHTML = "<p style='color:red;text-align:center;'>Error loading products ❌</p>";
-        console.error(error);
-        return;
-      }
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      allProducts = data;
-      renderProducts(allProducts);
+const grid = document.getElementById("productGrid");
+let allProducts = [];
+
+async function loadProducts() {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category", "T-Shirts")
+    .order("id", { ascending: false });
+
+  if (error) {
+    grid.innerHTML = "<p style='color:red'>Error loading products</p>";
+    return;
+  }
+
+  allProducts = data;
+  renderProducts(allProducts);
+}
+
+function renderProducts(products) {
+  if (!products.length) {
+    grid.innerHTML = "<p style='color:#777'>No products found.</p>";
+    return;
+  }
+
+  grid.innerHTML = products.map(p => `
+    <a href="product.html?id=${p.id}" class="product-card"
+       data-name="${p.name}" data-price="${p.price}">
+      <img src="${(p.images||'').split(',')[0]}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>${p.price}₺</p>
+    </a>
+  `).join("");
+}
+
+loadProducts();
+
+/* --- FİLTRE / ARAMA --- */
+const searchInput = document.getElementById("searchInput");
+const priceRange = document.getElementById("priceRange");
+const priceVal = document.getElementById("priceVal");
+const sizeBtns = document.querySelectorAll(".size-btn");
+let selectedSize = null;
+
+searchInput.addEventListener("input", applyFilters);
+priceRange.addEventListener("input", () => {
+  priceVal.textContent = priceRange.value;
+  applyFilters();
+});
+sizeBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    sizeBtns.forEach(b => b.classList.remove("active"));
+    if (selectedSize === btn.dataset.size) {
+      selectedSize = null;
+    } else {
+      btn.classList.add("active");
+      selectedSize = btn.dataset.size;
     }
+    applyFilters();
+  });
+});
 
-    function renderProducts(products) {
-      if (!products.length) {
-        grid.innerHTML = "<p style='text-align:center;'>No products found.</p>";
-        return;
-      }
+function applyFilters() {
+  const text = searchInput.value.toLowerCase();
+  const maxPrice = parseFloat(priceRange.value);
+  const filtered = allProducts.filter(p => {
+    const matchesName = p.name.toLowerCase().includes(text);
+    const matchesPrice = parseFloat(p.price) <= maxPrice;
+    const matchesSize = !selectedSize || (p.sizes && p.sizes.includes(selectedSize));
+    return matchesName && matchesPrice && matchesSize;
+  });
+  renderProducts(filtered);
+}
+</script>
 
-      grid.innerHTML = products
-        .map(
-          (p) => `
-          <div class="product-card">
-            <img src="${(p.images || '').split(',')[0]}" alt="${p.name}">
-            <h3>${p.name}</h3>
-            <p>${p.description || ''}</p>
-            <p class="price">₺${p.price}</p>
-          </div>`
-        )
-        .join("");
-    }
+<script src="menu.js"></script>
+<script src="theme.js"></script>
+<script src="cart.js"></script>
 
-    window.filterCategory = (cat) => {
-      document.querySelectorAll(".filter-bar button").forEach(b => b.classList.remove("active"));
-      event.target.classList.add("active");
+<script>
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+if (avatar) {
+  avatar.addEventListener("click", () => {
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+  });
+}
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+let username = localStorage.getItem("loggedInUser");
+if (username) {
+  let data = JSON.parse(localStorage.getItem("user_" + username));
+  if (data && data.avatar) {
+    let small = document.getElementById("userAvatar");
+    if (small) small.src = data.avatar;
+  }
+}
+</script>
 
-      if (cat === "T-Shirts") renderProducts(allProducts);
-      else {
-        const filtered = allProducts.filter(p =>
-          p.name.toLowerCase().includes(cat.toLowerCase()) ||
-          p.category.toLowerCase().includes(cat.toLowerCase())
-        );
-        renderProducts(filtered);
-      }
-    };
-
-    loadProducts();
-  </script>
 </body>
 </html>
