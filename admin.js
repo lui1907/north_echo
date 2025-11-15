@@ -18,25 +18,24 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🟢 Mesajları yükle
+// 🟢 Mesajları Yükle
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
   if (error) {
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
-    console.error("Supabase load error:", error);
+    console.error(error);
     return;
   }
   allMessages = data;
   renderMessages();
 }
 
-// 🧠 Tarihi güvenli parse et
+// 🧩 Tarih Düzgün Görünsün
 function parseDateSafe(value) {
   if (!value) return new Date(0);
   let d = new Date(value);
   if (isNaN(d)) {
-    // 14.11.2025 17:07:10 gibi formatlar için
     const parts = String(value).split(/[.\s:]/);
     if (parts.length >= 5) {
       const [day, month, year, hour, minute] = parts;
@@ -45,14 +44,13 @@ function parseDateSafe(value) {
   }
   return d;
 }
-
 function formatDateSafe(value) {
   const d = parseDateSafe(value);
   if (isNaN(d)) return String(value || "");
   return d.toLocaleString();
 }
 
-// 🟢 Mesajları ekrana bas
+// 🟢 Mesajları Ekrana Bas
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
@@ -72,16 +70,17 @@ function renderMessages() {
   }
 
   list.forEach((msg) => {
+    const dateText = formatDateSafe(msg.date);
     const html = `
-      <div class="msg-box" id="msg-${msg.id}">
+      <div class="msg-box" id="msg-${msg.id || msg.uuid}">
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${formatDateSafe(msg.date)}</div>
+            <div class="msg-date">${dateText}</div>
           </div>
-          <button class="msg-delete" data-id="${msg.id}">Delete</button>
+          <button class="msg-delete" data-id="${msg.id || msg.uuid}">Delete</button>
         </div>
         <div class="msg-text">${msg.message || ""}</div>
         ${
@@ -97,64 +96,67 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🧩 Eventler
+// 🔗 Buton Olaylarını Bağla
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
-
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
-// 🔔 Confirm popup
+// 💬 Silme Onayı Popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// 🗑️ ID ÜZERİNDEN KALICI SİLME
+// 🗑️ Kalıcı Silme (hem id hem uuid destekli)
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
-
-  const rowId = Number(deleteTarget);
-  if (Number.isNaN(rowId)) {
-    console.error("Invalid deleteTarget (not a number):", deleteTarget);
-    showToast("Cannot delete this row ❌", "error");
-    confirmPopup.classList.remove("show");
-    return;
-  }
+  confirmPopup.classList.remove("show");
 
   try {
-    const { error, status } = await supabase
-      .from("messages")
-      .delete()
-      .eq("id", rowId);
+    let deleteQuery;
 
-    confirmPopup.classList.remove("show");
+    if (deleteTarget.includes("-")) {
+      // UUID ise
+      deleteQuery = supabase.from("messages").delete().eq("uuid", deleteTarget);
+    } else {
+      // Sayısal id ise
+      deleteQuery = supabase
+        .from("messages")
+        .delete()
+        .eq("id", Number(deleteTarget));
+    }
+
+    const { error } = await deleteQuery;
 
     if (error) {
-      console.error("Supabase delete error:", error, "status:", status);
+      console.error("Supabase Delete Error:", error);
       showToast("Delete failed ❌", "error");
       return;
     }
 
-    // Local listeden çıkar
-    allMessages = allMessages.filter((m) => m.id !== rowId);
+    // Arayüzden kaldır
+    allMessages = allMessages.filter(
+      (m) =>
+        String(m.id) !== String(deleteTarget) &&
+        String(m.uuid) !== String(deleteTarget)
+    );
     renderMessages();
     showToast("Deleted permanently ✅", "success");
   } catch (e) {
     console.error("Unexpected delete error:", e);
     showToast("Unexpected error ❌", "error");
-    confirmPopup.classList.remove("show");
   }
 };
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Image modal
+// 🖼️ Görsel Önizleme
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -171,10 +173,10 @@ sortButton.onclick = () => {
   renderMessages();
 };
 
-// 🔄 Filtre
+// 🧩 Filtreleme
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast
+// 🔔 Toast Mesajları
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
