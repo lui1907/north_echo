@@ -6,10 +6,11 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // -----------------------------------------
-// 🔐 Admin Access Check
+// 🔐 Admin Access
 // -----------------------------------------
 const ADMINS = ["luivoss", "fisami"];
 const loggedUser = localStorage.getItem("loggedInUser");
@@ -23,14 +24,12 @@ if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
 // -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
-const sortButton = document.getElementById("sortButton");
 const confirmPopup = document.getElementById("confirmPopup");
 const confirmYes = document.getElementById("confirmYes");
 const confirmNo = document.getElementById("confirmNo");
 const confirmText = document.getElementById("confirmText");
 
 let allMessages = [];
-let ascending = false; // 🔽 newest first
 let deleteTarget = null;
 
 // -----------------------------------------
@@ -39,11 +38,7 @@ let deleteTarget = null;
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
 
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .order("date", { ascending }); // 🔥 timestamp sırasına göre
-
+  const { data, error } = await supabase.from("messages").select("*");
   if (error) {
     console.error("Load error:", error);
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
@@ -71,21 +66,27 @@ function renderMessages() {
 
   list.forEach((msg) => {
     const html = `
-      <div class="msg-box" id="msg-${msg.id}">
+      <div class="msg-box ${msg.read ? "read" : "unread"}" id="msg-${msg.id}">
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
             <div class="msg-date">${
-              msg.date
-                ? new Date(msg.date).toLocaleString("tr-TR")
-                : "—"
+              msg.date ? new Date(msg.date).toLocaleString("tr-TR") : "—"
             }</div>
-            <div class="msg-id" style="opacity:.5;font-size:13px;">#${msg.id}</div>
           </div>
-          <button class="msg-delete" data-id="${msg.id}">Delete</button>
+
+          <div class="msg-actions">
+            ${
+              !msg.read
+                ? `<span class="unread-dot" title="Unread"></span>`
+                : ""
+            }
+            <button class="msg-delete" data-id="${msg.id}">🗑️</button>
+          </div>
         </div>
+
         <div class="msg-text">${msg.message || ""}</div>
         ${
           msg.file
@@ -104,25 +105,46 @@ function renderMessages() {
 // 🖱️ Events
 // -----------------------------------------
 function bindEvents() {
-  document.querySelectorAll(".msg-delete").forEach((btn) => {
-    btn.onclick = () => openConfirmPopup(btn.dataset.id);
+  document.querySelectorAll(".msg-box").forEach((box) => {
+    box.onclick = () => markAsRead(box.id.replace("msg-", ""));
   });
+
+  document.querySelectorAll(".msg-delete").forEach((btn) => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      openConfirmPopup(btn.dataset.id);
+    };
+  });
+
   document.querySelectorAll(".msg-img").forEach((img) => {
-    img.onclick = () => openImage(img.dataset.url);
+    img.onclick = (e) => {
+      e.stopPropagation();
+      openImage(img.dataset.url);
+    };
   });
 }
 
 // -----------------------------------------
-// 🔁 Sorting
+// ✅ Mark as Read
 // -----------------------------------------
-sortButton.onclick = async () => {
-  ascending = !ascending; // yön değiştir
-  sortButton.textContent = ascending
-    ? "Sort: Oldest First"
-    : "Sort: Newest First";
+async function markAsRead(id) {
+  const msg = allMessages.find((m) => m.id === id);
+  if (!msg || msg.read) return;
 
-  await loadMessages(); // 🔥 veriyi tekrar çek ve sıralamayı uygula
-};
+  const { error } = await supabase
+    .from("messages")
+    .update({ read: true })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Read update failed:", error);
+    showToast("Failed to mark as read ❌", "error");
+    return;
+  }
+
+  msg.read = true;
+  renderMessages();
+}
 
 // -----------------------------------------
 // 🧨 Delete Confirmation
@@ -180,8 +202,27 @@ function showToast(msg, type = "info") {
   }, 2000);
 }
 
+// -----------------------------------------
+// 💅 Extra Styles
+// -----------------------------------------
 const style = document.createElement("style");
 style.innerHTML = `
+.unread-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.msg-box.unread {
+  border-left: 4px solid #00aa66;
+  background: #111;
+}
+.msg-box.read {
+  opacity: 0.8;
+}
 .toast {
   position: fixed;
   top: 50%;
