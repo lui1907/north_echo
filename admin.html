@@ -3,39 +3,32 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Admin Panel — North Echo</title>
+<title>North Echo — Admin</title>
 
 <link rel="stylesheet" href="style.css" />
+<script type="module" src="admin.js"></script>
 
 <style>
 body {
+  margin: 0;
   background: #000;
   color: #fff;
-  margin: 0;
   font-family: 'Poppins', sans-serif;
 }
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background: #0a0a0a;
-  padding: 15px 25px;
+  padding: 16px 24px;
   border-bottom: 1px solid #111;
-}
-.logo {
   font-weight: 700;
-  color: #fff;
-  text-decoration: none;
 }
 .admin-wrapper {
   display: flex;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 65px);
 }
 .side-menu {
-  width: 240px;
+  width: 220px;
   background: #0d0d0d;
   border-right: 1px solid #111;
-  padding-top: 30px;
   display: flex;
   flex-direction: column;
 }
@@ -43,11 +36,11 @@ header {
   background: none;
   border: none;
   color: #ccc;
-  font-size: 16px;
-  padding: 14px 25px;
+  padding: 16px 25px;
   text-align: left;
+  font-size: 16px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: .2s;
 }
 .side-menu button.active,
 .side-menu button:hover {
@@ -59,11 +52,15 @@ header {
   padding: 25px;
   overflow-y: auto;
 }
+h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
 input, textarea {
-  width: 100%;
   background: #111;
   border: 1px solid #333;
-  color: #fff;
+  color: white;
+  width: 100%;
   border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
@@ -71,23 +68,32 @@ input, textarea {
 button {
   background: #00aa66;
   border: none;
-  color: #fff;
+  color: white;
   padding: 10px 18px;
   border-radius: 6px;
   cursor: pointer;
-  transition: .2s;
 }
 button:hover { background: #00cc77; }
+
 .card {
   background: #0d0d0d;
   border: 1px solid #222;
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 15px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
 .card img {
-  width: 100%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
   border-radius: 8px;
+  border: 1px solid #333;
+}
+.card-content {
+  flex: 1;
 }
 .delete-btn {
   background: #400;
@@ -102,40 +108,36 @@ button:hover { background: #00cc77; }
 </head>
 
 <body>
-<header>
-  <a href="index.html" class="logo">NORTH ECHO — ADMIN</a>
-</header>
+<header>NORTH ECHO — ADMIN</header>
 
 <div class="admin-wrapper">
   <div class="side-menu">
-    <button id="btnProducts" class="active">Products</button>
-    <button id="btnMessages">Messages</button>
+    <button id="btnProducts" class="active">🛍️ Products</button>
+    <button id="btnMessages">💬 Messages</button>
   </div>
 
   <div class="main-panel">
-    <!-- PRODUCTS -->
+    <!-- PRODUCTS SECTION -->
     <div id="sectionProducts">
       <h2>Add New Product</h2>
-      <input id="pName" placeholder="Product name" />
-      <input id="pPrice" placeholder="Price (₺)" type="number" />
-      <input id="pCategory" placeholder="Category (e.g. T-Shirts)" />
+      <input id="pName" placeholder="Product name">
+      <input id="pPrice" type="number" placeholder="Price (₺)">
+      <input id="pCategory" placeholder="Category (e.g. T-Shirts)">
       <textarea id="pDescription" placeholder="Description"></textarea>
-      <input id="pImages" placeholder="Image URLs (comma-separated)" />
-      <input id="pSizes" placeholder="Sizes (e.g. S,M,L,XL)" />
+      <input id="pImages" placeholder="Image URLs (comma-separated)">
+      <input id="pSizes" placeholder="Sizes (e.g. S,M,L,XL)">
       <button id="btnAddProduct">Add Product</button>
 
-      <h2 style="margin-top:40px;">Product List</h2>
+      <h2 style="margin-top:35px;">Product List</h2>
       <div id="productsList"></div>
     </div>
 
-    <!-- MESSAGES -->
+    <!-- MESSAGES SECTION -->
     <div id="sectionMessages" style="display:none;">
       <h2>Messages</h2>
       <div id="messagesList"></div>
     </div>
   </div>
 </div>
-
-<script type="module" src="admin.js"></script>
 </body>
 </html>
