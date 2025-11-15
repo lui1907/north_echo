@@ -6,245 +6,156 @@
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="support.css" />
 
 <style>
 body {
   background: #000;
   color: #fff;
-  margin: 0;
   font-family: 'Poppins', sans-serif;
+  margin: 0;
 }
 
-/* Ana layout */
-.admin-wrapper {
-  max-width: 1100px;
-  margin: 120px auto 40px;
-  padding: 20px;
-  display: flex;
-  gap: 20px;
-}
-
-/* SOL MENÜ (sekme gibi) */
-.admin-menu {
-  width: 220px;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 10px;
-  padding: 15px;
-  height: fit-content;
-}
-
-.admin-menu button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: #111;
-  border: 1px solid #333;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-  font-size: 14px;
-}
-.admin-menu button:hover {
-  background: #00aa66;
-}
-.admin-menu button.active {
-  background: #00aa66;
-}
-
-/* SAĞ PANEL */
-.admin-main {
-  flex: 1;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 25px;
-  min-height: 300px;
-}
-
-.admin-main h1 {
-  font-size: 28px;
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-weight: 700;
-}
-
-/* MESAJLAR TOOLBAR */
-.admin-toolbar {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.admin-toolbar select {
-  background: #111;
-  border: 1px solid #333;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-/* MESAJ KUTUSU */
-.msg-box {
-  background: #050505;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
-
-.msg-top {
+/* --- HEADER --- */
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 14px 30px;
+  background: #0a0a0a;
+  border-bottom: 1px solid #222;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
 }
-
-.msg-sender {
+.logo {
   font-weight: 700;
-  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
 }
-.msg-email {
-  opacity: 0.7;
-  font-size: 13px;
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
-.msg-category {
-  font-size: 13px;
-  opacity: 0.8;
-}
-.msg-date {
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-.msg-text {
-  margin-top: 10px;
-  line-height: 1.5;
-  opacity: 0.9;
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #333;
 }
 
-.msg-img {
-  margin-top: 10px;
-  width: 180px;
+/* --- SIDE MENU --- */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 240px;
+  height: 100%;
+  background: #0d0d0d;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: 0.3s;
+  z-index: 999;
+}
+.side-menu.show {
+  left: 0;
+}
+.side-menu a {
+  color: white;
+  text-decoration: none;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+.side-menu a:hover {
+  background: #00aa66;
+}
+.close-menu {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* --- ADMIN LAYOUT --- */
+.admin-wrapper {
+  display: flex;
+  max-width: 1200px;
+  margin: 120px auto 50px;
+  gap: 25px;
+  padding: 20px;
+}
+.admin-left {
+  width: 240px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 18px;
+}
+.admin-item {
+  padding: 12px 14px;
+  background: #141414;
+  border: 1px solid #222;
   border-radius: 10px;
-  border: 1px solid #333;
+  margin-bottom: 10px;
   cursor: pointer;
   transition: .2s;
 }
-.msg-img:hover { transform: scale(1.03); }
-
-/* Delete Button */
-.msg-delete {
-  background: #400000;
-  color: #ff6666;
-  border: 1px solid #660000;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
+.admin-item:hover { background: #1b1b1b; }
+.admin-item.active { background: #00aa66; color: white; }
+.admin-right {
+  flex: 1;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 25px;
+  min-height: 600px;
 }
-.msg-delete:hover { background: #660000; }
 
-/* PRODUCTS FORM */
-label {
-  display: block;
-  margin-top: 12px;
-  font-size: 14px;
-  opacity: 0.9;
-}
-input, textarea, select {
+/* --- FORM STYLES --- */
+.input-box {
   width: 100%;
-  background: #111;
+  background: #141414;
   border: 1px solid #333;
-  color: white;
+  border-radius: 10px;
   padding: 10px;
-  border-radius: 8px;
-  margin-top: 5px;
-  font-size: 14px;
-  box-sizing: border-box;
+  margin-bottom: 14px;
+  color: white;
 }
-textarea {
-  min-height: 90px;
-}
-
+textarea { min-height: 80px; resize: vertical; }
 .save-btn {
-  margin-top: 20px;
   width: 100%;
+  padding: 12px;
   background: #00aa66;
   border: none;
   color: white;
-  padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
+  cursor: pointer;
   font-size: 16px;
-  cursor: pointer;
 }
-.save-btn:hover {
-  background: #009655;
-}
+.save-btn:hover { background: #009655; }
 
-/* Image Modal */
-#imgModal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-#imgModal img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 12px;
-}
-#imgModalClose {
-  position: fixed;
-  top: 25px; right: 30px;
-  font-size: 30px;
-  color: white;
-  cursor: pointer;
-}
-
-/* Custom confirmation popup */
-.confirm-popup {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
+/* --- MESSAGES BOX --- */
+.msg-box {
   background: #111;
   border: 1px solid #333;
-  border-radius: 12px;
-  padding: 25px;
-  text-align: center;
-  opacity: 0;
-  z-index: 10000;
-  transition: 0.2s;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
 }
-.confirm-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.confirm-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-.confirm-buttons button {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-.confirm-yes { background:#00aa66; color:white; }
-.confirm-no { background:#400; color:white; }
+.msg-box strong { color: #00ff99; }
+.msg-box small { color: #888; }
 
-/* Toast */
+/* --- TOAST --- */
 .toast {
   position: fixed;
   top: 50%;
@@ -257,7 +168,7 @@ textarea {
   border-radius: 10px;
   opacity: 0;
   transition: all .3s;
-  z-index: 10001;
+  z-index: 999999;
   font-size: 15px;
 }
 .toast.show {
@@ -266,10 +177,12 @@ textarea {
 }
 .toast.success { border-color:#00aa66; color:#00ff99; }
 .toast.error { border-color:#aa0000; color:#ff6666; }
+
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -278,6 +191,7 @@ textarea {
   </div>
 </header>
 
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
    <button id="closeMenu" class="close-menu">×</button>
    <a href="index.html">Home</a>
@@ -286,78 +200,138 @@ textarea {
    <a href="cart.html">Cart</a>
 </div>
 
+<!-- MAIN PANEL -->
 <div class="admin-wrapper">
-
-  <!-- SOL: sekmeler -->
-  <div class="admin-menu">
-    <button id="tabMessages" class="active">Messages</button>
-    <button id="tabProducts">Products</button>
+  <div class="admin-left">
+    <div class="admin-item active" onclick="showTab('messages')">Messages</div>
+    <div class="admin-item" onclick="showTab('addProduct')">Add Product</div>
   </div>
 
-  <!-- SAĞ: içerik -->
-  <div class="admin-main">
-
-    <!-- MESSAGES VIEW -->
-    <div id="messagesView">
-      <h1>Support Messages</h1>
-
-      <div class="admin-toolbar">
-        <select id="filterCategory">
-          <option>All</option>
-          <option>Product</option>
-          <option>Order</option>
-          <option>Design</option>
-          <option>Other</option>
-        </select>
-      </div>
-
-      <div id="adminMessages"></div>
-    </div>
-
-    <!-- PRODUCTS VIEW -->
-    <div id="productsView" style="display:none;">
-      <h1>Add New Product</h1>
-
-      <label>Product Name</label>
-      <input id="prodName" type="text" placeholder="Black Printed T-Shirt" />
-
-      <label>Category</label>
-      <select id="prodCategory">
-        <option value="T-Shirts">T-Shirts</option>
-        <option value="Sweatshirts">Sweatshirts</option>
-        <option value="Other">Other</option>
-      </select>
-
-      <label>Price (€)</label>
-      <input id="prodPrice" type="number" step="0.01" placeholder="20" />
-
-      <label>Description</label>
-      <textarea id="prodDesc" placeholder="Write product description..."></textarea>
-
-      <label>Image URL(s) (separate by comma)</label>
-      <textarea id="prodImages" placeholder="https://i.ibb.co/example1.jpg, https://i.ibb.co/example2.jpg"></textarea>
-
-      <button class="save-btn" id="saveProduct">Save Product</button>
-    </div>
-
+  <div class="admin-right" id="adminContent">
+    <h2>Messages</h2>
+    <div id="adminMessages"></div>
   </div>
 </div>
 
-<!-- Image Modal -->
-<div id="imgModal">
-  <div id="imgModalClose" onclick="closeImgModal()">✕</div>
-  <img id="imgModalContent" src="">
-</div>
+<script type="module">
+// -----------------------------------------
+// 🔥 Supabase Connection
+// -----------------------------------------
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<!-- Confirm Popup -->
-<div id="confirmPopup" class="confirm-popup">
-  <p id="confirmText">Are you sure?</p>
-  <div class="confirm-buttons">
-    <button id="confirmYes" class="confirm-yes">Yes</button>
-    <button id="confirmNo" class="confirm-no">No</button>
-  </div>
-</div>
+// -----------------------------------------
+// 🔐 Admin Access
+// -----------------------------------------
+const ADMINS = ["luivoss", "fisami"];
+const loggedUser = localStorage.getItem("loggedInUser");
+if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
+  window.location.href = "index.html";
+}
 
-<script type="module" src="admin.js"></script>
+// -----------------------------------------
+// 🧭 Tab Switching
+// -----------------------------------------
+window.showTab = function(tab) {
+  document.querySelectorAll(".admin-item").forEach(x => x.classList.remove("active"));
+  event.target.classList.add("active");
+
+  const content = document.getElementById("adminContent");
+  if (tab === "messages") loadMessagesTab(content);
+  if (tab === "addProduct") loadAddProductTab(content);
+};
+
+// -----------------------------------------
+// 💬 Messages Tab
+// -----------------------------------------
+async function loadMessagesTab(content) {
+  content.innerHTML = "<h2>Messages</h2><p>Loading...</p>";
+  const { data, error } = await supabase.from("messages").select("*");
+  if (error) return (content.innerHTML = "<p>Error loading messages.</p>");
+  if (!data.length) {
+    content.innerHTML = "<h2>Messages</h2><p>No messages yet.</p>";
+    return;
+  }
+
+  content.innerHTML = "<h2>Messages</h2>";
+  data.forEach(msg => {
+    content.innerHTML += `
+      <div class="msg-box">
+        <strong>${msg.name}</strong> <small>(${msg.email})</small><br>
+        <em>${msg.category}</em><br>
+        <p>${msg.message}</p>
+      </div>`;
+  });
+}
+
+// -----------------------------------------
+// 🛍️ Add Product Tab
+// -----------------------------------------
+function loadAddProductTab(content) {
+  content.innerHTML = `
+    <h2>Add Product</h2>
+    <input id="prodName" class="input-box" placeholder="Product Name">
+    <input id="prodPrice" class="input-box" type="number" placeholder="Price (€)">
+    <input id="prodCategory" class="input-box" placeholder="Category (e.g. T-Shirts)">
+    <textarea id="prodDesc" class="input-box" placeholder="Description"></textarea>
+    <input id="prodImages" class="input-box" placeholder="Image URLs (comma separated)">
+    <input id="prodSizes" class="input-box" placeholder="Sizes (e.g. S,M,L,XL)">
+    <button class="save-btn" id="saveProductBtn">Save Product</button>
+  `;
+  document.getElementById("saveProductBtn").onclick = saveProduct;
+}
+
+// -----------------------------------------
+// 💾 Save Product to Supabase
+// -----------------------------------------
+async function saveProduct() {
+  const name = document.getElementById("prodName").value.trim();
+  const price = parseFloat(document.getElementById("prodPrice").value);
+  const category = document.getElementById("prodCategory").value.trim();
+  const description = document.getElementById("prodDesc").value.trim();
+  const images = document.getElementById("prodImages").value.trim();
+  const sizes = document.getElementById("prodSizes").value.trim();
+
+  if (!name || !price || !category || !images) {
+    showToast("Please fill all required fields ❌", "error");
+    return;
+  }
+
+  const { error } = await supabase.from("products").insert([
+    { name, price, category, description, images, sizes }
+  ]);
+
+  if (error) {
+    console.error(error);
+    showToast("Error saving product ❌", "error");
+  } else {
+    showToast("✅ Product added successfully!", "success");
+    document.querySelectorAll(".input-box").forEach(i => i.value = "");
+  }
+}
+
+// -----------------------------------------
+// 🔔 Toast
+// -----------------------------------------
+function showToast(msg, type = "info") {
+  let toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 2000);
+}
+
+// -----------------------------------------
+// 🚀 Default Load
+// -----------------------------------------
+loadMessagesTab(document.getElementById("adminContent"));
+</script>
 </body>
 </html>
