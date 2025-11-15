@@ -4,11 +4,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>North Echo — Premium Apparel</title>
+
+<!-- STYLES & SCRIPTS -->
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-  <link rel="stylesheet" href="support.css">
+<link rel="stylesheet" href="support.css">
 <script src="support.js" type="module"></script>
 </head>
 
@@ -20,21 +22,19 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-  <a href="submit-design.html" class="submit-nav">Submit</a>
-  <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <!-- PROFIL FOTOĞRAFI -->
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
-  <!-- PROFIL FOTOĞRAFI -->
-  <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
-  <!-- AÇILIR MENÜ (Şimdilik görünmez) -->
-  <div class="avatar-menu" id="avatarMenu">
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
-    <a href="#" class="logout" onclick="logout()">Logout</a>
+    <!-- AÇILIR MENÜ -->
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
   </div>
-
-</div>
 </header>
 
 <!-- SIDE MENU -->
@@ -47,10 +47,9 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- ⭐⭐ FULL WIDTH KISA HERO (PREMIUM) ⭐⭐ -->
+<!-- HERO SECTION -->
 <section class="full-hero">
   <div class="hero-overlay">
-
     <h1 class="fh-title">Winter Collection 2025</h1>
     <p class="fh-sub">Minimal. Clean. Premium. Designed for everyday comfort.</p>
 
@@ -58,18 +57,13 @@
       <a href="tshirts.html" class="fh-btn">Shop T-Shirts</a>
       <a href="sweatshirts.html" class="fh-btn alt">Shop Sweatshirts</a>
     </div>
-
   </div>
 </section>
-<!-- ⭐⭐ HERO BİTİŞ ⭐⭐ -->
 
-    <!-- ⭐⭐ CATEGORIES SECTION ⭐⭐ -->
+<!-- CATEGORIES -->
 <section class="categories-section">
-
   <h2 class="cat-title-home">Categories</h2>
-
   <div class="categories-grid">
-
     <a href="tshirts.html" class="category-card">
       <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="">
       <h3>T-Shirts</h3>
@@ -79,26 +73,22 @@
       <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" alt="">
       <h3>Sweatshirts</h3>
     </a>
-
   </div>
-
 </section>
-
 
 <!-- FOOTER -->
 <footer class="footer">
-    <div class="footer-content">
-
-        <h3>NORTH ECHO</h3>
-        <p>Minimalist & premium apparel designed for everyday comfort and style.</p>
-
-        <a href="https://instagram.com/northecho.fi" target="_blank" class="footer-link">
-            Instagram
-        </a>
-
-    </div>
+  <div class="footer-content">
+    <h3>NORTH ECHO</h3>
+    <p>Minimalist & premium apparel designed for everyday comfort and style.</p>
+    <a href="https://instagram.com/northecho.fi" target="_blank" class="footer-link">
+      Instagram
+    </a>
+  </div>
 </footer>
-  <script>
+
+<!-- MENU & LOGOUT -->
+<script>
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
 
@@ -108,20 +98,37 @@ if (avatar) {
   });
 }
 
-// Logout fonksiyonu
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
 </script>
 
-  <script>
-let username = localStorage.getItem("loggedInUser");
+<!-- ✅ SUPABASE AVATAR LOAD -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const username = localStorage.getItem("loggedInUser");
+
 if (username) {
-  let data = JSON.parse(localStorage.getItem("user_" + username));
-  if (data && data.avatar) {
-    let small = document.getElementById("userAvatar");
-    if (small) small.src = data.avatar;
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("avatar")
+      .eq("username", username)
+      .single();
+
+    if (!error && data && data.avatar) {
+      const userAvatar = document.getElementById("userAvatar");
+      if (userAvatar) userAvatar.src = data.avatar;
+    }
+  } catch (err) {
+    console.error("Avatar load failed:", err);
   }
 }
 </script>
@@ -140,14 +147,11 @@ if (username) {
     <span>Support</span>
     <button onclick="toggleSupportPanel()">✕</button>
   </div>
-
   <div class="sup-body">
     <label>Your Name *</label>
     <input type="text" id="supName" placeholder="John Doe" />
-
     <label>Email *</label>
     <input type="email" id="supEmail" placeholder="your@mail.com" />
-
     <label>Category *</label>
     <select id="supCategory">
       <option value="Design">Design / Custom Request</option>
@@ -156,31 +160,13 @@ if (username) {
       <option value="Website">Website Issue</option>
       <option value="Other">Other</option>
     </select>
-
     <label>Your Message *</label>
-    <textarea
-      id="supMsg"
-      placeholder="Write your message..."
-    ></textarea>
-
+    <textarea id="supMsg" placeholder="Write your message..."></textarea>
     <label>Attach File (optional)</label>
-    <input
-      type="file"
-      id="supFile"
-      accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx"
-    />
-
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
+    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx" />
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
   </div>
 </div>
-
-<!-- SUPPORT JS -->
-<script type="module" src="support.js"></script>
-
-
-
 
 </body>
 </html>
