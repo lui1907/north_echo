@@ -11,14 +11,16 @@ const filterSelect = document.getElementById("filterCategory");
 const sortButton = document.getElementById("sortButton");
 
 let allMessages = [];
-let sortOrder = "desc";
+let sortOrder = "desc"; // varsayılan: yeni → eski
 
-// 🔹 Mesajları yükle
+// 🔹 MESAJLARI YÜKLE
 async function loadMessages() {
+  msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
+
   const { data, error } = await supabase.from("messages").select("*");
 
   if (error) {
-    console.error(error);
+    console.error("Load error:", error);
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
     return;
   }
@@ -27,17 +29,17 @@ async function loadMessages() {
   renderMessages();
 }
 
-// 🔹 Mesajları listele
+// 🔹 MESAJLARI LİSTELE
 function renderMessages() {
   msgContainer.innerHTML = "";
 
   let list = [...allMessages];
 
-  // Kategori filtresi
+  // Filtreleme (kategori)
   const category = filterSelect.value;
   if (category !== "All") list = list.filter((m) => m.category === category);
 
-  // Tarihe göre sırala
+  // Sıralama
   list.sort((a, b) => {
     const dA = new Date(a.date);
     const dB = new Date(b.date);
@@ -54,15 +56,15 @@ function renderMessages() {
       <div class="msg-box">
         <div class="msg-top">
           <div>
-            <div class="msg-sender">${msg.name}</div>
-            <div class="msg-email" style="opacity:.7;">${msg.email}</div>
-            <div class="msg-category">${msg.category}</div>
-            <div class="msg-date">${msg.date}</div>
+            <div class="msg-sender">${msg.name || "Unknown"}</div>
+            <div class="msg-email" style="opacity:.7;">${msg.email || ""}</div>
+            <div class="msg-category">${msg.category || "No Category"}</div>
+            <div class="msg-date">${msg.date || ""}</div>
           </div>
-          <button class="msg-delete" onclick="deleteMessage('${msg.id}')">Delete</button>
+          <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
 
-        <div class="msg-text">${msg.message}</div>
+        <div class="msg-text">${msg.message || ""}</div>
 
         ${
           msg.file
@@ -72,17 +74,26 @@ function renderMessages() {
       </div>
     `;
   });
+
+  // 🔹 Her render'dan sonra delete butonlarını aktif et
+  document.querySelectorAll(".msg-delete").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id");
+      if (confirm("Delete this message?")) {
+        const { error } = await supabase.from("messages").delete().eq("id", id);
+        if (error) {
+          alert("Failed to delete message.");
+          console.error(error);
+        } else {
+          alert("Message deleted.");
+          loadMessages();
+        }
+      }
+    });
+  });
 }
 
-// 🔹 Mesaj silme
-window.deleteMessage = async function (id) {
-  if (!confirm("Delete this message?")) return;
-  await supabase.from("messages").delete().eq("id", id);
-  loadMessages();
-};
-
-// 🔹 Filtre / sıralama butonları
-filterSelect.addEventListener("change", renderMessages);
+// 🔹 SIRALAMA DÜĞMESİ
 sortButton.addEventListener("click", () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
@@ -90,5 +101,8 @@ sortButton.addEventListener("click", () => {
   renderMessages();
 });
 
-// 🔹 Başlangıçta yükle
+// 🔹 FİLTRE MENÜSÜ
+filterSelect.addEventListener("change", renderMessages);
+
+// 🔹 BAŞLANGIÇTA YÜKLE
 loadMessages();
