@@ -11,7 +11,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // -----------------------------------------
 // 🔐 Admin Access Check
 // -----------------------------------------
-const ADMINS = ["luivoss", "fisami"]; // 👈 Supabase'deki username'lerle birebir aynı olmalı!
+const ADMINS = ["luivoss", "fstekin"]; // 👈 Supabase'deki username'lerle birebir aynı olmalı!
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
