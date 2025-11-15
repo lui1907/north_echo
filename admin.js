@@ -1,41 +1,26 @@
-// 🧩 Allowed Admins
-const ADMIN_USERS = ["luivoss", "fisami"]; // sadece bu kullanıcılar admin
-
-// Giriş yapan kullanıcıyı localStorage'dan al
-const currentUser = localStorage.getItem("username");
-
-// ❌ Eğer kullanıcı admin değilse erişimi engelle
-if (!currentUser || !ADMIN_USERS.includes(currentUser.toLowerCase())) {
-  document.body.innerHTML = `
-    <div style="
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      background:#000;
-      color:#f55;
-      font-family:sans-serif;
-      flex-direction:column;
-      text-align:center;">
-      <h2>Access Denied ❌</h2>
-      <p style="opacity:0.7;">You do not have permission to view this page.</p>
-    </div>
-  `;
-  throw new Error("Access denied");
-}
-
-console.log("✅ Admin access granted for:", currentUser);
-
-// --------------------------------------------------------
+// -----------------------------------------
+// 🔥 Supabase Connection
+// -----------------------------------------
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🌐 Element referansları
+// -----------------------------------------
+// 🔐 Admin Access Check
+// -----------------------------------------
+const ADMINS = ["luivoss", "fisami"];
+let loggedUser = localStorage.getItem("loggedInUser");
+
+if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
+  window.location.href = "index.html";
+}
+
+// -----------------------------------------
+// 📥 Load Messages
+// -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
 const sortButton = document.getElementById("sortButton");
@@ -48,14 +33,14 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🔄 Mesajları yükle
+// 🔄 Fetch messages
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
 
   if (error) {
+    console.error("Load error:", error);
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
-    console.error("Supabase load error:", error);
     return;
   }
 
@@ -63,26 +48,9 @@ async function loadMessages() {
   renderMessages();
 }
 
-// 🕓 Tarih güvenli biçimlendirme
-function parseDateSafe(value) {
-  if (!value) return new Date(0);
-  let d = new Date(value);
-  if (isNaN(d)) {
-    const parts = String(value).split(/[.\s:/]/);
-    if (parts.length >= 5) {
-      const [day, month, year, hour, minute] = parts;
-      d = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
-    }
-  }
-  return d;
-}
-function formatDateSafe(value) {
-  const d = parseDateSafe(value);
-  if (isNaN(d)) return String(value || "");
-  return d.toLocaleString();
-}
-
-// 🧾 Mesajları render et
+// -----------------------------------------
+// 🧾 Render messages
+// -----------------------------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
@@ -91,8 +59,8 @@ function renderMessages() {
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
   list.sort((a, b) => {
-    const dA = parseDateSafe(a.date);
-    const dB = parseDateSafe(b.date);
+    const dA = new Date(a.date);
+    const dB = new Date(b.date);
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -109,7 +77,7 @@ function renderMessages() {
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${formatDateSafe(msg.date)}</div>
+            <div class="msg-date">${msg.date || ""}</div>
           </div>
           <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
@@ -127,31 +95,35 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🖱️ Event bağlama
+// -----------------------------------------
+// 🖱️ Events
+// -----------------------------------------
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
+
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
-// 🗑️ Silme onayı
+// -----------------------------------------
+// 🧨 Delete Confirmation
+// -----------------------------------------
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// 🚮 Supabase’den silme işlemi
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
   confirmPopup.classList.remove("show");
 
   const { error } = await supabase.from("messages").delete().eq("id", deleteTarget);
   if (error) {
-    console.error("Supabase delete error:", error);
+    console.error("Delete failed:", error);
     showToast("Delete failed ❌", "error");
     return;
   }
@@ -162,7 +134,9 @@ confirmYes.onclick = async () => {
 };
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Görsel modalı
+// -----------------------------------------
+// 🖼️ Image Modal
+// -----------------------------------------
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -171,18 +145,20 @@ window.closeImgModal = () => {
   document.getElementById("imgModal").style.display = "none";
 };
 
-// 🔁 Sıralama
+// -----------------------------------------
+// 🔁 Sorting & Filtering
+// -----------------------------------------
 sortButton.onclick = () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
     sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
   renderMessages();
 };
-
-// 🧩 Filtreleme
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast bildirimi
+// -----------------------------------------
+// 🔔 Toast Notification
+// -----------------------------------------
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -221,5 +197,7 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// 🚀 Başlat
+// -----------------------------------------
+// 🚀 Start
+// -----------------------------------------
 loadMessages();
