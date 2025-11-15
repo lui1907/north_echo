@@ -1,10 +1,10 @@
-// 🧩 Allowed Admin Usernames
-const ADMIN_USERS = ["fisami", "LuiVoss", "eren"]; // sadece bunlar admin paneli görebilir
+// 🧩 Allowed Admins
+const ADMIN_USERS = ["luivoss", "fisami"]; // sadece bu kullanıcılar admin
 
-// Giriş yapan kullanıcıyı al (örnek: login sonrası kaydedilmiş username)
+// Giriş yapan kullanıcıyı localStorage'dan al
 const currentUser = localStorage.getItem("username");
 
-// Erişim kontrolü
+// ❌ Eğer kullanıcı admin değilse erişimi engelle
 if (!currentUser || !ADMIN_USERS.includes(currentUser.toLowerCase())) {
   document.body.innerHTML = `
     <div style="
@@ -26,7 +26,7 @@ if (!currentUser || !ADMIN_USERS.includes(currentUser.toLowerCase())) {
 
 console.log("✅ Admin access granted for:", currentUser);
 
-// ----------------------------------------------------
+// --------------------------------------------------------
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
@@ -35,6 +35,7 @@ const SUPABASE_KEY =
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// 🌐 Element referansları
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
 const sortButton = document.getElementById("sortButton");
@@ -47,25 +48,27 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🔄 Load Messages
+// 🔄 Mesajları yükle
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
+
   if (error) {
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
     console.error("Supabase load error:", error);
     return;
   }
+
   allMessages = data;
   renderMessages();
 }
 
-// 🕓 Sort by date
+// 🕓 Tarih güvenli biçimlendirme
 function parseDateSafe(value) {
   if (!value) return new Date(0);
   let d = new Date(value);
   if (isNaN(d)) {
-    const parts = String(value).split(/[.\s:]/);
+    const parts = String(value).split(/[.\s:/]/);
     if (parts.length >= 5) {
       const [day, month, year, hour, minute] = parts;
       d = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
@@ -79,7 +82,7 @@ function formatDateSafe(value) {
   return d.toLocaleString();
 }
 
-// 🧾 Render messages
+// 🧾 Mesajları render et
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
@@ -124,7 +127,7 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🖱️ Events
+// 🖱️ Event bağlama
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
@@ -134,20 +137,19 @@ function bindEvents() {
   });
 }
 
-// 💬 Delete popup
+// 🗑️ Silme onayı
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// 🗑️ Delete from Supabase
+// 🚮 Supabase’den silme işlemi
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
   confirmPopup.classList.remove("show");
 
   const { error } = await supabase.from("messages").delete().eq("id", deleteTarget);
-
   if (error) {
     console.error("Supabase delete error:", error);
     showToast("Delete failed ❌", "error");
@@ -158,10 +160,9 @@ confirmYes.onclick = async () => {
   renderMessages();
   showToast("Deleted permanently ✅", "success");
 };
-
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Image modal
+// 🖼️ Görsel modalı
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -170,7 +171,7 @@ window.closeImgModal = () => {
   document.getElementById("imgModal").style.display = "none";
 };
 
-// 🔁 Sort button
+// 🔁 Sıralama
 sortButton.onclick = () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
@@ -178,10 +179,10 @@ sortButton.onclick = () => {
   renderMessages();
 };
 
-// 🧩 Filter
+// 🧩 Filtreleme
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast
+// 🔔 Toast bildirimi
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -216,8 +217,9 @@ style.innerHTML = `
   transform: translate(-50%,-50%) scale(1);
 }
 .toast.success { border-color:#00aa66; color:#00ff99; }
+.toast.error { border-color:#aa0000; color:#ff6666; }
 `;
 document.head.appendChild(style);
 
-// 🚀 Load
+// 🚀 Başlat
 loadMessages();
