@@ -11,7 +11,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // -----------------------------------------
 // 🔐 Admin Access Check
 // -----------------------------------------
-const ADMINS = ["luivoss", "fstekin"];
+// İstersen burayı kendi kullanıcı adlarına göre düzenleyebilirsin
+const ADMINS = ["luivoss", "fisami"]; 
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
@@ -19,7 +20,35 @@ if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
 }
 
 // -----------------------------------------
-// 📥 Load Messages
+// TAB & VIEW ELEMENTLERİ
+// -----------------------------------------
+const tabMessages = document.getElementById("tabMessages");
+const tabProducts = document.getElementById("tabProducts");
+const messagesView = document.getElementById("messagesView");
+const productsView = document.getElementById("productsView");
+
+function setActiveTab(tab) {
+  document
+    .querySelectorAll(".admin-menu button")
+    .forEach((b) => b.classList.remove("active"));
+  tab.classList.add("active");
+}
+
+tabMessages.onclick = () => {
+  setActiveTab(tabMessages);
+  messagesView.style.display = "block";
+  productsView.style.display = "none";
+  loadMessages();
+};
+
+tabProducts.onclick = () => {
+  setActiveTab(tabProducts);
+  messagesView.style.display = "none";
+  productsView.style.display = "block";
+};
+
+// -----------------------------------------
+// 📥 Messages: Load & Render
 // -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
@@ -42,13 +71,14 @@ async function loadMessages() {
     return;
   }
 
+  // En yeni id en üstte olacak şekilde sırala
+  data.sort((a, b) => Number(b.id) - Number(a.id));
+
   allMessages = data;
   renderMessages();
 }
 
-// -----------------------------------------
 // 🧾 Render messages
-// -----------------------------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
@@ -84,17 +114,17 @@ function renderMessages() {
     msgContainer.insertAdjacentHTML("beforeend", html);
   });
 
-  bindEvents();
+  bindMessageEvents();
 }
 
-// -----------------------------------------
 // 🖱️ Events
-// -----------------------------------------
-function bindEvents() {
+function bindMessageEvents() {
+  // delete buttons
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
 
+  // image click
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
@@ -113,17 +143,24 @@ confirmYes.onclick = async () => {
   if (!deleteTarget) return;
   confirmPopup.classList.remove("show");
 
-  const { error } = await supabase.from("messages").delete().eq("id", deleteTarget);
+  const { error } = await supabase
+    .from("messages")
+    .delete()
+    .eq("id", deleteTarget);
+
   if (error) {
     console.error("Delete failed:", error);
     showToast("Delete failed ❌", "error");
     return;
   }
 
-  allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
+  allMessages = allMessages.filter(
+    (m) => String(m.id) !== String(deleteTarget)
+  );
   renderMessages();
   showToast("Deleted permanently ✅", "success");
 };
+
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
 // -----------------------------------------
@@ -138,11 +175,6 @@ window.closeImgModal = () => {
 };
 
 // -----------------------------------------
-// 🔁 Filter
-// -----------------------------------------
-filterSelect.onchange = renderMessages;
-
-// -----------------------------------------
 // 🔔 Toast Notification
 // -----------------------------------------
 function showToast(msg, type = "info") {
@@ -150,40 +182,69 @@ function showToast(msg, type = "info") {
   toast.className = `toast ${type}`;
   toast.textContent = msg;
   document.body.appendChild(toast);
-  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => toast.classList.add("show"), 50);
   setTimeout(() => {
     toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 400);
-  }, 2000);
+    setTimeout(() => toast.remove(), 300);
+  }, 1800);
 }
 
-const style = document.createElement("style");
-style.innerHTML = `
-.toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%) scale(0.9);
-  background: rgba(20,20,20,0.95);
-  border: 1px solid #333;
-  padding: 16px 22px;
-  color: white;
-  border-radius: 10px;
-  opacity: 0;
-  transition: all .3s;
-  z-index: 999999;
-  font-size: 15px;
-}
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%,-50%) scale(1);
-}
-.toast.success { border-color:#00aa66; color:#00ff99; }
-.toast.error { border-color:#aa0000; color:#ff6666; }
-`;
-document.head.appendChild(style);
+// Kategori değişince yeniden filtrele
+filterSelect.onchange = renderMessages;
 
 // -----------------------------------------
-// 🚀 Start
+// 🧢 PRODUCTS: Insert
 // -----------------------------------------
+const prodName = document.getElementById("prodName");
+const prodCategory = document.getElementById("prodCategory");
+const prodPrice = document.getElementById("prodPrice");
+const prodDesc = document.getElementById("prodDesc");
+const prodImages = document.getElementById("prodImages");
+const saveProductBtn = document.getElementById("saveProduct");
+
+if (saveProductBtn) {
+  saveProductBtn.onclick = saveProduct;
+}
+
+async function saveProduct() {
+  const name = (prodName.value || "").trim();
+  const category = (prodCategory.value || "").trim();
+  const price = parseFloat(prodPrice.value);
+  const description = (prodDesc.value || "").trim();
+  const images = (prodImages.value || "").trim(); // text kolonuna JSON veya virgüllü string yazacağız
+
+  if (!name || !category || !price || !description || !images) {
+    showToast("Please fill all fields.", "error");
+    return;
+  }
+
+  const { error } = await supabase.from("products").insert([
+    {
+      name,
+      category,
+      price,
+      description,
+      images,
+    },
+  ]);
+
+  if (error) {
+    console.error(error);
+    showToast("Error saving product.", "error");
+  } else {
+    showToast("Product added successfully ✅", "success");
+    prodName.value = "";
+    prodPrice.value = "";
+    prodDesc.value = "";
+    prodImages.value = "";
+    prodCategory.value = "T-Shirts";
+  }
+}
+
+// -----------------------------------------
+// 🚀 Start with Messages tab
+// -----------------------------------------
+messagesView.style.display = "block";
+productsView.style.display = "none";
+setActiveTab(tabMessages);
 loadMessages();
