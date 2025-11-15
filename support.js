@@ -5,24 +5,17 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🟢 Fonksiyonları global yap
-window.toggleSupportPanel = toggleSupportPanel;
-window.sendSupportMessage = sendSupportMessage;
+// 🎛️ Support panel aç/kapa
+window.toggleSupportPanel = function () {
+  const panel = document.getElementById("supportPanel");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+};
 
-// 💬 Panel toggle
-function toggleSupportPanel() {
-  const p = document.getElementById("supportPanel");
-  if (p) {
-    p.style.display = p.style.display === "block" ? "none" : "block";
-  }
-}
-
-// 📩 Mesaj gönder
-async function sendSupportMessage() {
+// 📩 Mesaj gönderme
+window.sendSupportMessage = async function () {
   const name = document.getElementById("supName").value.trim();
   const email = document.getElementById("supEmail").value.trim();
   const message = document.getElementById("supMsg").value.trim();
-  const category = document.getElementById("supCategory").value;
   const fileInput = document.getElementById("supFile");
 
   if (!name || !email || !message) {
@@ -33,7 +26,6 @@ async function sendSupportMessage() {
   openConfirmPopup(async () => {
     let fileUrl = "";
 
-    // 🖼️ Dosya yükleme
     if (fileInput.files.length > 0) {
       const file = fileInput.files[0];
       const fileName = `${Date.now()}_${file.name}`;
@@ -51,13 +43,11 @@ async function sendSupportMessage() {
       fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
     }
 
-    // 💾 Mesaj kaydı
     const { error: insertError } = await supabase.from("messages").insert([
       {
         name,
         email,
         message,
-        category,
         file: fileUrl || "",
         date: new Date().toLocaleString(),
         read: false,
@@ -68,59 +58,15 @@ async function sendSupportMessage() {
       console.error("Insert error:", insertError);
       showToast("Message failed ❌", "error");
     } else {
-      showToast("Message sent ✅", "success");
-
+      showToast("Message sent successfully ✅", "success");
       document.getElementById("supportPanel").style.display = "none";
       document.getElementById("supName").value = "";
       document.getElementById("supEmail").value = "";
       document.getElementById("supMsg").value = "";
-      document.getElementById("supCategory").selectedIndex = 0;
       fileInput.value = "";
     }
   });
-}
-
-// ✅ Otomatik olarak buton + panel ekle (her sayfa)
-document.addEventListener("DOMContentLoaded", () => {
-  if (!document.getElementById("supportBtn")) {
-    const btn = document.createElement("div");
-    btn.id = "supportBtn";
-    btn.innerHTML = `
-      <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg=="/>`;
-    btn.onclick = toggleSupportPanel;
-    document.body.appendChild(btn);
-  }
-
-  if (!document.getElementById("supportPanel")) {
-    const panel = document.createElement("div");
-    panel.id = "supportPanel";
-    panel.innerHTML = `
-      <div class="sup-header">
-        <span>Support</span>
-        <button onclick="toggleSupportPanel()">✕</button>
-      </div>
-      <div class="sup-body">
-        <label>Your Name *</label>
-        <input type="text" id="supName" placeholder="John Doe" />
-        <label>Email *</label>
-        <input type="email" id="supEmail" placeholder="your@mail.com" />
-        <label>Category *</label>
-        <select id="supCategory">
-          <option value="Design">Design / Custom Request</option>
-          <option value="Order">Order or Delivery</option>
-          <option value="Product">Product Information</option>
-          <option value="Website">Website Issue</option>
-          <option value="Other">Other</option>
-        </select>
-        <label>Your Message *</label>
-        <textarea id="supMsg" placeholder="Write your message..."></textarea>
-        <label>Attach File (optional)</label>
-        <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx" />
-        <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
-      </div>`;
-    document.body.appendChild(panel);
-  }
-});
+};
 
 // 💬 Emin misiniz popup
 function openConfirmPopup(onConfirm) {
@@ -144,22 +90,80 @@ function openConfirmPopup(onConfirm) {
   document.getElementById("confirmNo").onclick = () => popup.remove();
 }
 
-// 🔔 Toast
+// 🔔 Toast mesajı
 function showToast(msg, type = "info") {
-  const t = document.createElement("div");
-  t.className = `toast ${type}`;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.classList.add("show"), 50);
+  let toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 100);
   setTimeout(() => {
-    t.classList.remove("show");
-    setTimeout(() => t.remove(), 400);
-  }, 2000);
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
 }
 
-// 🎨 Style
+// 🎨 Stiller (ikon + toast + popup)
 const style = document.createElement("style");
 style.innerHTML = `
+#supportBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #00aa66;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+  z-index: 9999;
+  transition: 0.2s;
+}
+#supportBtn:hover { background: #00cc77; }
+#supportBtn img {
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+}
+
+#supportPanel {
+  position: fixed;
+  bottom: 100px;
+  right: 40px;
+  width: 320px;
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 20px;
+  display: none;
+  z-index: 9998;
+}
+#supportPanel input, #supportPanel textarea, #supportPanel select {
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #111;
+  color: white;
+  padding: 8px;
+  font-size: 14px;
+}
+#supportPanel .sup-send {
+  width: 100%;
+  background: #00aa66;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+#supportPanel .sup-send:hover { background: #00cc77; }
+
 .toast {
   position: fixed;
   top: 50%;
@@ -172,10 +176,13 @@ style.innerHTML = `
   border-radius: 10px;
   opacity: 0;
   transition: all .3s;
-  z-index: 999999;
+  z-index: 99999;
   font-size: 15px;
 }
-.toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%,-50%) scale(1);
+}
 .toast.success { border-color:#00aa66; color:#00ff99; }
 .toast.error { border-color:#aa0000; color:#ff5555; }
 
@@ -187,7 +194,7 @@ style.innerHTML = `
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999998;
+  z-index: 99998;
 }
 .confirm-box {
   background: #111;
