@@ -17,7 +17,7 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// ✅ Load messages
+// 🟢 MESAJLARI YÜKLE
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
@@ -30,16 +30,17 @@ async function loadMessages() {
   renderMessages();
 }
 
-// ✅ Render messages
+// 🟢 MESAJLARI GÖSTER
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
+  // Tarih dönüşüm hatalarına karşı güvenli
   list.sort((a, b) => {
-    const dA = new Date(a.date);
-    const dB = new Date(b.date);
+    const dA = parseDateSafe(a.date);
+    const dB = parseDateSafe(b.date);
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -49,6 +50,7 @@ function renderMessages() {
   }
 
   list.forEach((msg) => {
+    const dateText = formatDateSafe(msg.date);
     const html = `
       <div class="msg-box" id="msg-${msg.id}">
         <div class="msg-top">
@@ -56,7 +58,7 @@ function renderMessages() {
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${new Date(msg.date).toLocaleString()}</div>
+            <div class="msg-date">${dateText}</div>
           </div>
           <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
@@ -74,33 +76,51 @@ function renderMessages() {
   bindEvents();
 }
 
-// ✅ Bind delete and image events
+// 🧩 Tarih hatasız dönüştürme
+function parseDateSafe(value) {
+  if (!value) return new Date(0);
+  let d = new Date(value);
+  if (isNaN(d)) {
+    // Örneğin "15.11.2025 22:48:01" gibi formatlar için
+    const parts = value.split(/[.\s:]/);
+    if (parts.length >= 5) {
+      const [day, month, year, hour, minute] = parts;
+      d = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+    }
+  }
+  return d;
+}
+
+function formatDateSafe(value) {
+  const d = parseDateSafe(value);
+  if (isNaN(d)) return "Invalid date";
+  return d.toLocaleString();
+}
+
+// 🔗 Eventleri bağla
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
-
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
-// ✅ Confirmation popup
+// 💬 Silme onayı
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// ✅ Kalıcı silme
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
-
   try {
     const { error } = await supabase
       .from("messages")
       .delete()
-      .match({ id: deleteTarget }); // <--- kesin eşleşme
+      .match({ id: deleteTarget }); // ✅ ID tipi fark etmez
 
     confirmPopup.classList.remove("show");
 
@@ -110,9 +130,12 @@ confirmYes.onclick = async () => {
       return;
     }
 
-    allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
+    // Local listeden çıkar
+    allMessages = allMessages.filter(
+      (m) => String(m.id) !== String(deleteTarget)
+    );
     renderMessages();
-    showToast("Message deleted permanently ✅", "success");
+    showToast("Deleted permanently ✅", "success");
   } catch (e) {
     console.error("Unexpected error:", e);
     showToast("Unexpected error ❌", "error");
@@ -122,7 +145,7 @@ confirmYes.onclick = async () => {
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Image modal
+// 🖼️ Resim önizleme
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -131,7 +154,7 @@ window.closeImgModal = () => {
   document.getElementById("imgModal").style.display = "none";
 };
 
-// 🔁 Sort
+// 🔁 Sıralama
 sortButton.onclick = () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
@@ -139,10 +162,10 @@ sortButton.onclick = () => {
   renderMessages();
 };
 
-// 🧩 Filter
+// 🧩 Filtre
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast
+// 🔔 Toast bildirimi
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -155,6 +178,7 @@ function showToast(msg, type = "info") {
   }, 2000);
 }
 
+// Stil
 const style = document.createElement("style");
 style.innerHTML = `
 .toast {
@@ -180,5 +204,5 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// 🚀 Start
+// 🚀 Başlat
 loadMessages();
