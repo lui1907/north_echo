@@ -1,16 +1,69 @@
 <!doctype html>
 <html lang="en">
-
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>T-Shirts — North Echo</title>
 
+<!-- STYLES & SCRIPTS -->
 <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="support.css" />
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<link rel="stylesheet" href="support.css">
+<script src="cart.js" defer></script>
 <script src="support.js" defer></script>
+
+<style>
+.page-title { text-align:center; margin-top:120px; font-size:28px; font-weight:700; }
+.product-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+.product-card {
+  background:#0d0d0d;
+  border:1px solid #222;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  transition:0.2s;
+  text-decoration:none;
+  color:#fff;
+}
+.product-card:hover { transform:scale(1.03); border-color:#00aa66; }
+.product-card img { width:100%; border-radius:10px; margin-bottom:10px; }
+.filter-side {
+  width:280px;
+  background:#0d0d0d;
+  border:1px solid #222;
+  border-radius:12px;
+  padding:20px;
+  height:fit-content;
+}
+.tshirt-layout {
+  display:flex;
+  max-width:1200px;
+  margin:40px auto;
+  gap:25px;
+  padding:0 20px;
+}
+.search-box {
+  width:100%;
+  background:#111;
+  border:1px solid #333;
+  border-radius:8px;
+  color:white;
+  padding:10px 12px;
+  margin-bottom:20px;
+}
+.size-btn {
+  background:#111;
+  border:1px solid #333;
+  padding:6px 12px;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+}
+.size-btn.active { background:#00aa66; border-color:#00ff99; }
+.price-slider-box { margin:10px 0; }
+.price-value { font-size:14px; opacity:.8; }
+</style>
 </head>
 
 <body>
@@ -19,10 +72,15 @@
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
     <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <!-- PROFIL FOTOĞRAFI -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <!-- AÇILIR MENÜ -->
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -41,130 +99,109 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PAGE TITLE -->
 <h1 class="page-title">T-Shirts</h1>
 
-<!-- MAIN LAYOUT -->
+<!-- ANA YAPI -->
 <div class="tshirt-layout">
-
   <!-- SOL: ÜRÜNLER -->
-  <div class="product-area" id="productArea">
+  <div class="product-area">
     <div class="product-grid" id="productGrid">
       <p style="opacity:.6;">Loading products...</p>
     </div>
   </div>
 
-  <!-- SAĞ: ARAMA + FİLTRELER -->
+  <!-- SAĞ: FİLTRE -->
   <div class="filter-side">
-
-    <!-- ARAMA -->
     <input type="text" id="searchInput" class="search-box" placeholder="Search products..." />
 
-    <!-- FİLTRE KUTUSU -->
     <div class="filter-box">
-
       <h3>Filters</h3>
-
-      <!-- PRICE -->
       <h4>Price</h4>
       <div class="price-slider-box">
-        <input type="range" id="priceRange" min="10" max="200" value="200" />
-        <div class="price-value">Max: <span id="priceVal">200</span>€</div>
+        <input type="range" id="priceRange" min="10" max="100" value="100" />
+        <div class="price-value">Max: <span id="priceVal">100</span>€</div>
       </div>
 
-      <!-- SIZE -->
       <h4>Size</h4>
-      <div class="size-filter-box">
-        <div class="size-buttons">
-          <div class="size-btn" data-size="S">S</div>
-          <div class="size-btn" data-size="M">M</div>
-          <div class="size-btn" data-size="L">L</div>
-          <div class="size-btn" data-size="XL">XL</div>
-        </div>
+      <div class="size-buttons">
+        <div class="size-btn" data-size="S">S</div>
+        <div class="size-btn" data-size="M">M</div>
+        <div class="size-btn" data-size="L">L</div>
+        <div class="size-btn" data-size="XL">XL</div>
       </div>
-
     </div>
-
   </div>
-
 </div>
 
-<!-- 🔥 SUPABASE SCRIPT -->
+<!-- SUPABASE PRODUCT LOAD -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// Supabase bağlantısı
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
 
-const productGrid = document.getElementById("productGrid");
 let allProducts = [];
+const grid = document.getElementById("productGrid");
 
-// 🔄 Ürünleri yükle
+// 🔄 Ürünleri Yükle
 async function loadProducts() {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("category", "T-Shirts");
-
-  if (error) {
-    console.error("Load error:", error);
-    productGrid.innerHTML = "<p>Error loading products.</p>";
+  const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
+  if (error || !data.length) {
+    grid.innerHTML = "<p>No products found.</p>";
     return;
   }
-
   allProducts = data;
-  renderProducts();
+  renderProducts(data);
 }
 
-// 🧩 Ürünleri göster
-function renderProducts() {
-  productGrid.innerHTML = "";
-
-  if (!allProducts.length) {
-    productGrid.innerHTML = "<p style='opacity:.6;'>No products found.</p>";
-    return;
-  }
-
-  allProducts.forEach((p) => {
-    // İlk görseli çek (images text kolonu)
-    const firstImg = p.images?.split(",")[0]?.trim() || "assets/default-product.jpg";
-
-    const html = `
-      <a href="product.html?id=${p.id}" 
-         class="product-card" 
-         data-name="${p.name.toLowerCase()}" 
-         data-price="${p.price}">
-        <img src="${firstImg}" alt="${p.name}">
+// 🔎 Ürünleri Göster
+function renderProducts(list) {
+  grid.innerHTML = "";
+  list.forEach(p => {
+    const img = p.images?.split(",")[0]?.trim() || "assets/no-image.jpg";
+    const card = `
+      <a class="product-card" href="#">
+        <img src="${img}" alt="${p.name}">
         <h3>${p.name}</h3>
         <p>${p.price}€</p>
-      </a>
-    `;
-    productGrid.insertAdjacentHTML("beforeend", html);
+      </a>`;
+    grid.insertAdjacentHTML("beforeend", card);
   });
-
-  // Filtreleri yeniden aktif et
-  applyFilters();
 }
 
-// ==================== FİLTRE SİSTEMİ ====================
+// 🔍 Filtreler
 const searchInput = document.getElementById("searchInput");
 const priceRange = document.getElementById("priceRange");
 const priceVal = document.getElementById("priceVal");
 const sizeBtns = document.querySelectorAll(".size-btn");
-
 let selectedSize = null;
 
-// BEDEN BUTONLARI
-sizeBtns.forEach((btn) => {
+function applyFilters() {
+  const term = searchInput.value.toLowerCase();
+  const maxPrice = parseFloat(priceRange.value);
+  let filtered = allProducts.filter(p =>
+    p.name.toLowerCase().includes(term) && p.price <= maxPrice
+  );
+  if (selectedSize) {
+    filtered = filtered.filter(p => p.sizes && p.sizes.includes(selectedSize));
+  }
+  renderProducts(filtered);
+}
+
+priceRange.addEventListener("input", () => {
+  priceVal.textContent = priceRange.value;
+  applyFilters();
+});
+searchInput.addEventListener("input", applyFilters);
+
+sizeBtns.forEach(btn => {
   btn.addEventListener("click", () => {
-    if (btn.classList.contains("active")) {
-      btn.classList.remove("active");
+    sizeBtns.forEach(b => b.classList.remove("active"));
+    if (selectedSize === btn.dataset.size) {
       selectedSize = null;
     } else {
-      sizeBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       selectedSize = btn.dataset.size;
     }
@@ -172,92 +209,35 @@ sizeBtns.forEach((btn) => {
   });
 });
 
-// FİYAT SLIDER
-priceRange.addEventListener("input", () => {
-  priceVal.textContent = priceRange.value;
-  applyFilters();
-});
-
-// ARAMA
-searchInput.addEventListener("input", applyFilters);
-
-// FİLTRE UYGULAMA
-function applyFilters() {
-  const searchText = searchInput.value.toLowerCase();
-  const maxPrice = parseFloat(priceRange.value);
-  const cards = document.querySelectorAll(".product-card");
-
-  cards.forEach((card) => {
-    const name = card.dataset.name;
-    const price = parseFloat(card.dataset.price);
-
-    const matchSearch = name.includes(searchText);
-    const matchPrice = price <= maxPrice;
-    const matchSize = true; // Şimdilik tüm ürünlerde tüm bedenler var
-
-    card.style.display = matchSearch && matchPrice && matchSize ? "block" : "none";
-  });
-}
-
-// Sayfa yüklenince ürünleri getir
 loadProducts();
 </script>
 
-<!-- 🔒 PROFİL / LOGOUT / MENU -->
+<!-- PROFİL / MENÜ / LOGOUT -->
 <script>
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
-
-if (avatar) {
-  avatar.addEventListener("click", function () {
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-  });
-}
-
+if (avatar) avatar.addEventListener("click", () => {
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+});
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+</script>
 
-// Avatar'ı localStorage'dan yükle
-let username = localStorage.getItem("loggedInUser");
+<!-- AVATAR LOAD -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+const username = localStorage.getItem("loggedInUser");
 if (username) {
-  let data = JSON.parse(localStorage.getItem("user_" + username));
-  if (data && data.avatar) {
-    let small = document.getElementById("userAvatar");
-    if (small) small.src = data.avatar;
-  }
+  const { data } = await supabase.from("users").select("avatar").eq("username", username).single();
+  if (data && data.avatar) document.getElementById("userAvatar").src = data.avatar;
 }
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
-  <img
-    src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg=="
-    alt="support"
-  />
-</div>
-
-<!-- 💬 SUPPORT PANEL -->
-<div id="supportPanel">
-  <div class="sup-header">
-    <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
-  </div>
-  <div class="sup-body">
-    <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe" />
-    <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com" />
-    <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx" />
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
-  </div>
-</div>
-
-<link rel="stylesheet" href="support.css">
-<script src="support.js"></script>
 </body>
 </html>
