@@ -58,16 +58,21 @@ document.getElementById("btnAddProduct").onclick = async () => {
   }
 };
 
+// 🧃 Refresh butonları
+window.refreshProducts = () => loadProducts();
+window.refreshMessages = () => loadMessages();
+
 // ÜRÜNLERİ LİSTELE
 async function loadProducts() {
   const container = document.getElementById("productsList");
-  container.innerHTML = "<p>Loading...</p>";
+  container.innerHTML = `<p>Loading...</p>
+    <button onclick="refreshProducts()" style="margin-bottom:10px;background:#00aa66;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">🔄 Refresh</button>`;
 
   const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
   if (error) return (container.innerHTML = "<p>Error loading products ❌</p>");
   if (!data.length) return (container.innerHTML = "<p>No products yet.</p>");
 
-  container.innerHTML = data.map(p => `
+  container.innerHTML += data.map(p => `
     <div class="card">
       <img src="${(p.images || '').split(',')[0]}" alt="${p.name}">
       <div class="card-content">
@@ -82,13 +87,14 @@ async function loadProducts() {
 // MESAJLARI LİSTELE
 async function loadMessages() {
   const container = document.getElementById("messagesList");
-  container.innerHTML = "<p>Loading...</p>";
+  container.innerHTML = `<p>Loading...</p>
+    <button onclick="refreshMessages()" style="margin-bottom:10px;background:#00aa66;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">🔄 Refresh</button>`;
 
   const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
   if (error) return (container.innerHTML = "<p>Error loading messages ❌</p>");
   if (!data.length) return (container.innerHTML = "<p>No messages yet.</p>");
 
-  container.innerHTML = data.map(m => `
+  container.innerHTML += data.map(m => `
     <div class="card">
       ${m.file ? `<img src="${m.file}" alt="attachment">` : ""}
       <div class="card-content">
@@ -144,7 +150,7 @@ async function deleteMessage(id) {
   }
 }
 
-// 🔔 Toast mesaj sistemi
+// 🔔 Toast sistemi
 function showToast(msg, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
