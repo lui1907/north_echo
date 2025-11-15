@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const msgContainer = document.getElementById("adminMessages");
@@ -17,29 +18,51 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🟢 MESAJLARI YÜKLE
+// 🟢 Mesajları yükle
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
   if (error) {
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
-    console.error(error);
+    console.error("Supabase load error:", error);
     return;
   }
   allMessages = data;
   renderMessages();
 }
 
-// 🟢 MESAJLARI GÖSTER
+// 🧠 Tarihi güvenli parse et
+function parseDateSafe(value) {
+  if (!value) return new Date(0);
+  let d = new Date(value);
+  if (isNaN(d)) {
+    // 14.11.2025 17:07:10 gibi formatlar için
+    const parts = String(value).split(/[.\s:]/);
+    if (parts.length >= 5) {
+      const [day, month, year, hour, minute] = parts;
+      d = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+    }
+  }
+  return d;
+}
+
+function formatDateSafe(value) {
+  const d = parseDateSafe(value);
+  if (isNaN(d)) return String(value || "");
+  return d.toLocaleString();
+}
+
+// 🟢 Mesajları ekrana bas
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
+
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
   list.sort((a, b) => {
-    const dA = new Date(a.date);
-    const dB = new Date(b.date);
+    const dA = parseDateSafe(a.date);
+    const dB = parseDateSafe(b.date);
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -50,15 +73,15 @@ function renderMessages() {
 
   list.forEach((msg) => {
     const html = `
-      <div class="msg-box" id="msg-${msg.uuid}">
+      <div class="msg-box" id="msg-${msg.id}">
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${msg.date || ""}</div>
+            <div class="msg-date">${formatDateSafe(msg.date)}</div>
           </div>
-          <button class="msg-delete" data-id="${msg.uuid}">Delete</button>
+          <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
         <div class="msg-text">${msg.message || ""}</div>
         ${
@@ -74,58 +97,64 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🔗 Eventler
+// 🧩 Eventler
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
+
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
-// 💬 Onay popup
+// 🔔 Confirm popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// ✅ UUID ÜZERİNDEN KALICI SİLME (detaylı hata loglu)
+// 🗑️ ID ÜZERİNDEN KALICI SİLME
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
-  confirmPopup.classList.remove("show");
+
+  const rowId = Number(deleteTarget);
+  if (Number.isNaN(rowId)) {
+    console.error("Invalid deleteTarget (not a number):", deleteTarget);
+    showToast("Cannot delete this row ❌", "error");
+    confirmPopup.classList.remove("show");
+    return;
+  }
 
   try {
-    const { data, error, status } = await supabase
+    const { error, status } = await supabase
       .from("messages")
       .delete()
-      .eq("uuid", deleteTarget); // 👈 uuid’ye göre sil
+      .eq("id", rowId);
+
+    confirmPopup.classList.remove("show");
 
     if (error) {
-      console.error("🟥 Supabase Delete Error:", error);
-      console.error("🟧 Status Code:", status);
+      console.error("Supabase delete error:", error, "status:", status);
       showToast("Delete failed ❌", "error");
       return;
     }
 
-    console.log("✅ Supabase Delete Success:", data);
-
-    // Arayüzden kaldır
-    allMessages = allMessages.filter(
-      (m) => String(m.uuid) !== String(deleteTarget)
-    );
+    // Local listeden çıkar
+    allMessages = allMessages.filter((m) => m.id !== rowId);
     renderMessages();
     showToast("Deleted permanently ✅", "success");
-  } catch (err) {
-    console.error("❌ Unexpected error:", err);
+  } catch (e) {
+    console.error("Unexpected delete error:", e);
     showToast("Unexpected error ❌", "error");
+    confirmPopup.classList.remove("show");
   }
 };
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Resim modal
+// 🖼️ Image modal
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -142,7 +171,7 @@ sortButton.onclick = () => {
   renderMessages();
 };
 
-// 🧩 Filtre
+// 🔄 Filtre
 filterSelect.onchange = renderMessages;
 
 // 🔔 Toast
