@@ -1,44 +1,40 @@
-// admin.js
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔐 Admin kontrol
 const ADMINS = ["luivoss", "fisami"];
-const loggedUser = localStorage.getItem("loggedInUser");
-
-if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  window.location.href = "index.html";
-}
-
-// ---- Menü elemanları ----
-const menuProducts = document.getElementById("menuProducts");
-const menuMessages = document.getElementById("menuMessages");
-const sectionProducts = document.getElementById("sectionProducts");
-const sectionMessages = document.getElementById("sectionMessages");
+const user = localStorage.getItem("loggedInUser");
+if (!user || !ADMINS.includes(user.toLowerCase())) window.location.href = "index.html";
 
 // Menü geçişleri
-menuProducts.onclick = () => {
-  sectionProducts.style.display = "block";
-  sectionMessages.style.display = "none";
-  menuProducts.classList.add("active");
-  menuMessages.classList.remove("active");
-  loadProducts();
+const sections = {
+  dashboard: document.getElementById("sectionDashboard"),
+  products: document.getElementById("sectionProducts"),
+  messages: document.getElementById("sectionMessages"),
 };
 
-menuMessages.onclick = () => {
-  sectionProducts.style.display = "none";
-  sectionMessages.style.display = "block";
-  menuMessages.classList.add("active");
-  menuProducts.classList.remove("active");
-  loadMessages();
-};
+const menuDashboard = document.getElementById("menuDashboard");
+const menuProducts = document.getElementById("menuProducts");
+const menuMessages = document.getElementById("menuMessages");
 
-// ---- PRODUCT EKLEME ----
+function showSection(name) {
+  Object.values(sections).forEach((s) => (s.style.display = "none"));
+  document.querySelectorAll(".sidebar li").forEach((li) => li.classList.remove("active"));
+  sections[name].style.display = "block";
+  document.getElementById(`menu${name.charAt(0).toUpperCase() + name.slice(1)}`).classList.add("active");
+
+  if (name === "products") loadProducts();
+  if (name === "messages") loadMessages();
+}
+
+menuDashboard.onclick = () => showSection("dashboard");
+menuProducts.onclick = () => showSection("products");
+menuMessages.onclick = () => showSection("messages");
+
+// Ürün ekleme
 document.getElementById("btnAddProduct").onclick = async () => {
   const name = document.getElementById("pName").value.trim();
   const price = parseFloat(document.getElementById("pPrice").value);
@@ -52,53 +48,24 @@ document.getElementById("btnAddProduct").onclick = async () => {
     return;
   }
 
-  const { error } = await supabase.from("products").insert([
-    { name, price, category, description, images, sizes }
-  ]);
-
-  if (error) {
-    console.error(error);
-    showToast("Error adding product ❌", "error");
-  } else {
-    showToast("Product added ✅", "success");
+  const { error } = await supabase.from("products").insert([{ name, price, category, description, images, sizes }]);
+  if (error) showToast("Error adding product ❌", "error");
+  else {
+    showToast("✅ Product added!");
     loadProducts();
   }
 };
 
-// ---- REFRESH butonlarını global yap ----
-window.refreshProducts = () => loadProducts();
-window.refreshMessages = () => loadMessages();
-
-// ---- PRODUCTS LİSTE ----
+// Ürünleri listele
 async function loadProducts() {
   const container = document.getElementById("productsList");
-  container.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <h2 style="margin:0;">Product List</h2>
-      <button onclick="refreshProducts()" style="background:#00aa66;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
-        🔄 Refresh
-      </button>
-    </div>
-    <p>Loading...</p>
-  `;
+  container.innerHTML = `<p>Loading...</p>`;
 
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .order("id", { ascending: false });
+  const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
+  if (error) return (container.innerHTML = "<p>Error loading products ❌</p>");
+  if (!data.length) return (container.innerHTML = "<p>No products yet.</p>");
 
-  if (error) {
-    console.error(error);
-    container.innerHTML = "<p>Error loading products ❌</p>";
-    return;
-  }
-
-  if (!data.length) {
-    container.innerHTML += "<p>No products yet.</p>";
-    return;
-  }
-
-  const listHtml = data
+  container.innerHTML = data
     .map(
       (p) => `
     <div class="card">
@@ -107,52 +74,26 @@ async function loadProducts() {
         <h3>${p.name}</h3>
         <p>${p.category} — ₺${p.price}</p>
       </div>
-      <button class="delete-btn product-delete" data-id="${p.id}">Delete</button>
+      <button class="delete-btn" data-id="${p.id}" data-type="product">Delete</button>
     </div>`
     )
     .join("");
 
-  container.innerHTML = container.innerHTML.replace("<p>Loading...</p>", "") + listHtml;
-
-  // product delete click
-  container.querySelectorAll(".product-delete").forEach((btn) => {
-    btn.onclick = () => {
-      const id = btn.dataset.id;
-      confirmDelete("product", id);
-    };
+  container.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.onclick = () => confirmDelete("product", btn.dataset.id);
   });
 }
 
-// ---- MESSAGES LİSTE ----
+// Mesajları listele
 async function loadMessages() {
   const container = document.getElementById("messagesList");
-  container.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <h2 style="margin:0;">Messages</h2>
-      <button onclick="refreshMessages()" style="background:#00aa66;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
-        🔄 Refresh
-      </button>
-    </div>
-    <p>Loading...</p>
-  `;
+  container.innerHTML = `<p>Loading...</p>`;
 
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .order("id", { ascending: false });
+  const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
+  if (error) return (container.innerHTML = "<p>Error loading messages ❌</p>");
+  if (!data.length) return (container.innerHTML = "<p>No messages yet.</p>");
 
-  if (error) {
-    console.error(error);
-    container.innerHTML = "<p>Error loading messages ❌</p>";
-    return;
-  }
-
-  if (!data.length) {
-    container.innerHTML += "<p>No messages yet.</p>";
-    return;
-  }
-
-  const listHtml = data
+  container.innerHTML = data
     .map(
       (m) => `
     <div class="card">
@@ -162,24 +103,18 @@ async function loadMessages() {
         <p><b>Category:</b> ${m.category || "None"}</p>
         <p>${m.message || ""}</p>
       </div>
-      <button class="delete-btn message-delete" data-id="${m.id}">Delete</button>
+      <button class="delete-btn" data-id="${m.id}" data-type="message">Delete</button>
     </div>`
     )
     .join("");
 
-  container.innerHTML = container.innerHTML.replace("<p>Loading...</p>", "") + listHtml;
-
-  // ❗ BURASI ÖNEMLİ: mesaj delete click’leri burada bağlanıyor
-  container.querySelectorAll(".message-delete").forEach((btn) => {
-    btn.onclick = () => {
-      const id = btn.dataset.id;
-      confirmDelete("message", id);
-    };
+  container.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.onclick = () => confirmDelete("message", btn.dataset.id);
   });
 }
 
-// ---- SİLME ONAY POPUP ----
-window.confirmDelete = (type, id) => {
+// Onay popup
+function confirmDelete(type, id) {
   const popup = document.createElement("div");
   popup.className = "confirm-popup";
   popup.innerHTML = `
@@ -189,45 +124,22 @@ window.confirmDelete = (type, id) => {
         <button id="confirmYes">Yes</button>
         <button id="confirmNo">No</button>
       </div>
-    </div>
-  `;
+    </div>`;
   document.body.appendChild(popup);
 
   document.getElementById("confirmYes").onclick = async () => {
     popup.remove();
-    if (type === "product") {
-      await deleteProduct(id);
-    } else {
-      await deleteMessage(id);
-    }
+    if (type === "product") await supabase.from("products").delete().eq("id", id);
+    else await supabase.from("messages").delete().eq("id", id);
+    showToast("✅ Deleted successfully");
+    if (type === "product") loadProducts();
+    else loadMessages();
   };
+
   document.getElementById("confirmNo").onclick = () => popup.remove();
-};
-
-// ---- VERİTABANI SİLME FONKSİYONLARI ----
-async function deleteProduct(id) {
-  const { error } = await supabase.from("products").delete().eq("id", id);
-  if (error) {
-    console.error(error);
-    showToast("Delete failed ❌", "error");
-  } else {
-    showToast("Product deleted ✅", "success");
-    loadProducts();
-  }
 }
 
-async function deleteMessage(id) {
-  const { error } = await supabase.from("messages").delete().eq("id", id);
-  if (error) {
-    console.error(error);
-    showToast("Delete failed ❌", "error");
-  } else {
-    showToast("Message deleted ✅", "success");
-    loadMessages();
-  }
-}
-
-// ---- TOAST ----
+// Toast
 function showToast(msg, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -240,7 +152,7 @@ function showToast(msg, type = "info") {
   }, 2500);
 }
 
-// ---- STİLLER ----
+// Toast stilleri
 const style = document.createElement("style");
 style.innerHTML = `
 .toast {
@@ -262,17 +174,11 @@ style.innerHTML = `
   opacity: 1;
   transform: translate(-50%,-50%) scale(1);
 }
-.toast.success { border-color:#00aa66; color:#00ff99; }
-.toast.error { border-color:#aa0000; color:#ff5555; }
-
 .confirm-popup {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   z-index:999998;
 }
 .confirm-box {
@@ -296,7 +202,6 @@ style.innerHTML = `
   padding:8px 16px;
   border-radius:6px;
   cursor:pointer;
-  transition:.2s;
 }
 .confirm-buttons button:hover {
   background:#00aa66;
@@ -305,9 +210,5 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// 🔄 ilk açılışta Products sekmesi
-loadProducts();
-sectionProducts.style.display = "block";
-sectionMessages.style.display = "none";
-menuProducts.classList.add("active");
-menuMessages.classList.remove("active");
+// Varsayılan görünüm
+showSection("dashboard");
