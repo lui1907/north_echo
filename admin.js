@@ -38,8 +38,8 @@ function renderMessages() {
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
   list.sort((a, b) => {
-    const dA = parseDateSafe(a.date);
-    const dB = parseDateSafe(b.date);
+    const dA = new Date(a.date);
+    const dB = new Date(b.date);
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -49,7 +49,6 @@ function renderMessages() {
   }
 
   list.forEach((msg) => {
-    const dateText = formatDateSafe(msg.date);
     const html = `
       <div class="msg-box" id="msg-${msg.uuid}">
         <div class="msg-top">
@@ -57,7 +56,7 @@ function renderMessages() {
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${dateText}</div>
+            <div class="msg-date">${msg.date || ""}</div>
           </div>
           <button class="msg-delete" data-id="${msg.uuid}">Delete</button>
         </div>
@@ -75,26 +74,7 @@ function renderMessages() {
   bindEvents();
 }
 
-// ✅ Güvenli tarih dönüşümü
-function parseDateSafe(value) {
-  if (!value) return new Date(0);
-  let d = new Date(value);
-  if (isNaN(d)) {
-    const parts = value.split(/[.\s:]/);
-    if (parts.length >= 5) {
-      const [day, month, year, hour, minute] = parts;
-      d = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
-    }
-  }
-  return d;
-}
-function formatDateSafe(value) {
-  const d = parseDateSafe(value);
-  if (isNaN(d)) return "Invalid date";
-  return d.toLocaleString();
-}
-
-// 🔗 Event bağla
+// 🔗 Eventler
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
@@ -104,46 +84,48 @@ function bindEvents() {
   });
 }
 
-// 💬 Silme popup
+// 💬 Onay popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// ✅ UUID ÜZERİNDEN KALICI SİLME
+// ✅ UUID ÜZERİNDEN KALICI SİLME (detaylı hata loglu)
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
+  confirmPopup.classList.remove("show");
+
   try {
-    const { error } = await supabase
+    const { data, error, status } = await supabase
       .from("messages")
       .delete()
-      .match({ uuid: deleteTarget }); // 🔥 Artık UUID'e göre siler
-
-    confirmPopup.classList.remove("show");
+      .eq("uuid", deleteTarget); // 👈 uuid’ye göre sil
 
     if (error) {
-      console.error("Supabase delete error:", error);
+      console.error("🟥 Supabase Delete Error:", error);
+      console.error("🟧 Status Code:", status);
       showToast("Delete failed ❌", "error");
       return;
     }
 
-    // Arayüzden de kaldır
+    console.log("✅ Supabase Delete Success:", data);
+
+    // Arayüzden kaldır
     allMessages = allMessages.filter(
       (m) => String(m.uuid) !== String(deleteTarget)
     );
     renderMessages();
     showToast("Deleted permanently ✅", "success");
-  } catch (e) {
-    console.error("Unexpected error:", e);
+  } catch (err) {
+    console.error("❌ Unexpected error:", err);
     showToast("Unexpected error ❌", "error");
-    confirmPopup.classList.remove("show");
   }
 };
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Resim önizleme
+// 🖼️ Resim modal
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -176,7 +158,6 @@ function showToast(msg, type = "info") {
   }, 2000);
 }
 
-// Stil
 const style = document.createElement("style");
 style.innerHTML = `
 .toast {
