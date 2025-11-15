@@ -1,220 +1,230 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
 <title>Admin Panel — North Echo</title>
 
-<link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="support.css" />
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<link rel="stylesheet" href="support.css"/>
 
 <style>
 body {
-  background: #000;
-  color: #fff;
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  padding: 0;
+  background: #0b0b0b;
+  color: white;
+  font-family: "Inter", sans-serif;
 }
 
-.admin-wrapper {
+/* WRAPPER */
+.admin-container {
   max-width: 1100px;
-  margin: 120px auto 40px;
+  margin: 120px auto;
   padding: 20px;
 }
 
-h1 {
-  font-size: 32px;
-  margin-bottom: 20px;
-  font-weight: 700;
-}
-
-/* Toolbar */
-.admin-toolbar {
+/* HEADER BAR */
+.admin-header {
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 25px;
 }
 
-select, button {
-  background: #111;
-  border: 1px solid #333;
+.admin-header h1 {
+  font-size: 26px;
+  margin: 0;
+}
+
+.admin-tools {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-tools select,
+.admin-tools button {
+  background: #141414;
   color: white;
-  padding: 10px 16px;
+  border: 1px solid #333;
   border-radius: 8px;
+  padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
 }
-
-button:hover {
-  background: #00aa66;
-  border-color: #00aa66;
+.admin-tools button:hover {
+  background: #1d1d1d;
 }
 
+/* MESSAGE BOX */
 .msg-box {
-  background: #0d0d0d;
+  background: #111;
   border: 1px solid #222;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
 }
 
 .msg-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
 .msg-sender {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .msg-email {
+  font-size: 13px;
   opacity: 0.7;
-  font-size: 14px;
 }
 
 .msg-category {
-  font-size: 14px;
+  font-size: 13px;
   opacity: 0.8;
+  margin-top: 3px;
 }
 
 .msg-date {
-  opacity: 0.5;
-  font-size: 13px;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
 .msg-text {
   margin-top: 10px;
-  line-height: 1.5;
   opacity: 0.9;
+  line-height: 1.4;
+  white-space: pre-wrap;
 }
 
+.msg-delete {
+  background: #aa0000;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.msg-delete:hover {
+  background: #cc0000;
+}
+
+/* IMAGE PREVIEW */
 .msg-img {
-  margin-top: 10px;
-  width: 180px;
+  margin-top: 12px;
+  max-width: 100%;
   border-radius: 10px;
   border: 1px solid #333;
   cursor: pointer;
-  transition: .2s;
+  transition: 0.2s;
 }
-.msg-img:hover { transform: scale(1.03); }
+.msg-img:hover { transform: scale(1.02); }
 
-/* Delete Button */
-.msg-delete {
-  background: #400000;
-  color: #ff6666;
-  border: 1px solid #660000;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.msg-delete:hover { background: #660000; }
-
-/* Modal (image viewer) */
-#imgModal {
+/* POPUP */
+#confirmPopup {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.85);
   display: none;
-  justify-content: center;
   align-items: center;
-  z-index: 99999;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
 }
-#imgModal img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 12px;
-}
-#imgModalClose {
-  position: fixed;
-  top: 25px; right: 30px;
-  font-size: 30px;
-  color: white;
-  cursor: pointer;
-}
-
-/* Custom confirmation popup */
-.confirm-popup {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
+#confirmPopup.show { display: flex; }
+#confirmPopup .popup-box {
   background: #111;
   border: 1px solid #333;
-  border-radius: 12px;
-  padding: 25px;
+  border-radius: 10px;
+  padding: 24px;
   text-align: center;
-  opacity: 0;
-  z-index: 999999;
-  transition: 0.2s;
 }
-.confirm-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.confirm-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-.confirm-buttons button {
+#confirmPopup button {
+  margin: 10px 8px 0;
   padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+#confirmYes { background: #00aa66; color: white; }
+#confirmNo { background: #444; color: white; }
+
+/* IMAGE MODAL */
+#imgModal {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+}
+#imgModalContent {
+  max-width:90%;
+  max-height:90%;
+  border-radius:10px;
+  box-shadow:0 0 20px black;
 }
 </style>
 </head>
+
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-  <div class="right-buttons">
-    <img id="userAvatar" src="assets/default-avatar.png" class="avatar">
-  </div>
 </header>
 
-<div class="side-menu" id="sideMenu">
-   <button id="closeMenu" class="close-menu">×</button>
-   <a href="index.html">Home</a>
-   <a href="tshirts.html">T-Shirts</a>
-   <a href="sweatshirts.html">Sweatshirts</a>
-   <a href="cart.html">Cart</a>
-</div>
+<!-- ADMIN CONTAINER -->
+<div class="admin-container">
 
-<div class="admin-wrapper">
-  <h1>Support Messages</h1>
+  <div class="admin-header">
+    <h1>📩 Messages Dashboard</h1>
 
-  <div class="admin-toolbar">
-    <select id="filterCategory">
-      <option>All</option>
-      <option>Product</option>
-      <option>Order</option>
-      <option>Design</option>
-      <option>Other</option>
-    </select>
-    <button id="sortButton">Sort: Newest First</button>
+    <div class="admin-tools">
+      <select id="filterCategory">
+        <option>All</option>
+        <option>Design</option>
+        <option>Order</option>
+        <option>Product</option>
+        <option>Website</option>
+        <option>Other</option>
+      </select>
+
+      <button id="sortButton">Sort: Newest First</button>
+    </div>
   </div>
 
   <div id="adminMessages"></div>
 </div>
 
-<!-- Image Modal -->
-<div id="imgModal">
-  <div id="imgModalClose" onclick="closeImgModal()">✕</div>
-  <img id="imgModalContent" src="">
-</div>
-
-<!-- Confirm Popup -->
-<div id="confirmPopup" class="confirm-popup">
-  <p id="confirmText">Are you sure?</p>
-  <div class="confirm-buttons">
-    <button id="confirmYes" style="background:#00aa66;">Yes</button>
-    <button id="confirmNo" style="background:#400;">No</button>
+<!-- CONFIRM POPUP -->
+<div id="confirmPopup">
+  <div class="popup-box">
+    <p id="confirmText">Delete this message?</p>
+    <button id="confirmYes">Yes</button>
+    <button id="confirmNo">Cancel</button>
   </div>
 </div>
 
+<!-- IMAGE MODAL -->
+<div id="imgModal" onclick="closeImgModal()">
+  <img id="imgModalContent" src="">
+</div>
+
+<!-- ADMIN JS -->
 <script type="module" src="admin.js"></script>
+
 </body>
 </html>
