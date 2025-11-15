@@ -64,7 +64,7 @@ window.sendSupportMessage = async function () {
       message,
       category,
       file: fileUrl || "",
-      date: new Date().toLocaleString(),
+      date: new Date().toISOString(), // ✅ ISO format (doğru sıralama için)
       read: false,
     },
   ]);
