@@ -13,81 +13,21 @@
 <script src="support.js" type="module"></script>
 
 <style>
-.size-box {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
-
-.size-options {
-  display: flex;
-  gap: 10px;
-}
-
-.size-btn {
-  background: #111;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.size-btn.active {
-  background: #00aa66;
-  border-color: #00ff99;
-}
-
-.add-cart-btn {
-  background: #00aa66;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #fff;
-  margin-top: 10px;
-}
-
-.recommended-box {
-  margin-top: 50px;
-  border-top: 1px solid #222;
-  padding-top: 30px;
-}
-
-.rec-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.rec-card {
-  background: #0f0f0f;
-  border-radius: 10px;
-  overflow: hidden;
-  text-decoration: none;
-  width: 30%;
-  transition: 0.2s;
-}
-
-.rec-card:hover {
-  transform: translateY(-3px);
-}
-
-.rec-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.rec-card h3 {
-  color: #fff;
-  text-align: center;
-  padding: 10px 0;
-  font-size: 15px;
-}
+.size-box { display: flex; flex-direction: column; margin: 15px 0; }
+.size-options { display: flex; gap: 10px; }
+.size-btn { background: #111; border: 1px solid #333; color: #fff; padding: 8px 14px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+.size-btn.active { background: #00aa66; border-color: #00ff99; }
+.add-cart-btn { background: #00aa66; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #fff; margin-top: 10px; }
+.recommended-box { margin-top: 50px; border-top: 1px solid #222; padding-top: 30px; }
+.rec-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+.rec-card { background: #0f0f0f; border-radius: 10px; overflow: hidden; text-decoration: none; width: 30%; transition: 0.2s; }
+.rec-card:hover { transform: translateY(-3px); }
+.rec-card img { width: 100%; height: 200px; object-fit: cover; }
+.rec-card h3 { color: #fff; text-align: center; padding: 10px 0; font-size: 15px; }
+.toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.9); background: rgba(20,20,20,0.95); border: 1px solid #333; padding: 16px 22px; color: white; border-radius: 10px; opacity: 0; transition: all .3s; z-index: 99999; font-size: 15px; }
+.toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.toast.success { border-color:#00aa66; color:#00ff99; }
+.toast.error { border-color:#aa0000; color:#ff6666; }
 </style>
 </head>
 
@@ -135,7 +75,7 @@
 
 <!-- 💬 SUPPORT -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==" alt="Support">
 </div>
 <div id="supportPanel"></div>
 
@@ -197,9 +137,35 @@ document.querySelectorAll(".size-btn").forEach(btn => {
 });
 
 document.getElementById("addCartBtn").addEventListener("click", () => {
-  if (!selectedSize) return alert("Please select a size");
-  alert("Added to cart: " + selectedSize);
+  if (!selectedSize) return showToast("Please select a size ❌", "error");
+
+  const product = {
+    id,
+    name: nameEl.textContent,
+    price: priceEl.textContent,
+    image: mainImage.src,
+    size: selectedSize,
+    quantity: 1
+  };
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push(product);
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  showToast(`${product.name} (${selectedSize}) added to cart 🛒`, "success");
 });
+
+function showToast(msg, type = "info") {
+  let toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
+}
 </script>
 
 </body>
