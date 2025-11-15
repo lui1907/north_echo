@@ -1,134 +1,121 @@
-// -----------------------------------------
-// 🔥 Supabase Connection
-// -----------------------------------------
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// -----------------------------------------
-// 🔐 Admin Access Check
-// -----------------------------------------
-const ADMINS = ["luivoss", "fstekin"]; // sadece bu kullanıcılar erişebilir
-const loggedUser = localStorage.getItem("loggedInUser");
-
-if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
+// 🔒 Admin kontrolü
+const allowedUsers = ["luivoss", "fstekin"];
+const user = localStorage.getItem("loggedInUser");
+if (!allowedUsers.includes(user)) {
   window.location.href = "index.html";
 }
 
-// -----------------------------------------
-// 🧭 Panel Sections
-// -----------------------------------------
-const msgTab = document.getElementById("tabMessages");
-const prodTab = document.getElementById("tabProducts");
-const msgSection = document.getElementById("messagesSection");
-const prodSection = document.getElementById("productsSection");
+// 📂 Sekme geçişleri
+const btnProducts = document.getElementById("btnProducts");
+const btnMessages = document.getElementById("btnMessages");
+const sectionProducts = document.getElementById("sectionProducts");
+const sectionMessages = document.getElementById("sectionMessages");
 
-// aktif sekme değiştirme
-msgTab.onclick = () => showSection("messages");
-prodTab.onclick = () => showSection("products");
+btnProducts.onclick = () => {
+  btnProducts.classList.add("active");
+  btnMessages.classList.remove("active");
+  sectionProducts.style.display = "block";
+  sectionMessages.style.display = "none";
+};
 
-function showSection(which) {
-  if (which === "messages") {
-    msgSection.style.display = "block";
-    prodSection.style.display = "none";
-    msgTab.classList.add("active");
-    prodTab.classList.remove("active");
-    loadMessages();
-  } else {
-    msgSection.style.display = "none";
-    prodSection.style.display = "block";
-    msgTab.classList.remove("active");
-    prodTab.classList.add("active");
-  }
-}
+btnMessages.onclick = async () => {
+  btnMessages.classList.add("active");
+  btnProducts.classList.remove("active");
+  sectionMessages.style.display = "block";
+  sectionProducts.style.display = "none";
+  loadMessages();
+};
 
-// -----------------------------------------
-// 📨 Load Messages (for admin)
-// -----------------------------------------
-const msgContainer = document.getElementById("adminMessages");
+// ✅ Ürün ekleme
+document.getElementById("btnAddProduct").onclick = async () => {
+  const name = pName.value.trim();
+  const price = parseFloat(pPrice.value);
+  const category = pCategory.value;
+  const description = pDescription.value.trim();
+  const images = pImages.value.trim();
+  const sizes = pSizes.value.trim();
 
-async function loadMessages() {
-  msgContainer.innerHTML = "<p>Loading...</p>";
-  const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
-  if (error) {
-    msgContainer.innerHTML = "<p>Error loading messages.</p>";
-    console.error(error);
-    return;
-  }
-
-  msgContainer.innerHTML = "";
-  data.forEach((msg) => {
-    msgContainer.innerHTML += `
-      <div class="msg-box">
-        <div class="msg-top">
-          <div>
-            <b>${msg.name}</b> <small>(${msg.email})</small><br>
-            <span>${msg.category}</span>
-          </div>
-          <button class="msg-delete" data-id="${msg.id}">🗑️</button>
-        </div>
-        <p>${msg.message}</p>
-        ${msg.file ? `<img src="${msg.file}" class="msg-img" />` : ""}
-      </div>
-    `;
-  });
-
-  document.querySelectorAll(".msg-delete").forEach((btn) => {
-    btn.onclick = async () => {
-      const id = btn.dataset.id;
-      await supabase.from("messages").delete().eq("id", id);
-      loadMessages();
-    };
-  });
-}
-
-// -----------------------------------------
-// 🛍️ Product Add Section
-// -----------------------------------------
-const saveBtn = document.getElementById("saveProduct");
-
-saveBtn.onclick = async () => {
-  const name = document.getElementById("pName").value.trim();
-  const price = parseFloat(document.getElementById("pPrice").value);
-  const category = document.getElementById("pCategory").value.trim();
-  const desc = document.getElementById("pDesc").value.trim();
-  const sizes = document.getElementById("pSizes").value.trim();
-  const imgs = document.getElementById("pImages").value.trim();
-
-  if (!name || !price || !category) {
-    alert("Please fill all required fields!");
+  if (!name || !price || !category || !description || !images) {
+    alert("Please fill all fields!");
     return;
   }
 
   const { error } = await supabase.from("products").insert([
-    {
-      name,
-      price,
-      category,
-      description: desc,
-      sizes,
-      images: imgs,
-    },
+    { name, price, category, description, images, sizes },
   ]);
 
-  if (error) {
-    console.error("Insert error:", error);
-    alert("Product insert failed ❌");
-  } else {
-    alert("Product added ✅");
-    document.getElementById("pName").value = "";
-    document.getElementById("pPrice").value = "";
-    document.getElementById("pCategory").value = "";
-    document.getElementById("pDesc").value = "";
-    document.getElementById("pSizes").value = "";
-    document.getElementById("pImages").value = "";
+  if (error) alert("❌ Error adding product");
+  else {
+    alert("✅ Product added!");
+    loadProducts();
   }
 };
 
-// -----------------------------------------
-// 🚀 Initialize
-// -----------------------------------------
-showSection("messages");
+// 🔄 Ürünleri yükle
+async function loadProducts() {
+  const list = document.getElementById("productsList");
+  list.innerHTML = "<p>Loading...</p>";
+
+  const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
+  if (error) {
+    list.innerHTML = "<p>Error loading products</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.innerHTML = "<p>No products yet.</p>";
+    return;
+  }
+
+  list.innerHTML = data.map(p => `
+    <div class="product-card">
+      <img src="${p.images.split(',')[0]}" alt="${p.name}">
+      <div class="info">
+        <h4>${p.name}</h4>
+        <p>€${p.price} — ${p.category}</p>
+        <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+// 🗑️ Ürün sil
+window.deleteProduct = async (id) => {
+  if (!confirm("Delete this product?")) return;
+  await supabase.from("products").delete().eq("id", id);
+  loadProducts();
+};
+
+// 💬 Mesajları yükle
+async function loadMessages() {
+  const list = document.getElementById("messagesList");
+  list.innerHTML = "<p>Loading...</p>";
+
+  const { data, error } = await supabase.from("messages").select("*").order("id", { ascending: false });
+  if (error) {
+    list.innerHTML = "<p>Error loading messages</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.innerHTML = "<p>No messages found.</p>";
+    return;
+  }
+
+  list.innerHTML = data.map(m => `
+    <div class="message-item">
+      <h4>${m.name} (${m.email})</h4>
+      <p><b>Category:</b> ${m.category}</p>
+      <p>${m.message}</p>
+      ${m.file ? `<a href="${m.file}" target="_blank">Attached File</a>` : ""}
+    </div>
+  `).join("");
+}
+
+loadProducts();
