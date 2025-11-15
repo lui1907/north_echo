@@ -1,6 +1,3 @@
-// ---------------------------------------------
-// 🔥 Supabase Connection
-// ---------------------------------------------
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
@@ -8,122 +5,142 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ---------------------------------------------
-// 🔐 Admin Giriş Kontrolü
-// ---------------------------------------------
-const ADMINS = ["luivoss", "fstekin"];
+const ADMINS = ["luivoss", "fisami"];
 const loggedUser = localStorage.getItem("loggedInUser");
-if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  window.location.href = "index.html";
-}
+if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) window.location.href = "index.html";
 
-// ---------------------------------------------
-// 📂 Tab Geçişi
-// ---------------------------------------------
-window.showTab = function (tab) {
-  document.querySelectorAll(".admin-item").forEach((x) => x.classList.remove("active"));
-  event.target.classList.add("active");
+const msgContainer = document.getElementById("adminMessages");
+const filterSelect = document.getElementById("filterCategory");
+const confirmPopup = document.getElementById("confirmPopup");
+const confirmYes = document.getElementById("confirmYes");
+const confirmNo = document.getElementById("confirmNo");
+const confirmText = document.getElementById("confirmText");
 
-  const content = document.getElementById("adminContent");
-  if (tab === "messages") loadMessagesTab(content);
-  if (tab === "addProduct") loadAddProductTab(content);
-};
+let allMessages = [];
+let deleteTarget = null;
 
-// ---------------------------------------------
-// 💬 Mesajlar Sekmesi
-// ---------------------------------------------
-async function loadMessagesTab(content) {
-  content.innerHTML = `
-    <h2>Messages</h2>
-    <div id="loadingSpinner" style="text-align:center;padding:20px;">Loading...</div>
-  `;
+// 🚀 İlk açılış
+loadMessages();
 
+filterSelect.onchange = renderMessages;
+
+// 💬 MESAJLARI YÜKLE
+async function loadMessages() {
+  msgContainer.innerHTML = "<p>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
-
   if (error) {
+    msgContainer.innerHTML = "<p>Error loading messages ❌</p>";
     console.error(error);
-    content.innerHTML = "<p style='color:#f55;'>Error loading messages ❌</p>";
     return;
   }
-
-  if (!data.length) {
-    content.innerHTML = "<h2>Messages</h2><p>No messages yet.</p>";
-    return;
-  }
-
-  let html = "<h2>Messages</h2>";
-  data.forEach((msg) => {
-    const readClass = msg.read ? "border:1px solid #333;" : "border:1px solid #00aa66;";
-    html += `
-      <div class="msg-box" style="${readClass}">
-        <strong>${msg.name}</strong> <small>(${msg.email})</small><br>
-        <em>${msg.category}</em><br>
-        <p>${msg.message}</p>
-        <div style="display:flex;gap:10px;margin-top:8px;">
-          <button class="mark-read-btn" onclick="markAsRead('${msg.id}')">Mark Read</button>
-          <button class="delete-btn" onclick="deleteMessage('${msg.id}')">Delete</button>
-        </div>
-      </div>`;
-  });
-  content.innerHTML = html;
+  allMessages = data;
+  renderMessages();
 }
 
-// ---------------------------------------------
-// 📨 Okundu İşareti
-// ---------------------------------------------
-window.markAsRead = async function (id) {
-  const { error } = await supabase
-    .from("messages")
-    .update({ read: true })
-    .eq("id", id);
+// 🔄 MESAJLARI GÖRÜNTÜLE
+function renderMessages() {
+  msgContainer.innerHTML = "";
+  const cat = filterSelect.value;
+  let list = cat === "All" ? allMessages : allMessages.filter(m => m.category === cat);
 
+  if (!list.length) {
+    msgContainer.innerHTML = "<p>No messages found.</p>";
+    return;
+  }
+
+  list.forEach(msg => {
+    msgContainer.insertAdjacentHTML("beforeend", `
+      <div class="msg-box" id="msg-${msg.id}">
+        <div class="msg-top">
+          <div>
+            <div class="msg-sender">${msg.name}</div>
+            <div class="msg-email">${msg.email}</div>
+            <div class="msg-category">${msg.category}</div>
+            <div class="msg-date">${msg.date || ""}</div>
+          </div>
+          <button class="msg-delete" data-id="${msg.id}" style="background:#400;border:1px solid #600;color:#ff6666;border-radius:8px;padding:6px 12px;cursor:pointer;">Delete</button>
+        </div>
+        <div class="msg-text">${msg.message}</div>
+        ${msg.file ? `<img src="${msg.file}" class="msg-img" data-url="${msg.file}" />` : ""}
+      </div>
+    `);
+  });
+
+  bindEvents();
+}
+
+// 🖱️ EVENTLER
+function bindEvents() {
+  document.querySelectorAll(".msg-delete").forEach(btn => {
+    btn.onclick = () => openConfirmPopup(btn.dataset.id);
+  });
+  document.querySelectorAll(".msg-img").forEach(img => {
+    img.onclick = () => openImage(img.dataset.url);
+  });
+}
+
+// ⚡ SİLME ONAY POPUP
+function openConfirmPopup(id) {
+  deleteTarget = id;
+  confirmText.textContent = "Delete this message?";
+  confirmPopup.classList.add("show");
+}
+
+confirmYes.onclick = async () => {
+  if (!deleteTarget) return;
+  confirmPopup.classList.remove("show");
+  const { error } = await supabase.from("messages").delete().eq("id", deleteTarget);
   if (error) {
-    console.error(error);
-    showToast("Error marking as read ❌", "error");
+    showToast("Delete failed ❌", "error");
   } else {
-    showToast("Message marked as read ✅", "success");
-    loadMessagesTab(document.getElementById("adminContent"));
+    allMessages = allMessages.filter(m => String(m.id) !== String(deleteTarget));
+    renderMessages();
+    showToast("Deleted permanently ✅", "success");
   }
 };
+confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// ---------------------------------------------
-// 🗑️ Mesaj Silme
-// ---------------------------------------------
-window.deleteMessage = async function (id) {
-  if (!confirm("Are you sure you want to delete this message?")) return;
-
-  const { error } = await supabase.from("messages").delete().eq("id", id);
-  if (error) {
-    console.error(error);
-    showToast("Error deleting message ❌", "error");
-  } else {
-    showToast("Message deleted 🗑️", "success");
-    loadMessagesTab(document.getElementById("adminContent"));
-  }
+// 🖼️ FOTO BÜYÜTME
+window.openImage = (url) => {
+  document.getElementById("imgModalContent").src = url;
+  document.getElementById("imgModal").style.display = "flex";
+};
+document.getElementById("imgModalClose").onclick = () => {
+  document.getElementById("imgModal").style.display = "none";
 };
 
-// ---------------------------------------------
-// 🛍️ Ürün Ekleme Sekmesi
-// ---------------------------------------------
-function loadAddProductTab(content) {
+// 🧭 SEKME GEÇİŞLERİ
+window.showTab = function(tab) {
+  document.querySelectorAll(".admin-item").forEach(x => x.classList.remove("active"));
+  event.target.classList.add("active");
+  const content = document.getElementById("adminContent");
+  if (tab === "messages") {
+    content.innerHTML = `<h2>Messages</h2><div class="admin-toolbar">
+      <select id="filterCategory">
+        <option>All</option><option>Product</option><option>Order</option>
+        <option>Design</option><option>Other</option>
+      </select></div><div id="adminMessages"></div>`;
+    loadMessages();
+  }
+  if (tab === "addProduct") loadAddProduct(content);
+};
+
+// 🛍️ ÜRÜN EKLEME
+function loadAddProduct(content) {
   content.innerHTML = `
     <h2>Add Product</h2>
     <input id="prodName" class="input-box" placeholder="Product Name">
     <input id="prodPrice" class="input-box" type="number" placeholder="Price (€)">
-    <input id="prodCategory" class="input-box" placeholder="Category (e.g. T-Shirts)">
+    <input id="prodCategory" class="input-box" placeholder="Category">
     <textarea id="prodDesc" class="input-box" placeholder="Description"></textarea>
     <input id="prodImages" class="input-box" placeholder="Image URLs (comma separated)">
-    <input id="prodSizes" class="input-box" placeholder="Sizes (e.g. S,M,L,XL)">
-    <button class="save-btn" id="saveProductBtn">Save Product</button>
-    <div id="productList"></div>
+    <input id="prodSizes" class="input-box" placeholder="Sizes (S,M,L,XL)">
+    <button id="saveProductBtn" style="background:#00aa66;padding:10px;border:none;color:#fff;border-radius:8px;">Save Product</button>
   `;
   document.getElementById("saveProductBtn").onclick = saveProduct;
-  loadProductsList();
 }
 
-// ---------------------------------------------
-// 💾 Ürün Kaydetme
-// ---------------------------------------------
+// 💾 ÜRÜN KAYDET
 async function saveProduct() {
   const name = document.getElementById("prodName").value.trim();
   const price = parseFloat(document.getElementById("prodPrice").value);
@@ -131,81 +148,20 @@ async function saveProduct() {
   const description = document.getElementById("prodDesc").value.trim();
   const images = document.getElementById("prodImages").value.trim();
   const sizes = document.getElementById("prodSizes").value.trim();
+  if (!name || !price || !category || !images) return showToast("Fill required fields ❌", "error");
 
-  if (!name || !price || !category || !images) {
-    showToast("Please fill all required fields ❌", "error");
-    return;
-  }
-
-  const { error } = await supabase.from("products").insert([
-    { name, price, category, description, images, sizes },
-  ]);
-
+  const { error } = await supabase.from("products").insert([{ name, price, category, description, images, sizes }]);
   if (error) {
-    console.error(error);
     showToast("Error saving product ❌", "error");
   } else {
-    showToast("✅ Product added successfully!", "success");
-    document.querySelectorAll(".input-box").forEach((i) => (i.value = ""));
-    loadProductsList();
+    showToast("Product added ✅", "success");
+    document.querySelectorAll(".input-box").forEach(i => i.value = "");
   }
 }
 
-// ---------------------------------------------
-// 📋 Ürün Listesi
-// ---------------------------------------------
-async function loadProductsList() {
-  const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  const container = document.getElementById("productList");
-  if (!data.length) {
-    container.innerHTML = "<p>No products yet.</p>";
-    return;
-  }
-
-  let html = "<h3>Existing Products</h3>";
-  data.forEach((p) => {
-    const imgs = p.images ? p.images.split(",")[0].trim() : "";
-    html += `
-      <div class="msg-box">
-        <img src="${imgs}" style="width:70px;height:70px;object-fit:cover;border-radius:6px;margin-right:10px;">
-        <strong>${p.name}</strong> — ${p.price}€
-        <br><small>${p.category}</small>
-        <div style="display:flex;gap:8px;margin-top:6px;">
-          <button onclick="deleteProduct('${p.id}')">Delete</button>
-        </div>
-      </div>
-    `;
-  });
-  container.innerHTML = html;
-}
-
-// ---------------------------------------------
-// ❌ Ürün Silme
-// ---------------------------------------------
-window.deleteProduct = async function (id) {
-  if (!confirm("Are you sure you want to delete this product?")) return;
-
-  const { error } = await supabase.from("products").delete().eq("id", id);
-  if (error) {
-    console.error(error);
-    showToast("Error deleting product ❌", "error");
-  } else {
-    showToast("Product deleted 🗑️", "success");
-    loadProductsList();
-  }
-};
-
-// ---------------------------------------------
-// 🔔 Toast Mesajları
-// ---------------------------------------------
+// 🔔 TOAST
 function showToast(msg, type = "info") {
-  let toast = document.createElement("div");
+  const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.textContent = msg;
   document.body.appendChild(toast);
@@ -215,8 +171,3 @@ function showToast(msg, type = "info") {
     setTimeout(() => toast.remove(), 400);
   }, 2000);
 }
-
-// ---------------------------------------------
-// 🚀 İlk Açılışta Mesaj Sekmesi
-// ---------------------------------------------
-loadMessagesTab(document.getElementById("adminContent"));
