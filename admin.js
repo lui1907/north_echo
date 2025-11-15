@@ -1,98 +1,73 @@
-// -------------------
-// Supabase Config
-// -------------------
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const messageList = document.getElementById("messageList");
-const noMessages = document.getElementById("noMessages");
+const msgBox = document.getElementById("adminMessages");
 
-let allMessages = [];
-
-// -------------------
-// VERİLERİ ÇEK
-// -------------------
 async function loadMessages() {
-    const { data, error } = await client
+    msgBox.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
+
+    const { data, error } = await supabase
         .from("messages")
         .select("*")
-        .order("id", { ascending: false });
+        .order("id", { ascending:false });
 
     if (error) {
-        console.error("Supabase Error:", error);
+        msgBox.innerHTML = "<p style='color:red;'>Failed to load.</p>";
         return;
     }
 
-    allMessages = data;
-    renderMessages("all");
+    render(data);
 }
 
-// -------------------
-// MESAJLARI RENDER ET
-// -------------------
-function renderMessages(category = "all") {
-    messageList.innerHTML = "";
+function render(list) {
+    msgBox.innerHTML = "";
 
-    let filtered = category === "all"
-        ? allMessages
-        : allMessages.filter(m => m.category === category);
-
-    if (filtered.length === 0) {
-        noMessages.style.display = "block";
+    if (list.length === 0) {
+        msgBox.innerHTML = "<p style='opacity:.6;'>No messages.</p>";
         return;
     }
 
-    noMessages.style.display = "none";
+    list.forEach(msg => {
 
-    filtered.forEach(msg => {
-        const div = document.createElement("div");
-        div.className = "message";
+        msgBox.innerHTML += `
+        <div class="msg-box">
 
-        div.innerHTML = `
-            <div class="name">
-                <div class="tick"></div> ${msg.name}
-            </div>
+          <div class="read-dot ${msg.read ? "read" : ""}"></div>
 
-            <p>${msg.message}</p>
+          <button class="msg-delete" onclick="deleteMsg('${msg.id}')">Delete</button>
 
-            <small>${new Date(msg.created_at).toLocaleString()}</small>
+          <h3>${msg.name}</h3>
+          <p>${msg.email}</p>
+          <p class="msg-category">Category: ${msg.category}</p>
 
-            <button class="delete-btn" data-id="${msg.id}">Delete</button>
-        `;
+          <p>${msg.message}</p>
 
-        messageList.appendChild(div);
-    });
+          ${msg.file ? `<img class="msg-img" onclick="openImgModal('${msg.file}')" src="${msg.file}">` : ""}
 
-    // Silme
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", async e => {
-            let id = e.target.getAttribute("data-id");
+          <div class="msg-date">${msg.date}</div>
 
-            await client.from("messages").delete().eq("id", id);
-
-            allMessages = allMessages.filter(m => m.id != id);
-            renderMessages(category);
-        });
+        </div>`;
     });
 }
 
-// -------------------
-// KATEGORİ TIKLAMA
-// -------------------
-document.querySelectorAll(".category-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
+window.deleteMsg = async function(id) {
+    if (!confirm("Delete message?")) return;
 
-        document.querySelectorAll(".category-btn")
-            .forEach(b => b.classList.remove("active"));
+    await supabase.from("messages").delete().eq("id", id);
+    loadMessages();
+};
 
-        btn.classList.add("active");
+window.openImgModal = function(url) {
+    document.getElementById("imgModalContent").src = url;
+    document.getElementById("imgModal").style.display = "flex";
+};
 
-        const cat = btn.getAttribute("data-category");
-        renderMessages(cat);
-    });
-});
+window.closeImgModal = function() {
+    document.getElementById("imgModal").style.display = "none";
+};
 
-// Başlangıçta yükle
 loadMessages();
