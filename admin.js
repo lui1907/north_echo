@@ -43,7 +43,7 @@ document.getElementById("btnAddProduct").onclick = async () => {
   const sizes = document.getElementById("pSizes").value.trim();
 
   if (!name || !price || !category || !description || !images) {
-    alert("Please fill all fields ❌");
+    showToast("Please fill all fields ❌", "error");
     return;
   }
 
@@ -51,9 +51,9 @@ document.getElementById("btnAddProduct").onclick = async () => {
     name, price, category, description, images, sizes 
   }]);
 
-  if (error) alert("Error adding product ❌");
+  if (error) showToast("Error adding product ❌", "error");
   else {
-    alert("✅ Product added successfully!");
+    showToast("✅ Product added successfully!", "success");
     loadProducts();
   }
 };
@@ -74,18 +74,10 @@ async function loadProducts() {
         <h3>${p.name}</h3>
         <p>${p.category} — ₺${p.price}</p>
       </div>
-      <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+      <button class="delete-btn" onclick="confirmDelete('product', ${p.id})">Delete</button>
     </div>
   `).join("");
 }
-
-// ÜRÜN SİL
-window.deleteProduct = async (id) => {
-  if (!confirm("Delete this product?")) return;
-  const { error } = await supabase.from("products").delete().eq("id", id);
-  if (error) alert("Delete failed ❌");
-  else loadProducts();
-};
 
 // MESAJLARI LİSTELE
 async function loadMessages() {
@@ -101,21 +93,135 @@ async function loadMessages() {
       ${m.file ? `<img src="${m.file}" alt="attachment">` : ""}
       <div class="card-content">
         <h3>${m.name} (${m.email})</h3>
-        <p><b>${m.category}</b></p>
+        <p><b>Category:</b> ${m.category}</p>
         <p>${m.message}</p>
       </div>
-      <button class="delete-btn" onclick="deleteMessage(${m.id})">Delete</button>
+      <button class="delete-btn" onclick="confirmDelete('message', ${m.id})">Delete</button>
     </div>
   `).join("");
 }
 
-// MESAJ SİL
-window.deleteMessage = async (id) => {
-  if (!confirm("Delete this message?")) return;
-  const { error } = await supabase.from("messages").delete().eq("id", id);
-  if (error) alert("Delete failed ❌");
-  else loadMessages();
+// 🔥 Onay popup
+window.confirmDelete = (type, id) => {
+  const popup = document.createElement("div");
+  popup.className = "confirm-popup";
+  popup.innerHTML = `
+    <div class="confirm-box">
+      <p>Are you sure you want to delete this ${type}?</p>
+      <div class="confirm-buttons">
+        <button id="confirmYes">Yes</button>
+        <button id="confirmNo">No</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  document.getElementById("confirmYes").onclick = async () => {
+    popup.remove();
+    if (type === "product") await deleteProduct(id);
+    else await deleteMessage(id);
+  };
+  document.getElementById("confirmNo").onclick = () => popup.remove();
 };
 
-// İlk yükleme
+// ÜRÜN SİL
+async function deleteProduct(id) {
+  const { error } = await supabase.from("products").delete().eq("id", id);
+  if (error) showToast("Delete failed ❌", "error");
+  else {
+    showToast("✅ Product deleted!", "success");
+    loadProducts();
+  }
+}
+
+// MESAJ SİL
+async function deleteMessage(id) {
+  const { error } = await supabase.from("messages").delete().eq("id", id);
+  if (error) showToast("Delete failed ❌", "error");
+  else {
+    showToast("✅ Message deleted!", "success");
+    loadMessages();
+  }
+}
+
+// 🔔 Toast mesaj sistemi
+function showToast(msg, type = "info") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
+}
+
+// 💅 Stiller
+const style = document.createElement("style");
+style.innerHTML = `
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(20,20,20,0.95);
+  border: 1px solid #333;
+  padding: 16px 22px;
+  color: white;
+  border-radius: 10px;
+  opacity: 0;
+  transition: all .3s;
+  z-index: 999999;
+  font-size: 15px;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%,-50%) scale(1);
+}
+.toast.success { border-color:#00aa66; color:#00ff99; }
+.toast.error { border-color:#aa0000; color:#ff5555; }
+
+.confirm-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999998;
+}
+.confirm-box {
+  background: #111;
+  padding: 25px 35px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  text-align: center;
+  color: #fff;
+}
+.confirm-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.confirm-buttons button {
+  background: #222;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.confirm-buttons button:hover {
+  background: #00aa66;
+  border-color: #00ff99;
+  color: #fff;
+}
+`;
+document.head.appendChild(style);
+
+// 🔄 İlk yükleme
 loadProducts();
