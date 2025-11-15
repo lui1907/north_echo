@@ -12,7 +12,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // -----------------------------------------
 // 🔐 Admin Access Check
 // -----------------------------------------
-const ADMINS = ["luivoss", "fstekin"];
+const ADMINS = ["luivoss", "fisami"];
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
@@ -31,46 +31,61 @@ const confirmNo = document.getElementById("confirmNo");
 const confirmText = document.getElementById("confirmText");
 
 let allMessages = [];
-let sortOrder = "desc"; // "desc" = Supabase'in verdiği sıra, "asc" = ters çevir
+let sortOrder = "desc"; // newest first
 let deleteTarget = null;
 
 // -----------------------------------------
-// 🔄 Mesajları Yükle
+// 🔄 Load Messages
 // -----------------------------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
 
   const { data, error } = await supabase.from("messages").select("*");
-
   if (error) {
     console.error("Load error:", error);
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
     return;
   }
 
-  allMessages = data || [];
-  renderMessages();      // önce normal sırayla yaz
-  applySortToDOM();      // sonra mevcut sortOrder'a göre DOM'u ters/normal yap
+  // Her mesajın index’ini kaydediyoruz
+  allMessages = (data || []).map((m, i) => ({ ...m, index: i }));
+  renderMessages();
 }
 
 // -----------------------------------------
-// 🧾 Mesajları Ekrana Bas
+// 🧾 Render Messages
 // -----------------------------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
 
   let list = [...allMessages];
 
+  // Kategori filtresi
   const cat = filterSelect.value;
-  if (cat && cat !== "All") {
-    list = list.filter((m) => m.category === cat);
-  }
+  if (cat && cat !== "All") list = list.filter((m) => m.category === cat);
+
+  // 🔁 Sıralama
+  list.sort((a, b) => {
+    // 1️⃣ Eğer date varsa tarihe göre sırala
+    if (a.date && b.date) {
+      const dA = new Date(a.date);
+      const dB = new Date(b.date);
+      return sortOrder === "desc" ? dB - dA : dA - dB;
+    }
+    // 2️⃣ Eğer id varsa id’ye göre sırala
+    if (a.id && b.id) {
+      return sortOrder === "desc" ? b.id - a.id : a.id - b.id;
+    }
+    // 3️⃣ Fallback olarak index’e göre
+    return sortOrder === "desc" ? b.index - a.index : a.index - b.index;
+  });
 
   if (!list.length) {
     msgContainer.innerHTML = "<p style='opacity:.6;'>No messages found.</p>";
     return;
   }
 
+  // 🔹 Listeyi oluştur
   list.forEach((msg) => {
     const html = `
       <div class="msg-box" id="msg-${msg.id}">
@@ -79,7 +94,8 @@ function renderMessages() {
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${msg.date || ""}</div>
+            <div class="msg-date">${msg.date || "—"}</div>
+            <div class="msg-id" style="opacity:.5;font-size:13px;">#${msg.id}</div>
           </div>
           <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
@@ -98,25 +114,7 @@ function renderMessages() {
 }
 
 // -----------------------------------------
-// 🔁 SIRALAMAYI SADECE DOM ÜZERİNDE UYGULA
-// -----------------------------------------
-function applySortToDOM() {
-  // Hiç mesaj yoksa uğraşmaya gerek yok
-  const items = Array.from(msgContainer.children);
-  if (items.length <= 1) return;
-
-  // "desc" → Supabase'in verdiği base sıra (renderMessages sonrası)
-  // "asc" → o sıranın TAM tersine çevrilmiş hali
-  if (sortOrder === "asc") {
-    const reversed = items.reverse();
-    msgContainer.innerHTML = "";
-    reversed.forEach((el) => msgContainer.appendChild(el));
-  }
-  // sortOrder "desc" ise bir şey yapmıyoruz, renderMessages zaten base sırayı yazdı
-}
-
-// -----------------------------------------
-// 🖱️ Eventler
+// 🖱️ Butonlar / Görseller
 // -----------------------------------------
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
@@ -129,7 +127,7 @@ function bindEvents() {
 }
 
 // -----------------------------------------
-// 🧨 Silme Onayı
+// 🧨 Delete Confirmation
 // -----------------------------------------
 function openConfirmPopup(id) {
   deleteTarget = id;
@@ -154,57 +152,42 @@ confirmYes.onclick = async () => {
 
   allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
   renderMessages();
-  applySortToDOM();
   showToast("Deleted permanently ✅", "success");
 };
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
 // -----------------------------------------
-// 🖼️ Görsel Modal
+// 🖼️ Image Modal
 // -----------------------------------------
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
 };
-
 window.closeImgModal = () => {
   document.getElementById("imgModal").style.display = "none";
 };
 
 // -----------------------------------------
-// 📂 Filtre & Sıralama Butonları
+// 🔁 Sorting & Filtering
 // -----------------------------------------
-if (filterSelect) {
-  filterSelect.onchange = () => {
-    renderMessages();
-    applySortToDOM();
-  };
-}
-
-if (sortButton) {
-  sortButton.onclick = () => {
-    // sıra modunu değiştir
-    sortOrder = sortOrder === "desc" ? "asc" : "desc";
-    sortButton.textContent =
-      sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
-
-    // DOM'u yeniden oluşturup sonra ters/normal yap
-    renderMessages();
-    applySortToDOM();
-  };
-}
+sortButton.onclick = () => {
+  sortOrder = sortOrder === "desc" ? "asc" : "desc";
+  sortButton.textContent =
+    sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
+  renderMessages();
+};
+filterSelect.onchange = renderMessages;
 
 // -----------------------------------------
-// 🔔 Toast
+// 🔔 Toast Notification
 // -----------------------------------------
 function showToast(msg, type = "info") {
-  const toast = document.createElement("div");
+  let toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.textContent = msg;
   document.body.appendChild(toast);
-
-  setTimeout(() => toast.classList.add("show"), 50);
+  setTimeout(() => toast.classList.add("show"), 100);
   setTimeout(() => {
     toast.classList.remove("show");
     setTimeout(() => toast.remove(), 400);
