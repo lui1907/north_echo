@@ -16,7 +16,6 @@ const ADMINS = ["luivoss", "fisami"];
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  // Uyarı göstermeden direkt ana sayfaya
   window.location.href = "index.html";
 }
 
@@ -32,11 +31,11 @@ const confirmNo = document.getElementById("confirmNo");
 const confirmText = document.getElementById("confirmText");
 
 let allMessages = [];
-let sortOrder = "desc"; // desc = newest first
+let sortOrder = "desc"; // "desc" = Supabase'in verdiği sıra, "asc" = ters çevir
 let deleteTarget = null;
 
 // -----------------------------------------
-// 🔄 Load Messages (tek sefer, sonra sadece JS ile sırala)
+// 🔄 Mesajları Yükle
 // -----------------------------------------
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
@@ -49,39 +48,23 @@ async function loadMessages() {
     return;
   }
 
-  // Her mesaja kendi index'ini koyuyoruz (hangi sırada geldiyse)
-  allMessages = (data || []).map((m, index) => ({
-    ...m,
-    _i: index, // 🔑 sadece buna göre sıralayacağız
-  }));
-
-  renderMessages();
+  allMessages = data || [];
+  renderMessages();      // önce normal sırayla yaz
+  applySortToDOM();      // sonra mevcut sortOrder'a göre DOM'u ters/normal yap
 }
 
 // -----------------------------------------
-// 🧾 Render Messages
+// 🧾 Mesajları Ekrana Bas
 // -----------------------------------------
 function renderMessages() {
   msgContainer.innerHTML = "";
 
   let list = [...allMessages];
 
-  // Kategori filtresi
   const cat = filterSelect.value;
   if (cat && cat !== "All") {
     list = list.filter((m) => m.category === cat);
   }
-
-  // 🔑 Sıralama SIRF _i'ye göre (created_at yok, date parse yok)
-  list.sort((a, b) => {
-    if (sortOrder === "desc") {
-      // En son gelen en üstte
-      return b._i - a._i;
-    } else {
-      // İlk gelen en üstte
-      return a._i - b._i;
-    }
-  });
 
   if (!list.length) {
     msgContainer.innerHTML = "<p style='opacity:.6;'>No messages found.</p>";
@@ -115,7 +98,25 @@ function renderMessages() {
 }
 
 // -----------------------------------------
-// 🖱️ Button / Image Events
+// 🔁 SIRALAMAYI SADECE DOM ÜZERİNDE UYGULA
+// -----------------------------------------
+function applySortToDOM() {
+  // Hiç mesaj yoksa uğraşmaya gerek yok
+  const items = Array.from(msgContainer.children);
+  if (items.length <= 1) return;
+
+  // "desc" → Supabase'in verdiği base sıra (renderMessages sonrası)
+  // "asc" → o sıranın TAM tersine çevrilmiş hali
+  if (sortOrder === "asc") {
+    const reversed = items.reverse();
+    msgContainer.innerHTML = "";
+    reversed.forEach((el) => msgContainer.appendChild(el));
+  }
+  // sortOrder "desc" ise bir şey yapmıyoruz, renderMessages zaten base sırayı yazdı
+}
+
+// -----------------------------------------
+// 🖱️ Eventler
 // -----------------------------------------
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
@@ -128,7 +129,7 @@ function bindEvents() {
 }
 
 // -----------------------------------------
-// 🧨 Delete Confirmation Popup
+// 🧨 Silme Onayı
 // -----------------------------------------
 function openConfirmPopup(id) {
   deleteTarget = id;
@@ -153,13 +154,14 @@ confirmYes.onclick = async () => {
 
   allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
   renderMessages();
+  applySortToDOM();
   showToast("Deleted permanently ✅", "success");
 };
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
 // -----------------------------------------
-// 🖼️ Image Modal
+// 🖼️ Görsel Modal
 // -----------------------------------------
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
@@ -171,19 +173,26 @@ window.closeImgModal = () => {
 };
 
 // -----------------------------------------
-// 🔁 Sort & Filter
+// 📂 Filtre & Sıralama Butonları
 // -----------------------------------------
-if (sortButton) {
-  sortButton.onclick = () => {
-    sortOrder = sortOrder === "desc" ? "asc" : "desc";
-    sortButton.textContent =
-      sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
-    renderMessages(); // sadece JS içinde yeniden sırala
+if (filterSelect) {
+  filterSelect.onchange = () => {
+    renderMessages();
+    applySortToDOM();
   };
 }
 
-if (filterSelect) {
-  filterSelect.onchange = () => renderMessages();
+if (sortButton) {
+  sortButton.onclick = () => {
+    // sıra modunu değiştir
+    sortOrder = sortOrder === "desc" ? "asc" : "desc";
+    sortButton.textContent =
+      sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
+
+    // DOM'u yeniden oluşturup sonra ters/normal yap
+    renderMessages();
+    applySortToDOM();
+  };
 }
 
 // -----------------------------------------
