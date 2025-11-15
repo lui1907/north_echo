@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Products — North Echo</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>T-Shirts — North Echo</title>
 
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <link rel="stylesheet" href="support.css">
@@ -19,7 +19,7 @@
   letter-spacing: 1px;
 }
 
-.products-layout {
+.tshirt-layout {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -28,7 +28,7 @@
   max-width: 1200px;
 }
 
-/* SOL: ÜRÜNLER */
+/* Ürünler alanı */
 .product-area {
   flex: 3;
 }
@@ -66,7 +66,7 @@
   font-size: 14px;
 }
 
-/* SAĞ: FİLTRE PANELİ */
+/* Sağ filtre */
 .filter-side {
   flex: 1;
   background: #0d0d0d;
@@ -111,23 +111,14 @@
   background: #00aa66;
   border-color: #00aa66;
 }
-.category-select {
-  width: 100%;
-  background: #111;
-  color: white;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 10px;
-  margin-top: 10px;
-}
 </style>
 </head>
 
 <body>
+
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-
   <div class="right-buttons">
     <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
@@ -143,35 +134,25 @@
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
-  <a href="products.html">Products</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
   <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
 
-<h1 class="page-title">Products</h1>
+<h1 class="page-title">T-Shirts</h1>
 
-<div class="products-layout">
-  <!-- SOL -->
+<div class="tshirt-layout">
   <div class="product-area">
     <div id="productGrid" class="product-grid">
-      <p style="opacity:.7;">Loading products...</p>
+      <p style="opacity:.6;">Loading products...</p>
     </div>
   </div>
 
-  <!-- SAĞ -->
   <div class="filter-side">
     <input type="text" id="searchInput" class="search-box" placeholder="Search products..."/>
 
     <div class="filter-box">
-      <h3>Category</h3>
-      <select id="categorySelect" class="category-select">
-        <option value="All">All</option>
-        <option value="T-Shirt">T-Shirts</option>
-        <option value="Sweatshirt">Sweatshirts</option>
-        <option value="Hoodie">Hoodies</option>
-        <option value="Accessory">Accessories</option>
-      </select>
-
       <h3>Price</h3>
       <div class="price-slider-box">
         <input type="range" id="priceRange" min="10" max="200" value="200" />
@@ -229,7 +210,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const productGrid = document.getElementById("productGrid");
 const searchInput = document.getElementById("searchInput");
-const categorySelect = document.getElementById("categorySelect");
 const priceRange = document.getElementById("priceRange");
 const priceVal = document.getElementById("priceVal");
 const sizeBtns = document.querySelectorAll(".size-btn");
@@ -237,31 +217,34 @@ const sizeBtns = document.querySelectorAll(".size-btn");
 let allProducts = [];
 let selectedSize = null;
 
-// 🟢 Ürünleri yükle
+// 🔹 Sadece kategori "T-Shirt" olan ürünleri çek
 async function loadProducts() {
-  const { data, error } = await supabase.from("products").select("*");
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category", "T-Shirt");
+
   if (error) {
     console.error(error);
     productGrid.innerHTML = "<p>Error loading products ❌</p>";
     return;
   }
+
   allProducts = data;
   renderProducts();
 }
 
-// 🧱 Ürünleri göster
+// 🔹 Ürünleri listele
 function renderProducts() {
   productGrid.innerHTML = "";
   const searchText = searchInput.value.toLowerCase();
-  const selectedCat = categorySelect.value;
   const maxPrice = parseInt(priceRange.value);
 
   const filtered = allProducts.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(searchText);
-    const matchCat = selectedCat === "All" || p.category === selectedCat;
     const matchPrice = p.price <= maxPrice;
     const matchSize = !selectedSize || (p.sizes && p.sizes.includes(selectedSize));
-    return matchSearch && matchCat && matchPrice && matchSize;
+    return matchSearch && matchPrice && matchSize;
   });
 
   if (!filtered.length) {
@@ -281,9 +264,7 @@ function renderProducts() {
   });
 }
 
-// 🧩 Filtre eventleri
 searchInput.oninput = renderProducts;
-categorySelect.onchange = renderProducts;
 priceRange.oninput = () => { priceVal.textContent = priceRange.value; renderProducts(); };
 sizeBtns.forEach(btn => {
   btn.onclick = () => {
