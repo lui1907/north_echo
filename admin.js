@@ -18,20 +18,20 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🟢 Mesajları Yükle
+// 🟢 Mesajları yükle
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
   if (error) {
     msgContainer.innerHTML = "<p>Error loading messages.</p>";
-    console.error(error);
+    console.error("Supabase load error:", error);
     return;
   }
   allMessages = data;
   renderMessages();
 }
 
-// 🧩 Tarih Düzgün Görünsün
+// 🧠 Tarihi düzgün sırala/göster
 function parseDateSafe(value) {
   if (!value) return new Date(0);
   let d = new Date(value);
@@ -50,11 +50,10 @@ function formatDateSafe(value) {
   return d.toLocaleString();
 }
 
-// 🟢 Mesajları Ekrana Bas
+// 🟢 Mesajları göster
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
-
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
@@ -70,17 +69,16 @@ function renderMessages() {
   }
 
   list.forEach((msg) => {
-    const dateText = formatDateSafe(msg.date);
     const html = `
-      <div class="msg-box" id="msg-${msg.id || msg.uuid}">
+      <div class="msg-box" id="msg-${msg.id}">
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${dateText}</div>
+            <div class="msg-date">${formatDateSafe(msg.date)}</div>
           </div>
-          <button class="msg-delete" data-id="${msg.id || msg.uuid}">Delete</button>
+          <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
         <div class="msg-text">${msg.message || ""}</div>
         ${
@@ -96,56 +94,43 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🔗 Buton Olaylarını Bağla
+// 🔗 Eventler
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
+
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
-// 💬 Silme Onayı Popup
+// 💬 Onay popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// 🗑️ Kalıcı Silme (hem id hem uuid destekli)
+// 🗑️ Kalıcı silme (id'ye göre)
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
   confirmPopup.classList.remove("show");
 
   try {
-    let deleteQuery;
-
-    if (deleteTarget.includes("-")) {
-      // UUID ise
-      deleteQuery = supabase.from("messages").delete().eq("uuid", deleteTarget);
-    } else {
-      // Sayısal id ise
-      deleteQuery = supabase
-        .from("messages")
-        .delete()
-        .eq("id", Number(deleteTarget));
-    }
-
-    const { error } = await deleteQuery;
+    const { error } = await supabase
+      .from("messages")
+      .delete()
+      .eq("id", deleteTarget);
 
     if (error) {
-      console.error("Supabase Delete Error:", error);
+      console.error("Supabase delete error:", error);
       showToast("Delete failed ❌", "error");
       return;
     }
 
     // Arayüzden kaldır
-    allMessages = allMessages.filter(
-      (m) =>
-        String(m.id) !== String(deleteTarget) &&
-        String(m.uuid) !== String(deleteTarget)
-    );
+    allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
     renderMessages();
     showToast("Deleted permanently ✅", "success");
   } catch (e) {
@@ -156,7 +141,7 @@ confirmYes.onclick = async () => {
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Görsel Önizleme
+// 🖼️ Resim modal
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -173,10 +158,10 @@ sortButton.onclick = () => {
   renderMessages();
 };
 
-// 🧩 Filtreleme
+// 🧩 Filtre
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast Mesajları
+// 🔔 Toast
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
