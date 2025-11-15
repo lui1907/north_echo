@@ -17,7 +17,7 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🟢 Load messages
+// ✅ Load messages
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
@@ -30,18 +30,16 @@ async function loadMessages() {
   renderMessages();
 }
 
-// 🟢 Render messages
+// ✅ Render messages
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
-  // ✅ Tarih sıralaması düzgün çalışır (ISO tarih destekli)
   list.sort((a, b) => {
     const dA = new Date(a.date);
     const dB = new Date(b.date);
-    if (isNaN(dA) || isNaN(dB)) return 0;
     return sortOrder === "desc" ? dB - dA : dA - dB;
   });
 
@@ -58,7 +56,7 @@ function renderMessages() {
             <div class="msg-sender">${msg.name || "Unknown"}</div>
             <div class="msg-email">${msg.email || ""}</div>
             <div class="msg-category">${msg.category || "No Category"}</div>
-            <div class="msg-date">${new Date(msg.date).toLocaleString() || ""}</div>
+            <div class="msg-date">${new Date(msg.date).toLocaleString()}</div>
           </div>
           <button class="msg-delete" data-id="${msg.id}">Delete</button>
         </div>
@@ -76,7 +74,7 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🟢 Event listeners
+// ✅ Bind delete and image events
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
@@ -87,52 +85,31 @@ function bindEvents() {
   });
 }
 
-// 🟡 Custom confirmation popup
+// ✅ Confirmation popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
+// ✅ Kalıcı silme
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
 
-  // ✅ Supabase'den kalıcı olarak sil
   try {
-    // 1️⃣ Önce kontrol edelim kayıt var mı
-    const { data: existing, error: fetchError } = await supabase
-      .from("messages")
-      .select("*")
-      .eq("id", deleteTarget);
-
-    if (fetchError) {
-      console.error("Fetch error:", fetchError);
-      showToast("Fetch failed ❌", "error");
-      confirmPopup.classList.remove("show");
-      return;
-    }
-
-    if (!existing || existing.length === 0) {
-      showToast("Message not found ❌", "error");
-      confirmPopup.classList.remove("show");
-      return;
-    }
-
-    // 2️⃣ Şimdi gerçekten sil
-    const { error: deleteError } = await supabase
+    const { error } = await supabase
       .from("messages")
       .delete()
-      .eq("id", deleteTarget);
+      .match({ id: deleteTarget }); // <--- kesin eşleşme
 
     confirmPopup.classList.remove("show");
 
-    if (deleteError) {
-      console.error("Delete error:", deleteError);
-      showToast("Supabase delete failed ❌", "error");
+    if (error) {
+      console.error("Delete error:", error);
+      showToast("Delete failed ❌", "error");
       return;
     }
 
-    // 3️⃣ Arayüzü yenile
     allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
     renderMessages();
     showToast("Message deleted permanently ✅", "success");
@@ -142,6 +119,8 @@ confirmYes.onclick = async () => {
     confirmPopup.classList.remove("show");
   }
 };
+
+confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
 // 🖼️ Image modal
 window.openImage = (url) => {
@@ -163,7 +142,7 @@ sortButton.onclick = () => {
 // 🧩 Filter
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast message
+// 🔔 Toast
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
