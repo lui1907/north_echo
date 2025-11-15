@@ -6,183 +6,145 @@
 <title>Admin Panel — North Echo</title>
 
 <link rel="stylesheet" href="style.css" />
-<script src="theme.js" defer></script>
-<script src="menu.js" defer></script>
-<script src="admin.js" type="module" defer></script>
+<link rel="stylesheet" href="support.css" />
+<script type="module" src="admin.js"></script>
 
 <style>
 body {
-  background: #0e0e0e;
+  background: #000;
   color: #fff;
-  font-family: Poppins, sans-serif;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
 }
-header {
-  background: #111;
-  padding: 12px 25px;
+.header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #222;
+  align-items: center;
+  background: #0a0a0a;
+  padding: 15px 25px;
+  border-bottom: 1px solid #111;
 }
-.logo { color: #fff; text-decoration: none; font-size: 22px; font-weight: 600; }
-.container {
+.logo {
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  text-decoration: none;
+}
+.admin-wrapper {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - 70px);
 }
-.sidebar {
+.side-menu {
   width: 230px;
-  background: #141414;
-  border-right: 1px solid #222;
+  background: #0d0d0d;
+  border-right: 1px solid #111;
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
 }
-.sidebar button {
+.side-menu button {
   background: none;
-  color: #ccc;
   border: none;
-  padding: 12px 18px;
+  color: #ccc;
+  font-size: 16px;
+  padding: 15px 25px;
   text-align: left;
   cursor: pointer;
-  transition: 0.2s;
+  transition: .2s;
 }
-.sidebar button.active, .sidebar button:hover {
-  background: #222;
-  color: #00ffaa;
-}
-.main {
-  flex: 1;
-  padding: 30px;
-}
-
-/* ============ FORM TASARIMI ============ */
-.form-box {
-  background: #161616;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 25px;
-}
-.form-box input, .form-box textarea, .form-box select {
-  width: 100%;
-  background: #0e0e0e;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 10px;
-  margin: 8px 0 15px 0;
-  font-size: 14px;
-}
-.form-box button {
-  background: #00ffaa;
-  color: #000;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.form-box button:hover { background: #00cc88; }
-
-/* ============ ÜRÜN LİSTESİ ============ */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 18px;
-}
-.product-card {
+.side-menu button.active,
+.side-menu button:hover {
   background: #111;
-  border: 1px solid #222;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: 0.2s;
+  color: #00ff99;
 }
-.product-card:hover { border-color: #00ffaa; transform: scale(1.02); }
+.main-panel {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+input, textarea, select {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+button {
+  background: #00aa66;
+  border: none;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { background: #00cc77; }
+.product-card, .message-card {
+  background: #0d0d0d;
+  border: 1px solid #222;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
 .product-card img {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
-.product-card .info {
-  padding: 10px;
-}
-.product-card h4 { margin: 0 0 6px 0; color: #fff; font-size: 15px; }
-.product-card p { margin: 0; color: #ccc; font-size: 14px; }
 .delete-btn {
-  background: #ff4444;
-  border: none;
-  padding: 6px 10px;
-  color: #fff;
-  border-radius: 5px;
+  background: #400;
+  color: #ff6666;
+  border: 1px solid #600;
+  padding: 5px 10px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-top: 8px;
 }
-.delete-btn:hover { background: #cc0000; }
-
-/* ============ MESAJLAR ============ */
-.messages-box {
-  display: grid;
-  gap: 15px;
-}
-.message-item {
-  background: #141414;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 15px;
-}
-.message-item h4 { margin: 0 0 8px 0; color: #00ffaa; }
-.message-item p { margin: 4px 0; color: #ccc; }
-.message-item a {
-  color: #00ffaa;
-  text-decoration: underline;
-  word-break: break-all;
-}
+.delete-btn:hover { background: #600; }
 </style>
 </head>
 
 <body>
-<header>
-  <a href="index.html" class="logo">NORTH ECHO — Admin</a>
+<header class="header">
+  <a href="index.html" class="logo">NORTH ECHO ADMIN</a>
 </header>
 
-<div class="container">
-  <div class="sidebar">
-    <button id="btnProducts" class="active">🛍️ Products</button>
-    <button id="btnMessages">💬 Messages</button>
+<div class="admin-wrapper">
+
+  <!-- SOL MENÜ -->
+  <div class="side-menu">
+    <button id="btnProducts" class="active">Products</button>
+    <button id="btnMessages">Messages</button>
   </div>
 
-  <div class="main">
+  <!-- SAĞ PANEL -->
+  <div class="main-panel">
+
     <!-- PRODUCTS -->
-    <div id="sectionProducts" class="section">
-      <h2>🧾 Add New Product</h2>
+    <div id="sectionProducts">
+      <h1>🛍️ Add New Product</h1>
+      <input id="pName" placeholder="Product name" />
+      <input id="pPrice" placeholder="Price (€)" type="number" />
+      <input id="pCategory" placeholder="Category (T-Shirts, Sweatshirts...)" />
+      <textarea id="pDescription" placeholder="Product description"></textarea>
+      <input id="pImages" placeholder="Image URLs (comma-separated)" />
+      <input id="pSizes" placeholder="Available sizes (S,M,L,XL)" />
+      <button id="btnAddProduct">Add Product</button>
 
-      <div class="form-box">
-        <input id="pName" placeholder="Product Name" />
-        <input id="pPrice" placeholder="Price (€)" type="number" />
-        <select id="pCategory">
-          <option value="T-Shirts">T-Shirts</option>
-          <option value="Sweatshirts">Sweatshirts</option>
-        </select>
-        <textarea id="pDescription" placeholder="Description"></textarea>
-        <input id="pImages" placeholder="Image URLs (comma separated)" />
-        <input id="pSizes" placeholder="Sizes (e.g. S,M,L,XL)" />
-        <button id="btnAddProduct">Add Product</button>
-      </div>
-
-      <h3>📦 All Products</h3>
-      <div id="productsList" class="products-grid">
-        <p>Loading...</p>
-      </div>
+      <h1 style="margin-top:40px;">📦 All Products</h1>
+      <div id="productsList"></div>
     </div>
 
     <!-- MESSAGES -->
-    <div id="sectionMessages" class="section" style="display:none;">
-      <h2>💬 User Messages</h2>
-      <div id="messagesList" class="messages-box">
-        <p>Loading...</p>
-      </div>
+    <div id="sectionMessages" style="display:none;">
+      <h1>💬 Support Messages</h1>
+      <div id="messagesList"></div>
     </div>
+
   </div>
 </div>
 </body>
