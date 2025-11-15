@@ -1,124 +1,260 @@
-/* SUPPORT BUTTON */
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 🔘 Paneli oluştur (her sayfada otomatik)
+const panelHTML = `
+  <div class="sup-container">
+    <div class="sup-header">
+      <span>Support</span>
+      <button id="closeSup">✕</button>
+    </div>
+    <div class="sup-body">
+      <label>Your Name *</label>
+      <input type="text" id="supName" placeholder="John Doe" />
+
+      <label>Email *</label>
+      <input type="email" id="supEmail" placeholder="your@mail.com" />
+
+      <label>Category *</label>
+      <select id="supCategory">
+        <option value="Design">Design / Custom Request</option>
+        <option value="Order">Order or Delivery</option>
+        <option value="Product">Product Information</option>
+        <option value="Website">Website Issue</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Your Message *</label>
+      <textarea id="supMsg" placeholder="Write your message..."></textarea>
+
+      <label>Attach File (optional)</label>
+      <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx" />
+
+      <button class="sup-send" id="sendSup">Send Message →</button>
+    </div>
+  </div>
+`;
+document.getElementById("supportPanel").innerHTML = panelHTML;
+
+// 🎛️ Panel aç/kapat
+window.toggleSupportPanel = function () {
+  const p = document.getElementById("supportPanel");
+  p.classList.toggle("show");
+};
+
+// 🔐 Kapatma tuşu
+document.addEventListener("click", (e) => {
+  if (e.target.id === "closeSup") {
+    document.getElementById("supportPanel").classList.remove("show");
+  }
+});
+
+// 📨 Mesaj gönder
+document.addEventListener("click", async (e) => {
+  if (e.target.id !== "sendSup") return;
+
+  const name = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const category = document.getElementById("supCategory").value;
+  const message = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if (!name || !email || !message) {
+    showToast("Please fill all required fields ❌", "error");
+    return;
+  }
+
+  let fileUrl = "";
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const fileName = `${Date.now()}_${file.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("uploads")
+      .upload(fileName, file);
+
+    if (uploadError) {
+      showToast("File upload failed ❌", "error");
+      return;
+    }
+
+    fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
+  }
+
+  const { error } = await supabase.from("messages").insert([
+    {
+      name,
+      email,
+      category,
+      message,
+      file: fileUrl,
+      date: new Date().toLocaleString(),
+      read: false,
+    },
+  ]);
+
+  if (error) {
+    showToast("Message failed ❌", "error");
+    console.error(error);
+  } else {
+    showToast("Message sent successfully ✅", "success");
+    document.getElementById("supportPanel").classList.remove("show");
+    document.getElementById("supName").value = "";
+    document.getElementById("supEmail").value = "";
+    document.getElementById("supMsg").value = "";
+    document.getElementById("supFile").value = "";
+  }
+});
+
+// 🔔 Toast bildirimi
+function showToast(msg, type = "info") {
+  let toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
+}
+
+// 💅 CSS stilleri
+const style = document.createElement("style");
+style.innerHTML = `
 #supportBtn {
   position: fixed;
   bottom: 25px;
   right: 25px;
-  width: 60px;
-  height: 60px;
   background: #00aa66;
   border-radius: 50%;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
   z-index: 9999;
-  box-shadow: 0 0 15px rgba(0,0,0,.4);
-  transition: .2s;
+  transition: 0.2s;
 }
+#supportBtn:hover { transform: scale(1.08); }
 
 #supportBtn img {
   width: 28px;
   height: 28px;
-  filter: invert(1);
+  filter: brightness(0) invert(1);
 }
 
-#supportBtn:hover {
-  background: #009655;
-}
-
-
-/* SUPPORT PANEL */
 #supportPanel {
   position: fixed;
-  bottom: 95px;
-  right: 25px;
-  width: 400px;
-  background: #0d0d0d;
-  border-radius: 14px;
-  border: 1px solid #222;
-  display: none;
-  z-index: 9999;
-  box-shadow: 0 0 30px rgba(0,0,0,.55);
-  overflow: hidden;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 9998;
+}
+
+#supportPanel.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sup-container {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  width: 360px;
+  padding: 25px 30px;
+  color: #fff;
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
 }
 
 .sup-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid #222;
-  font-size: 20px;
-  font-weight: 600;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 .sup-header button {
   background: none;
-  color: white;
   border: none;
+  color: #fff;
   font-size: 22px;
   cursor: pointer;
 }
 
-
-/* BODY */
-.sup-body {
-  padding: 20px;
-}
-
 .sup-body label {
-  display: block;
-  margin-top: 14px;
-  margin-bottom: 6px;
   font-size: 14px;
+  display: block;
+  margin-top: 12px;
 }
 
 .sup-body input,
 .sup-body select,
 .sup-body textarea {
   width: 100%;
-  padding: 12px;
-  background: #111;
+  background: #0f0f0f;
   border: 1px solid #333;
-  border-radius: 8px;
+  border-radius: 6px;
   color: white;
+  padding: 8px 10px;
+  margin-top: 4px;
   font-size: 14px;
 }
 
 .sup-body textarea {
-  height: 120px;
-  resize: none;
+  min-height: 80px;
+  resize: vertical;
 }
 
-#supFile {
-  padding: 10px;
-}
-
-
-/* SEND BUTTON */
 .sup-send {
   width: 100%;
-  padding: 14px;
-  margin-top: 18px;
   background: #00aa66;
   border: none;
-  border-radius: 10px;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 15px;
   cursor: pointer;
+  transition: 0.2s;
+}
+.sup-send:hover { background: #00cc77; }
+
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.9);
+  background: rgba(20,20,20,0.95);
+  border: 1px solid #333;
+  padding: 16px 22px;
   color: white;
+  border-radius: 10px;
+  opacity: 0;
+  transition: all .3s;
+  z-index: 99999;
   font-size: 15px;
-  font-weight: 600;
 }
-
-.sup-send:hover {
-  background: #009655;
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%,-50%) scale(1);
 }
-
-
-/* MOBILE */
-@media (max-width: 480px) {
-  #supportPanel {
-    width: 90%;
-    right: 5%;
-    bottom: 90px;
-  }
-}
+.toast.success { border-color:#00aa66; color:#00ff99; }
+.toast.error { border-color:#aa0000; color:#ff6666; }
+`;
+document.head.appendChild(style);
