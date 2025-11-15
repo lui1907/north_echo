@@ -11,11 +11,10 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 // -----------------------------------------
 // 🔐 Admin Access Check
 // -----------------------------------------
-const ADMINS = ["luivoss", "fstekin"]; // 👈 Supabase'deki username'lerle birebir aynı olmalı!
+const ADMINS = ["luivoss", "fstekin"];
 const loggedUser = localStorage.getItem("loggedInUser");
 
 if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
-  // 👇 Uyarı göstermeden direkt ana sayfaya yönlendir
   window.location.href = "index.html";
 }
 
@@ -24,14 +23,12 @@ if (!loggedUser || !ADMINS.includes(loggedUser.toLowerCase())) {
 // -----------------------------------------
 const msgContainer = document.getElementById("adminMessages");
 const filterSelect = document.getElementById("filterCategory");
-const sortButton = document.getElementById("sortButton");
 const confirmPopup = document.getElementById("confirmPopup");
 const confirmYes = document.getElementById("confirmYes");
 const confirmNo = document.getElementById("confirmNo");
 const confirmText = document.getElementById("confirmText");
 
 let allMessages = [];
-let sortOrder = "desc";
 let deleteTarget = null;
 
 // 🔄 Fetch messages
@@ -58,12 +55,6 @@ function renderMessages() {
 
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
-
-  list.sort((a, b) => {
-    const dA = new Date(a.date);
-    const dB = new Date(b.date);
-    return sortOrder === "desc" ? dB - dA : dA - dB;
-  });
 
   if (!list.length) {
     msgContainer.innerHTML = "<p style='opacity:.6;'>No messages found.</p>";
@@ -147,14 +138,8 @@ window.closeImgModal = () => {
 };
 
 // -----------------------------------------
-// 🔁 Sorting & Filtering
+// 🔁 Filter
 // -----------------------------------------
-sortButton.onclick = () => {
-  sortOrder = sortOrder === "desc" ? "asc" : "desc";
-  sortButton.textContent =
-    sortOrder === "desc" ? "Sort: Newest First" : "Sort: Oldest First";
-  renderMessages();
-};
 filterSelect.onchange = renderMessages;
 
 // -----------------------------------------
