@@ -1,3 +1,32 @@
+// 🧩 Allowed Admin Usernames
+const ADMIN_USERS = ["ahmet", "berkay", "eren"]; // sadece bunlar admin paneli görebilir
+
+// Giriş yapan kullanıcıyı al (örnek: login sonrası kaydedilmiş username)
+const currentUser = localStorage.getItem("username");
+
+// Erişim kontrolü
+if (!currentUser || !ADMIN_USERS.includes(currentUser.toLowerCase())) {
+  document.body.innerHTML = `
+    <div style="
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      background:#000;
+      color:#f55;
+      font-family:sans-serif;
+      flex-direction:column;
+      text-align:center;">
+      <h2>Access Denied ❌</h2>
+      <p style="opacity:0.7;">You do not have permission to view this page.</p>
+    </div>
+  `;
+  throw new Error("Access denied");
+}
+
+console.log("✅ Admin access granted for:", currentUser);
+
+// ----------------------------------------------------
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
@@ -18,7 +47,7 @@ let allMessages = [];
 let sortOrder = "desc";
 let deleteTarget = null;
 
-// 🟢 Mesajları yükle
+// 🔄 Load Messages
 async function loadMessages() {
   msgContainer.innerHTML = "<p style='opacity:.6;'>Loading...</p>";
   const { data, error } = await supabase.from("messages").select("*");
@@ -31,7 +60,7 @@ async function loadMessages() {
   renderMessages();
 }
 
-// 🧠 Tarihi düzgün sırala/göster
+// 🕓 Sort by date
 function parseDateSafe(value) {
   if (!value) return new Date(0);
   let d = new Date(value);
@@ -50,10 +79,11 @@ function formatDateSafe(value) {
   return d.toLocaleString();
 }
 
-// 🟢 Mesajları göster
+// 🧾 Render messages
 function renderMessages() {
   msgContainer.innerHTML = "";
   let list = [...allMessages];
+
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
@@ -94,54 +124,44 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🔗 Eventler
+// 🖱️ Events
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
   });
-
   document.querySelectorAll(".msg-img").forEach((img) => {
     img.onclick = () => openImage(img.dataset.url);
   });
 }
 
-// 💬 Onay popup
+// 💬 Delete popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
-// 🗑️ Kalıcı silme (id'ye göre)
+// 🗑️ Delete from Supabase
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
   confirmPopup.classList.remove("show");
 
-  try {
-    const { error } = await supabase
-      .from("messages")
-      .delete()
-      .eq("id", deleteTarget);
+  const { error } = await supabase.from("messages").delete().eq("id", deleteTarget);
 
-    if (error) {
-      console.error("Supabase delete error:", error);
-      showToast("Delete failed ❌", "error");
-      return;
-    }
-
-    // Arayüzden kaldır
-    allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
-    renderMessages();
-    showToast("Deleted permanently ✅", "success");
-  } catch (e) {
-    console.error("Unexpected delete error:", e);
-    showToast("Unexpected error ❌", "error");
+  if (error) {
+    console.error("Supabase delete error:", error);
+    showToast("Delete failed ❌", "error");
+    return;
   }
+
+  allMessages = allMessages.filter((m) => String(m.id) !== String(deleteTarget));
+  renderMessages();
+  showToast("Deleted permanently ✅", "success");
 };
 
 confirmNo.onclick = () => confirmPopup.classList.remove("show");
 
-// 🖼️ Resim modal
+// 🖼️ Image modal
 window.openImage = (url) => {
   document.getElementById("imgModalContent").src = url;
   document.getElementById("imgModal").style.display = "flex";
@@ -150,7 +170,7 @@ window.closeImgModal = () => {
   document.getElementById("imgModal").style.display = "none";
 };
 
-// 🔁 Sıralama
+// 🔁 Sort button
 sortButton.onclick = () => {
   sortOrder = sortOrder === "desc" ? "asc" : "desc";
   sortButton.textContent =
@@ -158,7 +178,7 @@ sortButton.onclick = () => {
   renderMessages();
 };
 
-// 🧩 Filtre
+// 🧩 Filter
 filterSelect.onchange = renderMessages;
 
 // 🔔 Toast
@@ -199,5 +219,5 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// 🚀 Başlat
+// 🚀 Load
 loadMessages();
