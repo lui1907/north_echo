@@ -16,7 +16,7 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
 }
-.header {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,7 +66,7 @@ h1 {
   font-size: 28px;
   margin-bottom: 20px;
 }
-input, textarea, select {
+input, textarea {
   background: #111;
   border: 1px solid #333;
   color: #fff;
@@ -84,14 +84,14 @@ button {
   cursor: pointer;
 }
 button:hover { background: #00cc77; }
-.product-card, .message-card {
+.card {
   background: #0d0d0d;
   border: 1px solid #222;
   padding: 15px;
   margin-bottom: 15px;
   border-radius: 10px;
 }
-.product-card img {
+.card img {
   width: 100%;
   border-radius: 8px;
   margin-bottom: 10px;
@@ -100,7 +100,7 @@ button:hover { background: #00cc77; }
   background: #400;
   color: #ff6666;
   border: 1px solid #600;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -109,42 +109,37 @@ button:hover { background: #00cc77; }
 </head>
 
 <body>
-<header class="header">
+<header>
   <a href="index.html" class="logo">NORTH ECHO ADMIN</a>
 </header>
 
 <div class="admin-wrapper">
-
-  <!-- SOL MENÜ -->
   <div class="side-menu">
     <button id="btnProducts" class="active">Products</button>
     <button id="btnMessages">Messages</button>
   </div>
 
-  <!-- SAĞ PANEL -->
   <div class="main-panel">
-
     <!-- PRODUCTS -->
     <div id="sectionProducts">
-      <h1>🛍️ Add New Product</h1>
+      <h1>🛍️ Add Product</h1>
       <input id="pName" placeholder="Product name" />
       <input id="pPrice" placeholder="Price (€)" type="number" />
-      <input id="pCategory" placeholder="Category (T-Shirts, Sweatshirts...)" />
+      <input id="pCategory" placeholder="Category" />
       <textarea id="pDescription" placeholder="Product description"></textarea>
       <input id="pImages" placeholder="Image URLs (comma-separated)" />
-      <input id="pSizes" placeholder="Available sizes (S,M,L,XL)" />
+      <input id="pSizes" placeholder="Sizes (S,M,L,XL)" />
       <button id="btnAddProduct">Add Product</button>
 
-      <h1 style="margin-top:40px;">📦 All Products</h1>
+      <h1 style="margin-top:40px;">📦 Product List</h1>
       <div id="productsList"></div>
     </div>
 
     <!-- MESSAGES -->
     <div id="sectionMessages" style="display:none;">
-      <h1>💬 Support Messages</h1>
+      <h1>💬 Messages</h1>
       <div id="messagesList"></div>
     </div>
-
   </div>
 </div>
 </body>
