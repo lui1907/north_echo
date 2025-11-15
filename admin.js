@@ -37,7 +37,6 @@ function renderMessages() {
   const cat = filterSelect.value;
   if (cat !== "All") list = list.filter((m) => m.category === cat);
 
-  // Tarih dönüşüm hatalarına karşı güvenli
   list.sort((a, b) => {
     const dA = parseDateSafe(a.date);
     const dB = parseDateSafe(b.date);
@@ -52,7 +51,7 @@ function renderMessages() {
   list.forEach((msg) => {
     const dateText = formatDateSafe(msg.date);
     const html = `
-      <div class="msg-box" id="msg-${msg.id}">
+      <div class="msg-box" id="msg-${msg.uuid}">
         <div class="msg-top">
           <div>
             <div class="msg-sender">${msg.name || "Unknown"}</div>
@@ -60,7 +59,7 @@ function renderMessages() {
             <div class="msg-category">${msg.category || "No Category"}</div>
             <div class="msg-date">${dateText}</div>
           </div>
-          <button class="msg-delete" data-id="${msg.id}">Delete</button>
+          <button class="msg-delete" data-id="${msg.uuid}">Delete</button>
         </div>
         <div class="msg-text">${msg.message || ""}</div>
         ${
@@ -76,12 +75,11 @@ function renderMessages() {
   bindEvents();
 }
 
-// 🧩 Tarih hatasız dönüştürme
+// ✅ Güvenli tarih dönüşümü
 function parseDateSafe(value) {
   if (!value) return new Date(0);
   let d = new Date(value);
   if (isNaN(d)) {
-    // Örneğin "15.11.2025 22:48:01" gibi formatlar için
     const parts = value.split(/[.\s:]/);
     if (parts.length >= 5) {
       const [day, month, year, hour, minute] = parts;
@@ -90,14 +88,13 @@ function parseDateSafe(value) {
   }
   return d;
 }
-
 function formatDateSafe(value) {
   const d = parseDateSafe(value);
   if (isNaN(d)) return "Invalid date";
   return d.toLocaleString();
 }
 
-// 🔗 Eventleri bağla
+// 🔗 Event bağla
 function bindEvents() {
   document.querySelectorAll(".msg-delete").forEach((btn) => {
     btn.onclick = () => openConfirmPopup(btn.dataset.id);
@@ -107,32 +104,33 @@ function bindEvents() {
   });
 }
 
-// 💬 Silme onayı
+// 💬 Silme popup
 function openConfirmPopup(id) {
   deleteTarget = id;
   confirmText.textContent = "Delete this message?";
   confirmPopup.classList.add("show");
 }
 
+// ✅ UUID ÜZERİNDEN KALICI SİLME
 confirmYes.onclick = async () => {
   if (!deleteTarget) return;
   try {
     const { error } = await supabase
       .from("messages")
       .delete()
-      .match({ id: deleteTarget }); // ✅ ID tipi fark etmez
+      .match({ uuid: deleteTarget }); // 🔥 Artık UUID'e göre siler
 
     confirmPopup.classList.remove("show");
 
     if (error) {
-      console.error("Delete error:", error);
+      console.error("Supabase delete error:", error);
       showToast("Delete failed ❌", "error");
       return;
     }
 
-    // Local listeden çıkar
+    // Arayüzden de kaldır
     allMessages = allMessages.filter(
-      (m) => String(m.id) !== String(deleteTarget)
+      (m) => String(m.uuid) !== String(deleteTarget)
     );
     renderMessages();
     showToast("Deleted permanently ✅", "success");
@@ -165,7 +163,7 @@ sortButton.onclick = () => {
 // 🧩 Filtre
 filterSelect.onchange = renderMessages;
 
-// 🔔 Toast bildirimi
+// 🔔 Toast
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
