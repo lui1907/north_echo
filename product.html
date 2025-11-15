@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Product — North Echo</title>
+
+<link rel="stylesheet" href="style.css"/>
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<link rel="stylesheet" href="support.css">
+<script src="support.js" type="module"></script>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+  </div>
+</header>
+
+<main class="product-page" id="productPage">
+  <p style="opacity:.6;">Loading product...</p>
+</main>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+const container = document.getElementById("productPage");
+
+async function loadProduct() {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    container.innerHTML = "<h2>Product not found ❌</h2>";
+    return;
+  }
+
+  const imgs = data.images ? data.images.split(",") : ["assets/default-product.png"];
+  const sizes = data.sizes ? data.sizes.split(",") : ["S","M","L","XL"];
+
+  container.innerHTML = `
+  <div class="product-left">
+    <img id="mainImg" class="product-main-img" src="${imgs[0]}" />
+    <div class="product-thumbnails">
+      ${imgs.map(i => `<img src="${i}" onclick="document.getElementById('mainImg').src='${i}'">`).join("")}
+    </div>
+  </div>
+  <div class="product-right">
+    <h1>${data.name}</h1>
+    <p class="price">${data.price}€</p>
+    <p class="product-desc">${data.description || "No description available."}</p>
+    <label>Size:</label>
+    <select id="sizeSelect">${sizes.map(s => `<option>${s}</option>`).join("")}</select>
+    <button class="add-cart-btn" onclick="addToCart('${data.name}', ${data.price}, '${imgs[0]}')">Add to Cart</button>
+  </div>`;
+}
+
+loadProduct();
+</script>
+</body>
+</html>
