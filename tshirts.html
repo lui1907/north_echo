@@ -6,11 +6,9 @@
 <title>T-Shirts — North Echo</title>
 
 <link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="support.css" />
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<script type="module" src="support.js"></script>
 
 <style>
 body {
@@ -72,7 +70,7 @@ body {
   margin: 4px 0 0;
 }
 
-/* FİLTRE KISMI */
+/* FILTER */
 .filter-side {
   background: #0a0a0a;
   border: 1px solid #1f1f1f;
@@ -83,7 +81,6 @@ body {
   position: sticky;
   top: 120px;
 }
-.filter-side h3 { margin-bottom: 10px; font-size: 1.1rem; }
 .filter-side input[type="text"] {
   width: 100%;
   padding: 7px;
@@ -92,14 +89,6 @@ body {
   border-radius: 6px;
   color: white;
   margin-bottom: 15px;
-}
-.filter-side h4 {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #bbb;
-}
-.price-slider-box input[type="range"] {
-  width: 100%;
 }
 .price-value {
   font-size: 0.85rem;
@@ -125,7 +114,7 @@ body {
   border-color: #00ff99;
 }
 
-/* ✅ SUPPORT BUTTON & PANEL (küçük dikdörtgen üstte) */
+/* ✅ SUPPORT BUTTON & SMALL PANEL */
 #supportBtn {
   position: fixed;
   bottom: 30px;
@@ -149,8 +138,8 @@ body {
   position: fixed;
   bottom: 95px;
   right: 40px;
-  width: 300px;
-  background: rgba(15,15,15,0.95);
+  width: 320px;
+  background: rgba(15,15,15,0.97);
   border: 1px solid #222;
   border-radius: 12px;
   padding: 15px;
@@ -158,10 +147,13 @@ body {
   z-index: 9998;
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
   backdrop-filter: blur(6px);
-  animation: slideUp 0.25s ease;
+  animation: fadeIn 0.25s ease;
 }
 #supportPanel.show { display: block; }
-
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .sup-header {
   display: flex;
   justify-content: space-between;
@@ -170,13 +162,8 @@ body {
 }
 .sup-header span { font-weight: bold; font-size: 16px; }
 .sup-header button {
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 18px;
+  background: none; border: none; color: #fff; cursor: pointer; font-size: 18px;
 }
-
 .sup-body label { display: block; margin-bottom: 5px; font-size: 13px; color: #aaa; }
 .sup-body input, .sup-body textarea {
   width: 100%;
@@ -200,11 +187,6 @@ body {
   transition: 0.2s;
 }
 .sup-send:hover { background: #00cc77; }
-
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
 </style>
 </head>
 
@@ -216,11 +198,6 @@ body {
     <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar" />
-    <div class="avatar-menu" id="avatarMenu">
-      <a href="profile.html">Profile</a>
-      <a href="settings.html">Settings</a>
-      <a href="#" class="logout" id="logoutBtn">Logout</a>
-    </div>
   </div>
 </header>
 
@@ -239,7 +216,6 @@ body {
   <div class="product-area">
     <div class="product-grid" id="productGrid"></div>
   </div>
-
   <div class="filter-side">
     <input type="text" id="searchInput" placeholder="Search products..." />
     <h3>Filters</h3>
@@ -248,7 +224,6 @@ body {
       <input type="range" id="priceRange" min="0" max="100" value="100" />
       <div class="price-value">Max: <span id="priceVal">100</span>€</div>
     </div>
-
     <h4>Size</h4>
     <div class="size-buttons">
       <div class="size-btn" data-size="S">S</div>
@@ -290,15 +265,19 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-// ✅ Support toggle
+// ✅ SUPPORT BUTTON
 const btn = document.getElementById("supportBtn");
 const panel = document.getElementById("supportPanel");
 const closeBtn = document.getElementById("closeSupport");
 
-btn.addEventListener("click", () => panel.classList.toggle("show"));
-closeBtn.addEventListener("click", () => panel.classList.remove("show"));
+btn.addEventListener("click", () => {
+  panel.classList.toggle("show");
+});
+closeBtn.addEventListener("click", () => {
+  panel.classList.remove("show");
+});
 
-// Ürünleri yükle
+// ✅ ÜRÜN LİSTESİ
 const grid = document.getElementById("productGrid");
 const searchInput = document.getElementById("searchInput");
 const priceRange = document.getElementById("priceRange");
