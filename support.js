@@ -5,7 +5,12 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🧩 SUPPORT PANEL YOKSA OLUŞTUR
+// ❗ BUNU KONTROL ET: Supabase → Storage → Bucket name
+// Panelde sol tarafta ne yazıyorsa BURAYA ONU YAZ.
+// Örn: "uploads" ya da "support-uploads" vs.
+const STORAGE_BUCKET = "uploads";
+
+// ---------------------- PANEL OLUŞTUR ----------------------
 function createSupportPanel() {
   if (document.getElementById("supportPanel")) return;
 
@@ -19,24 +24,35 @@ function createSupportPanel() {
     <div class="sup-body">
       <label>Your Name *</label>
       <input type="text" id="supName" placeholder="John Doe" />
+
       <label>Email *</label>
       <input type="email" id="supEmail" placeholder="your@mail.com" />
+
+      <label>Category *</label>
+      <select id="supCategory">
+        <option value="Design">Design / Custom Request</option>
+        <option value="Order">Order or Delivery</option>
+        <option value="Product">Product Information</option>
+        <option value="Website">Website Issue</option>
+        <option value="Other">Other</option>
+      </select>
+
       <label>Your Message *</label>
       <textarea id="supMsg" placeholder="Write your message..."></textarea>
+
       <label>Attach File (optional)</label>
       <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx" />
+
       <button class="sup-send" id="sendSupportBtn">Send Message →</button>
     </div>
   `;
   document.body.appendChild(panel);
 }
-createSupportPanel();
 
-// ✅ SUPPORT BUTONU VARSA TIKLANINCA PANELİ AÇ/KAPA
+// ---------------------- DESTEK BUTONU BAĞLA ----------------------
 function bindSupportButton() {
   const btn = document.getElementById("supportBtn");
   const panel = document.getElementById("supportPanel");
-
   if (!btn || !panel) return;
 
   btn.addEventListener("click", () => {
@@ -45,27 +61,59 @@ function bindSupportButton() {
   });
 }
 
-// DOM TAM YÜKLENİNCE YENİDEN BAĞLA
+// DOM hazır olunca
 window.addEventListener("load", () => {
+  createSupportPanel();
   bindSupportButton();
 });
 
-// ❌ PANEL KAPAT / ✅ MESAJ GÖNDER
-document.addEventListener("click", async e => {
+// ---------------------- CLICK EVENTS ----------------------
+document.addEventListener("click", async (e) => {
   if (e.target.id === "closeSupport") {
     document.getElementById("supportPanel").style.display = "none";
   }
 
   if (e.target.id === "sendSupportBtn") {
+    openConfirmPopup();
+  }
+
+  if (e.target.id === "confirmNo") {
+    const popup = document.getElementById("confirmPopup");
+    if (popup) popup.remove();
+  }
+
+  if (e.target.id === "confirmYes") {
+    const popup = document.getElementById("confirmPopup");
+    if (popup) popup.remove();
     await sendSupportMessage();
   }
 });
 
-// 📩 MESAJ GÖNDER
+// ---------------------- EMIN MISIN POPUP ----------------------
+function openConfirmPopup() {
+  if (document.getElementById("confirmPopup")) return;
+
+  const popup = document.createElement("div");
+  popup.id = "confirmPopup";
+  popup.className = "confirm-popup";
+  popup.innerHTML = `
+    <div class="confirm-box">
+      <p>Are you sure you want to send this message?</p>
+      <div class="confirm-buttons">
+        <button id="confirmYes">Yes</button>
+        <button id="confirmNo">No</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popup);
+}
+
+// ---------------------- MESAJ GÖNDER ----------------------
 async function sendSupportMessage() {
   const name = document.getElementById("supName").value.trim();
   const email = document.getElementById("supEmail").value.trim();
   const message = document.getElementById("supMsg").value.trim();
+  const category = document.getElementById("supCategory").value;
   const fileInput = document.getElementById("supFile");
 
   if (!name || !email || !message) {
@@ -74,30 +122,43 @@ async function sendSupportMessage() {
   }
 
   let fileUrl = "";
-if (fileInput.files.length > 0) {
-  const file = fileInput.files[0];
-  const safeName = `${Date.now()}_${file.name.replace(/\s+/g, "_").replace(/[^\w.-]/g, "")}`;
 
-  // direkt kök dizine yükleme (senin ilk sistem gibi)
-  const { error: uploadError } = await supabase.storage
-    .from("uploads")
-    .upload(safeName, file, {
-      cacheControl: "3600",
-      upsert: false
-    });
+  // ---- DOSYA YÜKLEME ----
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const safeName = `${Date.now()}_${file.name
+      .replace(/\s+/g, "_")
+      .replace(/[^\w.-]/g, "")}`;
 
-  if (uploadError) {
-    console.error("Upload error:", uploadError);
-    showToast("File upload failed ❌", "error");
-    return;
+    // Bucket'a yükle (KÖK dizine)
+    const { error: uploadError } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(safeName, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Upload error:", uploadError);
+      showToast("File upload failed ❌", "error");
+      return;
+    }
+
+    // Public URL
+    fileUrl = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${safeName}`;
   }
 
-  // URL doğrudan kökten
-  fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/${safeName}`;
-}
-
+  // ---- VERİTABANINA MESAJ KAYDET ----
   const { error: insertError } = await supabase.from("messages").insert([
-    { name, email, message, file: fileUrl || "", date: new Date().toLocaleString(), read: false },
+    {
+      name,
+      email,
+      category,
+      message,
+      file: fileUrl || "",
+      date: new Date().toLocaleString(),
+      read: false,
+    },
   ]);
 
   if (insertError) {
@@ -106,10 +167,17 @@ if (fileInput.files.length > 0) {
   } else {
     showToast("Message sent successfully ✅", "success");
     document.getElementById("supportPanel").style.display = "none";
+
+    // formu temizle
+    document.getElementById("supName").value = "";
+    document.getElementById("supEmail").value = "";
+    document.getElementById("supMsg").value = "";
+    document.getElementById("supCategory").selectedIndex = 0;
+    fileInput.value = "";
   }
 }
 
-// 🔔 TOAST MESAJLARI
+// ---------------------- TOAST ----------------------
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -122,7 +190,7 @@ function showToast(msg, type = "info") {
   }, 2500);
 }
 
-// 🎨 STİL
+// ---------------------- STİL ----------------------
 const style = document.createElement("style");
 style.innerHTML = `
 #supportBtn {
@@ -174,7 +242,7 @@ style.innerHTML = `
   background: none; border: none; color: #fff; cursor: pointer; font-size: 18px;
 }
 .sup-body label { display: block; margin-bottom: 5px; font-size: 13px; color: #aaa; }
-.sup-body input, .sup-body textarea {
+.sup-body input, .sup-body textarea, .sup-body select {
   width: 100%;
   margin-bottom: 10px;
   border: 1px solid #333;
@@ -215,5 +283,43 @@ style.innerHTML = `
 .toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
 .toast.success { border-color:#00aa66; color:#00ff99; }
 .toast.error { border-color:#aa0000; color:#ff5555; }
+
+.confirm-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99997;
+}
+.confirm-box {
+  background: #111;
+  padding: 25px 35px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  text-align: center;
+  color: #fff;
+}
+.confirm-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.confirm-buttons button {
+  background: #222;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.confirm-buttons button:hover {
+  background: #00aa66;
+  border-color: #00ff99;
+}
 `;
 document.head.appendChild(style);
