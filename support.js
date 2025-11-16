@@ -5,7 +5,7 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🧩 Eğer panel DOM’da yoksa oluştur
+// 🧩 Panel DOM'da yoksa oluştur
 if (!document.getElementById("supportPanel")) {
   const panel = document.createElement("div");
   panel.id = "supportPanel";
@@ -19,14 +19,6 @@ if (!document.getElementById("supportPanel")) {
       <input type="text" id="supName" placeholder="John Doe" />
       <label>Email *</label>
       <input type="email" id="supEmail" placeholder="your@mail.com" />
-      <label>Category *</label>
-      <select id="supCategory">
-        <option value="Design">Design / Custom Request</option>
-        <option value="Order">Order or Delivery</option>
-        <option value="Product">Product Information</option>
-        <option value="Website">Website Issue</option>
-        <option value="Other">Other</option>
-      </select>
       <label>Your Message *</label>
       <textarea id="supMsg" placeholder="Write your message..."></textarea>
       <label>Attach File (optional)</label>
@@ -37,26 +29,30 @@ if (!document.getElementById("supportPanel")) {
   document.body.appendChild(panel);
 }
 
-// 🎛️ Panel aç/kapa
-window.toggleSupportPanel = function () {
-  const p = document.getElementById("supportPanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
-};
+// ✅ SAĞ ALTTAKİ BUTONA EVENT EKLE
+window.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("supportBtn");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const p = document.getElementById("supportPanel");
+      const isVisible = p.style.display === "block";
+      p.style.display = isVisible ? "none" : "block";
+    });
+  }
+});
 
 document.addEventListener("click", e => {
   if (e.target.id === "closeSupport") {
     document.getElementById("supportPanel").style.display = "none";
   }
+  if (e.target.id === "sendSupportBtn") sendSupportMessage();
 });
 
-// 📩 Mesaj gönder
-document.addEventListener("click", async e => {
-  if (e.target.id !== "sendSupportBtn") return;
-
+// 📩 Mesaj gönderme
+async function sendSupportMessage() {
   const name = document.getElementById("supName").value.trim();
   const email = document.getElementById("supEmail").value.trim();
   const message = document.getElementById("supMsg").value.trim();
-  const category = document.getElementById("supCategory").value;
   const fileInput = document.getElementById("supFile");
 
   if (!name || !email || !message) {
@@ -68,9 +64,10 @@ document.addEventListener("click", async e => {
   if (fileInput.files.length > 0) {
     const file = fileInput.files[0];
     const fileName = `${Date.now()}_${file.name}`;
-    const { error: uploadError } = await supabase.storage.from("uploads").upload(fileName, file);
+    const { error: uploadError } = await supabase.storage
+      .from("uploads")
+      .upload(fileName, file);
     if (uploadError) {
-      console.error("Upload error:", uploadError);
       showToast("File upload failed ❌", "error");
       return;
     }
@@ -82,7 +79,6 @@ document.addEventListener("click", async e => {
       name,
       email,
       message,
-      category,
       file: fileUrl || "",
       date: new Date().toLocaleString(),
       read: false,
@@ -96,9 +92,9 @@ document.addEventListener("click", async e => {
     showToast("Message sent successfully ✅", "success");
     document.getElementById("supportPanel").style.display = "none";
   }
-});
+}
 
-// 🔔 Toast mesajları
+// 🔔 Toast
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -111,7 +107,7 @@ function showToast(msg, type = "info") {
   }, 2500);
 }
 
-// 🎨 Stiller
+// 🎨 Stil
 const style = document.createElement("style");
 style.innerHTML = `
 #supportBtn {
@@ -128,7 +124,7 @@ style.innerHTML = `
   cursor: pointer;
   box-shadow: 0 0 12px rgba(0,0,0,0.3);
   z-index: 9999;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 #supportBtn:hover { background: #00cc77; }
 #supportBtn img { width: 26px; height: 26px; pointer-events: none; }
@@ -138,13 +134,19 @@ style.innerHTML = `
   bottom: 100px;
   right: 40px;
   width: 320px;
-  background: #0f0f0f;
+  background: rgba(15,15,15,0.95);
   border: 1px solid #222;
   border-radius: 12px;
   padding: 20px;
   display: none;
   z-index: 9998;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 .sup-header {
   display: flex;
@@ -154,19 +156,10 @@ style.innerHTML = `
 }
 .sup-header span { font-weight: bold; font-size: 16px; }
 .sup-header button {
-  background: none;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
+  background: none; border: none; color: #fff; cursor: pointer; font-size: 18px;
 }
-.sup-body label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 13px;
-  color: #aaa;
-}
-.sup-body input, .sup-body textarea, .sup-body select {
+.sup-body label { display: block; margin-bottom: 5px; font-size: 13px; color: #aaa; }
+.sup-body input, .sup-body textarea {
   width: 100%;
   margin-bottom: 10px;
   border: 1px solid #333;
