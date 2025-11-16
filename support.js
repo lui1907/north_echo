@@ -74,24 +74,27 @@ async function sendSupportMessage() {
   }
 
   let fileUrl = "";
-  if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    const safeName = `${Date.now()}_${file.name.replace(/\s+/g, "_").replace(/[^\w.-]/g, "")}`;
-    
-    const { error: uploadError } = await supabase.storage
-      .from("uploads")
-      .upload(`public/${safeName}`, file, {
-        cacheControl: "3600",
-        upsert: false
-      });
+if (fileInput.files.length > 0) {
+  const file = fileInput.files[0];
+  const safeName = `${Date.now()}_${file.name.replace(/\s+/g, "_").replace(/[^\w.-]/g, "")}`;
 
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
-      showToast("File upload failed ❌", "error");
-      return;
-    }
-    fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/public/${safeName}`;
+  // direkt kök dizine yükleme (senin ilk sistem gibi)
+  const { error: uploadError } = await supabase.storage
+    .from("uploads")
+    .upload(safeName, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+  if (uploadError) {
+    console.error("Upload error:", uploadError);
+    showToast("File upload failed ❌", "error");
+    return;
   }
+
+  // URL doğrudan kökten
+  fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/${safeName}`;
+}
 
   const { error: insertError } = await supabase.from("messages").insert([
     { name, email, message, file: fileUrl || "", date: new Date().toLocaleString(), read: false },
