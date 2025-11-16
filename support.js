@@ -76,13 +76,21 @@ async function sendSupportMessage() {
   let fileUrl = "";
   if (fileInput.files.length > 0) {
     const file = fileInput.files[0];
-    const fileName = `${Date.now()}_${file.name}`;
-    const { error: uploadError } = await supabase.storage.from("uploads").upload(fileName, file);
+    const safeName = `${Date.now()}_${file.name.replace(/\s+/g, "_").replace(/[^\w.-]/g, "")}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from("uploads")
+      .upload(`public/${safeName}`, file, {
+        cacheControl: "3600",
+        upsert: false
+      });
+
     if (uploadError) {
+      console.error("Upload error:", uploadError);
       showToast("File upload failed ❌", "error");
       return;
     }
-    fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
+    fileUrl = `${SUPABASE_URL}/storage/v1/object/public/uploads/public/${safeName}`;
   }
 
   const { error: insertError } = await supabase.from("messages").insert([
