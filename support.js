@@ -5,8 +5,10 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🧩 Panel DOM'da yoksa oluştur
-if (!document.getElementById("supportPanel")) {
+// 🧩 SUPPORT PANEL YOKSA OLUŞTUR
+function createSupportPanel() {
+  if (document.getElementById("supportPanel")) return;
+
   const panel = document.createElement("div");
   panel.id = "supportPanel";
   panel.innerHTML = `
@@ -28,27 +30,38 @@ if (!document.getElementById("supportPanel")) {
   `;
   document.body.appendChild(panel);
 }
+createSupportPanel();
 
-// ✅ SAĞ ALTTAKİ BUTONA EVENT EKLE
-window.addEventListener("DOMContentLoaded", () => {
+// ✅ SUPPORT BUTONU VARSA TIKLANINCA PANELİ AÇ/KAPA
+function bindSupportButton() {
   const btn = document.getElementById("supportBtn");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      const p = document.getElementById("supportPanel");
-      const isVisible = p.style.display === "block";
-      p.style.display = isVisible ? "none" : "block";
-    });
-  }
+  const panel = document.getElementById("supportPanel");
+
+  if (!btn || !panel) return;
+
+  btn.addEventListener("click", () => {
+    const visible = panel.style.display === "block";
+    panel.style.display = visible ? "none" : "block";
+  });
+}
+
+// DOM TAM YÜKLENİNCE YENİDEN BAĞLA
+window.addEventListener("load", () => {
+  bindSupportButton();
 });
 
-document.addEventListener("click", e => {
+// ❌ PANEL KAPAT / ✅ MESAJ GÖNDER
+document.addEventListener("click", async e => {
   if (e.target.id === "closeSupport") {
     document.getElementById("supportPanel").style.display = "none";
   }
-  if (e.target.id === "sendSupportBtn") sendSupportMessage();
+
+  if (e.target.id === "sendSupportBtn") {
+    await sendSupportMessage();
+  }
 });
 
-// 📩 Mesaj gönderme
+// 📩 MESAJ GÖNDER
 async function sendSupportMessage() {
   const name = document.getElementById("supName").value.trim();
   const email = document.getElementById("supEmail").value.trim();
@@ -64,9 +77,7 @@ async function sendSupportMessage() {
   if (fileInput.files.length > 0) {
     const file = fileInput.files[0];
     const fileName = `${Date.now()}_${file.name}`;
-    const { error: uploadError } = await supabase.storage
-      .from("uploads")
-      .upload(fileName, file);
+    const { error: uploadError } = await supabase.storage.from("uploads").upload(fileName, file);
     if (uploadError) {
       showToast("File upload failed ❌", "error");
       return;
@@ -75,14 +86,7 @@ async function sendSupportMessage() {
   }
 
   const { error: insertError } = await supabase.from("messages").insert([
-    {
-      name,
-      email,
-      message,
-      file: fileUrl || "",
-      date: new Date().toLocaleString(),
-      read: false,
-    },
+    { name, email, message, file: fileUrl || "", date: new Date().toLocaleString(), read: false },
   ]);
 
   if (insertError) {
@@ -94,7 +98,7 @@ async function sendSupportMessage() {
   }
 }
 
-// 🔔 Toast
+// 🔔 TOAST MESAJLARI
 function showToast(msg, type = "info") {
   let toast = document.createElement("div");
   toast.className = `toast ${type}`;
@@ -107,7 +111,7 @@ function showToast(msg, type = "info") {
   }, 2500);
 }
 
-// 🎨 Stil
+// 🎨 STİL
 const style = document.createElement("style");
 style.innerHTML = `
 #supportBtn {
