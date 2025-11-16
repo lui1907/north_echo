@@ -1,323 +1,341 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>T-Shirts — North Echo</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>T-Shirts — North Echo</title>
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="support.css" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="support.css" />
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+<script src="cart.js" defer></script>
+<script type="module" src="support.js"></script>
 
-  <script src="menu.js" defer></script>
-  <script src="theme.js" defer></script>
-  <script src="cart.js" defer></script>
-  <script type="module" src="support.js"></script>
+<style>
+body {
+  background: #000;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}
 
-  <style>
-    body {
-      background: #000;
-      color: white;
-      font-family: 'Poppins', sans-serif;
-    }
+.page-title {
+  text-align: center;
+  margin-top: 80px;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+}
 
-    .page-title {
-      text-align: center;
-      margin-top: 80px;
-      font-size: 1.6rem;
-      letter-spacing: 2px;
-    }
+.tshirt-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 40px;
+  gap: 40px;
+  padding-bottom: 100px;
+}
 
-    .tshirt-layout {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      margin-top: 40px;
-      gap: 40px;
-      padding-bottom: 100px;
-    }
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 25px;
+  max-width: 800px;
+}
 
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 25px;
-      max-width: 800px;
-    }
+.product-card {
+  text-decoration: none;
+  background: #111;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  transition: 0.25s;
+  border: 1px solid #222;
+}
+.product-card:hover {
+  background: #171717;
+  transform: translateY(-4px);
+}
+.product-card img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  height: 270px;
+}
+.product-card h3 {
+  margin-top: 10px;
+  color: white;
+  font-size: 1rem;
+}
+.product-card p {
+  color: #00ff99;
+  font-weight: bold;
+  margin: 4px 0 0;
+}
 
-    .product-card {
-      text-decoration: none;
-      background: #111;
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-      transition: 0.25s;
-      border: 1px solid #222;
-    }
-    .product-card:hover {
-      background: #171717;
-      transform: translateY(-4px);
-    }
-    .product-card img {
-      width: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-      height: 270px;
-    }
-    .product-card h3 {
-      margin-top: 10px;
-      color: white;
-      font-size: 1rem;
-    }
-    .product-card p {
-      color: #00ff99;
-      font-weight: bold;
-      margin: 4px 0 0;
-    }
+/* FİLTRE KISMI */
+.filter-side {
+  background: #0a0a0a;
+  border: 1px solid #1f1f1f;
+  border-radius: 12px;
+  padding: 20px;
+  width: 260px;
+  height: fit-content;
+  position: sticky;
+  top: 120px;
+}
+.filter-side h3 { margin-bottom: 10px; font-size: 1.1rem; }
+.filter-side input[type="text"] {
+  width: 100%;
+  padding: 7px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: white;
+  margin-bottom: 15px;
+}
+.filter-side h4 {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #bbb;
+}
+.price-slider-box input[type="range"] {
+  width: 100%;
+}
+.price-value {
+  font-size: 0.85rem;
+  margin-top: 3px;
+  color: #00ff99;
+}
+.size-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+.size-btn {
+  background: #111;
+  color: white;
+  border: 1px solid #333;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.size-btn.active {
+  background: #00aa66;
+  border-color: #00ff99;
+}
 
-    /* FİLTRE KISMI */
-    .filter-side {
-      background: #0a0a0a;
-      border: 1px solid #1f1f1f;
-      border-radius: 12px;
-      padding: 20px;
-      width: 260px;
-      height: fit-content;
-      position: sticky;
-      top: 120px;
-    }
-    .filter-side h3 { margin-bottom: 10px; font-size: 1.1rem; }
-    .filter-side input[type="text"] {
-      width: 100%;
-      padding: 7px;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 6px;
-      color: white;
-      margin-bottom: 15px;
-    }
+/* ✅ SUPPORT BUTTON & PANEL (küçük dikdörtgen üstte) */
+#supportBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #00aa66;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+  z-index: 9999;
+  transition: 0.25s;
+}
+#supportBtn:hover { background: #00cc77; }
+#supportBtn img { width: 26px; height: 26px; pointer-events: none; }
 
-    .filter-side h4 {
-      margin-top: 10px;
-      font-size: 0.9rem;
-      color: #bbb;
-    }
-    .price-slider-box input[type="range"] {
-      width: 100%;
-    }
-    .price-value {
-      font-size: 0.85rem;
-      margin-top: 3px;
-      color: #00ff99;
-    }
+#supportPanel {
+  position: fixed;
+  bottom: 95px;
+  right: 40px;
+  width: 300px;
+  background: rgba(15,15,15,0.95);
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 15px;
+  display: none;
+  z-index: 9998;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  animation: slideUp 0.25s ease;
+}
+#supportPanel.show { display: block; }
 
-    .size-buttons {
-      display: flex;
-      gap: 8px;
-      margin-top: 5px;
-    }
-    .size-btn {
-      background: #111;
-      color: white;
-      border: 1px solid #333;
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: 0.2s;
-    }
-    .size-btn.active {
-      background: #00aa66;
-      border-color: #00ff99;
-    }
+.sup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.sup-header span { font-weight: bold; font-size: 16px; }
+.sup-header button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+}
 
-    /* SUPPORT */
-    #supportBtn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background: #00aa66;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(0,0,0,0.3);
-      z-index: 9999;
-      transition: 0.25s;
-    }
-    #supportBtn:hover { background: #00cc77; }
-    #supportBtn img { width: 26px; height: 26px; pointer-events: none; }
+.sup-body label { display: block; margin-bottom: 5px; font-size: 13px; color: #aaa; }
+.sup-body input, .sup-body textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #111;
+  color: white;
+  padding: 8px;
+  font-size: 14px;
+}
+.sup-send {
+  width: 100%;
+  background: #00aa66;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.sup-send:hover { background: #00cc77; }
 
-    #supportPanel {
-      position: fixed;
-      bottom: 100px;
-      right: 40px;
-      width: 320px;
-      background: rgba(15,15,15,0.95);
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 20px;
-      display: none;
-      z-index: 9998;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      backdrop-filter: blur(8px);
-    }
-    #supportPanel.show { display: block; animation: slideUp 0.25s ease; }
-
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    #supportPanel input,
-    #supportPanel textarea {
-      width: 100%;
-      margin-bottom: 10px;
-      border: 1px solid #333;
-      border-radius: 6px;
-      background: #111;
-      color: white;
-      padding: 8px;
-      font-size: 14px;
-    }
-
-    #supportPanel button {
-      width: 100%;
-      background: #00aa66;
-      border: none;
-      border-radius: 6px;
-      padding: 10px;
-      font-weight: bold;
-      color: white;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    #supportPanel button:hover { background: #00cc77; }
-  </style>
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
 </head>
 
 <body>
-  <!-- HEADER -->
-  <header class="header">
-    <div class="hamburger" id="menuBtn">☰</div>
-    <a href="index.html" class="logo">NORTH ECHO</a>
-    <div class="right-buttons">
-      <a href="submit-design.html" class="submit-nav">Submit</a>
-      <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-      <img src="assets/default-avatar.png" class="avatar" id="userAvatar" />
-      <div class="avatar-menu" id="avatarMenu">
-        <a href="profile.html">Profile</a>
-        <a href="settings.html">Settings</a>
-        <a href="#" class="logout" id="logoutBtn">Logout</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- SIDE MENU -->
-  <div class="side-menu" id="sideMenu">
-    <button id="closeMenu" class="close-menu">×</button>
-    <a href="index.html">Home</a>
-    <a href="tshirts.html">T-Shirts</a>
-    <a href="sweatshirts.html">Sweatshirts</a>
-    <a href="submit-design.html">Submit Design</a>
-    <a href="cart.html">Cart</a>
-  </div>
-
-  <h1 class="page-title">T-Shirts</h1>
-
-  <div class="tshirt-layout">
-    <!-- SOL -->
-    <div class="product-area">
-      <div class="product-grid" id="productGrid"></div>
-    </div>
-
-    <!-- SAĞ -->
-    <div class="filter-side">
-      <input type="text" id="searchInput" placeholder="Search products..." />
-      <h3>Filters</h3>
-      <h4>Price</h4>
-      <div class="price-slider-box">
-        <input type="range" id="priceRange" min="0" max="100" value="100" />
-        <div class="price-value">Max: <span id="priceVal">100</span>€</div>
-      </div>
-      <h4>Size</h4>
-      <div class="size-buttons">
-        <div class="size-btn" data-size="S">S</div>
-        <div class="size-btn" data-size="M">M</div>
-        <div class="size-btn" data-size="L">L</div>
-        <div class="size-btn" data-size="XL">XL</div>
-      </div>
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="submit-design.html" class="submit-nav">Submit</a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar" />
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" id="logoutBtn">Logout</a>
     </div>
   </div>
+</header>
 
-  <!-- 💬 SUPPORT BUTTON -->
-  <div id="supportBtn">
-    <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==" alt="Support">
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="submit-design.html">Submit Design</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<h1 class="page-title">T-Shirts</h1>
+
+<div class="tshirt-layout">
+  <div class="product-area">
+    <div class="product-grid" id="productGrid"></div>
   </div>
 
-  <!-- 💬 SUPPORT PANEL -->
-  <div id="supportPanel">
-    <h3>Support</h3>
-    <input type="text" id="supName" placeholder="Your Name *">
-    <input type="email" id="supEmail" placeholder="Email *">
-    <textarea id="supMsg" placeholder="Your Message *"></textarea>
-    <button id="sendSupport">Send Message →</button>
+  <div class="filter-side">
+    <input type="text" id="searchInput" placeholder="Search products..." />
+    <h3>Filters</h3>
+    <h4>Price</h4>
+    <div class="price-slider-box">
+      <input type="range" id="priceRange" min="0" max="100" value="100" />
+      <div class="price-value">Max: <span id="priceVal">100</span>€</div>
+    </div>
+
+    <h4>Size</h4>
+    <div class="size-buttons">
+      <div class="size-btn" data-size="S">S</div>
+      <div class="size-btn" data-size="M">M</div>
+      <div class="size-btn" data-size="L">L</div>
+      <div class="size-btn" data-size="XL">XL</div>
+    </div>
   </div>
+</div>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const supabase = createClient(
-      "https://xedfviwffpsvbmyqzoof.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
-    );
+<!-- ✅ SUPPORT BUTTON -->
+<div id="supportBtn">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==" alt="Support">
+</div>
 
-    // SUPPORT PANEL toggle
-    const supBtn = document.getElementById("supportBtn");
-    const supPanel = document.getElementById("supportPanel");
-    supBtn.addEventListener("click", () => {
-      supPanel.classList.toggle("show");
-    });
+<!-- ✅ SUPPORT PANEL -->
+<div id="supportPanel">
+  <div class="sup-header">
+    <span>Support</span>
+    <button id="closeSupport">✕</button>
+  </div>
+  <div class="sup-body">
+    <label>Your Name *</label>
+    <input type="text" id="supName" placeholder="John Doe" />
+    <label>Email *</label>
+    <input type="email" id="supEmail" placeholder="your@mail.com" />
+    <label>Your Message *</label>
+    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx" />
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+  </div>
+</div>
 
-    // ÜRÜNLERİ YÜKLE
-    const grid = document.getElementById("productGrid");
-    const searchInput = document.getElementById("searchInput");
-    const priceRange = document.getElementById("priceRange");
-    const priceVal = document.getElementById("priceVal");
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
 
-    async function loadProducts() {
-      const { data, error } = await supabase.from("products").select("*").eq("category", "T-Shirts");
-      if (error) return console.error(error);
-      renderProducts(data);
-    }
-    loadProducts();
+// ✅ Support toggle
+const btn = document.getElementById("supportBtn");
+const panel = document.getElementById("supportPanel");
+const closeBtn = document.getElementById("closeSupport");
 
-    function renderProducts(data) {
-      grid.innerHTML = data.map(p => `
-        <a href="product.html?id=${p.id}" class="product-card" data-name="${p.name.toLowerCase()}" data-price="${p.price}">
-          <img src="${(p.images || '').split(',')[0] || 'assets/noimg.png'}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <p>${p.price}€</p>
-        </a>
-      `).join("");
-    }
+btn.addEventListener("click", () => panel.classList.toggle("show"));
+closeBtn.addEventListener("click", () => panel.classList.remove("show"));
 
-    priceRange.addEventListener("input", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
+// Ürünleri yükle
+const grid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const priceRange = document.getElementById("priceRange");
+const priceVal = document.getElementById("priceVal");
 
-    function applyFilters() {
-      priceVal.textContent = priceRange.value;
-      const searchText = searchInput.value.toLowerCase();
-      const maxPrice = parseInt(priceRange.value);
-      document.querySelectorAll(".product-card").forEach(card => {
-        const name = card.dataset.name;
-        const price = parseInt(card.dataset.price);
-        const matchSearch = name.includes(searchText);
-        const matchPrice = price <= maxPrice;
-        if (matchSearch && matchPrice) card.style.display = "block";
-        else card.style.display = "none";
-      });
-    }
-  </script>
+async function loadProducts() {
+  const { data, error } = await supabase.from("products").select("*").eq("category", "T-Shirts");
+  if (error) return console.error(error);
+  renderProducts(data);
+}
+loadProducts();
+
+function renderProducts(data) {
+  grid.innerHTML = data.map(p => `
+    <a href="product.html?id=${p.id}" class="product-card" data-name="${p.name.toLowerCase()}" data-price="${p.price}">
+      <img src="${(p.images || '').split(',')[0] || 'assets/noimg.png'}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>${p.price}€</p>
+    </a>
+  `).join("");
+}
+
+searchInput.addEventListener("input", applyFilters);
+priceRange.addEventListener("input", applyFilters);
+
+function applyFilters() {
+  priceVal.textContent = priceRange.value;
+  const searchText = searchInput.value.toLowerCase();
+  const maxPrice = parseInt(priceRange.value);
+  document.querySelectorAll(".product-card").forEach(card => {
+    const name = card.dataset.name;
+    const price = parseInt(card.dataset.price);
+    const matchSearch = name.includes(searchText);
+    const matchPrice = price <= maxPrice;
+    card.style.display = matchSearch && matchPrice ? "block" : "none";
+  });
+}
+</script>
 </body>
 </html>
