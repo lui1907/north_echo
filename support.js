@@ -131,12 +131,13 @@ async function sendSupportMessage() {
       .replace(/[^\w.-]/g, "")}`;
 
     // Bucket'a yükle (KÖK dizine)
-    const { error: uploadError } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .upload(safeName, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+const { error: uploadError } = await supabase.storage
+  .from(STORAGE_BUCKET)
+  .upload(`public/${safeName}`, file, {
+    cacheControl: "3600",
+    upsert: false,
+  });
+
 
     if (uploadError) {
       console.error("Upload error:", uploadError);
