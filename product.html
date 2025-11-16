@@ -10,7 +10,7 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<script src="support.js" type="module"></script>
+<script src="support.js" defer></script>
 
 <style>
 body { background: #000; color: white; font-family: "Inter", sans-serif; }
@@ -164,10 +164,8 @@ body { background: #000; color: white; font-family: "Inter", sans-serif; }
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient("https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM");
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
@@ -187,7 +185,7 @@ async function loadProduct() {
   }
 
   nameEl.textContent = data.name;
-  priceEl.textContent = data.price + "₺";
+  priceEl.textContent = data.price + "€";
   descEl.textContent = data.description || "";
 
   const imgs = (data.images || "").split(",");
