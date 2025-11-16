@@ -146,7 +146,7 @@ const { error: uploadError } = await supabase.storage
     }
 
     // Public URL
-    fileUrl = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${safeName}`;
+   fileUrl = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/public/${safeName}`;
   }
 
   // ---- VERİTABANINA MESAJ KAYDET ----
