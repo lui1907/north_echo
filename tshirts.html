@@ -16,180 +16,40 @@ body {
   color: white;
   font-family: 'Poppins', sans-serif;
 }
-
-.page-title {
-  text-align: center;
-  margin-top: 80px;
-  font-size: 1.6rem;
-  letter-spacing: 2px;
-}
-
-.tshirt-layout {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin-top: 40px;
-  gap: 40px;
-  padding-bottom: 100px;
-}
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 25px;
-  max-width: 800px;
-}
-
-.product-card {
-  text-decoration: none;
-  background: #111;
-  border-radius: 12px;
-  padding: 15px;
-  text-align: center;
-  transition: 0.25s;
-  border: 1px solid #222;
-}
-.product-card:hover {
-  background: #171717;
-  transform: translateY(-4px);
-}
-.product-card img {
-  width: 100%;
-  border-radius: 8px;
-  object-fit: cover;
-  height: 270px;
-}
-.product-card h3 {
-  margin-top: 10px;
-  color: white;
-  font-size: 1rem;
-}
-.product-card p {
-  color: #00ff99;
-  font-weight: bold;
-  margin: 4px 0 0;
-}
-
-/* FILTER */
-.filter-side {
-  background: #0a0a0a;
-  border: 1px solid #1f1f1f;
-  border-radius: 12px;
-  padding: 20px;
-  width: 260px;
-  height: fit-content;
-  position: sticky;
-  top: 120px;
-}
-.filter-side input[type="text"] {
-  width: 100%;
-  padding: 7px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 6px;
-  color: white;
-  margin-bottom: 15px;
-}
-.price-value {
-  font-size: 0.85rem;
-  margin-top: 3px;
-  color: #00ff99;
-}
-.size-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 5px;
-}
-.size-btn {
-  background: #111;
-  color: white;
-  border: 1px solid #333;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-}
-.size-btn.active {
-  background: #00aa66;
-  border-color: #00ff99;
-}
-
-/* ✅ SUPPORT BUTTON & SMALL PANEL */
-#supportBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background: #00aa66;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 0 12px rgba(0,0,0,0.3);
-  z-index: 9999;
-  transition: 0.25s;
-}
-#supportBtn:hover { background: #00cc77; }
-#supportBtn img { width: 26px; height: 26px; pointer-events: none; }
-
-#supportPanel {
-  position: fixed;
-  bottom: 95px;
-  right: 40px;
-  width: 320px;
-  background: rgba(15,15,15,0.97);
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 15px;
-  display: none;
-  z-index: 9998;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  backdrop-filter: blur(6px);
-  animation: fadeIn 0.25s ease;
-}
-#supportPanel.show { display: block; }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.sup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.sup-header span { font-weight: bold; font-size: 16px; }
-.sup-header button {
-  background: none; border: none; color: #fff; cursor: pointer; font-size: 18px;
-}
-.sup-body label { display: block; margin-bottom: 5px; font-size: 13px; color: #aaa; }
-.sup-body input, .sup-body textarea {
-  width: 100%;
-  margin-bottom: 10px;
-  border: 1px solid #333;
-  border-radius: 6px;
-  background: #111;
-  color: white;
-  padding: 8px;
-  font-size: 14px;
-}
-.sup-send {
-  width: 100%;
-  background: #00aa66;
-  border: none;
-  border-radius: 6px;
-  padding: 10px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.sup-send:hover { background: #00cc77; }
+.page-title { text-align:center;margin-top:80px;font-size:1.6rem;letter-spacing:2px;}
+.tshirt-layout {display:flex;justify-content:center;align-items:flex-start;margin-top:40px;gap:40px;padding-bottom:100px;}
+.product-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:25px;max-width:800px;}
+.product-card {text-decoration:none;background:#111;border-radius:12px;padding:15px;text-align:center;transition:.25s;border:1px solid #222;}
+.product-card:hover {background:#171717;transform:translateY(-4px);}
+.product-card img {width:100%;border-radius:8px;object-fit:cover;height:270px;}
+.product-card h3 {margin-top:10px;color:white;font-size:1rem;}
+.product-card p {color:#00ff99;font-weight:bold;margin:4px 0 0;}
+.filter-side {background:#0a0a0a;border:1px solid #1f1f1f;border-radius:12px;padding:20px;width:260px;position:sticky;top:120px;}
+.filter-side input[type="text"]{width:100%;padding:7px;background:#111;border:1px solid #333;border-radius:6px;color:white;margin-bottom:15px;}
+.price-value{font-size:.85rem;margin-top:3px;color:#00ff99;}
+.size-buttons{display:flex;gap:8px;margin-top:5px;}
+.size-btn{background:#111;color:white;border:1px solid #333;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:13px;}
+.size-btn.active{background:#00aa66;border-color:#00ff99;}
+/* SUPPORT */
+#supportBtn{position:fixed;bottom:30px;right:30px;width:55px;height:55px;border-radius:50%;background:#00aa66;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 12px rgba(0,0,0,.3);z-index:9999;transition:.25s;}
+#supportBtn:hover{background:#00cc77;}
+#supportBtn img{width:26px;height:26px;pointer-events:none;}
+#supportPanel{position:fixed;bottom:95px;right:40px;width:320px;background:rgba(15,15,15,.97);border:1px solid #222;border-radius:12px;padding:15px;display:none;z-index:9998;box-shadow:0 0 20px rgba(0,0,0,.5);backdrop-filter:blur(6px);}
+#supportPanel.show{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+.sup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sup-header span{font-weight:bold;font-size:16px;}
+.sup-header button{background:none;border:none;color:#fff;cursor:pointer;font-size:18px;}
+.sup-body label{display:block;margin-bottom:5px;font-size:13px;color:#aaa;}
+.sup-body input,.sup-body textarea{width:100%;margin-bottom:10px;border:1px solid #333;border-radius:6px;background:#111;color:white;padding:8px;font-size:14px;}
+.sup-send{width:100%;background:#00aa66;border:none;border-radius:6px;padding:10px;font-weight:bold;color:white;cursor:pointer;transition:.2s;}
+.sup-send:hover{background:#00cc77;}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);background:rgba(20,20,20,.95);border:1px solid #333;padding:16px 22px;color:white;border-radius:10px;opacity:0;transition:all .3s;z-index:99999;font-size:15px;}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.toast.success{border-color:#00aa66;color:#00ff99;}
+.toast.error{border-color:#aa0000;color:#ff5555;}
 </style>
 </head>
-
 <body>
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
@@ -200,15 +60,6 @@ body {
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar" />
   </div>
 </header>
-
-<div class="side-menu" id="sideMenu">
-  <button id="closeMenu" class="close-menu">×</button>
-  <a href="index.html">Home</a>
-  <a href="tshirts.html">T-Shirts</a>
-  <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="submit-design.html">Submit Design</a>
-  <a href="cart.html">Cart</a>
-</div>
 
 <h1 class="page-title">T-Shirts</h1>
 
@@ -224,22 +75,13 @@ body {
       <input type="range" id="priceRange" min="0" max="100" value="100" />
       <div class="price-value">Max: <span id="priceVal">100</span>€</div>
     </div>
-    <h4>Size</h4>
-    <div class="size-buttons">
-      <div class="size-btn" data-size="S">S</div>
-      <div class="size-btn" data-size="M">M</div>
-      <div class="size-btn" data-size="L">L</div>
-      <div class="size-btn" data-size="XL">XL</div>
-    </div>
   </div>
 </div>
 
-<!-- ✅ SUPPORT BUTTON -->
+<!-- SUPPORT -->
 <div id="supportBtn">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==" alt="Support">
+  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==" />
 </div>
-
-<!-- ✅ SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -265,54 +107,78 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-// ✅ SUPPORT BUTTON
-const btn = document.getElementById("supportBtn");
-const panel = document.getElementById("supportPanel");
-const closeBtn = document.getElementById("closeSupport");
+// PANEL toggle
+const btn=document.getElementById("supportBtn");
+const panel=document.getElementById("supportPanel");
+const closeBtn=document.getElementById("closeSupport");
+btn.addEventListener("click",()=>panel.classList.toggle("show"));
+closeBtn.addEventListener("click",()=>panel.classList.remove("show"));
 
-btn.addEventListener("click", () => {
-  panel.classList.toggle("show");
+// SEND MESSAGE
+document.getElementById("sendSupportBtn").addEventListener("click", async()=>{
+  const name=document.getElementById("supName").value.trim();
+  const email=document.getElementById("supEmail").value.trim();
+  const msg=document.getElementById("supMsg").value.trim();
+  const fileInput=document.getElementById("supFile");
+
+  if(!name||!email||!msg){showToast("Please fill all required fields ❌","error");return;}
+
+  let fileUrl="";
+  if(fileInput.files.length>0){
+    const file=fileInput.files[0];
+    const fileName=`${Date.now()}_${file.name}`;
+    const { error: uploadError }=await supabase.storage.from("uploads").upload(fileName,file);
+    if(uploadError){showToast("File upload failed ❌","error");return;}
+    fileUrl=`https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/${fileName}`;
+  }
+
+  const { error }=await supabase.from("messages").insert([
+    { name, email, message:msg, file:fileUrl, date:new Date().toLocaleString(), read:false }
+  ]);
+
+  if(error) showToast("Message failed ❌","error");
+  else{ showToast("Message sent ✅","success"); panel.classList.remove("show"); }
 });
-closeBtn.addEventListener("click", () => {
-  panel.classList.remove("show");
-});
 
-// ✅ ÜRÜN LİSTESİ
-const grid = document.getElementById("productGrid");
-const searchInput = document.getElementById("searchInput");
-const priceRange = document.getElementById("priceRange");
-const priceVal = document.getElementById("priceVal");
+// TOAST
+function showToast(msg,type="info"){
+  let toast=document.createElement("div");
+  toast.className=`toast ${type}`;
+  toast.textContent=msg;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.classList.add("show"),100);
+  setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),400);},2500);
+}
 
-async function loadProducts() {
-  const { data, error } = await supabase.from("products").select("*").eq("category", "T-Shirts");
-  if (error) return console.error(error);
+// ÜRÜNLER
+const grid=document.getElementById("productGrid");
+const searchInput=document.getElementById("searchInput");
+const priceRange=document.getElementById("priceRange");
+const priceVal=document.getElementById("priceVal");
+async function loadProducts(){
+  const {data,error}=await supabase.from("products").select("*").eq("category","T-Shirts");
+  if(error)return console.error(error);
   renderProducts(data);
 }
 loadProducts();
-
-function renderProducts(data) {
-  grid.innerHTML = data.map(p => `
-    <a href="product.html?id=${p.id}" class="product-card" data-name="${p.name.toLowerCase()}" data-price="${p.price}">
-      <img src="${(p.images || '').split(',')[0] || 'assets/noimg.png'}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p>${p.price}€</p>
-    </a>
-  `).join("");
+function renderProducts(data){
+  grid.innerHTML=data.map(p=>`
+  <a href="product.html?id=${p.id}" class="product-card" data-name="${p.name.toLowerCase()}" data-price="${p.price}">
+    <img src="${(p.images||'').split(',')[0]||'assets/noimg.png'}">
+    <h3>${p.name}</h3>
+    <p>${p.price}€</p>
+  </a>`).join("");
 }
-
-searchInput.addEventListener("input", applyFilters);
-priceRange.addEventListener("input", applyFilters);
-
-function applyFilters() {
-  priceVal.textContent = priceRange.value;
-  const searchText = searchInput.value.toLowerCase();
-  const maxPrice = parseInt(priceRange.value);
-  document.querySelectorAll(".product-card").forEach(card => {
-    const name = card.dataset.name;
-    const price = parseInt(card.dataset.price);
-    const matchSearch = name.includes(searchText);
-    const matchPrice = price <= maxPrice;
-    card.style.display = matchSearch && matchPrice ? "block" : "none";
+priceRange.addEventListener("input",applyFilters);
+searchInput.addEventListener("input",applyFilters);
+function applyFilters(){
+  priceVal.textContent=priceRange.value;
+  const s=searchInput.value.toLowerCase();
+  const max=parseInt(priceRange.value);
+  document.querySelectorAll(".product-card").forEach(c=>{
+    const n=c.dataset.name;
+    const p=parseInt(c.dataset.price);
+    c.style.display=(n.includes(s)&&p<=max)?"block":"none";
   });
 }
 </script>
