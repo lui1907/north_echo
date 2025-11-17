@@ -6,7 +6,7 @@ const SUPABASE_KEY =
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // 👑 Admin kontrolü
-const ADMINS = ["luivoss", "fisami"];
+const ADMINS = ["luivoss", "fstekin"];
 const user = localStorage.getItem("loggedInUser");
 if (!user || !ADMINS.includes(user.toLowerCase())) window.location.href = "index.html";
 
