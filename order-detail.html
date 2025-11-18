@@ -3,78 +3,64 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
 <title>Order Detail — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="support.css">
-
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="support.js" defer></script>
 
 <style>
-body{color:white;margin:0;padding:0;}
+body { color:white;margin:0;background:black; }
 
-.detail-wrapper{
+.detail-wrapper {
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
 
-.detail-card{
+.detail-card {
   width:750px;
   background:#0d0d0d;
-  padding:25px;
-  border-radius:16px;
   border:1px solid #222;
-}
-
-.section-title{
-  font-size:20px;
-  font-weight:bold;
-  margin:15px 0 10px 0;
-}
-
-.product-box{
-  display:flex;
-  gap:12px;
-  background:#1a1a1a;
-  border:1px solid #2a2a2a;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:12px;
-}
-
-.product-box img{
-  width:70px;
-  height:70px;
-  border-radius:10px;
-  object-fit:cover;
+  padding:25px;
+  border-radius:18px;
 }
 
 .back-btn {
-  position: absolute;
-  top: 110px;
-  left: 100px;
-  color: #ccc;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 6px 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 8px;
-  transition: .2s;
+  cursor:pointer;
+  margin-bottom:15px;
+  color:#00cc77;
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-.back-btn:hover {
-  color: white;
-  background: #222;
-  border-color: #555;
+.product-box {
+  background:#161616;
+  border:1px solid #333;
+  padding:10px;
+  border-radius:10px;
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
 }
 
-  
-.avatar-menu a{color:white!important;}
-.avatar-menu .logout{color:#ff4444!important;}
+.product-box img {
+  width:60px;
+  height:60px;
+  border-radius:8px;
+  object-fit:cover;
+}
+
+.shipping-info span {
+  display:block;
+  margin:4px 0;
+  opacity:0.9;
+}
 </style>
 </head>
 
@@ -84,15 +70,13 @@ body{color:white;margin:0;padding:0;}
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" class="logout" onclick="logout()">Logout</a>
+      <a href="#" onclick="logout()" class="logout">Logout</a>
     </div>
   </div>
 </header>
@@ -105,132 +89,22 @@ body{color:white;margin:0;padding:0;}
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
-  <a href="orders.html">My Orders</a>
 </div>
 
-<!-- BACK BUTTON -->
-<div class="back-btn" onclick="history.back()">
-  ← Back to Orders
-</div>
-
-  
-<!-- PAGE -->
 <div class="detail-wrapper">
   <div class="detail-card">
-    <h2>Order Details</h2>
-    <div id="detail"></div>
+
+    <div class="back-btn" onclick="history.back()">
+      ← Back to orders
+    </div>
+
+    <h2>Order Detail</h2>
+    <div id="orderInfo" style="margin-top:20px;"></div>
+
   </div>
 </div>
 
-<!-- ORDER DETAIL SCRIPT -->
-<script>
-let username = localStorage.getItem("loggedInUser");
-if (!username) window.location = "login.html";
-
-const index = localStorage.getItem("selectedOrderIndex");
-if (index === null) window.location = "orders.html";
-
-let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
-let reversed = [...orders].reverse();
-let order = reversed[index];
-
-if (!order) {
-  document.getElementById("detail").innerHTML =
-    "<p>Order not found.</p>";
-} else {
-  let html = `
-    <div class="section-title">General Info</div>
-    <p><b>Date:</b> ${order.date}</p>
-    <p><b>Total:</b> ${order.total}€</p>
-    <p><b>Status:</b> Completed</p>
-
-    <div class="section-title">Products</div>
-  `;
-
-  order.items.forEach(i=>{
-    html += `
-      <div class="product-box">
-        <img src="${i.image}">
-        <div>
-          <p><b>${i.name}</b></p>
-          <p>Size: ${i.size}</p>
-          <p>${i.quantity} × ${i.price}€</p>
-        </div>
-      </div>
-    `;
-  });
-
-  html += `
-    <div class="section-title">Shipping Address</div>
-    <p><b>Name:</b> ${order.contact.name}</p>
-    <p><b>Email:</b> ${order.contact.email}</p>
-    <p><b>Phone:</b> ${order.contact.phone}</p>
-    <p><b>Country:</b> ${order.contact.country}</p>
-    <p><b>City:</b> ${order.contact.city}</p>
-    <p><b>Address:</b> ${order.contact.address}</p>
-  `;
-
-  document.getElementById("detail").innerHTML = html;
-}
-
-/* Avatar menu */
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
-};
-
-function logout(){
-  localStorage.removeItem("loggedInUser");
-  window.location.href="login.html";
-}
-
-/* CART COUNT (adet bazlı) */
-document.addEventListener("DOMContentLoaded", ()=>{
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const total = cart.reduce((s,i)=> s + (Number(i.quantity)||1), 0);
-  const cnt = document.getElementById("cartCount");
-  if (cnt) cnt.textContent = total;
-});
-</script>
-
-<!-- SUPPORT BUTTON -->
-<div id="supportBtn">
-  <img src="assets/support.svg">
-</div>
-
-<!-- SUPPORT PANEL -->
-<div id="supportPanel">
-  <div class="sup-header">
-    <span>Support</span>
-    <button id="closeSupport">✕</button>
-  </div>
-
-  <div class="sup-body">
-    <label>Your Name *</label>
-    <input id="supName" type="text">
-
-    <label>Email *</label>
-    <input id="supEmail" type="email">
-
-    <label>Category *</label>
-    <select id="supCategory">
-      <option value="Website">Website Issue</option>
-      <option value="Product">Product Info</option>
-      <option value="Design">Design Request</option>
-      <option value="Other">Other</option>
-    </select>
-
-    <label>Your Message *</label>
-    <textarea id="supMsg"></textarea>
-
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile">
-
-    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
-  </div>
-</div>
-
-<!-- SUPPORT LOGIC (T-SHIRTS MANTIĞI İLE) -->
+<!-- LOAD ORDER DETAIL -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -239,114 +113,83 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-const supportBtn    = document.getElementById("supportBtn");
-const supportPanel  = document.getElementById("supportPanel");
-const closeSupport  = document.getElementById("closeSupport");
-const sendSupportBtn= document.getElementById("sendSupportBtn");
+const id = new URLSearchParams(location.search).get("id");
+const container = document.getElementById("orderInfo");
 
-if (supportBtn) supportBtn.onclick = () => {
-  supportPanel.style.display =
-    (supportPanel.style.display === "block") ? "none" : "block";
-};
-if (closeSupport) closeSupport.onclick = () => {
-  supportPanel.style.display = "none";
-};
+if (!id) container.innerHTML = "Order not found.";
 
-function showToast(msg,type="info"){
-  const t=document.createElement("div");
-  t.className=`toast ${type}`;
-  t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.classList.add("show"),50);
-  setTimeout(()=>{
-    t.classList.remove("show");
-    setTimeout(()=>t.remove(),300);
-  },2500);
-}
+/* 1) Order Info */
+const { data: order } = await supabase
+  .from("orders")
+  .select("*")
+  .eq("id", id)
+  .single();
 
-function confirmBox(msg,cb){
-  const c=document.createElement("div");
-  c.className="confirmBox";
-  c.innerHTML=`
-    <div>${msg}</div>
-    <div class="confirm-buttons">
-      <button class="ok">Yes</button>
-      <button class="cancel">No</button>
-    </div>`;
-  document.body.appendChild(c);
-  setTimeout(()=>c.classList.add("show"),50);
-  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
-  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
-}
+/* 2) Order Items */
+const { data: items } = await supabase
+  .from("order_items")
+  .select("*")
+  .eq("order_id", id);
 
-sendSupportBtn.onclick = () => {
-  confirmBox("Are you sure you want to send this message?", (yes)=>{
-    if (yes) sendSupportMessage();
-  });
-};
+container.innerHTML = `
+  <h3>Order #${order.id}</h3>
+  <p>Status: <b>${order.status}</b></p>
+  <p>Date: ${order.date}</p>
 
-async function sendSupportMessage(){
-  const name  = document.getElementById("supName").value.trim();
-  const email = document.getElementById("supEmail").value.trim();
-  const msg   = document.getElementById("supMsg").value.trim();
-  const cat   = document.getElementById("supCategory").value;
-  const fileInput = document.getElementById("supFile");
+  <h3 style="margin-top:20px;">Products</h3>
+`;
 
-  if (!name || !email || !msg){
-    showToast("Please fill all required fields ❌","error");
-    return;
-  }
+items.forEach(i => {
+  container.innerHTML += `
+    <div class="product-box">
+      <img src="${i.image}">
+      <div>
+        <div><b>${i.product_name}</b></div>
+        <div>Size: ${i.size}</div>
+        <div>${i.quantity} × ${i.price}€</div>
+      </div>
+    </div>
+  `;
+});
 
-  let fileUrl = "";
+container.innerHTML += `
+  <hr style="opacity:.3;margin:20px 0">
 
-  if (fileInput.files.length > 0){
-    const f = fileInput.files[0];
-    const safeName = `${Date.now()}_${f.name
-      .replace(/\s+/g,"_")
-      .replace(/[^\w.-]/g,"")}`;
+  <h3>Shipping Address</h3>
+  <div class="shipping-info">
+    <span><b>Name:</b> ${order.name}</span>
+    <span><b>Email:</b> ${order.email}</span>
+    <span><b>Phone:</b> ${order.phone}</span>
+    <span><b>Country:</b> ${order.country}</span>
+    <span><b>City:</b> ${order.city}</span>
+    <span><b>Address:</b> ${order.full_address}</span>
+  </div>
 
-    const { error: uploadError } = await supabase
-      .storage.from("uploads")
-      .upload(`public/${safeName}`, f, {
-        cacheControl:"3600",
-        upsert:false
-      });
-
-    if (uploadError){
-      console.error(uploadError);
-      showToast("File upload failed ❌","error");
-      return;
-    }
-
-    fileUrl =
-      `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safeName}`;
-  }
-
-  const { error: insertError } = await supabase
-    .from("messages")
-    .insert([{
-      name,
-      email,
-      category: cat || "Order Detail",
-      message: msg,
-      file: fileUrl,
-      date: new Date().toLocaleString(),
-      read: false
-    }]);
-
-  if (insertError){
-    console.error(insertError);
-    showToast("Message failed ❌","error");
-  } else {
-    showToast("Message sent ✅","success");
-    supportPanel.style.display = "none";
-    document.getElementById("supName").value = "";
-    document.getElementById("supEmail").value = "";
-    document.getElementById("supMsg").value = "";
-    document.getElementById("supFile").value = "";
-  }
-}
+  <hr style="opacity:.3;margin:20px 0">
+  <h3>Total: ${order.total}€</h3>
+`;
 </script>
+
+<!-- PROFILE + CART COUNT -->
+<script>
+document.getElementById("userAvatar").onclick=()=>{
+  avatarMenu.style.display =
+  avatarMenu.style.display==="flex"?"none":"flex";
+};
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location="login.html";
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  const c=JSON.parse(localStorage.getItem("cart"))||[];
+  cartCount.textContent=c.reduce((s,i)=>s+i.quantity,0);
+});
+</script>
+
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn"><img src="assets/support.svg"></div>
+<div id="supportPanel"> … </div>
+<script src="support.js"></script>
 
 </body>
 </html>
