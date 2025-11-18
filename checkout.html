@@ -19,16 +19,19 @@
     display: flex;
     justify-content: center;
   }
+
   .checkout-layout {
     width: 80%;
     display: flex;
     gap: 40px;
   }
+
   .checkout-form {
     flex: 2;
     display: flex;
     flex-direction: column;
   }
+
   .checkout-form input,
   .checkout-form textarea,
   .checkout-form select {
@@ -40,7 +43,6 @@
     margin-bottom:15px;
   }
 
-  /* BEYAZ ORDER BUTTON */
   .placeorder-btn {
     padding:14px;
     background:#fff;
@@ -63,17 +65,20 @@
     border:1px solid #222;
     height:max-content;
   }
+
   .summary-product {
     display:flex;
     gap:12px;
     margin-bottom:15px;
   }
+
   .summary-product img {
     width:70px;
     height:70px;
     border-radius:10px;
     object-fit:cover;
   }
+
   .co-line {
     display:flex;
     justify-content:space-between;
@@ -95,7 +100,7 @@
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-    <!-- DAİMA DEFAULT AVATAR -->
+    <!-- DEFAULT AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
@@ -116,6 +121,7 @@
   <a href="cart.html">Cart</a>
 </div>
 
+<!-- CHECKOUT PAGE -->
 <main class="checkout-wrapper">
   <div class="checkout-layout">
 
@@ -128,10 +134,10 @@
       <input id="c_name" type="text" placeholder="John Doe" required>
 
       <label>Email</label>
-      <input id="c_email" type="email" placeholder="example@mail.com" required>
+      <input id="c_email" type="email" placeholder="your@mail.com" required>
 
       <label>Phone Number</label>
-      <input id="c_phone" type="tel" required pattern="^[0-9+\s\-]{7,20}$" placeholder="+358 xx xxx xxx">
+      <input id="c_phone" type="text" placeholder="+358 xx xxx xx xx" required>
 
       <h2 style="margin-top:30px;">Select Saved Address</h2>
 
@@ -148,15 +154,13 @@
       <input id="c_city" type="text" placeholder="Helsinki" required>
 
       <label>Full Address</label>
-      <textarea id="c_address" placeholder="Street, building, apartment number..." required></textarea>
+      <textarea id="c_address" placeholder="Street, building, apartment..." required></textarea>
 
     </form>
 
     <!-- SUMMARY -->
     <div class="checkout-summary">
-
       <h2>Order Summary</h2>
-
       <div id="sumItems"></div>
 
       <div class="co-line">
@@ -177,139 +181,120 @@
       <button class="placeorder-btn" type="submit" form="checkoutForm">
         Complete Order →
       </button>
-
     </div>
   </div>
 </main>
 
-<script>
-// --------- CART SUMMARY ----------
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-const box = document.getElementById("sumItems");
-let subtotal = 0;
+<!-- LOAD CART + LOAD ADDRESSES + SUBMIT ORDER -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+// USER
+const username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
+
+// LOAD ADDRESSES
+async function loadAddresses() {
+  const { data } = await supabase
+    .from("addresses")
+    .select("*")
+    .eq("username", username);
+
+  const select = document.getElementById("addressSelect");
+
+  (data || []).forEach(addr => {
+    const opt = document.createElement("option");
+    opt.value = addr.id;
+    opt.textContent = `${addr.country}, ${addr.city} — ${addr.full_address}`;
+    select.appendChild(opt);
+  });
+
+  select.addEventListener("change", () => {
+    const selected = data.find(a => a.id == select.value);
+    if (selected) {
+      c_country.value = selected.country;
+      c_city.value = selected.city;
+      c_address.value = selected.full_address;
+    }
+  });
+}
+loadAddresses();
+
+// LOAD CART SUMMARY
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+let subtotal = 0;
 cart.forEach(item => {
-  subtotal += item.price * (item.quantity || 1);
-  box.innerHTML += `
+  subtotal += item.price * item.quantity;
+
+  sumItems.innerHTML += `
     <div class="summary-product">
       <img src="${item.image}">
       <div>
         <h4>${item.name}</h4>
         <p>Size: ${item.size}</p>
-        <p>${item.price}€ × ${item.quantity || 1}</p>
+        <p>${item.price}€ × ${item.quantity}</p>
       </div>
-    </div>`;
+    </div>
+  `;
 });
+sumSubtotal.textContent = subtotal + "€";
+sumTotal.textContent = subtotal + "€";
 
-document.getElementById("sumSubtotal").textContent = subtotal + "€";
-document.getElementById("sumTotal").textContent = subtotal + "€";
-
-// --------- LOAD SAVED ADDRESSES ----------
-const currentUser = localStorage.getItem("loggedInUser");
-const addressSelect = document.getElementById("addressSelect");
-let savedAddresses = [];
-
-if (!currentUser) {
-  // login yoksa checkout olmaz
-  // ama yine de sayfayı patlatmayalım
-  console.warn("No loggedInUser found");
-} else {
-  savedAddresses = JSON.parse(localStorage.getItem("addresses_" + currentUser)) || [];
-
-  savedAddresses.forEach((a, index) => {
-    // bozuk / eski formatlı kayıtları gösterme
-    if (!a || !a.country || !a.city || !a.full) return;
-
-    const opt = document.createElement("option");
-    opt.value = index; // index tutuyoruz
-    opt.textContent = `${a.country}, ${a.city} — ${a.full}`;
-    addressSelect.appendChild(opt);
-  });
-
-  // default adres varsa otomatik seç + formu doldur
-  const defaultIndex = savedAddresses.findIndex(a => a && a.default);
-  if (defaultIndex !== -1 && savedAddresses[defaultIndex].country) {
-    addressSelect.value = String(defaultIndex);
-    fillAddressFields(savedAddresses[defaultIndex]);
-  }
-}
-
-function fillAddressFields(addr){
-  if (!addr) return;
-  document.getElementById("c_country").value = addr.country || "";
-  document.getElementById("c_city").value    = addr.city || "";
-  document.getElementById("c_address").value = addr.full || "";
-}
-
-// dropdown değişince alanları doldur
-addressSelect.addEventListener("change", () => {
-  if (addressSelect.value === "") return;
-  const idx = Number(addressSelect.value);
-  const addr = savedAddresses[idx];
-  if (!addr || !addr.country) return;
-  fillAddressFields(addr);
-});
-
-// --------- COMPLETE ORDER ----------
-document.getElementById("checkoutForm").addEventListener("submit", e => {
+// SUBMIT ORDER → SUPABASE
+document.getElementById("checkoutForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const user = localStorage.getItem("loggedInUser");
-  if (!user) return alert("Please login first.");
-
-  let orders = JSON.parse(localStorage.getItem("orders_" + user)) || [];
-
-  const orderData = {
-    user,
-    items: cart,
-    total: subtotal,
-    contact: {
-      name: c_name.value,
-      email: c_email.value,
-      phone: c_phone.value,
+  // 1) Orders tablosuna ekle
+  const { data: order, error: orderErr } = await supabase
+    .from("orders")
+    .insert([{
+      username,
+      total: subtotal,
       country: c_country.value,
       city: c_city.value,
-      address: c_address.value
-    },
-    date: new Date().toLocaleString()
-  };
+      full_address: c_address.value,
+      name: c_name.value,
+      email: c_email.value,
+      phone: c_phone.value
+    }])
+    .select()
+    .single();
 
-  orders.push(orderData);
-  localStorage.setItem("orders_" + user, JSON.stringify(orders));
+  if (orderErr) {
+    alert("Order failed.");
+    console.log(orderErr);
+    return;
+  }
+
+  const orderId = order.id;
+
+  // 2) Order Items tablosuna ekle
+  const itemsToInsert = cart.map(i => ({
+    order_id: orderId,
+    product_name: i.name,
+    size: i.size,
+    quantity: i.quantity,
+    price: i.price,
+    image: i.image
+  }));
+
+  await supabase.from("order_items").insert(itemsToInsert);
+
+  // 3) Cart temizle
   localStorage.removeItem("cart");
 
-  window.location.href = "order-success.html";
-});
-
-// --------- AVATAR MENU ----------
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
-};
-
-// --------- LOGOUT ----------
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-// --------- CART COUNT (QUANTITY DAHİL) ----------
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCountEl = document.getElementById("cartCount");
-  if (!cartCountEl) return;
-
-  const totalCount = cart.reduce((sum, item) => {
-    const qty = item.quantity ? Number(item.quantity) : 1;
-    return sum + (isNaN(qty) ? 1 : qty);
-  }, 0);
-
-  cartCountEl.textContent = totalCount;
+  // 4) Order Success sayfasına git
+  window.location.href = "order-success.html?id=" + orderId;
 });
 </script>
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
+<div id="supportBtn">
   <img src="assets/support.svg">
 </div>
 
@@ -319,8 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
     <span>Support</span>
     <button onclick="toggleSupportPanel()">✕</button>
   </div>
-
   <div class="sup-body">
+
     <label>Your Name *</label>
     <input id="supName" type="text">
 
@@ -347,12 +332,23 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 </div>
 
-<!-- SUPPORT TOGGLE -->
 <script>
 function toggleSupportPanel(){
   const p = document.getElementById("supportPanel");
   p.style.display = (p.style.display === "block") ? "none" : "block";
 }
+</script>
+
+<!-- CART COUNT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+
+  const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCountEl.textContent = totalCount;
+});
 </script>
 
 </body>
