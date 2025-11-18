@@ -314,7 +314,23 @@ async function sendSupportMessage(){
 }
 </script>
 
-  <script>
+<!-- SUPPORT SCRIPT (TEK DOĞRU ŞEKİL) -->
+<script src="support.js"></script>
+
+<script>
+function toggleSupportPanel() {
+  const panel = document.getElementById("supportPanel");
+  panel.style.display = (panel.style.display === "block") ? "none" : "block";
+}
+
+const supportBtn = document.getElementById("supportBtn");
+const closeBtn = document.querySelector("#supportPanel button");
+
+if (supportBtn) supportBtn.onclick = toggleSupportPanel;
+if (closeBtn) closeBtn.onclick = toggleSupportPanel;
+</script>
+
+<script>
 // 🔥 CART COUNT (TOPLAM ADET, QUANTITY DAHİL)
 document.addEventListener("DOMContentLoaded", () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -330,7 +346,6 @@ document.addEventListener("DOMContentLoaded", () => {
   cartCountEl.textContent = totalCount;
 });
 </script>
-
 
 </body>
 </html>
