@@ -1,117 +1,93 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Profile — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
 
 <style>
-body { margin: 0; padding: 0; color: white; }
-
-/* PAGE */
-.profile-wrapper {
-  margin-top: 110px;
-  display: flex;
-  justify-content: center;
-  padding: 20px;
+body {
+  background:#000;
+  color:#fff;
+  font-family:'Poppins',sans-serif;
 }
 
-/* CARD */
-.profile-card {
-  width: 400px;
-  background: #0d0d0d;
-  border: 1px solid #222;
-  border-radius: 18px;
+.profile-container {
+  max-width: 420px;
+  margin: 110px auto;
+  background:#0d0d0d;
   padding: 30px;
-  text-align: center;
-  position: relative;
+  border-radius: 14px;
+  border:1px solid #222;
+  box-shadow:0 0 20px rgba(0,0,0,0.4);
 }
 
-/* BIG AVATAR */
 .profile-avatar {
-  width: 135px;
-  height: 135px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #555;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid #00ff99;
+  display:block;
+  margin:0 auto 10px;
 }
 
-/* + BUTTON */
-.avatar-edit-btn {
-  position: absolute;
-  top: 140px;
-  left: 165px;
-  width: 38px;
-  height: 38px;
-  background: #00aa66;
-  color: white;
-  border-radius: 50%;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  transition: 0.2s;
-}
-.avatar-edit-btn:hover { background: #009655; }
-
-/* BUTTON */
-.go-dashboard-btn {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 12px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  color: white;
-  margin-top: 35px;
-  margin-bottom: 15px;
-}
-.go-dashboard-btn:hover { background:#222; }
-
-/* LABEL */
-.label { text-align: left; margin-top: 15px; font-size: 14px; opacity: .7; }
-
-/* INPUT */
-.input-box {
-  width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  border-radius: 10px;
-  background: #141414;
-  border: 1px solid #333;
-  color: white;
+.profile-title {
+  text-align:center;
+  font-size:1.4rem;
+  margin-bottom:20px;
+  color:#00ff99;
 }
 
-/* SAVE BUTTON */
+.input-label {
+  color:#aaa;
+  margin-bottom:5px;
+  font-size:14px;
+}
+
+.profile-input {
+  width:100%;
+  background:#111;
+  padding:10px;
+  border:1px solid #333;
+  border-radius:6px;
+  color:white;
+  margin-bottom:15px;
+}
+
 .save-btn {
-  width: 100%;
-  padding: 12px;
-  background: #00aa66;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 16px;
+  width:100%;
+  padding:10px;
+  background:#00aa66;
+  border:none;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+  transition:.2s;
 }
-.save-btn:hover { background:#009655; }
 
-/* LIGHT MODE */
-html.light .profile-card { background:white; color:#111; border-color:#ccc; }
-html.light .input-box { background:#fff; border-color:#ccc; color:#111; }
-html.light .go-dashboard-btn { background:#f0f0f0; border-color:#ccc; color:#111; }
-html.light .go-dashboard-btn:hover { background:#e5e5e5; }
+.save-btn:hover { background:#00cc77; }
+
+.goto-btn {
+  width:100%;
+  padding:10px;
+  background:#222;
+  color:white;
+  border:1px solid #444;
+  border-radius:6px;
+  cursor:pointer;
+  margin-bottom:12px;
+}
+
+.goto-btn:hover {
+  background:#333;
+}
 </style>
 </head>
 
@@ -124,7 +100,9 @@ html.light .go-dashboard-btn:hover { background:#e5e5e5; }
 
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -143,138 +121,75 @@ html.light .go-dashboard-btn:hover { background:#e5e5e5; }
 </div>
 
 <!-- PROFILE CARD -->
-<div class="profile-wrapper">
-  <div class="profile-card">
-    <img id="profileAvatarPreview" class="profile-avatar" src="assets/default-avatar.png">
-    <button class="avatar-edit-btn" onclick="document.getElementById('uploadAvatar').click()">+</button>
-    <input type="file" id="uploadAvatar" accept="image/*" style="display:none;">
+<div class="profile-container">
 
-    <div class="label">Full Name</div>
-    <input id="fullNameInput" class="input-box" type="text">
+  <img src="assets/default-avatar.png" class="profile-avatar">
 
-    <div class="label">Username</div>
-    <input id="usernameInput" class="input-box" type="text" disabled style="opacity:.5;">
+  <h2 class="profile-title">Your Profile</h2>
 
-    <a href="dashboard.html" class="go-dashboard-btn">Go to Dashboard</a>
-    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
-  </div>
+  <label class="input-label">Full Name</label>
+  <input type="text" id="fullName" class="profile-input" placeholder="Your name">
+
+  <label class="input-label">Username</label>
+  <input type="text" id="username" class="profile-input" readonly style="opacity:0.7;">
+
+  <button class="goto-btn" onclick="window.location.href='dashboard.html'">
+    Go to Dashboard
+  </button>
+
+  <button class="save-btn" onclick="saveProfile()">
+    Save Changes
+  </button>
 </div>
 
-<!-- 💬 SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
-</div>
+<script>
+// KAYITLI VERİYİ YÜKLE
+window.onload = () => {
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) window.location.href = "login.html";
 
-<!-- 💬 SUPPORT PANEL -->
-<div id="supportPanel">
-  <div class="sup-header">
-    <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
-  </div>
-  <div class="sup-body">
-    <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe">
-    <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com">
-    <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
-  </div>
-</div>
+  const data = JSON.parse(localStorage.getItem("user_" + user)) || {};
 
-<!-- ✅ SUPABASE PROFILE SCRIPT -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  document.getElementById("fullName").value = data.fullName || "";
+  document.getElementById("username").value = user;
+};
 
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// PROFİLİ KAYDET
+function saveProfile() {
+  const user = localStorage.getItem("loggedInUser");
+  const data = JSON.parse(localStorage.getItem("user_" + user)) || {};
 
-// 🟩 Login kontrol
-const username = localStorage.getItem("loggedInUser");
-if (!username) window.location.href = "login.html";
+  data.fullName = document.getElementById("fullName").value.trim();
 
-// 🟦 Kullanıcı bilgilerini çek
-async function loadUser() {
-  const { data, error } = await supabase
-    .from("users")
-    .select("fullname, avatar")
-    .eq("username", username)
-    .single();
+  localStorage.setItem("user_" + user, JSON.stringify(data));
 
-  if (error) {
-    console.error("User load error:", error);
-    return;
-  }
-
-  document.getElementById("usernameInput").value = username;
-  document.getElementById("fullNameInput").value = data?.fullname || "";
-  document.getElementById("profileAvatarPreview").src =
-    data?.avatar || "assets/default-avatar.png";
-  document.getElementById("userAvatar").src =
-    data?.avatar || "assets/default-avatar.png";
+  alert("Saved!");
 }
 
-await loadUser();
-
-// 🟨 Avatar değiştir
-document.getElementById("uploadAvatar").addEventListener("change", async function() {
-  const file = this.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async function() {
-    const base64 = reader.result;
-
-    const { error } = await supabase
-      .from("users")
-      .update({ avatar: base64 })
-      .eq("username", username);
-
-    if (error) {
-      console.error("Avatar update error:", error);
-      alert("Error updating avatar.");
-      return;
-    }
-
-    document.getElementById("profileAvatarPreview").src = base64;
-    document.getElementById("userAvatar").src = base64;
-    alert("Avatar updated successfully!");
-  };
-  reader.readAsDataURL(file);
-});
-
-// 🟢 Profil kaydet
-window.saveProfile = async function() {
-  const fullname = document.getElementById("fullNameInput").value.trim();
-
-  const { error } = await supabase
-    .from("users")
-    .update({ fullname })
-    .eq("username", username);
-
-  if (error) {
-    alert("Error updating profile.");
-    console.error(error);
-  } else {
-    alert("Profile updated successfully.");
-  }
-};
-
-// 🟠 Logout
-window.logout = function() {
+// LOGOUT
+function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
-};
+}
+</script>
 
-// ⚪ Avatar menüsü
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = m.style.display === "flex" ? "none" : "flex";
-};
+<!-- AVATAR DROPDOWN FIX -->
+<script>
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+if (avatar) {
+  avatar.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
+}
+
+document.addEventListener("click", (e) => {
+  if (menu && !menu.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
 </script>
 
 </body>
