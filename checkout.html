@@ -6,44 +6,47 @@
 <title>Checkout — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
-<link rel="stylesheet" href="support.css"/>
+<link rel="stylesheet" href="support.css">
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="support.js" defer></script>
+<script src="cart.js" defer></script>
 
 <style>
-  .checkout-wrapper {
-    margin-top: 120px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  body{color:white;margin:0;padding:0;}
+
+  .checkout-wrapper{
+    margin-top:120px;
+    width:100%;
+    display:flex;
+    justify-content:center;
   }
 
-  .checkout-layout {
-    width: 80%;
-    display: flex;
-    gap: 40px;
+  .checkout-layout{
+    width:80%;
+    display:flex;
+    gap:40px;
   }
 
-  .checkout-form {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
+  .checkout-form{
+    flex:2;
+    display:flex;
+    flex-direction:column;
   }
 
   .checkout-form input,
   .checkout-form textarea,
-  .checkout-form select {
+  .checkout-form select{
     background:#111;
     border:1px solid #333;
     border-radius:10px;
     padding:12px;
     color:white;
     margin-bottom:15px;
+    width:100%;
   }
 
-  .placeorder-btn {
+  .placeorder-btn{
     padding:14px;
     background:#fff;
     color:#000;
@@ -55,10 +58,9 @@
     font-size:16px;
     font-weight:600;
   }
-  .placeorder-btn:hover { background:#ddd; }
 
-  .checkout-summary {
-    flex: 1;
+  .checkout-summary{
+    flex:1;
     background:#0d0d0d;
     padding:20px;
     border-radius:16px;
@@ -66,27 +68,24 @@
     height:max-content;
   }
 
-  .summary-product {
+  .summary-product{
     display:flex;
     gap:12px;
     margin-bottom:15px;
   }
 
-  .summary-product img {
+  .summary-product img{
     width:70px;
     height:70px;
     border-radius:10px;
     object-fit:cover;
   }
 
-  .co-line {
+  .co-line{
     display:flex;
     justify-content:space-between;
     margin:8px 0;
   }
-
-  .avatar-menu a { color:white !important; }
-  .avatar-menu a.logout { color:#ff4444 !important; }
 </style>
 </head>
 
@@ -99,8 +98,6 @@
 
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
-    <!-- DEFAULT AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
@@ -121,7 +118,7 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- CHECKOUT PAGE -->
+<!-- MAIN -->
 <main class="checkout-wrapper">
   <div class="checkout-layout">
 
@@ -137,9 +134,9 @@
       <input id="c_email" type="email" placeholder="your@mail.com" required>
 
       <label>Phone Number</label>
-      <input id="c_phone" type="text" placeholder="+358 xx xxx xx xx" required>
+      <input id="c_phone" type="text" placeholder="+90 555 555 55 55" required>
 
-      <h2 style="margin-top:30px;">Select Saved Address</h2>
+      <h2 style="margin-top:30px;">Saved Address</h2>
 
       <select id="addressSelect">
         <option value="">-- Choose Saved Address --</option>
@@ -148,19 +145,20 @@
       <h2 style="margin-top:30px;">Shipping Address</h2>
 
       <label>Country</label>
-      <input id="c_country" type="text" placeholder="Finland" required>
+      <input id="c_country" type="text" placeholder="Country" required>
 
       <label>City</label>
-      <input id="c_city" type="text" placeholder="Helsinki" required>
+      <input id="c_city" type="text" placeholder="City" required>
 
       <label>Full Address</label>
-      <textarea id="c_address" placeholder="Street, building, apartment..." required></textarea>
+      <textarea id="c_address" placeholder="Street / Building / Apartment" required></textarea>
 
     </form>
 
     <!-- SUMMARY -->
     <div class="checkout-summary">
       <h2>Order Summary</h2>
+
       <div id="sumItems"></div>
 
       <div class="co-line">
@@ -182,10 +180,12 @@
         Complete Order →
       </button>
     </div>
+
   </div>
 </main>
 
-<!-- LOAD CART + LOAD ADDRESSES + SUBMIT ORDER -->
+
+<!-- SUPABASE ORDER SAVE -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -194,86 +194,91 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-// USER
-const username = localStorage.getItem("loggedInUser");
-if (!username) window.location.href = "login.html";
+// USER CHECK
+const user = localStorage.getItem("loggedInUser");
+if (!user) window.location.href = "login.html";
 
-// LOAD ADDRESSES
-async function loadAddresses() {
+// CART LOAD
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const box = document.getElementById("sumItems");
+let subtotal = 0;
+
+cart.forEach(i => {
+  subtotal += i.price * i.quantity;
+  box.innerHTML += `
+    <div class="summary-product">
+      <img src="${i.image}">
+      <div>
+        <h4>${i.name}</h4>
+        <p>Size: ${i.size}</p>
+        <p>${i.price}€ × ${i.quantity}</p>
+      </div>
+    </div>`;
+});
+
+sumSubtotal.textContent = subtotal + "€";
+sumTotal.textContent = subtotal + "€";
+
+/* LOAD SAVED ADDRESSES */
+async function loadAddresses(){
   const { data } = await supabase
     .from("addresses")
     .select("*")
-    .eq("username", username);
+    .eq("username", user);
 
-  const select = document.getElementById("addressSelect");
+  if(!data) return;
 
-  (data || []).forEach(addr => {
-    const opt = document.createElement("option");
-    opt.value = addr.id;
-    opt.textContent = `${addr.country}, ${addr.city} — ${addr.full_address}`;
-    select.appendChild(opt);
-  });
-
-  select.addEventListener("change", () => {
-    const selected = data.find(a => a.id == select.value);
-    if (selected) {
-      c_country.value = selected.country;
-      c_city.value = selected.city;
-      c_address.value = selected.full_address;
-    }
+  data.forEach(a=>{
+    addressSelect.innerHTML += `
+      <option value="${a.id}"
+        data-country="${a.country}"
+        data-city="${a.city}"
+        data-address="${a.full_address}">
+        ${a.country}, ${a.city} — ${a.full_address.substring(0,25)}...
+      </option>`;
   });
 }
 loadAddresses();
 
-// LOAD CART SUMMARY
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-let subtotal = 0;
-cart.forEach(item => {
-  subtotal += item.price * item.quantity;
+/* SELECTING SAVED ADDRESS → AUTO FILL */
+addressSelect.onchange = () => {
+  const opt = addressSelect.selectedOptions[0];
+  if (!opt.value) return;
 
-  sumItems.innerHTML += `
-    <div class="summary-product">
-      <img src="${item.image}">
-      <div>
-        <h4>${item.name}</h4>
-        <p>Size: ${item.size}</p>
-        <p>${item.price}€ × ${item.quantity}</p>
-      </div>
-    </div>
-  `;
-});
-sumSubtotal.textContent = subtotal + "€";
-sumTotal.textContent = subtotal + "€";
+  c_country.value = opt.dataset.country;
+  c_city.value = opt.dataset.city;
+  c_address.value = opt.dataset.address;
+};
 
-// SUBMIT ORDER → SUPABASE
-document.getElementById("checkoutForm").addEventListener("submit", async (e) => {
+/* SUBMIT ORDER */
+document.getElementById("checkoutForm").addEventListener("submit", async e => {
   e.preventDefault();
 
-  // 1) Orders tablosuna ekle
-  const { data: order, error: orderErr } = await supabase
+  // 1) ORDER INSERT
+  const { data: orderData, error: orderErr } = await supabase
     .from("orders")
-    .insert([{
-      username,
-      total: subtotal,
+    .insert({
+      username: user,
+      status: "Processing",
+      total_price: subtotal,
       country: c_country.value,
       city: c_city.value,
       full_address: c_address.value,
-      name: c_name.value,
       email: c_email.value,
-      phone: c_phone.value
-    }])
+      phone: c_phone.value,
+      fullname: c_name.value
+    })
     .select()
     .single();
 
-  if (orderErr) {
-    alert("Order failed.");
-    console.log(orderErr);
+  if(orderErr){
+    alert("Order failed!");
     return;
   }
 
-  const orderId = order.id;
+  const orderId = orderData.id;
 
-  // 2) Order Items tablosuna ekle
+  // 2) ORDER ITEMS INSERT
   const itemsToInsert = cart.map(i => ({
     order_id: orderId,
     product_name: i.name,
@@ -285,27 +290,24 @@ document.getElementById("checkoutForm").addEventListener("submit", async (e) => 
 
   await supabase.from("order_items").insert(itemsToInsert);
 
-  // 3) Cart temizle
+  // CLEAR CART
   localStorage.removeItem("cart");
 
-  // 4) Order Success sayfasına git
-  window.location.href = "order-success.html?id=" + orderId;
+  window.location.href = `order-success.html?id=${orderId}`;
 });
 </script>
 
-<!-- SUPPORT BUTTON -->
-<div id="supportBtn">
-  <img src="assets/support.svg">
-</div>
 
-<!-- SUPPORT PANEL -->
+<!-- SUPPORT PANEL (HER SAYFADA STANDART) -->
+<div id="supportBtn"><img src="assets/support.svg"></div>
+
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
+    <button id="closeSupport">✕</button>
   </div>
-  <div class="sup-body">
 
+  <div class="sup-body">
     <label>Your Name *</label>
     <input id="supName" type="text">
 
@@ -326,29 +328,62 @@ document.getElementById("checkoutForm").addEventListener("submit", async (e) => 
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<script>
-function toggleSupportPanel(){
-  const p = document.getElementById("supportPanel");
-  p.style.display = (p.style.display === "block") ? "none" : "block";
+<!-- SUPPORT SCRIPT (HER SAYFADA AYNI) -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const panel = document.getElementById("supportPanel");
+const btn = document.getElementById("supportBtn");
+const closeBtn = document.getElementById("closeSupport");
+const sendBtn = document.getElementById("sendSupportBtn");
+
+btn.onclick = () => {
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+};
+closeBtn.onclick = () => (panel.style.display = "none");
+
+function showToast(msg){
+  alert(msg);
 }
+
+sendBtn.onclick = async () => {
+
+  const name = supName.value.trim();
+  const email = supEmail.value.trim();
+  const msg = supMsg.value.trim();
+  const cat = supCategory.value;
+
+  if (!name || !email || !msg){
+    return showToast("Fill all required fields.");
+  }
+
+  await supabase.from("messages").insert({
+    name,
+    email,
+    message: msg,
+    category: cat
+  });
+
+  showToast("Message sent!");
+  supMsg.value = "";
+};
 </script>
 
-<!-- CART COUNT -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCountEl = document.getElementById("cartCount");
-  if (!cartCountEl) return;
 
-  const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartCountEl.textContent = totalCount;
-});
+<script>
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
 </script>
 
 </body>
