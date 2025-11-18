@@ -11,85 +11,75 @@
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
 
 <style>
-body { color:white; margin:0; padding:0; }
+body { color:white; margin:0; }
 
-/* WRAPPER */
-.detail-wrapper {
+/* PAGE WRAPPER */
+.details-wrapper {
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
 
-/* CARD */
-.detail-card {
-  width:750px;
+/* MAIN CARD */
+.details-card {
+  width:700px;
   background:#0d0d0d;
   border:1px solid #222;
   border-radius:18px;
   padding:25px;
 }
 
-/* BACK BUTTON */
 .back-btn {
   display:inline-block;
-  margin-bottom:15px;
-  color:#00aa66;
+  margin-bottom:10px;
   cursor:pointer;
-  font-size:15px;
+  opacity:0.8;
 }
-.back-btn:hover { text-decoration:underline; }
+.back-btn:hover { opacity:1; }
 
-/* SECTION TITLES */
-.section-title {
-  font-size:18px;
-  margin:15px 0 10px 0;
-  font-weight:600;
+/* ORDER HEADER */
+.order-header {
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:8px;
 }
 
-/* PRODUCT */
+.order-status {
+  color:#00aa66;
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.order-date { opacity:0.8; font-size:14px; margin-bottom:15px; }
+
+/* PRODUCT CARD */
 .order-product {
   display:flex;
-  align-items:center;
-  gap:15px;
-  margin-bottom:12px;
-  background:#161616;
-  padding:12px;
+  gap:12px;
+  padding:10px;
+  background:#1a1a1a;
   border-radius:10px;
+  margin-bottom:10px;
   border:1px solid #2a2a2a;
 }
-
 .order-product img {
-  width:70px;
-  height:70px;
-  border-radius:10px;
+  width:60px; height:60px;
+  border-radius:8px;
   object-fit:cover;
 }
 
-.order-product-info span {
-  display:block;
-  font-size:14px;
-}
-
-/* INFO BOX */
-.info-box {
-  background:#161616;
-  padding:15px;
-  border-radius:12px;
+.address-box {
+  background:#141414;
+  padding:12px;
+  border-radius:10px;
   border:1px solid #2a2a2a;
-  margin-bottom:20px;
+  margin-top:10px;
 }
+.address-box div { margin:4px 0; }
 
-.info-line {
-  margin-bottom:8px;
-  font-size:15px;
-}
-
-html.light .detail-card { background:white; border-color:#ccc; color:#111; }
-html.light .order-product { background:#eee; }
 </style>
 </head>
 
@@ -108,7 +98,6 @@ html.light .order-product { background:#eee; }
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="orders.html">My Orders</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -125,22 +114,18 @@ html.light .order-product { background:#eee; }
   <a href="orders.html">My Orders</a>
 </div>
 
-
 <!-- CONTENT -->
-<div class="detail-wrapper">
-  <div class="detail-card">
+<div class="details-wrapper">
+  <div class="details-card">
 
     <div class="back-btn" onclick="window.location.href='orders.html'">← Back to Orders</div>
 
-    <h2>Order Details</h2>
-
-    <div id="orderContent"></div>
+    <div id="orderDetails"></div>
 
   </div>
 </div>
 
-
-<!-- SUPABASE ORDER DETAILS -->
+<!-- SUPABASE ORDER DETAIL -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -149,72 +134,69 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-const username = localStorage.getItem("loggedInUser");
-if (!username) window.location.href = "login.html";
-
 const params = new URLSearchParams(window.location.search);
-const orderId = params.get("id");
+const id = params.get("id");
 
-const orderBox = document.getElementById("orderContent");
+// USER CHECK
+const username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href="login.html";
 
-async function loadOrder() {
-  const { data: order, error } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("id", orderId)
-    .eq("username", username)
-    .single();
+// USER ID FETCH
+const { data: user } = await supabase
+  .from("users")
+  .select("id")
+  .eq("username", username)
+  .single();
 
-  if (!order) {
-    orderBox.innerHTML = "<p>Order not found.</p>";
-    return;
-  }
+const { data: order } = await supabase
+  .from("orders")
+  .select(`
+    id, total, status, created_at,
+    address_line, address_city, address_country,
+    items:order_items (
+      product_name, price, qty, image, size
+    )
+  `)
+  .eq("id", id)
+  .eq("user_id", user.id)
+  .single();
 
-  /* LOAD ITEMS */
-  const { data: items } = await supabase
-    .from("order_items")
-    .select("*")
-    .eq("order_id", orderId);
+const box = document.getElementById("orderDetails");
 
-  /* BUILD HTML */
-  orderBox.innerHTML = `
-    <div class="info-box">
-      <div class="info-line"><b>Order ID:</b> ${order.id}</div>
-      <div class="info-line"><b>Status:</b> ${order.status}</div>
-      <div class="info-line"><b>Date:</b> ${order.created_at}</div>
-      <div class="info-line"><b>Total:</b> ${order.total_price}€</div>
+let itemsHTML = order.items.map(i => `
+  <div class="order-product">
+    <img src="${i.image}">
+    <div>
+      <div><b>${i.product_name}</b></div>
+      <div>Size: ${i.size}</div>
+      <div>${i.qty} × ${i.price}€</div>
     </div>
+  </div>
+`).join('');
 
-    <div class="section-title">Products</div>
-    ${items.map(i => `
-      <div class="order-product">
-        <img src="${i.image}">
-        <div class="order-product-info">
-          <span><b>${i.product_name}</b></span>
-          <span>Size: ${i.size}</span>
-          <span>${i.quantity} × ${i.price}€</span>
-        </div>
-      </div>
-    `).join("")}
+box.innerHTML = `
+  <div class="order-header">Order #${order.id}</div>
+  <div class="order-status">${order.status}</div>
+  <div class="order-date">${order.created_at}</div>
 
-    <div class="section-title">Shipping Address</div>
-    <div class="info-box">
-      <div class="info-line"><b>Name:</b> ${order.fullname}</div>
-      <div class="info-line"><b>Email:</b> ${order.email}</div>
-      <div class="info-line"><b>City:</b> ${order.city}</div>
-      <div class="info-line"><b>Country:</b> ${order.country}</div>
-      <div class="info-line"><b>Address:</b> ${order.address}</div>
-    </div>
-  `;
-}
+  ${itemsHTML}
 
-loadOrder();
+  <h3 style="margin-top:15px;">Shipping Address</h3>
+  <div class="address-box">
+    <div><b>Name:</b> ${username}</div>
+    <div><b>Address:</b> ${order.address_line}</div>
+    <div><b>City:</b> ${order.address_city}</div>
+    <div><b>Country:</b> ${order.address_country}</div>
+  </div>
+
+  <hr style="opacity:.2;margin:15px 0;">
+  <div><b>Total:</b> ${order.total}€</div>
+`;
 </script>
-
 
 <!-- SUPPORT BUTTON -->
 <div id="supportBtn">
-  <img src="assets/support.svg">
+  <img src="assets/support.svg" />
 </div>
 
 <!-- SUPPORT PANEL -->
@@ -225,12 +207,11 @@ loadOrder();
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
-    <input type="text" id="supName">
+    <input id="supName" type="text">
 
     <label>Email *</label>
-    <input type="email" id="supEmail">
+    <input id="supEmail" type="email">
 
     <label>Category *</label>
     <select id="supCategory">
@@ -250,56 +231,90 @@ loadOrder();
   </div>
 </div>
 
+<!-- SUPPORT POPUP + SEND MESSAGE -->
+<script>
+const supportBtn = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupportBtn = document.getElementById("sendSupportBtn");
 
-<!-- SUPPORT SCRIPT (HER SAYFADA SORUNSUZ ÇALIŞAN SÜRÜM) -->
+supportBtn.onclick = ()=> supportPanel.style.display =
+  supportPanel.style.display==="block" ? "none" : "block";
+
+closeSupport.onclick = ()=> supportPanel.style.display="none";
+
+function showToast(msg,type="info"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
+
+function confirmBox(msg,cb){
+  const c=document.createElement("div");
+  c.className="confirmBox";
+  c.innerHTML=`
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
+}
+</script>
+
+<!-- SUPABASE SEND MESSAGE -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const supabaseMSG = createClient(
+const supabase2 = createClient(
   "https://xedfviwffpsvbmyqzoof.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-const supportBtnX = document.getElementById("supportBtn");
-const supportPanelX = document.getElementById("supportPanel");
-const closeSupportX = document.getElementById("closeSupport");
-const sendBtn = document.getElementById("sendSupportBtn");
-
-supportBtnX.onclick = () => {
-  supportPanelX.style.display = supportPanelX.style.display === "block" ? "none" : "block";
-};
-closeSupportX.onclick = () => supportPanelX.style.display = "none";
-
-function showToast(txt) { alert(txt); }
-
-sendBtn.onclick = async () => {
-  const name = supName.value.trim();
-  const email = supEmail.value.trim();
-  const msg = supMsg.value.trim();
-  const cat = supCategory.value;
-
-  if (!name || !email || !msg) return showToast("Fill all fields");
-
-  await supabaseMSG.from("messages").insert({
-    name,
-    email,
-    message: msg,
-    category: cat
+document.getElementById("sendSupportBtn").onclick = ()=>{
+  confirmBox("Are you sure you want to send this message?", ok=>{
+    if(ok) sendMessage();
   });
-
-  showToast("Message sent successfully!");
-  supMsg.value = "";
 };
-</script>
 
+async function sendMessage(){
+  const name=supName.value.trim();
+  const email=supEmail.value.trim();
+  const cat=supCategory.value;
+  const msg=supMsg.value.trim();
+  const fileInput=supFile;
 
-<script>
-// CART COUNT FIX
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const total = cart.reduce((s,i)=>s+Number(i.quantity||1),0);
-  document.getElementById("cartCount").textContent = total;
-});
+  if(!name||!email||!msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl="";
+  if(fileInput.files.length>0){
+    const f=fileInput.files[0];
+    const safe=`${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const {error}=await supabase2.storage.from("uploads").upload(`public/${safe}`,f);
+    if(error) return showToast("Upload failed ❌","error");
+    fileUrl=`https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
+  }
+
+  await supabase2.from("messages").insert([{
+    name,email,category:cat,message:msg,file:fileUrl,
+    date:new Date().toLocaleString(),read:false
+  }]);
+
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display="none";
+}
 </script>
 
 </body>
