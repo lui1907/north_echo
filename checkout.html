@@ -6,7 +6,7 @@
 <title>Checkout — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
-<link rel="stylesheet" href="support.css">
+<link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
@@ -40,6 +40,7 @@
     margin-bottom:15px;
   }
 
+  /* BEYAZ ORDER BUTTON */
   .placeorder-btn {
     padding:14px;
     background:#fff;
@@ -62,7 +63,6 @@
     border:1px solid #222;
     height:max-content;
   }
-
   .summary-product {
     display:flex;
     gap:12px;
@@ -74,7 +74,6 @@
     border-radius:10px;
     object-fit:cover;
   }
-
   .co-line {
     display:flex;
     justify-content:space-between;
@@ -94,15 +93,16 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <a href="cart.html" class="cart-icon">
-      🛒 <span id="cartCount">0</span>
-    </a>
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
+    <!-- DAİMA DEFAULT AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
+      <a href="orders.html">My Orders</a>
+      <a href="addresses.html">Addresses</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -118,8 +118,6 @@
   <a href="cart.html">Cart</a>
 </div>
 
-
-<!-- PAGE -->
 <main class="checkout-wrapper">
   <div class="checkout-layout">
 
@@ -137,13 +135,14 @@
       <label>Phone Number</label>
       <input id="c_phone" type="text" required>
 
-      <!-- SAVED ADDRESS DROPDOWN -->
       <h2 style="margin-top:30px;">Select Saved Address</h2>
+
       <select id="addressSelect">
         <option value="">-- Choose Saved Address --</option>
       </select>
 
       <h2 style="margin-top:30px;">Shipping Address</h2>
+
       <label>Country</label>
       <input id="c_country" type="text" required>
 
@@ -159,6 +158,7 @@
     <div class="checkout-summary">
 
       <h2>Order Summary</h2>
+
       <div id="sumItems"></div>
 
       <div class="co-line">
@@ -184,23 +184,21 @@
   </div>
 </main>
 
-
-<!-- JS: CART SUMMARY + ADDRESS AUTOFILL + ORDER COMPLETE -->
 <script>
-/* LOAD CART */
+// --------- CART SUMMARY ----------
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const box = document.getElementById("sumItems");
 let subtotal = 0;
 
 cart.forEach(item => {
-  subtotal += item.price * item.quantity;
+  subtotal += item.price * (item.quantity || 1);
   box.innerHTML += `
     <div class="summary-product">
       <img src="${item.image}">
       <div>
         <h4>${item.name}</h4>
         <p>Size: ${item.size}</p>
-        <p>${item.price}€ × ${item.quantity}</p>
+        <p>${item.price}€ × ${item.quantity || 1}</p>
       </div>
     </div>`;
 });
@@ -208,54 +206,65 @@ cart.forEach(item => {
 document.getElementById("sumSubtotal").textContent = subtotal + "€";
 document.getElementById("sumTotal").textContent = subtotal + "€";
 
-
-/* LOAD SAVED ADDRESSES */
-const user = localStorage.getItem("loggedInUser");
-const addrSelect = document.getElementById("addressSelect");
+// --------- LOAD SAVED ADDRESSES ----------
+const currentUser = localStorage.getItem("loggedInUser");
+const addressSelect = document.getElementById("addressSelect");
 let savedAddresses = [];
 
-if (user) {
-  savedAddresses = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
+if (!currentUser) {
+  // login yoksa checkout olmaz
+  // ama yine de sayfayı patlatmayalım
+  console.warn("No loggedInUser found");
+} else {
+  savedAddresses = JSON.parse(localStorage.getItem("addresses_" + currentUser)) || [];
 
   savedAddresses.forEach((a, index) => {
+    // bozuk / eski formatlı kayıtları gösterme
+    if (!a || !a.country || !a.city || !a.full) return;
+
     const opt = document.createElement("option");
-    opt.value = index;
-    opt.textContent = `${a.title} — ${a.country}, ${a.city}`;
-    addrSelect.appendChild(opt);
+    opt.value = index; // index tutuyoruz
+    opt.textContent = `${a.country}, ${a.city} — ${a.full}`;
+    addressSelect.appendChild(opt);
   });
 
-  // DEFAULT ADDRESS
-  const defaultIndex = savedAddresses.findIndex(a => a.default);
-  if (defaultIndex !== -1) {
-    addrSelect.value = defaultIndex;
-    addrSelect.dispatchEvent(new Event("change"));
+  // default adres varsa otomatik seç + formu doldur
+  const defaultIndex = savedAddresses.findIndex(a => a && a.default);
+  if (defaultIndex !== -1 && savedAddresses[defaultIndex].country) {
+    addressSelect.value = String(defaultIndex);
+    fillAddressFields(savedAddresses[defaultIndex]);
   }
 }
 
-/* AUTOFILL WHEN SELECTED */
-addrSelect.addEventListener("change", () => {
-  if (addrSelect.value === "") return;
-  const a = savedAddresses[addrSelect.value];
+function fillAddressFields(addr){
+  if (!addr) return;
+  document.getElementById("c_country").value = addr.country || "";
+  document.getElementById("c_city").value    = addr.city || "";
+  document.getElementById("c_address").value = addr.full || "";
+}
 
-  c_country.value = a.country;
-  c_city.value = a.city;
-  c_address.value = a.full;
+// dropdown değişince alanları doldur
+addressSelect.addEventListener("change", () => {
+  if (addressSelect.value === "") return;
+  const idx = Number(addressSelect.value);
+  const addr = savedAddresses[idx];
+  if (!addr || !addr.country) return;
+  fillAddressFields(addr);
 });
 
-
-/* COMPLETE ORDER */
+// --------- COMPLETE ORDER ----------
 document.getElementById("checkoutForm").addEventListener("submit", e => {
   e.preventDefault();
 
+  const user = localStorage.getItem("loggedInUser");
   if (!user) return alert("Please login first.");
 
   let orders = JSON.parse(localStorage.getItem("orders_" + user)) || [];
 
-  orders.push({
+  const orderData = {
     user,
     items: cart,
     total: subtotal,
-    date: new Date().toLocaleString(),
     contact: {
       name: c_name.value,
       email: c_email.value,
@@ -263,39 +272,43 @@ document.getElementById("checkoutForm").addEventListener("submit", e => {
       country: c_country.value,
       city: c_city.value,
       address: c_address.value
-    }
-  });
+    },
+    date: new Date().toLocaleString()
+  };
 
+  orders.push(orderData);
   localStorage.setItem("orders_" + user, JSON.stringify(orders));
   localStorage.removeItem("cart");
 
   window.location.href = "order-success.html";
 });
 
-
-/* AVATAR MENU */
+// --------- AVATAR MENU ----------
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
 };
 
-
-/* CART COUNT FIX */
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const el = document.getElementById("cartCount");
-  const total = cart.reduce((s,i)=>s+(i.quantity?i.quantity:1),0);
-  el.textContent = total;
-});
-
-
-/* LOGOUT */
-function logout(){
+// --------- LOGOUT ----------
+function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
-</script>
 
+// --------- CART COUNT (QUANTITY DAHİL) ----------
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+
+  const totalCount = cart.reduce((sum, item) => {
+    const qty = item.quantity ? Number(item.quantity) : 1;
+    return sum + (isNaN(qty) ? 1 : qty);
+  }, 0);
+
+  cartCountEl.textContent = totalCount;
+});
+</script>
 
 <!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
@@ -310,7 +323,6 @@ function logout(){
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
     <input id="supName" type="text">
 
@@ -331,42 +343,19 @@ function logout(){
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
-
+    <button class="sup-send" onclick="sendSupportMessage()">
+      Send Message →
+    </button>
   </div>
 </div>
 
-  <script>
-// 🔥 KULLANICININ KAYITLI ADRESLERİNİ YÜKLE
-document.addEventListener("DOMContentLoaded", () => {
-  const user = localStorage.getItem("loggedInUser");
-  if (!user) return;
-
-  const savedAddresses = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
-  const addressSelect = document.getElementById("addressSelect");
-
-  // Dropdown’a adresleri ekle
-  savedAddresses.forEach((addr, index) => {
-    const opt = document.createElement("option");
-    opt.value = index;
-    opt.textContent = `${addr.country}, ${addr.city} — ${addr.full}`;
-    addressSelect.appendChild(opt);
-  });
-
-  // 🔥 Seçildiğinde otomatik doldur
-  addressSelect.addEventListener("change", () => {
-    const idx = addressSelect.value;
-    if (idx === "") return;
-
-    const selected = savedAddresses[idx];
-
-    document.getElementById("c_country").value = selected.country;
-    document.getElementById("c_city").value = selected.city;
-    document.getElementById("c_address").value = selected.full;
-  });
-});
+<!-- SUPPORT TOGGLE -->
+<script>
+function toggleSupportPanel(){
+  const p = document.getElementById("supportPanel");
+  p.style.display = (p.style.display === "block") ? "none" : "block";
+}
 </script>
-
 
 </body>
 </html>
