@@ -38,37 +38,54 @@ document.getElementById("menuMessages").onclick = () => showSection("messages");
 // -------------------------
 function showToast(message, type = "info") {
   const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
   toast.textContent = message;
 
+  // --- Ana stil ---
   Object.assign(toast.style, {
     position: "fixed",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%) scale(0.9)",
-    background: "rgba(20,20,20,0.95)",
-    padding: "14px 20px",
-    borderRadius: "10px",
-    border: "1px solid #333",
-    zIndex: "99999",
+    transform: "translate(-50%, -50%) scale(0.8)",
+    background: "rgba(15, 15, 15, 0.95)",
+    padding: "16px 22px",
+    borderRadius: "12px",
+    border: "1px solid #444",
+    zIndex: "999999999",
     opacity: "0",
-    transition: "0.25s",
+    transition: "all .25s ease",
     color: "white",
     fontSize: "15px",
+    fontWeight: "500",
+    textAlign: "center",
+    boxShadow: "0 0 25px rgba(0,0,0,0.5)",
+    pointerEvents: "none",
+    minWidth: "200px",
   });
+
+  // --- Renk teması ---
+  if (type === "success") {
+    toast.style.borderColor = "#00cc77";
+    toast.style.color = "#00ff99";
+  }
+  if (type === "error") {
+    toast.style.borderColor = "#cc0000";
+    toast.style.color = "#ff6666";
+  }
 
   document.body.appendChild(toast);
 
+  // ---
   setTimeout(() => {
     toast.style.opacity = "1";
     toast.style.transform = "translate(-50%, -50%) scale(1)";
-  }, 50);
+  }, 20);
 
+  // ---
   setTimeout(() => {
     toast.style.opacity = "0";
-    toast.style.transform = "translate(-50%, -50%) scale(0.9)";
+    toast.style.transform = "translate(-50%, -50%) scale(0.8)";
     setTimeout(() => toast.remove(), 300);
-  }, 2000);
+  }, 2200);
 }
 
 // -------------------------
