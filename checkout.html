@@ -328,7 +328,9 @@ document.getElementById("checkoutForm").addEventListener("submit", async e => {
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+    <button class="sup-send" id="sendSupportBtn" onclick="sendSupportMessage()">
+  Send Message →
+</button>
   </div>
 </div>
 
@@ -386,5 +388,83 @@ function logout(){
 }
 </script>
 
+<script>
+/* ==== Basit Confirm Popup ==== */
+function confirmBox(msg, callback) {
+  const box = document.createElement("div");
+  box.style.position = "fixed";
+  box.style.top = "50%";
+  box.style.left = "50%";
+  box.style.transform = "translate(-50%, -50%)";
+  box.style.background = "rgba(20,20,20,0.95)";
+  box.style.padding = "18px 26px";
+  box.style.borderRadius = "12px";
+  box.style.border = "1px solid #333";
+  box.style.zIndex = "999999";
+  box.style.color = "white";
+  box.style.textAlign = "center";
+  box.style.fontSize = "15px";
+
+  box.innerHTML = `
+    <div style="margin-bottom:12px;">${msg}</div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button id="cYes" style="
+        background:#00aa66;
+        padding:8px 16px;
+        border:none;
+        border-radius:6px;
+        color:white;
+        cursor:pointer;
+        font-weight:600;
+      ">Yes</button>
+      <button id="cNo" style="
+        background:#444;
+        padding:8px 16px;
+        border:none;
+        border-radius:6px;
+        color:white;
+        cursor:pointer;
+      ">No</button>
+    </div>
+  `;
+
+  document.body.appendChild(box);
+
+  box.querySelector("#cYes").onclick = () => {
+    box.remove();
+    callback(true);
+  };
+  box.querySelector("#cNo").onclick = () => {
+    box.remove();
+    callback(false);
+  };
+}
+
+/* ==== Support butonuna onay kutusu sarma ==== */
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("sendSupportBtn");
+  if (!btn) return;
+
+  // Eski inline onclick'i iptal ediyoruz (direkt göndermesin)
+  btn.onclick = null;
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    confirmBox("Are you sure you want to send this message?", (yes) => {
+      if (!yes) return;
+
+      // Var olan sendSupportMessage fonksiyonunu çağırıyoruz
+      if (typeof sendSupportMessage === "function") {
+        sendSupportMessage();
+      } else {
+        console.error("sendSupportMessage not found on this page.");
+      }
+    });
+  });
+});
+</script>
+
+  
 </body>
 </html>
