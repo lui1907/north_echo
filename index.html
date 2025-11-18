@@ -12,10 +12,8 @@
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
 
-<!-- SUPPORT -->
+<!-- SUPPORT CSS (sadece stil) -->
 <link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
-
 </head>
 <body>
 
@@ -25,19 +23,20 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-    <!-- AVATAR -->
+    <!-- PROFİL AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
-    <!-- AÇILIR MENÜ (EKSİK OLAN BUYDU!!) -->
+    <!-- AÇILIR MENÜ -->
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" onclick="logout()">Logout</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
 
+    <!-- TEMA BUTONU (GİZLİ – SADECE theme.js HATA VERMESİN DİYE) -->
+    <button id="themeToggle" class="theme-btn" style="display:none;"></button>
   </div>
 </header>
 
@@ -66,12 +65,12 @@
 <section class="categories-section">
   <div class="categories-grid">
     <a href="tshirts.html" class="category-card">
-      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="T-Shirts">
       <h3>T-Shirts</h3>
     </a>
 
     <a href="sweatshirts.html" class="category-card">
-      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
+      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" alt="Sweatshirts">
       <h3>Sweatshirts</h3>
     </a>
   </div>
@@ -88,7 +87,7 @@
 
 <!-- SUPPORT BUTTON -->
 <div id="supportBtn">
-  <img src="assets/support.svg" style="width:26px;height:26px;">
+  <img src="assets/support.svg" style="width:26px;height:26px;" alt="Support">
 </div>
 
 <!-- SUPPORT PANEL -->
@@ -123,14 +122,117 @@
   </div>
 </div>
 
-<!-- LOGIC -->
+<!-- SUPPORT + SUPABASE -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const supportBtn   = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupport  = document.getElementById("sendSupportBtn");
+
+// PANEL AÇ/KAPAT
+supportBtn.addEventListener("click", () => {
+  supportPanel.style.display =
+    supportPanel.style.display === "block" ? "none" : "block";
+});
+
+closeSupport.addEventListener("click", () => {
+  supportPanel.style.display = "none";
+});
+
+// TOAST
+function showToast(msg, type="info"){
+  const t = document.createElement("div");
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
+
+// CONFIRM POPUP
+function confirmBox(msg, callback){
+  const c = document.createElement("div");
+  c.className = "confirmBox";
+  c.innerHTML = `
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+
+  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
+  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+}
+
+// GÖNDER BUTONU
+sendSupport.addEventListener("click", () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if(yes) sendMessage();
+  });
+});
+
+async function sendMessage(){
+  const name  = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const cat   = document.getElementById("supCategory").value;
+  const msg   = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if(!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+  if(fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safe = `${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const { error } = await supabase
+      .storage
+      .from("uploads")
+      .upload(`public/${safe}`, f);
+
+    if(error){
+      showToast("File upload failed ❌","error");
+      return;
+    }
+    fileUrl = `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
+  }
+
+  await supabase.from("messages").insert([{
+    name,
+    email,
+    category: cat,
+    message: msg,
+    file: fileUrl,
+    date: new Date().toLocaleString(),
+    read: false
+  }]);
+
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display = "none";
+}
+</script>
+
+<!-- AVATAR MENÜ JS + LOGOUT -->
 <script>
 function logout(){
   localStorage.removeItem("loggedInUser");
-  window.location.href="login.html";
+  window.location.href = "login.html";
 }
 
-// AVATAR MENU
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
 
@@ -142,7 +244,7 @@ if (avatar) {
 }
 
 document.addEventListener("click", (e) => {
-  if (menu && !menu.contains(e.target)) {
+  if (menu && !menu.contains(e.target) && e.target !== avatar) {
     menu.style.display = "none";
   }
 });
