@@ -7,9 +7,63 @@
 
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
-<script src="theme.js" defer></script>
-  <link rel="stylesheet" href="support.css">
+<script src="cart.js" defer></script>
+
+<!-- SUPPORT -->
+<link rel="stylesheet" href="support.css">
 <script src="support.js" defer></script>
+
+<style>
+.cart-wrapper{
+  max-width:1200px;
+  margin:120px auto;
+  padding:20px;
+  color:white;
+}
+.cart-layout{
+  display:flex;
+  gap:40px;
+}
+.cart-products{
+  flex:2;
+}
+.cart-summary-box{
+  flex:1;
+  background:#0b0b0b;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #222;
+}
+.cart-item-box{
+  display:flex;
+  background:#0b0b0b;
+  border-radius:12px;
+  border:1px solid #222;
+  margin-bottom:15px;
+  padding:15px;
+}
+.cart-img{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-right:15px;
+}
+.quantity-controls button{
+  padding:5px 10px;
+  cursor:pointer;
+}
+.checkout-final-btn{
+  background:white;
+  padding:12px;
+  border-radius:8px;
+  display:block;
+  margin-top:15px;
+  text-align:center;
+  font-weight:bold;
+  color:black;
+}
+</style>
 </head>
 
 <body>
@@ -20,21 +74,20 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
   <div class="right-buttons">
 
-  <a href="submit-design.html" class="submit-nav">Submit</a>
-  <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <!-- SUBMIT KALDIRILDI -->
 
-  <!-- PROFIL FOTOĞRAFI -->
-  <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-  <!-- AÇILIR MENÜ -->
-  <div class="avatar-menu" id="avatarMenu">
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
-    <a href="#" class="logout" onclick="logout()">Logout</a>
+    <!-- DEFAULT AVATAR -->
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <!-- PROFİL MENÜ -->
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" style="color:#ff4444;" onclick="logout()">Logout</a>
+    </div>
   </div>
-
-</div>
-
 </header>
 
 <!-- SIDE MENU -->
@@ -43,25 +96,20 @@
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
+
 
 <!-- CART PAGE -->
 <div class="cart-wrapper">
 
-  <h1 class="cart-title" style="margin-top:90px; text-align:center;">Shopping Cart</h1>
+  <h1 class="cart-title" style="text-align:center;">Shopping Cart</h1>
 
   <div class="cart-layout">
 
-    <!-- SOL: ÜRÜNLER -->
-    <div class="cart-products" id="cartItems">
-      <!-- Ürünler JS ile eklenecek -->
-    </div>
+    <div class="cart-products" id="cartItems"></div>
 
-    <!-- SAĞ: ÖZET -->
     <div class="cart-summary-box">
-
       <h2>Order Summary</h2>
 
       <div class="summary-line">
@@ -74,44 +122,40 @@
         <span>Free</span>
       </div>
 
-      <div class="summary-total-line">
+      <div class="summary-total-line" style="margin-top:10px;">
         <strong>Total</strong>
         <strong id="cartTotal">0€</strong>
       </div>
 
-      <a href="checkout.html" class="checkout-final-btn" style="
-        display:block;
-        text-align:center;
-        background:#fff;
-        color:#000;
-        padding:12px;
-        border-radius:10px;
-        margin-top:15px;
-        font-weight:600;
-      ">
+      <button id="checkoutBtn" class="checkout-final-btn">
         Go to Checkout →
-      </a>
+      </button>
 
     </div>
   </div>
 </div>
+
 
 <!-- CART FUNCTIONALITY -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
     const itemsBox = document.getElementById("cartItems");
     const subtotalEl = document.getElementById("cartSubtotal");
     const totalEl = document.getElementById("cartTotal");
 
     itemsBox.innerHTML = "";
+
     let subtotal = 0;
 
     cart.forEach((item, index) => {
 
+        if (!item.quantity) item.quantity = 1;
+        if (!item.image) item.image = "assets/noimg.png";
+
         itemsBox.innerHTML += `
-        
           <div class="cart-item-box">
 
             <img src="${item.image}" class="cart-img">
@@ -132,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
           </div>
-        
         `;
 
         subtotal += item.price * item.quantity;
@@ -140,63 +183,79 @@ document.addEventListener("DOMContentLoaded", () => {
 
     subtotalEl.textContent = subtotal + "€";
     totalEl.textContent = subtotal + "€";
+
+    document.getElementById("cartCount").textContent = cart.length;
 });
 
 
-function changeQuantity(index, amount) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+function changeQuantity(index, amount){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    cart[index].quantity += amount;
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-    }
+  cart[index].quantity += amount;
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    location.reload();
+  if (cart[index].quantity <= 0){
+    cart.splice(index, 1);
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  location.reload();
 }
 
-function removeItem(index) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    location.reload();
+function removeItem(index){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  location.reload();
 }
 </script>
 
+
+<!-- CHECKOUT EMPTY CART BLOCK -->
+<script>
+document.getElementById("checkoutBtn").addEventListener("click", function(e){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if (cart.length === 0){
+    e.preventDefault();
+    alert("Your cart is empty!");
+    return;
+  }
+
+  window.location.href = "checkout.html";
+});
+</script>
+
+
+<!-- PROFILE MENU -->
 <script>
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
 
-if (avatar) {
-  avatar.addEventListener("click", function () {
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-  });
-}
+avatar.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+});
 
-// Logout fonksiyonu
-function logout() {
+document.addEventListener("click", e=>{
+  if (!menu.contains(e.target)) menu.style.display = "none";
+});
+</script>
+
+
+<!-- LOGOUT -->
+<script>
+function logout(){
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
 </script>
 
-<script>
-let username = localStorage.getItem("loggedInUser");
-if (username) {
-  let data = JSON.parse(localStorage.getItem("user_" + username));
-  if (data && data.avatar) {
-    let small = document.getElementById("userAvatar");
-    if (small) small.src = data.avatar;
-  }
-}
-</script>
 
-  <!-- 💬 SUPPORT BUTTON -->
+<!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
+  <img src="assets/support.svg"/>
 </div>
 
-<!-- 💬 SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -204,31 +263,21 @@ if (username) {
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com">
+    <input type="email" id="supEmail">
 
     <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <textarea id="supMsg"></textarea>
 
-    <!-- 📎 FILE UPLOAD -->
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <label>Attach File</label>
+    <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
-
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
   </div>
 </div>
 
-<!-- SUPPORT CSS + JS -->
-<link rel="stylesheet" href="support.css">
-<script src="support.js"></script>
-
-  
 </body>
 </html>
