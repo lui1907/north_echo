@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Addresses — North Echo</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+
+<style>
+body { color:white; margin:0; padding:0; }
+
+/* WRAPPER */
+.addr-wrapper {
+  margin-top:130px;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+.addr-card {
+  width:800px;
+  background:#0d0d0d;
+  border:1px solid #222;
+  border-radius:18px;
+  padding:25px;
+}
+
+/* ADDRESS BOX */
+.address-box {
+  background:#141414;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.address-header {
+  display:flex;
+  justify-content:space-between;
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.address-actions button {
+  background:#00aa66;
+  border:none;
+  padding:6px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
+  margin-left:8px;
+}
+
+.address-actions .del {
+  background:#aa0000;
+}
+
+.add-btn {
+  width:100%;
+  padding:12px;
+  background:#00aa66;
+  border-radius:10px;
+  border:none;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:15px;
+}
+
+.add-btn:hover { background:#00cc77; }
+
+/* ADD FORM (POPUP) */
+#addPopup {
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:#0d0d0d;
+  border:1px solid #333;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  display:none;
+  z-index:9999;
+}
+
+#addPopup input {
+  width:100%;
+  margin-bottom:12px;
+  background:#111;
+  border:1px solid #333;
+  padding:10px;
+  border-radius:8px;
+  color:white;
+}
+
+#addPopup button {
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  margin-top:5px;
+  cursor:pointer;
+}
+
+.save-btn { background:#00aa66; color:white; }
+.cancel-btn { background:#444; color:white; }
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="orders.html">My Orders</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="hoodies.html">Hoodies</a>
+  <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
+  <a href="addresses.html">Addresses</a>
+</div>
+
+<div class="addr-wrapper">
+  <div class="addr-card">
+    <h2>Saved Addresses</h2>
+    <div id="addressesList"></div>
+
+    <button class="add-btn" onclick="openAddPopup()">+ Add New Address</button>
+  </div>
+</div>
+
+<!-- ADD ADDRESS POPUP -->
+<div id="addPopup">
+  <h3>Add Address</h3>
+
+  <input id="addr_title" placeholder="Address Title (Home, Work...)">
+  <input id="addr_country" placeholder="Country">
+  <input id="addr_city" placeholder="City">
+  <input id="addr_full" placeholder="Full Address">
+
+  <button class="save-btn" onclick="saveAddress()">Save</button>
+  <button class="cancel-btn" onclick="closeAddPopup()">Cancel</button>
+</div>
+
+<script>
+// CURRENT USER
+const user = localStorage.getItem("loggedInUser");
+if (!user) window.location.href = "login.html";
+
+// LOAD ADDRESSES
+let addresses = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
+
+function renderAddresses() {
+  const box = document.getElementById("addressesList");
+  box.innerHTML = "";
+
+  if (addresses.length === 0) {
+    box.innerHTML = `<p style="opacity:.7;margin-top:20px;">No saved addresses yet.</p>`;
+    return;
+  }
+
+  addresses.forEach((a, index) => {
+    box.innerHTML += `
+      <div class="address-box">
+        <div class="address-header">
+          <span>${a.title}</span>
+          <div class="address-actions">
+            <button onclick="setDefault(${index})">Default</button>
+            <button class="del" onclick="deleteAddress(${index})">Delete</button>
+          </div>
+        </div>
+        <div>${a.country}, ${a.city}</div>
+        <div>${a.full}</div>
+        <div style="margin-top:8px; opacity:.7;">
+          ${a.default ? "✔ Default Address" : ""}
+        </div>
+      </div>
+    `;
+  });
+}
+
+renderAddresses();
+
+// ADD POPUP
+function openAddPopup(){ document.getElementById("addPopup").style.display="block"; }
+function closeAddPopup(){ document.getElementById("addPopup").style.display="none"; }
+
+// SAVE NEW ADDRESS
+function saveAddress() {
+  let obj = {
+    title: addr_title.value,
+    country: addr_country.value,
+    city: addr_city.value,
+    full: addr_full.value,
+    default: addresses.length === 0
+  };
+
+  addresses.push(obj);
+  localStorage.setItem("addresses_" + user, JSON.stringify(addresses));
+  closeAddPopup();
+  renderAddresses();
+}
+
+// DELETE ADDRESS
+function deleteAddress(i) {
+  addresses.splice(i, 1);
+  if (!addresses.some(a => a.default) && addresses.length > 0) {
+    addresses[0].default = true;
+  }
+  localStorage.setItem("addresses_" + user, JSON.stringify(addresses));
+  renderAddresses();
+}
+
+// SET DEFAULT
+function setDefault(i) {
+  addresses.forEach(a => a.default=false);
+  addresses[i].default=true;
+  localStorage.setItem("addresses_" + user, JSON.stringify(addresses));
+  renderAddresses();
+}
+
+// Avatar dropdown
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = m.style.display === "flex" ? "none" : "flex";
+};
+
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>
