@@ -9,24 +9,71 @@
 <script src="menu.js" defer></script>
 <script src="cart.js" defer></script>
 
-<!-- SUPPORT -->
 <link rel="stylesheet" href="support.css">
 <script src="support.js" defer></script>
 
 <style>
+body{
+  background:#000;
+  color:white;
+  font-family:'Poppins',sans-serif;
+}
+
 .cart-wrapper{
   max-width:1200px;
-  margin:120px auto;
+  margin:120px auto 50px auto;
   padding:20px;
-  color:white;
 }
+
 .cart-layout{
   display:flex;
   gap:40px;
 }
+
+/* SOL TARAF – ÜRÜN LİSTESİ */
 .cart-products{
   flex:2;
 }
+
+.cart-item-box{
+  display:flex;
+  gap:15px;
+  background:#0b0b0b;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #222;
+  margin-bottom:15px;
+}
+
+/* Ürün resmi sabit */
+.cart-img{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  flex-shrink:0;
+  border-radius:8px;
+}
+
+/* Sağdaki ürün yazıları */
+.cart-info h3{
+  margin-top:0;
+  margin-bottom:5px;
+}
+
+.quantity-controls button{
+  padding:6px 12px;
+  cursor:pointer;
+  background:#111;
+  border:1px solid #333;
+  color:white;
+  border-radius:6px;
+}
+
+.quantity-controls span{
+  margin:0 8px;
+}
+
+/* SAĞ TARAF – ÖZET */
 .cart-summary-box{
   flex:1;
   background:#0b0b0b;
@@ -34,34 +81,23 @@
   border-radius:12px;
   border:1px solid #222;
 }
-.cart-item-box{
+
+.summary-line,
+.summary-total-line{
   display:flex;
-  background:#0b0b0b;
-  border-radius:12px;
-  border:1px solid #222;
-  margin-bottom:15px;
-  padding:15px;
+  justify-content:space-between;
+  margin:10px 0;
 }
-.cart-img{
-  width:120px;
-  height:120px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-right:15px;
-}
-.quantity-controls button{
-  padding:5px 10px;
-  cursor:pointer;
-}
+
 .checkout-final-btn{
-  background:white;
-  padding:12px;
-  border-radius:8px;
   display:block;
-  margin-top:15px;
   text-align:center;
-  font-weight:bold;
-  color:black;
+  background:#fff;
+  color:#000;
+  padding:12px;
+  border-radius:10px;
+  margin-top:15px;
+  font-weight:600;
 }
 </style>
 </head>
@@ -72,21 +108,19 @@
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-  <div class="right-buttons">
 
-    <!-- SUBMIT KALDIRILDI -->
+  <div class="right-buttons">
 
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-    <!-- DEFAULT AVATAR -->
-    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar"/>
 
-    <!-- PROFİL MENÜ -->
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" class="logout" style="color:#ff4444;" onclick="logout()">Logout</a>
+      <a href="#" onclick="logout()" style="color:#ff4444;">Logout</a>
     </div>
+
   </div>
 </header>
 
@@ -99,16 +133,16 @@
   <a href="cart.html">Cart</a>
 </div>
 
-
 <!-- CART PAGE -->
 <div class="cart-wrapper">
 
-  <h1 class="cart-title" style="text-align:center;">Shopping Cart</h1>
+  <h1 style="text-align:center;">Shopping Cart</h1>
 
   <div class="cart-layout">
 
     <div class="cart-products" id="cartItems"></div>
 
+    <!-- Order Summary -->
     <div class="cart-summary-box">
       <h2>Order Summary</h2>
 
@@ -122,138 +156,129 @@
         <span>Free</span>
       </div>
 
-      <div class="summary-total-line" style="margin-top:10px;">
+      <div class="summary-total-line">
         <strong>Total</strong>
         <strong id="cartTotal">0€</strong>
       </div>
 
-      <button id="checkoutBtn" class="checkout-final-btn">
-        Go to Checkout →
-      </button>
-
+      <button id="checkoutBtn" class="checkout-final-btn">Go to Checkout →</button>
     </div>
+
   </div>
 </div>
 
-
-<!-- CART FUNCTIONALITY -->
+<!-- CART SCRIPT -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const itemsBox = document.getElementById("cartItems");
+  const subtotalEl = document.getElementById("cartSubtotal");
+  const totalEl = document.getElementById("cartTotal");
 
-    const itemsBox = document.getElementById("cartItems");
-    const subtotalEl = document.getElementById("cartSubtotal");
-    const totalEl = document.getElementById("cartTotal");
+  itemsBox.innerHTML = "";
+  let subtotal = 0;
 
-    itemsBox.innerHTML = "";
+  cart.forEach((item, index) => {
 
-    let subtotal = 0;
+    /* Eski üründe image yoksa boş görünmesin */
+    if(!item.image){
+      item.image = "assets/noimg.png";
+    }
 
-    cart.forEach((item, index) => {
+    if(!item.quantity){
+      item.quantity = 1;
+    }
 
-        if (!item.quantity) item.quantity = 1;
-        if (!item.image) item.image = "assets/noimg.png";
+    itemsBox.innerHTML += `
+      <div class="cart-item-box">
 
-        itemsBox.innerHTML += `
-          <div class="cart-item-box">
+        <img src="${item.image}" class="cart-img">
 
-            <img src="${item.image}" class="cart-img">
+        <div class="cart-info">
+          <h3>${item.name}</h3>
+          <p>Size: ${item.size}</p>
+          <p>${item.price}€</p>
 
-            <div class="cart-info">
-              <h3>${item.name}</h3>
-              <p>Size: ${item.size}</p>
-              <p>${item.price}€</p>
+          <div class="quantity-controls">
+            <button onclick="changeQuantity(${index}, -1)">-</button>
+            <span>${item.quantity}</span>
+            <button onclick="changeQuantity(${index}, 1)">+</button>
 
-              <div class="quantity-controls">
-                <button onclick="changeQuantity(${index}, -1)">-</button>
-                <span>${item.quantity}</span>
-                <button onclick="changeQuantity(${index}, 1)">+</button>
-
-                <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
-              </div>
-
-            </div>
-
+            <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
           </div>
-        `;
+        </div>
 
-        subtotal += item.price * item.quantity;
-    });
+      </div>
+    `;
 
-    subtotalEl.textContent = subtotal + "€";
-    totalEl.textContent = subtotal + "€";
+    subtotal += item.price * item.quantity;
+  });
 
-    document.getElementById("cartCount").textContent = cart.length;
+  subtotalEl.textContent = subtotal + "€";
+  totalEl.textContent = subtotal + "€";
+
+  document.getElementById("cartCount").textContent = cart.length;
 });
 
-
-function changeQuantity(index, amount){
+function changeQuantity(i, amount){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  cart[index].quantity += amount;
+  cart[i].quantity += amount;
 
-  if (cart[index].quantity <= 0){
-    cart.splice(index, 1);
+  if(cart[i].quantity <= 0){
+    cart.splice(i, 1);
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
   location.reload();
 }
 
-function removeItem(index){
+function removeItem(i){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.splice(index, 1);
+  cart.splice(i, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
   location.reload();
 }
 </script>
 
-
-<!-- CHECKOUT EMPTY CART BLOCK -->
+<!-- EMPTY CART CHECKOUT BLOCK -->
 <script>
-document.getElementById("checkoutBtn").addEventListener("click", function(e){
+document.getElementById("checkoutBtn").addEventListener("click", function(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  if (cart.length === 0){
-    e.preventDefault();
+  if(cart.length === 0){
     alert("Your cart is empty!");
     return;
   }
-
   window.location.href = "checkout.html";
 });
 </script>
-
 
 <!-- PROFILE MENU -->
 <script>
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
 
-avatar.addEventListener("click", (e)=>{
+avatar.addEventListener("click", e=>{
   e.stopPropagation();
   menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
 });
 
 document.addEventListener("click", e=>{
-  if (!menu.contains(e.target)) menu.style.display = "none";
+  if(!menu.contains(e.target)) menu.style.display="none";
 });
 </script>
 
-
-<!-- LOGOUT -->
 <script>
 function logout(){
   localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 </script>
 
-
 <!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="assets/support.svg"/>
+  <img src="assets/support.svg">
 </div>
 
 <div id="supportPanel">
