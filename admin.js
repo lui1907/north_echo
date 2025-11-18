@@ -219,7 +219,7 @@ async function loadProducts() {
         <img src="${(p.images || "").split(",")[0] || ""}" onclick="openModal('${(p.images || "").split(",")[0] || ""}')">
         <div class="card-content">
           <h3>${p.name}</h3>
-          <p>${p.category} — ₺${p.price}</p>
+          <p>${p.category} — €${p.price}</p>
         </div>
         <button class="delete-btn" onclick="deleteItem('products', '${p.id}')">Delete</button>
       </div>`
