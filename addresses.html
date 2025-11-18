@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="style.css"/>
 
-<!-- SUPPORT STYLES (index’teki ile aynı) -->
+<!-- SUPPORT STYLES -->
 <link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
@@ -322,7 +322,7 @@ body { color:white; margin:0; padding:0; }
   </div>
 </div>
 
-<!-- SUPABASE + ADDRESSES + SUPPORT (INDEX GİBİ) -->
+<!-- SUPABASE + ADDRESSES + SUPPORT -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -364,7 +364,7 @@ async function loadAddresses(){
     .order("created_at", { ascending:false });
 
   if (error){
-    console.error(error);
+    console.error("loadAddresses error:", error);
     addressList.innerHTML = `<p class="no-address">Failed to load addresses.</p>`;
     return;
   }
@@ -448,8 +448,8 @@ saveAddressBtn.addEventListener("click", async () => {
       }]);
 
     if (error){
-      console.error(error);
-      showToast("Address add failed ❌","error");
+      console.error("insert address error:", error);
+      showToast("Address add failed: " + (error.message || "check Supabase policies") + " ❌","error");
       return;
     }
 
@@ -469,8 +469,8 @@ saveAddressBtn.addEventListener("click", async () => {
       .eq("username", username);
 
     if (error){
-      console.error(error);
-      showToast("Address update failed ❌","error");
+      console.error("update address error:", error);
+      showToast("Address update failed: " + (error.message || "") + " ❌","error");
       return;
     }
 
@@ -493,7 +493,7 @@ window.editAddress = async function(id){
     .single();
 
   if (error){
-    console.error(error);
+    console.error("editAddress load error:", error);
     showToast("Failed to load address ❌","error");
     return;
   }
@@ -521,8 +521,8 @@ window.deleteAddress = function(id){
       .eq("username", username);
 
     if (error){
-      console.error(error);
-      showToast("Delete failed ❌","error");
+      console.error("deleteAddress error:", error);
+      showToast("Delete failed: " + (error.message || "") + " ❌","error");
       return;
     }
 
@@ -547,8 +547,8 @@ window.setDefault = async function(id){
     .eq("username", username);
 
   if (error){
-    console.error(error);
-    showToast("Set default failed ❌","error");
+    console.error("setDefault error:", error);
+    showToast("Set default failed: " + (error.message || "") + " ❌","error");
     return;
   }
 
@@ -556,7 +556,7 @@ window.setDefault = async function(id){
   loadAddresses();
 };
 
-/* ---------------- TOAST / CONFIRM (index’le aynı) ---------------- */
+/* ---------------- TOAST / CONFIRM ---------------- */
 function showToast(msg,type="info"){
   const t=document.createElement("div");
   t.className=`toast ${type}`;
@@ -584,7 +584,7 @@ function confirmBox(msg,cb){
   c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
 }
 
-/* ---------------- SUPPORT (INDEX İLE BİREBİR) ---------------- */
+/* ---------------- SUPPORT (index ile aynı) ---------------- */
 const supportBtn   = document.getElementById("supportBtn");
 const supportPanel = document.getElementById("supportPanel");
 const closeSupport = document.getElementById("closeSupport");
@@ -626,7 +626,7 @@ async function sendSupportMessage(){
       .upload(`public/${safe}`, f);
 
     if(upErr){
-      console.error(upErr);
+      console.error("support upload error:", upErr);
       showToast("File upload failed ❌","error");
       return;
     }
@@ -645,7 +645,7 @@ async function sendSupportMessage(){
   }]);
 
   if(error){
-    console.error(error);
+    console.error("support insert error:", error);
     showToast("Message failed ❌","error");
     return;
   }
