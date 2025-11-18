@@ -184,16 +184,3 @@ window.addEventListener("DOMContentLoaded", () => {
   updateCartCount();
   renderCartPage();
 });
-// --- CART COUNT (GLOBAL) ---
-document.addEventListener("DOMContentLoaded", () => {
-
-    const cartCountEl = document.getElementById("cartCount");
-    if (!cartCountEl) return; // Sayfada cart ikon yoksa hata verme
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    let totalQty = 0;
-    cart.forEach(item => totalQty += item.quantity);
-
-    cartCountEl.textContent = totalQty;
-});
