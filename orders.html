@@ -252,14 +252,23 @@ if (supportBtn) supportBtn.onclick = toggleSupportPanel;
 if (closeBtn) closeBtn.onclick = toggleSupportPanel;
 </script>
 
-  <script>
-// 🔥 CART COUNT (SAĞ ÜSTTE GÖRÜNEN SEPET SAYISI)
+<script>
+// 🔥 CART COUNT (TOPLAM ADET, QUANTITY DAHİL)
 document.addEventListener("DOMContentLoaded", () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCount = document.getElementById("cartCount");
-  if (cartCount) cartCount.textContent = cart.length;
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+
+  // Örnek: L (2 adet) + S (2 adet) => 4
+  const totalCount = cart.reduce((sum, item) => {
+    const qty = item.quantity ? Number(item.quantity) : 1;
+    return sum + (isNaN(qty) ? 1 : qty);
+  }, 0);
+
+  cartCountEl.textContent = totalCount;
 });
 </script>
+
 
   
 </body>
