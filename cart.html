@@ -314,5 +314,23 @@ async function sendSupportMessage(){
 }
 </script>
 
+  <script>
+// 🔥 CART COUNT (TOPLAM ADET, QUANTITY DAHİL)
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+
+  // Örnek: L (2 adet) + S (2 adet) => 4
+  const totalCount = cart.reduce((sum, item) => {
+    const qty = item.quantity ? Number(item.quantity) : 1;
+    return sum + (isNaN(qty) ? 1 : qty);
+  }, 0);
+
+  cartCountEl.textContent = totalCount;
+});
+</script>
+
+
 </body>
 </html>
