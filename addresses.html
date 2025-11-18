@@ -6,7 +6,6 @@
 <title>My Addresses — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
-
 <link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
@@ -16,6 +15,7 @@
 <style>
 body { color:white; margin:0; padding:0; }
 
+/* WRAPPER */
 .addresses-wrapper{
   margin-top:130px;
   display:flex;
@@ -23,6 +23,7 @@ body { color:white; margin:0; padding:0; }
   padding:20px;
 }
 
+/* MAIN CARD */
 .addresses-card{
   width:700px;
   background:#0d0d0d;
@@ -31,6 +32,7 @@ body { color:white; margin:0; padding:0; }
   padding:25px;
 }
 
+/* HEADER LINE */
 .addr-top-line{
   display:flex;
   justify-content:space-between;
@@ -56,15 +58,18 @@ body { color:white; margin:0; padding:0; }
   margin-bottom:15px;
 }
 
-.addr-lines{
-  font-size:14px;
-  opacity:0.85;
-  margin-bottom:8px;
+.addr-header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
 }
 
-.addr-actions{
-  display:flex;
-  gap:8px;
+.addr-default-tag{
+  background:#00aa66;
+  padding:2px 8px;
+  border-radius:8px;
+  font-size:11px;
+  color:black;
 }
 
 .addr-actions button{
@@ -74,10 +79,17 @@ body { color:white; margin:0; padding:0; }
   background:#000;
   color:#fff;
   cursor:pointer;
-  font-size:13px;
+  margin-right:6px;
 }
 .addr-actions button:hover{background:#111;}
 
+.no-address{
+  text-align:center;
+  margin-top:20px;
+  opacity:0.7;
+}
+
+/* POPUP */
 .address-popup{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
@@ -101,43 +113,54 @@ body { color:white; margin:0; padding:0; }
   width:100%;
   padding:8px;
   margin-bottom:10px;
-  border-radius:8px;
-  border:1px solid #333;
   background:#1a1a1a;
+  border:1px solid #333;
+  border-radius:8px;
   color:white;
 }
 
+/* TOAST + CONFIRM BOX */
 .toast,.confirmBox{
   position:fixed;
   top:50%;left:50%;
   transform:translate(-50%,-50%) scale(.9);
-  background:rgba(20,20,20,.95);
-  border:1px solid #333;
+  background:#111;
   padding:16px 22px;
-  color:white;border-radius:10px;
-  opacity:0;transition:all .3s;
-  z-index:99999;font-size:15px;text-align:center;
+  border-radius:10px;
+  border:1px solid #333;
+  opacity:0;
+  transition:.3s;
+  z-index:999999;
+  color:white;
 }
 .toast.show,.confirmBox.show{
-  opacity:1;transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
 }
+.toast.error{border-color:#aa0000;color:#ff6666;}
 .toast.success{border-color:#00aa66;color:#00ff99;}
-.toast.error{border-color:#aa0000;color:#ff5555;}
 
 .confirm-buttons{
-  display:flex;gap:10px;justify-content:center;margin-top:10px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin-top:8px;
 }
 .confirm-buttons button{
-  background:#00aa66;border:none;
-  padding:8px 14px;border-radius:6px;
-  cursor:pointer;color:white;font-weight:bold;
+  padding:6px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
 }
+.confirm-buttons .ok{background:#00aa66;}
 .confirm-buttons .cancel{background:#444;}
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -146,7 +169,6 @@ body { color:white; margin:0; padding:0; }
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -157,6 +179,7 @@ body { color:white; margin:0; padding:0; }
   </div>
 </header>
 
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -167,30 +190,41 @@ body { color:white; margin:0; padding:0; }
   <a href="addresses.html">Addresses</a>
 </div>
 
+<!-- PAGE -->
 <div class="addresses-wrapper">
   <div class="addresses-card">
     <div class="addr-top-line">
       <h2>My Addresses</h2>
-      <button class="add-btn" id="openAddPopup">+ Add Address</button>
+      <button id="openAddPopup" class="add-btn">+ Add Address</button>
     </div>
+
     <div id="addressList"></div>
   </div>
 </div>
 
 <!-- POPUP -->
-<div class="address-popup" id="addressPopup">
+<div id="addressPopup" class="address-popup">
   <div class="address-popup-inner">
     <h3 id="popupTitle">Add Address</h3>
 
-    <input id="a_fullname" placeholder="Full Name *">
-    <input id="a_phone" placeholder="Phone *">
-    <input id="a_country" placeholder="Country *">
-    <input id="a_city" placeholder="City *">
-    <textarea id="a_address" placeholder="Full Address *"></textarea>
+    <label>Full Name *</label>
+    <input id="a_fullname">
 
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
-      <button id="cancelPopup" class="cancel">Cancel</button>
-      <button id="saveAddressBtn" class="primary">Save</button>
+    <label>Phone *</label>
+    <input id="a_phone">
+
+    <label>Country *</label>
+    <input id="a_country">
+
+    <label>City *</label>
+    <input id="a_city">
+
+    <label>Full Address *</label>
+    <textarea id="a_address"></textarea>
+
+    <div class="confirm-buttons" style="margin-top:10px;">
+      <button class="cancel" id="cancelPopup">Cancel</button>
+      <button class="ok" id="saveAddressBtn">Save</button>
     </div>
   </div>
 </div>
@@ -200,7 +234,7 @@ body { color:white; margin:0; padding:0; }
   <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
 
-<!-- SUPPORT PANEL (index ile aynı) -->
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -208,17 +242,27 @@ body { color:white; margin:0; padding:0; }
   </div>
 
   <div class="sup-body">
-    <input id="supName" placeholder="Your Name *">
-    <input id="supEmail" type="email" placeholder="Your Email *">
+    <label>Your Name *</label>
+    <input type="text" id="supName">
+
+    <label>Email *</label>
+    <input type="email" id="supEmail">
+
+    <label>Category *</label>
     <select id="supCategory">
       <option value="Website">Website Issue</option>
       <option value="Product">Product Info</option>
       <option value="Design">Design Request</option>
       <option value="Other">Other</option>
     </select>
-    <textarea id="supMsg" placeholder="Your Message *"></textarea>
-    <input id="supFile" type="file">
-    <button id="sendSupportBtn" class="sup-send">Send Message →</button>
+
+    <label>Your Message *</label>
+    <textarea id="supMsg"></textarea>
+
+    <label>Attach File</label>
+    <input type="file" id="supFile">
+
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
@@ -230,23 +274,28 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
+// USER
 const username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
+// DOM
 const addressList = document.getElementById("addressList");
-const openAddPopupBtn = document.getElementById("openAddPopup");
-const addressPopup = document.getElementById("addressPopup");
-const cancelPopupBtn = document.getElementById("cancelPopup");
+const popup = document.getElementById("addressPopup");
+const popupTitle = document.getElementById("popupTitle");
+
+const openAddPopup = document.getElementById("openAddPopup");
+const cancelPopup = document.getElementById("cancelPopup");
 const saveAddressBtn = document.getElementById("saveAddressBtn");
 
 const a_fullname = document.getElementById("a_fullname");
-const a_phone = document.getElementById("a_phone");
-const a_country = document.getElementById("a_country");
-const a_city = document.getElementById("a_city");
-const a_address = document.getElementById("a_address");
+const a_phone    = document.getElementById("a_phone");
+const a_country  = document.getElementById("a_country");
+const a_city     = document.getElementById("a_city");
+const a_address  = document.getElementById("a_address");
 
 let editingId = null;
 
+// LOAD ADDRESSES
 async function loadAddresses(){
   const { data, error } = await supabase
     .from("addresses")
@@ -254,229 +303,158 @@ async function loadAddresses(){
     .eq("username", username)
     .order("created_at", { ascending:false });
 
-  if (error){
-    addressList.innerHTML = `<p class="no-address">Failed to load addresses.</p>`;
-    return;
-  }
-
   if (!data || data.length === 0){
     addressList.innerHTML = `<p class="no-address">You have no saved addresses yet.</p>`;
     return;
   }
 
-  addressList.innerHTML = data.map(x => `
+  addressList.innerHTML = data.map(a => `
     <div class="addr-box">
-      <div class="addr-lines">
-        <div><b>${x.fullname}</b></div>
-        <div>📞 ${x.phone}</div>
-        <div>🌍 ${x.country}, ${x.city}</div>
-        <div>🏠 ${x.full_address}</div>
+      <div class="addr-header">
+        <div>
+          <b>${a.fullname}</b>
+          ${a.is_default ? `<span class="addr-default-tag">Default</span>` : ""}
+        </div>
       </div>
 
+      <div>${a.phone}</div>
+      <div>${a.city}, ${a.country}</div>
+      <div>${a.address}</div>
+
       <div class="addr-actions">
-        <button onclick="setDefault(${x.id})">Set Default</button>
-        <button onclick="editAddress(${x.id})">Edit</button>
-        <button onclick="deleteAddress(${x.id})">Delete</button>
+        <button onclick="setDefault(${a.id})">Set Default</button>
+        <button onclick="edit(${a.id})">Edit</button>
+        <button onclick="del(${a.id})">Delete</button>
       </div>
     </div>
   `).join("");
 }
-
 loadAddresses();
 
-openAddPopupBtn.onclick = () => {
+// OPEN POPUP
+openAddPopup.addEventListener("click", ()=>{
   editingId = null;
+  popupTitle.textContent = "Add Address";
+
   a_fullname.value = "";
   a_phone.value = "";
   a_country.value = "";
   a_city.value = "";
   a_address.value = "";
-  addressPopup.style.display = "flex";
-};
 
-cancelPopupBtn.onclick = () => {
-  addressPopup.style.display = "none";
-};
+  popup.style.display = "flex";
+});
 
-saveAddressBtn.onclick = async () => {
+// CLOSE POPUP
+cancelPopup.addEventListener("click", ()=> popup.style.display="none");
+
+// SAVE
+saveAddressBtn.addEventListener("click", async ()=>{
   const fullname = a_fullname.value.trim();
   const phone = a_phone.value.trim();
   const country = a_country.value.trim();
   const city = a_city.value.trim();
-  const full_address = a_address.value.trim();
+  const address = a_address.value.trim();
 
-  if (!fullname || !phone || !country || !city || !full_address){
-    showToast("Please fill all fields ❌","error");
+  if(!fullname || !phone || !country || !city || !address){
+    toast("Please fill all required fields ❌","error");
     return;
   }
 
-  if (!editingId){
+  if(!editingId){
+    // INSERT
+    const { error } = await supabase.from("addresses").insert([{
+      username, fullname, phone, country, city, address, is_default:false
+    }]);
+
+    if(error){ console.log(error); toast("Address add failed ❌","error"); return; }
+
+    toast("Address added ✅","success");
+  } else {
+    // UPDATE
     const { error } = await supabase
       .from("addresses")
-      .insert([{ username, fullname, phone, country, city, full_address }]);
-
-    if (error){
-      console.error(error);
-      showToast("Address add failed ❌","error");
-      return;
-    }
-
-    showToast("Address added ✅","success");
-  } else {
-    await supabase
-      .from("addresses")
-      .update({ fullname, phone, country, city, full_address })
+      .update({ fullname, phone, country, city, address })
       .eq("id", editingId)
       .eq("username", username);
 
-    showToast("Address updated ✅","success");
+    if(error){ toast("Update failed ❌","error"); return; }
+
+    toast("Address updated ✅","success");
   }
 
-  addressPopup.style.display = "none";
+  popup.style.display="none";
   loadAddresses();
-};
+});
 
-window.editAddress = async (id) => {
-  editingId = id;
+// EDIT
+window.edit = async function(id){
   const { data } = await supabase
     .from("addresses")
     .select("*")
     .eq("id", id)
+    .eq("username", username)
     .single();
+
+  editingId = id;
+  popupTitle.textContent = "Edit Address";
 
   a_fullname.value = data.fullname;
   a_phone.value = data.phone;
   a_country.value = data.country;
   a_city.value = data.city;
-  a_address.value = data.full_address;
+  a_address.value = data.address;
 
-  addressPopup.style.display = "flex";
+  popup.style.display="flex";
 };
 
-window.deleteAddress = function(id){
-  confirmBox("Are you sure?", async yes => {
-    if (!yes) return;
+// DELETE
+window.del = function(id){
+  confirmBox("Delete this address?", async yes=>{
+    if(!yes) return;
 
-    await supabase.from("addresses")
-      .delete()
-      .eq("id", id);
+    await supabase.from("addresses").delete().eq("id", id).eq("username", username);
 
-    showToast("Address deleted ✅","success");
+    toast("Address deleted 🗑️","success");
     loadAddresses();
   });
 };
 
+// SET DEFAULT
 window.setDefault = async function(id){
   await supabase.from("addresses").update({ is_default:false }).eq("username", username);
-  await supabase.from("addresses").update({ is_default:true }).eq("id", id);
+  await supabase.from("addresses").update({ is_default:true }).eq("id", id).eq("username", username);
 
-  showToast("Default updated ✅","success");
+  toast("Default updated 🌟","success");
   loadAddresses();
 };
 
-/* ---- UI HELPERS ---- */
-function showToast(msg,type){
+// TOAST
+function toast(msg,type="info"){
   const t=document.createElement("div");
   t.className=`toast ${type}`;
   t.textContent=msg;
   document.body.appendChild(t);
   setTimeout(()=>t.classList.add("show"),50);
-  setTimeout(()=>{
-    t.classList.remove("show");
-    setTimeout(()=>t.remove(),300);
-  },2500);
+  setTimeout(()=>{ t.classList.remove("show"); setTimeout(()=>t.remove(),300); },2500);
 }
 
+// CONFIRM BOX
 function confirmBox(msg,cb){
-  const c=document.createElement("div");
-  c.className="confirmBox";
-  c.innerHTML=`
+  const el=document.createElement("div");
+  el.className="confirmBox";
+  el.innerHTML=`
     <div>${msg}</div>
     <div class="confirm-buttons">
       <button class="ok">Yes</button>
-      <button 
-class="cancel">No</button>
+      <button class="cancel">No</button>
     </div>`;
-  document.body.appendChild(c);
-  setTimeout(()=>c.classList.add("show"),50);
-  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
-  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
+  document.body.appendChild(el);
+  setTimeout(()=>el.classList.add("show"),50);
+
+  el.querySelector(".ok").onclick = ()=>{ el.remove(); cb(true); };
+  el.querySelector(".cancel").onclick = ()=>{ el.remove(); cb(false); };
 }
-
-/* ---- Support message ---- */
-const supportBtn   = document.getElementById("supportBtn");
-const supportPanel = document.getElementById("supportPanel");
-const closeSupport = document.getElementById("closeSupport");
-const sendSupport  = document.getElementById("sendSupportBtn");
-
-supportBtn.onclick = () => {
-  supportPanel.style.display =
-    supportPanel.style.display === "block" ? "none" : "block";
-};
-
-closeSupport.onclick = () => {
-  supportPanel.style.display = "none";
-};
-
-sendSupport.onclick = () => {
-  confirmBox("Are you sure you want to send this message?", yes=>{
-    if(yes) sendSupportMessage();
-  });
-};
-
-async function sendSupportMessage(){
-  const name  = document.getElementById("supName").value.trim();
-  const email = document.getElementById("supEmail").value.trim();
-  const cat   = document.getElementById("supCategory").value;
-  const msg   = document.getElementById("supMsg").value.trim();
-
-  if(!name || !email || !msg){
-    showToast("Please fill all required fields ❌","error");
-    return;
-  }
-
-  await supabase.from("messages").insert([{
-    name,
-    email,
-    category:cat,
-    message:msg,
-    date:new Date().toLocaleString(),
-    read:false
-  }]);
-
-  showToast("Message sent successfully ✅","success");
-  supportPanel.style.display="none";
-}
-
-/* ---- Avatar menu + Logout ---- */
-window.logout = function(){
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-};
-
-const avatar = document.getElementById("userAvatar");
-const menu   = document.getElementById("avatarMenu");
-
-if(avatar){
-  avatar.onclick = (e)=>{
-    e.stopPropagation();
-    menu.style.display = (menu.style.display==="flex") ? "none" : "flex";
-  };
-}
-document.addEventListener("click",(e)=>{
-  if(menu && !menu.contains(e.target) && e.target !== avatar){
-    menu.style.display="none";
-  }
-});
-
-/* ---- Cart Count ---- */
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const el = document.getElementById("cartCount");
-  if(!el) return;
-
-  el.textContent = cart.reduce((s,i)=>s+(i.quantity?Number(i.quantity):1),0);
-});
 </script>
 
 </body>
