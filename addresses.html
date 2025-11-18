@@ -228,10 +228,38 @@ body { color:white; margin:0; padding:0; }
   <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
 
-<!-- SUPPORT PANEL (SADECE SENDEKİ KULLANILIYOR) -->
-<div id="supportPanel">
-  <!-- senin support panel html yapın birebir burada duruyor -->
+<!-- SUPPORT PANEL (DOLU VE ÇALIŞAN) -->
+<div id="supportPanel" style="display:none;">
+  <div class="sup-header">
+    <span>Support</span>
+    <button id="closeSupport">✕</button>
+  </div>
+
+  <div class="sup-body">
+    <label>Your Name *</label>
+    <input type="text" id="supName">
+
+    <label>Email *</label>
+    <input type="email" id="supEmail">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="Website">Website Issue</option>
+      <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Your Message *</label>
+    <textarea id="supMsg"></textarea>
+
+    <label>Attach File</label>
+    <input type="file" id="supFile">
+
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+  </div>
 </div>
+
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
