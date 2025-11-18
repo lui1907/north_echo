@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Order Detail — North Echo</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="support.css">
+
+<script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
+
+<style>
+body{color:white;margin:0;padding:0;}
+
+.detail-wrapper{
+  margin-top:130px;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+.detail-card{
+  width:750px;
+  background:#0d0d0d;
+  padding:25px;
+  border-radius:16px;
+  border:1px solid #222;
+}
+
+.section-title{
+  font-size:20px;
+  font-weight:bold;
+  margin:15px 0 10px 0;
+}
+
+.product-box{
+  display:flex;
+  gap:12px;
+  background:#1a1a1a;
+  border:1px solid #2a2a2a;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.product-box img{
+  width:70px;
+  height:70px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+  </div>
+</header>
+
+<div class="detail-wrapper">
+  <div class="detail-card">
+    <h2>Order Details</h2>
+
+    <div id="detail"></div>
+
+  </div>
+</div>
+
+<script>
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location="login.html";
+
+const index = localStorage.getItem("selectedOrderIndex");
+if (index === null) window.location="orders.html";
+
+let orders = JSON.parse(localStorage.getItem("orders_" + username));
+let order = orders.reverse()[index];
+
+let html = `
+  <div class="section-title">General Info</div>
+  <p><b>Date:</b> ${order.date}</p>
+  <p><b>Total:</b> ${order.total}€</p>
+  <p><b>Status:</b> Completed</p>
+
+  <div class="section-title">Products</div>
+`;
+
+order.items.forEach(i=>{
+  html += `
+    <div class="product-box">
+      <img src="${i.image}">
+      <div>
+        <p><b>${i.name}</b></p>
+        <p>Size: ${i.size}</p>
+        <p>${i.quantity} × ${i.price}€</p>
+      </div>
+    </div>
+  `;
+});
+
+html += `
+  <div class="section-title">Shipping Address</div>
+  <p>${order.contact.name}</p>
+  <p>${order.contact.email}</p>
+  <p>${order.contact.phone}</p>
+  <p>${order.contact.country}, ${order.contact.city}</p>
+  <p>${order.contact.address}</p>
+`;
+
+document.getElementById("detail").innerHTML = html;
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const cart = JSON.parse(localStorage.getItem("cart"))||[];
+  document.getElementById("cartCount").textContent =
+    cart.reduce((a,b)=>a + Number(b.quantity||1),0);
+});
+</script>
+
+</body>
+</html>
