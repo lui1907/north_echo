@@ -11,10 +11,9 @@
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
-<script src="support.js" defer></script>
 
 <style>
+
 body { color:white; margin:0; padding:0; }
 
 /* PAGE WRAPPER */
@@ -25,7 +24,7 @@ body { color:white; margin:0; padding:0; }
   padding:20px;
 }
 
-/* CARD */
+/* MAIN CARD */
 .orders-card {
   width:700px;
   background:#0d0d0d;
@@ -34,25 +33,77 @@ body { color:white; margin:0; padding:0; }
   padding:25px;
 }
 
-/* ORDER ITEM */
+/* ORDER BLOCK */
 .order-box {
   background:#141414;
   border:1px solid #333;
   border-radius:12px;
   padding:15px;
-  margin-bottom:15px;
+  margin-bottom:18px;
 }
 
-.order-header { font-size:16px; font-weight:bold; margin-bottom:8px; }
-.order-status { color:#00aa66; font-size:14px; margin-bottom:8px; }
-.order-item { font-size:14px; opacity:0.85; }
+/* ORDER HEADER */
+.order-header {
+  font-size:17px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
 
+.order-status {
+  color:#00aa66;
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.order-date {
+  opacity:0.8;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+/* PRODUCT CARD INSIDE ORDER */
+.order-product {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+  padding:10px;
+  background:#1a1a1a;
+  border-radius:10px;
+  border:1px solid #2a2a2a;
+}
+
+.order-product img {
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+.order-product-info {
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+
+.order-product-info span {
+  font-size:14px;
+}
+
+/* EMPTY MESSAGE */
 .no-orders {
   text-align:center;
   margin-top:40px;
   font-size:16px;
   opacity:0.7;
 }
+
+html.light .orders-card { background:white; border-color:#ccc; color:#111; }
+html.light .order-box { background:#f1f1f1; border-color:#ccc; }
+
+.avatar-menu a { color:white !important; }
+.avatar-menu .logout { color:#ff4444 !important; }
+
 </style>
 </head>
 
@@ -69,10 +120,8 @@ body { color:white; margin:0; padding:0; }
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="settings.html">Settings</a>
       <a href="profile.html">Profile</a>
-      <a href="orders.html">My Orders</a>
+      <a href="settings.html">Settings</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -86,10 +135,9 @@ body { color:white; margin:0; padding:0; }
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
-  <a href="orders.html">My Orders</a>
 </div>
 
-<!-- PAGE -->
+<!-- PAGE CONTENT -->
 <div class="orders-wrapper">
   <div class="orders-card">
     <h2>My Orders</h2>
@@ -97,47 +145,47 @@ body { color:white; margin:0; padding:0; }
   </div>
 </div>
 
-<!-- ORDERS SCRIPT -->
 <script>
+/* LOGIN CHECK */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
+/* LOAD USER ORDERS */
 let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
-let box = document.getElementById("ordersList");
+let container = document.getElementById("ordersList");
 
 if (orders.length === 0) {
-  box.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
+  container.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
 } else {
-  orders.reverse().forEach((order, index) => {
+  orders.reverse().forEach(order => {
     
-    let orderId = order.orderId || (index + 1); 
-    let status = order.status || "Completed";
-
-    let itemsHTML = order.items
-      .map(i => `
-        <div class="order-item">
-          ${i.quantity}× ${i.name} — ${i.price}€
+    let itemHTML = order.items.map(i => `
+      <div class="order-product">
+        <img src="${i.image}">
+        <div class="order-product-info">
+          <span><b>${i.name}</b></span>
+          <span>Size: ${i.size}</span>
+          <span>${i.quantity} × ${i.price}€</span>
         </div>
-      `)
-      .join("");
+      </div>
+    `).join("");
 
-    box.innerHTML += `
+    container.innerHTML += `
       <div class="order-box">
-        <div class="order-header">Order #${orderId}</div>
-        <div class="order-status">${status}</div>
+        <div class="order-header">Order — ${order.date.split(" ")[0]}</div>
+        <div class="order-status">Completed</div>
         <div class="order-date">${order.date}</div>
 
-        <hr style="opacity:0.2;margin:10px 0;">
-        ${itemsHTML}
-        <hr style="opacity:0.2;margin:10px 0;">
+        ${itemHTML}
 
-        <div class="order-total"><b>Total:</b> ${order.total}€</div>
+        <hr style="opacity:0.2;margin:10px 0;">
+        <div><b>Total:</b> ${order.total}€</div>
       </div>
     `;
   });
 }
 
-/* AVATAR DROPDOWN */
+/* AVATAR MENU */
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
@@ -150,7 +198,7 @@ function logout() {
 </script>
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
+<div id="supportBtn">
   <img src="assets/support.svg">
 </div>
 
@@ -164,31 +212,32 @@ function logout() {
   <div class="sup-body">
 
     <label>Your Name *</label>
-    <input type="text" id="supName">
+    <input id="supName" type="text">
 
     <label>Email *</label>
-    <input type="email" id="supEmail">
+    <input id="supEmail" type="email">
 
     <label>Category *</label>
     <select id="supCategory">
-      <option value="Orders">Order Issue</option>
       <option value="Website">Website Issue</option>
       <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
       <option value="Other">Other</option>
     </select>
 
     <label>Your Message *</label>
     <textarea id="supMsg"></textarea>
 
-    <label>Attach File</label>
+    <label>Attach File (optional)</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
 
   </div>
 </div>
+
+<!-- SUPPORT SCRIPT (TEK DOĞRU ŞEKİL) -->
+<script src="support.js"></script>
 
 </body>
 </html>
