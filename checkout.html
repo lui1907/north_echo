@@ -30,7 +30,8 @@
     flex-direction: column;
   }
   .checkout-form input,
-  .checkout-form textarea {
+  .checkout-form textarea,
+  .checkout-form select {
     background:#111;
     border:1px solid #333;
     border-radius:10px;
@@ -39,7 +40,6 @@
     margin-bottom:15px;
   }
 
-  /* ✔ BEYAZ ORDER BUTTON */
   .placeorder-btn {
     padding:14px;
     background:#fff;
@@ -62,6 +62,7 @@
     border:1px solid #222;
     height:max-content;
   }
+
   .summary-product {
     display:flex;
     gap:12px;
@@ -73,6 +74,7 @@
     border-radius:10px;
     object-fit:cover;
   }
+
   .co-line {
     display:flex;
     justify-content:space-between;
@@ -92,9 +94,10 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <a href="cart.html" class="cart-icon">
+      🛒 <span id="cartCount">0</span>
+    </a>
 
-    <!-- ✔ DEFAULT AVATAR HER ZAMAN -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
@@ -115,6 +118,8 @@
   <a href="cart.html">Cart</a>
 </div>
 
+
+<!-- PAGE -->
 <main class="checkout-wrapper">
   <div class="checkout-layout">
 
@@ -132,23 +137,13 @@
       <label>Phone Number</label>
       <input id="c_phone" type="text" required>
 
+      <!-- SAVED ADDRESS DROPDOWN -->
       <h2 style="margin-top:30px;">Select Saved Address</h2>
-
-     <select id="addressSelect" style="
-     width:100%;
-     padding:12px;
-     background:#111;
-     border:1px solid #333;
-     border-radius:10px;
-     color:white;
-     margin-bottom:20px;
-     ">
-     <option value="">-- Choose Saved Address --</option>
-     </select>
-
+      <select id="addressSelect">
+        <option value="">-- Choose Saved Address --</option>
+      </select>
 
       <h2 style="margin-top:30px;">Shipping Address</h2>
-
       <label>Country</label>
       <input id="c_country" type="text" required>
 
@@ -164,7 +159,6 @@
     <div class="checkout-summary">
 
       <h2>Order Summary</h2>
-
       <div id="sumItems"></div>
 
       <div class="co-line">
@@ -190,7 +184,10 @@
   </div>
 </main>
 
+
+<!-- JS: CART SUMMARY + ADDRESS AUTOFILL + ORDER COMPLETE -->
 <script>
+/* LOAD CART */
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const box = document.getElementById("sumItems");
 let subtotal = 0;
@@ -211,11 +208,45 @@ cart.forEach(item => {
 document.getElementById("sumSubtotal").textContent = subtotal + "€";
 document.getElementById("sumTotal").textContent = subtotal + "€";
 
+
+/* LOAD SAVED ADDRESSES */
+const user = localStorage.getItem("loggedInUser");
+const addrSelect = document.getElementById("addressSelect");
+let savedAddresses = [];
+
+if (user) {
+  savedAddresses = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
+
+  savedAddresses.forEach((a, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = `${a.title} — ${a.country}, ${a.city}`;
+    addrSelect.appendChild(opt);
+  });
+
+  // DEFAULT ADDRESS
+  const defaultIndex = savedAddresses.findIndex(a => a.default);
+  if (defaultIndex !== -1) {
+    addrSelect.value = defaultIndex;
+    addrSelect.dispatchEvent(new Event("change"));
+  }
+}
+
+/* AUTOFILL WHEN SELECTED */
+addrSelect.addEventListener("change", () => {
+  if (addrSelect.value === "") return;
+  const a = savedAddresses[addrSelect.value];
+
+  c_country.value = a.country;
+  c_city.value = a.city;
+  c_address.value = a.full;
+});
+
+
 /* COMPLETE ORDER */
 document.getElementById("checkoutForm").addEventListener("submit", e => {
   e.preventDefault();
 
-  const user = localStorage.getItem("loggedInUser");
   if (!user) return alert("Please login first.");
 
   let orders = JSON.parse(localStorage.getItem("orders_" + user)) || [];
@@ -224,6 +255,7 @@ document.getElementById("checkoutForm").addEventListener("submit", e => {
     user,
     items: cart,
     total: subtotal,
+    date: new Date().toLocaleString(),
     contact: {
       name: c_name.value,
       email: c_email.value,
@@ -231,8 +263,7 @@ document.getElementById("checkoutForm").addEventListener("submit", e => {
       country: c_country.value,
       city: c_city.value,
       address: c_address.value
-    },
-    date: new Date().toLocaleString()
+    }
   });
 
   localStorage.setItem("orders_" + user, JSON.stringify(orders));
@@ -241,20 +272,30 @@ document.getElementById("checkoutForm").addEventListener("submit", e => {
   window.location.href = "order-success.html";
 });
 
-/* avatar menu */
+
+/* AVATAR MENU */
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
 };
 
-/* logout */
-function logout() {
+
+/* CART COUNT FIX */
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const el = document.getElementById("cartCount");
+  const total = cart.reduce((s,i)=>s+(i.quantity?i.quantity:1),0);
+  el.textContent = total;
+});
+
+
+/* LOGOUT */
+function logout(){
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
-
-/* ✔ DEFAULT AVATAR – KULLANICI RESMİ GETİRME YOK */
 </script>
+
 
 <!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
@@ -269,13 +310,13 @@ function logout() {
   </div>
 
   <div class="sup-body">
+
     <label>Your Name *</label>
     <input id="supName" type="text">
 
     <label>Email *</label>
     <input id="supEmail" type="email">
 
-     <!-- ✅ EKLEDİĞİM TEK ŞEY -->
     <label>Category *</label>
     <select id="supCategory">
       <option value="Website">Website Issue</option>
@@ -290,37 +331,10 @@ function logout() {
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+
   </div>
 </div>
 
-<!-- SUPPORT TOGGLE -->
-<script>
-function toggleSupportPanel(){
-  const p = document.getElementById("supportPanel");
-  p.style.display = (p.style.display === "block") ? "none" : "block";
-}
-</script>
-
-<script>
-// 🔥 CART COUNT (TOPLAM ADET, QUANTITY DAHİL)
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCountEl = document.getElementById("cartCount");
-  if (!cartCountEl) return;
-
-  // Örnek: L (2 adet) + S (2 adet) => 4
-  const totalCount = cart.reduce((sum, item) => {
-    const qty = item.quantity ? Number(item.quantity) : 1;
-    return sum + (isNaN(qty) ? 1 : qty);
-  }, 0);
-
-  cartCountEl.textContent = totalCount;
-});
-</script>
-
-  
 </body>
 </html>
