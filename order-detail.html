@@ -52,38 +52,59 @@ body{color:white;margin:0;padding:0;}
   object-fit:cover;
 }
 
+.avatar-menu a{color:white!important;}
+.avatar-menu .logout{color:#ff4444!important;}
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
   </div>
 </header>
 
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="hoodies.html">Hoodies</a>
+  <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
+</div>
+
+<!-- PAGE -->
 <div class="detail-wrapper">
   <div class="detail-card">
     <h2>Order Details</h2>
-
     <div id="detail"></div>
-
   </div>
 </div>
 
 <script>
 let username = localStorage.getItem("loggedInUser");
-if (!username) window.location="login.html";
+if (!username) window.location = "login.html";
 
 const index = localStorage.getItem("selectedOrderIndex");
-if (index === null) window.location="orders.html";
+if (index === null) window.location = "orders.html";
 
 let orders = JSON.parse(localStorage.getItem("orders_" + username));
-let order = orders.reverse()[index];
+let reversed = [...orders].reverse(); 
+let order = reversed[index];
 
 let html = `
   <div class="section-title">General Info</div>
@@ -117,14 +138,70 @@ html += `
 `;
 
 document.getElementById("detail").innerHTML = html;
+
+/* Avatar menu */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href="login.html";
+}
+
+/* CART COUNT */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const count = cart.reduce((s,i)=>s + Number(i.quantity||1), 0);
+  document.getElementById("cartCount").textContent = count;
+});
 </script>
 
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn"><img src="assets/support.svg"></div>
+
+<!-- SUPPORT PANEL -->
+<div id="supportPanel">
+  <div class="sup-header">
+    <span>Support</span>
+    <button id="closeSupport">✕</button>
+  </div>
+
+  <div class="sup-body">
+    <label>Your Name *</label>
+    <input id="supName" type="text">
+
+    <label>Email *</label>
+    <input id="supEmail" type="email">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="Website">Website Issue</option>
+      <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Your Message *</label>
+    <textarea id="supMsg"></textarea>
+
+    <label>Attach File</label>
+    <input type="file" id="supFile">
+
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+  </div>
+</div>
+
+<script src="support.js"></script>
+
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-  const cart = JSON.parse(localStorage.getItem("cart"))||[];
-  document.getElementById("cartCount").textContent =
-    cart.reduce((a,b)=>a + Number(b.quantity||1),0);
-});
+document.getElementById("supportBtn").onclick = ()=>supportPanel.style.display="block";
+document.getElementById("closeSupport").onclick = ()=>supportPanel.style.display="none";
+
+document.getElementById("sendSupportBtn").onclick = ()=>{
+  sendSupportMessage();
+};
 </script>
 
 </body>
