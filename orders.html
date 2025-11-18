@@ -172,7 +172,21 @@ if (orders.length === 0) {
         <div class="order-date">${order.date}</div>
         ${products}
         <hr style="opacity:.2;margin:10px 0;">
-        <div><b>Total:</b> ${order.total}€</div>
+        <!-- ADDRESS BLOCK -->
+<hr style="opacity:0.2;margin:10px 0;">
+
+<div class="order-address">
+  <b>Shipping Address:</b><br>
+  ${order.contact.name}<br>
+  ${order.contact.address}<br>
+  ${order.contact.city}, ${order.contact.country}<br>
+  <span style="opacity:.8">Phone: ${order.contact.phone}</span>
+</div>
+
+<hr style="opacity:0.2;margin:10px 0;">
+
+<div><b>Total:</b> ${order.total}€</div>
+
       </div>
     `;
   });
