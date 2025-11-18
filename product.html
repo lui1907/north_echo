@@ -319,5 +319,65 @@ function logout(){
 }
 </script>
 
+<script>
+// ===================== SUPPORT PANEL =====================
+const supportBtn    = document.getElementById("supportBtn");
+const supportPanel  = document.getElementById("supportPanel");
+const closeSupport  = document.getElementById("closeSupport");
+const sendSupportBtn= document.getElementById("sendSupportBtn");
+
+// Aç / Kapat
+if (supportBtn){
+  supportBtn.onclick = () => {
+    supportPanel.style.display =
+      (supportPanel.style.display === "block") ? "none" : "block";
+  };
+}
+if (closeSupport){
+  closeSupport.onclick = () => supportPanel.style.display = "none";
+}
+
+// Toast (ortada çıkıyor)
+function showToast(msg,type="info"){
+  const t = document.createElement("div");
+  t.className = "toast " + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2000);
+}
+
+// Confirm penceresi
+function confirmBox(msg,callback){
+  const c = document.createElement("div");
+  c.className = "confirmBox";
+  c.innerHTML = `
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+
+  setTimeout(()=>c.classList.add("show"),50);
+
+  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
+  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+}
+
+// SEND SUPPORT
+if (sendSupportBtn){
+  sendSupportBtn.onclick = () => {
+    confirmBox("Are you sure you want to send this message?", (yes)=>{
+      if(yes) sendSupportMessage();
+    });
+  };
+}
+</script>
+
+  
 </body>
 </html>
