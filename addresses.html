@@ -1,135 +1,129 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>My Addresses — North Echo</title>
 
-<link rel="stylesheet" href="style.css"/>
-<link rel="stylesheet" href="support.css"/>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="support.css">
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="support.js" defer></script>
 
 <style>
-body{
-  background:#000;
-  color:white;
-  font-family:'Poppins',sans-serif;
-  margin:0;
-}
+body { color:white; margin:0; padding:0; }
 
-.address-wrapper{
+/* WRAPPER */
+.addr-wrapper{
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
-
-.address-card{
-  width:750px;
+.addr-card{
+  width:700px;
   background:#0d0d0d;
   border:1px solid #222;
-  border-radius:16px;
+  border-radius:18px;
   padding:25px;
 }
 
-.address-card h2{
-  margin-top:0;
-}
-
+/* ADDRESS BOX */
 .address-box{
   background:#141414;
   border:1px solid #333;
   border-radius:12px;
   padding:15px;
-  margin-bottom:15px;
+  margin-bottom:18px;
 }
-
+.address-box .line{
+  margin-bottom:6px;
+  font-size:14px;
+}
 .addr-actions{
-  margin-top:12px;
   display:flex;
   gap:10px;
+  margin-top:10px;
 }
-
-.addr-actions button{
-  padding:7px 12px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.set-default{
+.addr-btn{
   background:#00aa66;
+  padding:7px 12px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
   color:white;
 }
-.delete-btn{
+.del-btn{
   background:#aa0000;
-  color:white;
+}
+.default-badge{
+  background:#00aa66;
+  padding:3px 7px;
+  font-size:12px;
+  border-radius:6px;
+  margin-left:7px;
+}
+.no-addr{
+  text-align:center;
+  opacity:0.7;
+  margin-top:20px;
 }
 
-.add-address-box{
-  margin-top:20px;
-  padding:15px;
-  border-radius:12px;
+/* ADD NEW FORM */
+.add-form{
+  margin-top:25px;
+  padding-top:20px;
+  border-top:1px solid #222;
+}
+.add-form input{
+  width:100%;
+  margin-bottom:12px;
+  padding:10px;
+  border-radius:10px;
   background:#111;
   border:1px solid #333;
+  color:white;
 }
 
-.add-address-box input, .add-address-box textarea{
-  width:100%;
-  background:#0d0d0d;
-  border:1px solid #333;
-  padding:12px;
-  border-radius:8px;
-  color:white;
-  margin-bottom:10px;
-}
-.add-btn{
-  width:100%;
-  background:#00aa66;
-  color:white;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-}
-
+/* TOAST + CONFIRM BOX */
 .toast,.confirmBox{
   position:fixed;
   top:50%;left:50%;
-  transform:translate(-50%,-50%) scale(.9);
-  background:#141414;
+  transform:translate(-50%,-50%) scale(.8);
+  background:rgba(20,20,20,.95);
   border:1px solid #333;
   padding:16px 22px;
-  color:white;
   border-radius:10px;
-  opacity:0;transition:all .3s;
+  color:white;
+  opacity:0;transition:.3s;
   z-index:99999;
-  font-size:15px;
-  text-align:center;
 }
 .toast.show,.confirmBox.show{
   opacity:1;transform:translate(-50%,-50%) scale(1);
 }
+.toast.success{color:#00ff99;border-color:#00aa66;}
+.toast.error{color:#ff6666;border-color:#aa0000;}
 
 .confirm-buttons{
-  display:flex;
-  justify-content:center;
-  gap:10px;
   margin-top:12px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
 }
 .confirm-buttons button{
-  padding:8px 14px;
+  background:#00aa66;
   border:none;
+  padding:8px 14px;
   border-radius:6px;
+  color:white;
   cursor:pointer;
+}
+.confirm-buttons .cancel{
+  background:#555;
   color:white;
 }
-.confirm-buttons .ok{ background:#00aa66; }
-.confirm-buttons .cancel{ background:#444; }
 </style>
 </head>
 
@@ -141,10 +135,11 @@ body{
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+    <a href="cart.html" class="cart-icon">
+      🛒 <span id="cartCount">0</span>
+    </a>
 
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -161,31 +156,27 @@ body{
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
-  <a href="orders.html">My Orders</a>
-  <a href="addresses.html">Addresses</a>
 </div>
 
 <!-- PAGE -->
-<div class="address-wrapper">
-  <div class="address-card">
+<div class="addr-wrapper">
+  <div class="addr-card">
     <h2>My Addresses</h2>
+    <div id="addrList"></div>
 
-    <div id="addressList"></div>
-
-    <div class="add-address-box">
+    <div class="add-form">
       <h3>Add New Address</h3>
-
-      <input id="add_country" placeholder="Country">
-      <input id="add_city" placeholder="City">
-      <textarea id="add_full" placeholder="Full Address"></textarea>
-
-      <button class="add-btn" onclick="addAddress()">Add Address</button>
+      <input id="a_name" placeholder="Full Name">
+      <input id="a_country" placeholder="Country">
+      <input id="a_city" placeholder="City">
+      <input id="a_line" placeholder="Full Address">
+      <button class="addr-btn" onclick="addAddress()">Add Address</button>
     </div>
   </div>
 </div>
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
+<div id="supportBtn">
   <img src="assets/support.svg">
 </div>
 
@@ -193,14 +184,15 @@ body{
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
+    <button id="closeSupport">✕</button>
   </div>
+
   <div class="sup-body">
     <label>Your Name *</label>
-    <input id="supName" type="text">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input id="supEmail" type="email">
+    <input type="email" id="supEmail">
 
     <label>Category *</label>
     <select id="supCategory">
@@ -216,128 +208,159 @@ body{
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<!-- SUPPORT TOGGLE -->
-<script>
-function toggleSupportPanel(){
-  const p = document.getElementById("supportPanel");
-  p.style.display = (p.style.display === "block") ? "none" : "block";
+<!-- JS -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+let user = localStorage.getItem("loggedInUser");
+if(!user) window.location.href="login.html";
+
+/* TOAST */
+function showToast(msg,type="info"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2000);
 }
-</script>
 
-<!-- MAIN SCRIPT -->
-<script>
-const user = localStorage.getItem("loggedInUser");
-if (!user) location.href = "login.html";
-
-/* ---------------- POPUP ---------------- */
-function confirmBox(msg, callback){
-  const c = document.createElement("div");
-  c.className = "confirmBox";
-  c.innerHTML = `
+/* CONFIRM */
+function confirmBox(msg,cb){
+  const c=document.createElement("div");
+  c.className="confirmBox";
+  c.innerHTML=`
     <div>${msg}</div>
     <div class="confirm-buttons">
       <button class="ok">Yes</button>
       <button class="cancel">No</button>
     </div>`;
   document.body.appendChild(c);
-  setTimeout(()=>c.classList.add("show"),20);
-
-  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
-  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+  setTimeout(()=>c.classList.add("show"),50);
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true)};
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false)};
 }
 
-/* ---------------- ADDRESS LIST ---------------- */
-function loadAddresses(){
-  const list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
-  const box = document.getElementById("addressList");
-  box.innerHTML = "";
+/* LOAD ADDRESSES */
+async function loadAddresses(){
+  const { data } = await supabase
+    .from("addresses")
+    .select("*")
+    .eq("username", user)
+    .order("is_default", { ascending:false });
 
-  list.forEach((a,i)=>{
+  const box = document.getElementById("addrList");
+  box.innerHTML="";
+
+  if(!data || data.length===0){
+    box.innerHTML=`<p class="no-addr">No saved addresses.</p>`;
+    return;
+  }
+
+  data.forEach(a=>{
     box.innerHTML += `
       <div class="address-box">
-        <b>${a.country}</b>, ${a.city}<br>
-        ${a.full}
-        ${a.default ? "<p style='color:#00ff99;margin-top:8px;'>✔ Default Address</p>" : ""}
-        <div class="addr-actions">
-          <button class="set-default" onclick="setDefault(${i})">Set Default</button>
-          <button class="delete-btn" onclick="deleteAddress(${i})">Delete</button>
+        <div class="line"><b>${a.full_name}</b>
+          ${a.is_default ? `<span class="default-badge">Default</span>` : ""}
         </div>
-      </div>`;
+        <div class="line">${a.country} / ${a.city}</div>
+        <div class="line">${a.address}</div>
+
+        <div class="addr-actions">
+          <button class="addr-btn" onclick="setDefault(${a.id})">Set Default</button>
+          <button class="del-btn addr-btn" onclick="deleteAddr(${a.id})">Delete</button>
+        </div>
+      </div>
+    `;
   });
 }
 loadAddresses();
 
-/* -------------- ADD NEW -------------- */
-function addAddress(){
-  let c = add_country.value.trim();
-  let ci = add_city.value.trim();
-  let f = add_full.value.trim();
-  if(!c || !ci || !f) return alert("Fill all fields");
+/* ADD ADDRESS */
+async function addAddress(){
+  let fn=a_name.value, co=a_country.value, ci=a_city.value, ad=a_line.value;
 
-  let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
+  if(!fn || !co || !ci || !ad){
+    showToast("Fill all fields ❌","error");
+    return;
+  }
 
-  list.push({
-    country:c,
+  await supabase.from("addresses").insert([{
+    username:user,
+    full_name:fn,
+    country:co,
     city:ci,
-    full:f,
-    default: list.length === 0
-  });
+    address:ad,
+    is_default:false
+  }]);
 
-  localStorage.setItem("addresses_" + user, JSON.stringify(list));
-  loadAddresses();
-
-  add_country.value = "";
-  add_city.value = "";
-  add_full.value = "";
-}
-
-/* -------------- DEFAULT SET -------------- */
-function setDefault(i){
-  let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
-  list.forEach(a => a.default = false);
-  list[i].default = true;
-  localStorage.setItem("addresses_" + user, JSON.stringify(list));
+  showToast("Address added ✔","success");
   loadAddresses();
 }
 
-/* -------------- DELETE -------------- */
-function deleteAddress(i){
-  confirmBox("Delete this address?", (ok)=>{
-    if(!ok) return;
+/* SET DEFAULT */
+async function setDefault(id){
+  await supabase.from("addresses").update({ is_default:false }).eq("username",user);
+  await supabase.from("addresses").update({ is_default:true }).eq("id",id);
 
-    let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
-    list.splice(i,1);
+  showToast("Default address set ✔","success");
+  loadAddresses();
+}
 
-    if(list.length > 0 && !list.some(a=>a.default)){
-      list[0].default = true;
-    }
-
-    localStorage.setItem("addresses_" + user, JSON.stringify(list));
+/* DELETE */
+function deleteAddr(id){
+  confirmBox("Delete this address?", async yes=>{
+    if(!yes) return;
+    await supabase.from("addresses").delete().eq("id",id);
+    showToast("Address deleted ✔","success");
     loadAddresses();
   });
 }
 
-/* -------------- AVATAR MENU -------------- */
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
-};
+/* SUPPORT BUTTON */
+import supportPopup from "./support.js";
+supportPopup();
+</script>
 
-/* -------------- LOGOUT -------------- */
+<!-- CART COUNT -->
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const cart=JSON.parse(localStorage.getItem("cart"))||[];
+  const total=cart.reduce((n,i)=>n + (i.quantity||1),0);
+  const el=document.getElementById("cartCount");
+  if(el) el.textContent=total;
+});
+</script>
+
+<!-- AVATAR MENU -->
+<script>
 function logout(){
   localStorage.removeItem("loggedInUser");
-  location.href = "login.html";
+  window.location.href="login.html";
 }
+const avatar=document.getElementById("userAvatar");
+const menu=document.getElementById("avatarMenu");
 
-/* -------------- CART COUNT -------------- */
-document.addEventListener("DOMContentLoaded", ()=> {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const el = document.getElementById("cartCount");
-  el.textContent = cart.reduce((sum,i)=> sum + (i.quantity || 1),0);
+avatar.onclick=e=>{
+  e.stopPropagation();
+  menu.style.display = (menu.style.display==="flex") ? "none" : "flex";
+};
+document.addEventListener("click",e=>{
+  if(menu && !menu.contains(e.target) && e.target!==avatar){
+    menu.style.display="none";
+  }
 });
 </script>
 
