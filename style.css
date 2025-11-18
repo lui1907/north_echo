@@ -1101,3 +1101,86 @@ body.light .footer-link:hover {
     background: #222;
     border-color: #555;
 }
+<style>
+/* Toast */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.9);
+  background: rgba(20,20,20,.95);
+  border: 1px solid #333;
+  padding: 16px 22px;
+  color: white;
+  border-radius: 10px;
+  opacity: 0;
+  transition: all .3s;
+  z-index: 99999;
+  font-size: 15px;
+  text-align: center;
+  min-width: 220px;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.toast.success {
+  border-color: #00aa66;
+  color: #00ff99;
+}
+
+.toast.error {
+  border-color: #aa0000;
+  color: #ff5555;
+}
+
+/* Confirm Popup */
+.confirmBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.9);
+  background: rgba(20,20,20,.95);
+  border: 1px solid #444;
+  padding: 20px 25px;
+  color: white;
+  border-radius: 12px;
+  opacity: 0;
+  transition: all .25s;
+  z-index: 99999;
+  min-width: 260px;
+  text-align: center;
+}
+
+.confirmBox.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.confirm-buttons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.confirm-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirm-buttons .ok {
+  background: #00aa66;
+  color: #fff;
+}
+
+.confirm-buttons .cancel {
+  background: #444;
+  color: #fff;
+}
+</style>
