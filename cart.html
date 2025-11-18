@@ -7,98 +7,31 @@
 
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
+<script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
 
-<link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
-
 <style>
-body{
-  background:#000;
-  color:white;
-  font-family:'Poppins',sans-serif;
-}
-
-.cart-wrapper{
-  max-width:1200px;
-  margin:120px auto 50px auto;
-  padding:20px;
-}
-
-.cart-layout{
-  display:flex;
-  gap:40px;
-}
-
-/* SOL TARAF – ÜRÜN LİSTESİ */
-.cart-products{
-  flex:2;
-}
-
-.cart-item-box{
-  display:flex;
-  gap:15px;
-  background:#0b0b0b;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #222;
-  margin-bottom:15px;
-}
-
-/* Ürün resmi sabit */
-.cart-img{
-  width:120px;
-  height:120px;
-  object-fit:cover;
-  flex-shrink:0;
-  border-radius:8px;
-}
-
-/* Sağdaki ürün yazıları */
-.cart-info h3{
-  margin-top:0;
-  margin-bottom:5px;
-}
-
-.quantity-controls button{
-  padding:6px 12px;
-  cursor:pointer;
-  background:#111;
-  border:1px solid #333;
-  color:white;
-  border-radius:6px;
-}
-
-.quantity-controls span{
-  margin:0 8px;
-}
-
-/* SAĞ TARAF – ÖZET */
-.cart-summary-box{
-  flex:1;
-  background:#0b0b0b;
-  padding:20px;
-  border-radius:12px;
-  border:1px solid #222;
-}
-
-.summary-line,
-.summary-total-line{
-  display:flex;
-  justify-content:space-between;
-  margin:10px 0;
-}
-
-.checkout-final-btn{
-  display:block;
-  text-align:center;
-  background:#fff;
-  color:#000;
-  padding:12px;
-  border-radius:10px;
-  margin-top:15px;
-  font-weight:600;
-}
+  /* Boş sepet uyarı tostu */
+  .cart-toast{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(.9);
+    background:rgba(20,20,20,.96);
+    border:1px solid #333;
+    padding:14px 22px;
+    color:#fff;
+    border-radius:10px;
+    opacity:0;
+    z-index:99999;
+    transition:.25s;
+    font-size:15px;
+    text-align:center;
+  }
+  .cart-toast.show{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
 </style>
 </head>
 
@@ -110,19 +43,17 @@ body{
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
-    <img src="assets/default-avatar.png" class="avatar" id="userAvatar"/>
-
-    <div class="avatar-menu" id="avatarMenu">
-      <a href="profile.html">Profile</a>
-      <a href="settings.html">Settings</a>
-      <a href="#" onclick="logout()" style="color:#ff4444;">Logout</a>
-    </div>
-
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
   </div>
 </header>
+
+<!-- PROFILE DROPDOWN -->
+<div class="avatar-menu" id="avatarMenu">
+  <a href="profile.html">Profile</a>
+  <a href="settings.html">Settings</a>
+  <a href="#" id="logoutLink" class="logout" style="color:#ff4444;">Logout</a>
+</div>
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
@@ -136,14 +67,18 @@ body{
 <!-- CART PAGE -->
 <div class="cart-wrapper">
 
-  <h1 style="text-align:center;">Shopping Cart</h1>
+  <h1 class="cart-title" style="margin-top:90px; text-align:center;">Shopping Cart</h1>
 
   <div class="cart-layout">
 
-    <div class="cart-products" id="cartItems"></div>
+    <!-- SOL: ÜRÜNLER -->
+    <div class="cart-products" id="cartItems">
+      <!-- Ürünler JS ile doldurulacak -->
+    </div>
 
-    <!-- Order Summary -->
+    <!-- SAĞ: ÖZET -->
     <div class="cart-summary-box">
+
       <h2>Order Summary</h2>
 
       <div class="summary-line">
@@ -161,50 +96,59 @@ body{
         <strong id="cartTotal">0€</strong>
       </div>
 
-      <button id="checkoutBtn" class="checkout-final-btn">Go to Checkout →</button>
-    </div>
+      <a href="checkout.html" id="checkoutBtn" class="checkout-final-btn" style="
+        display:block;
+        text-align:center;
+        background:#fff;
+        color:#000;
+        padding:12px;
+        border-radius:10px;
+        margin-top:15px;
+        font-weight:600;
+      ">
+        Go to Checkout →
+      </a>
 
+    </div>
   </div>
 </div>
 
-<!-- CART SCRIPT -->
+<!-- CART FUNCTIONALITY -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const itemsBox = document.getElementById("cartItems");
+  const itemsBox   = document.getElementById("cartItems");
   const subtotalEl = document.getElementById("cartSubtotal");
-  const totalEl = document.getElementById("cartTotal");
+  const totalEl    = document.getElementById("cartTotal");
 
   itemsBox.innerHTML = "";
   let subtotal = 0;
 
+  if (!cart.length) {
+    itemsBox.innerHTML = `
+      <p style="margin-top:20px;color:#aaa;">
+        Your cart is empty.
+      </p>`;
+  }
+
   cart.forEach((item, index) => {
-
-    /* Eski üründe image yoksa boş görünmesin */
-    if(!item.image){
-      item.image = "assets/noimg.png";
-    }
-
-    if(!item.quantity){
-      item.quantity = 1;
-    }
+    const price = parseFloat(item.price) || 0;
+    const qty   = item.quantity ? parseInt(item.quantity) : 1;
 
     itemsBox.innerHTML += `
       <div class="cart-item-box">
 
-        <img src="${item.image}" class="cart-img">
+        <img src="${item.image || 'assets/noimg.png'}" class="cart-img">
 
         <div class="cart-info">
           <h3>${item.name}</h3>
-          <p>Size: ${item.size}</p>
-          <p>${item.price}€</p>
+          <p>Size: ${item.size || '-'}</p>
+          <p>${price}€</p>
 
           <div class="quantity-controls">
             <button onclick="changeQuantity(${index}, -1)">-</button>
-            <span>${item.quantity}</span>
+            <span>${qty}</span>
             <button onclick="changeQuantity(${index}, 1)">+</button>
-
             <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
           </div>
         </div>
@@ -212,75 +156,90 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    subtotal += item.price * item.quantity;
+    subtotal += price * qty;
   });
 
   subtotalEl.textContent = subtotal + "€";
-  totalEl.textContent = subtotal + "€";
+  totalEl.textContent    = subtotal + "€";
 
-  document.getElementById("cartCount").textContent = cart.length;
+  // Checkout tıklandığında sepet boşsa engelle
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  checkoutBtn.addEventListener("click", (e) => {
+    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (!currentCart.length) {
+      e.preventDefault();
+      showCartToast("Your cart is empty 🛒");
+    }
+  });
 });
 
-function changeQuantity(i, amount){
+function changeQuantity(index, amount) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  if (!cart[index]) return;
 
-  cart[i].quantity += amount;
-
-  if(cart[i].quantity <= 0){
-    cart.splice(i, 1);
+  cart[index].quantity = (cart[index].quantity || 1) + amount;
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
   }
-
   localStorage.setItem("cart", JSON.stringify(cart));
   location.reload();
 }
 
-function removeItem(i){
+function removeItem(index) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.splice(i, 1);
+  cart.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
   location.reload();
 }
+
+// Boş sepet uyarı tostu
+function showCartToast(msg){
+  const t = document.createElement("div");
+  t.className = "cart-toast";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),250);
+  },1800);
+}
 </script>
 
-<!-- EMPTY CART CHECKOUT BLOCK -->
-<script>
-document.getElementById("checkoutBtn").addEventListener("click", function(){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  if(cart.length === 0){
-    alert("Your cart is empty!");
-    return;
-  }
-  window.location.href = "checkout.html";
-});
-</script>
-
-<!-- PROFILE MENU -->
+<!-- PROFILE MENU JS -->
 <script>
 const avatar = document.getElementById("userAvatar");
-const menu = document.getElementById("avatarMenu");
+const menu   = document.getElementById("avatarMenu");
+const logoutLink = document.getElementById("logoutLink");
 
-avatar.addEventListener("click", e=>{
-  e.stopPropagation();
-  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-});
+if (avatar && menu) {
+  avatar.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
 
-document.addEventListener("click", e=>{
-  if(!menu.contains(e.target)) menu.style.display="none";
-});
-</script>
+  document.addEventListener("click", (e) => {
+    if (!menu.contains(e.target)) {
+      menu.style.display = "none";
+    }
+  });
+}
 
-<script>
-function logout(){
-  localStorage.removeItem("loggedInUser");
-  window.location.href="login.html";
+if (logoutLink) {
+  logoutLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "login.html";
+  });
 }
 </script>
 
-<!-- SUPPORT BUTTON -->
+<!-- 💬 SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="assets/support.svg">
+  <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
 
+<!-- 💬 SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -289,20 +248,34 @@ function logout(){
 
   <div class="sup-body">
     <label>Your Name *</label>
-    <input type="text" id="supName">
+    <input type="text" id="supName" placeholder="John Doe">
 
     <label>Email *</label>
-    <input type="email" id="supEmail">
+    <input type="email" id="supEmail" placeholder="your@mail.com">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="Website">Website Issue</option>
+      <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
+      <option value="Other">Other</option>
+    </select>
 
     <label>Your Message *</label>
-    <textarea id="supMsg"></textarea>
+    <textarea id="supMsg" placeholder="Write your message..."></textarea>
 
-    <label>Attach File</label>
-    <input type="file" id="supFile">
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+    <button class="sup-send" onclick="sendSupportMessage()">
+      Send Message →
+    </button>
   </div>
 </div>
+
+<!-- SUPPORT CSS + JS (eski çalışan sürüm) -->
+<link rel="stylesheet" href="support.css">
+<script src="support.js"></script>
 
 </body>
 </html>
