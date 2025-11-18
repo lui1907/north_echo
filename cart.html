@@ -7,43 +7,10 @@
 
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
-<script src="cart.js" defer></script>
+<script src="theme.js" defer></script>
 
+<!-- SUPPORT STYLES -->
 <link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
-
-<style>
-/* Support override */
-#supportBtn{
-  position:fixed;
-  bottom:30px;
-  right:30px;
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  background:#00aa66;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  z-index:9999;
-}
-#supportBtn img{width:26px;height:26px;}
-
-#supportPanel{
-  position:fixed;
-  bottom:95px;
-  right:40px;
-  width:320px;
-  background:#111;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:15px;
-  display:none;
-  z-index:9998;
-}
-</style>
-
 </head>
 
 <body>
@@ -54,9 +21,13 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
+    <!-- Submit kaldırıldı -->
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <!-- HER ZAMAN DEFAULT AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
+    <!-- PROFIL MENÜSÜ -->
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -76,14 +47,13 @@
 
 <!-- CART PAGE -->
 <div class="cart-wrapper">
-
   <h1 class="cart-title" style="margin-top:90px; text-align:center;">Shopping Cart</h1>
 
   <div class="cart-layout">
-    <!-- SOL -->
+    <!-- SOL: ÜRÜNLER -->
     <div class="cart-products" id="cartItems"></div>
 
-    <!-- SAĞ -->
+    <!-- SAĞ: ÖZET -->
     <div class="cart-summary-box">
       <h2>Order Summary</h2>
 
@@ -102,104 +72,116 @@
         <strong id="cartTotal">0€</strong>
       </div>
 
-      <button id="checkoutBtn" class="checkout-final-btn" style="margin-top:15px;">
+      <a href="checkout.html" class="checkout-final-btn" id="checkoutBtn" style="
+        display:block;
+        text-align:center;
+        background:#fff;
+        color:#000;
+        padding:12px;
+        border-radius:10px;
+        margin-top:15px;
+        font-weight:600;
+      ">
         Go to Checkout →
-      </button>
+      </a>
     </div>
   </div>
 </div>
 
-<!-- CART SCRIPT -->
+<!-- CART FUNCTIONALITY -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const itemsBox = document.getElementById("cartItems");
-    const subtotalEl = document.getElementById("cartSubtotal");
-    const totalEl = document.getElementById("cartTotal");
-    const cartCount = document.getElementById("cartCount");
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const itemsBox  = document.getElementById("cartItems");
+  const subtotalEl = document.getElementById("cartSubtotal");
+  const totalEl    = document.getElementById("cartTotal");
 
-    // CART COUNT FIX
-    let totalQuantity = cart.reduce((sum, i) => sum + i.quantity, 0);
-    cartCount.textContent = totalQuantity;
+  itemsBox.innerHTML = "";
+  let subtotal = 0;
 
-    itemsBox.innerHTML = "";
-    let subtotal = 0;
+  cart.forEach((item, index) => {
+    itemsBox.innerHTML += `
+      <div class="cart-item-box">
+        <img src="${item.image}" class="cart-img">
+        <div class="cart-info">
+          <h3>${item.name}</h3>
+          <p>Size: ${item.size}</p>
+          <p>${item.price}€</p>
 
-    cart.forEach((item, index) => {
-        itemsBox.innerHTML += `
-          <div class="cart-item-box">
-            <img src="${item.image}" class="cart-img">
-            <div class="cart-info">
-              <h3>${item.name}</h3>
-              <p>Size: ${item.size}</p>
-              <p>${item.price}€</p>
-
-              <div class="quantity-controls">
-                <button onclick="changeQuantity(${index}, -1)">-</button>
-                <span>${item.quantity}</span>
-                <button onclick="changeQuantity(${index}, 1)">+</button>
-
-                <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
-              </div>
-            </div>
+          <div class="quantity-controls">
+            <button onclick="changeQuantity(${index}, -1)">-</button>
+            <span>${item.quantity}</span>
+            <button onclick="changeQuantity(${index}, 1)">+</button>
+            <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
           </div>
-        `;
-        subtotal += item.price * item.quantity;
-    });
+        </div>
+      </div>
+    `;
+    subtotal += item.price * item.quantity;
+  });
 
-    subtotalEl.textContent = subtotal + "€";
-    totalEl.textContent = subtotal + "€";
+  subtotalEl.textContent = subtotal + "€";
+  totalEl.textContent    = subtotal + "€";
+
+  // Sepet boşken checkout engelle
+  const btn = document.getElementById("checkoutBtn");
+  btn.addEventListener("click", (e) => {
+    let cartNow = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cartNow.length === 0) {
+      e.preventDefault();
+      alert("Your cart is empty.");
+    }
+  });
 });
 
-// CHANGE QUANTITY
 function changeQuantity(index, amount) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart[index].quantity += amount;
-
-    if (cart[index].quantity <= 0) cart.splice(index, 1);
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    location.reload();
-}
-
-// REMOVE ITEM
-function removeItem(index) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart[index].quantity += amount;
+  if (cart[index].quantity <= 0) {
     cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    location.reload();
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  location.reload();
 }
 
-// CHECKOUT BUTTON (SEPET BOŞSA UYARI)
-document.getElementById("checkoutBtn").onclick = () => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-    window.location.href = "checkout.html";
-};
+function removeItem(index) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  location.reload();
+}
 </script>
 
-<!-- PROFILE MENU -->
+<!-- PROFIL MENÜ JS (DEFAULT AVATAR KALIR) -->
 <script>
 const avatar = document.getElementById("userAvatar");
 const menu = document.getElementById("avatarMenu");
 
-avatar.addEventListener("click", e=>{
-  e.stopPropagation();
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+if (avatar) {
+  avatar.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
+}
+
+document.addEventListener("click", (e) => {
+  if (menu && !menu.contains(e.target) && e.target !== avatar) {
+    menu.style.display = "none";
+  }
 });
-document.addEventListener("click", e=>{
-  if(!menu.contains(e.target)) menu.style.display="none";
-});
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
 </script>
 
-<!-- SUPPORT BUTTON -->
+<!-- 💬 SUPPORT BUTTON -->
 <div id="supportBtn">
-  <img src="assets/support.svg">
+  <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
 
+<!-- 💬 SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -207,21 +189,11 @@ document.addEventListener("click", e=>{
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
     <input type="text" id="supName">
 
     <label>Email *</label>
     <input type="email" id="supEmail">
-
-    <label>Category *</label>
-    <select id="supCategory">
-      <option value="Cart">Cart Issue</option>
-      <option value="Website">Website Issue</option>
-      <option value="Product">Product Info</option>
-      <option value="Design">Design Request</option>
-      <option value="Other">Other</option>
-    </select>
 
     <label>Your Message *</label>
     <textarea id="supMsg"></textarea>
@@ -229,17 +201,120 @@ document.addEventListener("click", e=>{
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<script>
-document.getElementById("supportBtn").onclick = ()=>{
-  supportPanel.style.display = supportPanel.style.display==="block" ? "none" : "block";
+<!-- SUPPORT LOGIC (SAYFAYA ÖZEL, ÇALIŞAN) -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const supportBtn   = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupport  = document.getElementById("sendSupportBtn");
+
+supportBtn.onclick = () => {
+  supportPanel.style.display =
+    supportPanel.style.display === "block" ? "none" : "block";
 };
-document.getElementById("closeSupport").onclick = ()=>{
-  supportPanel.style.display="none";
+closeSupport.onclick = () => supportPanel.style.display = "none";
+
+// Toast
+function showToast(msg, type="info"){
+  const t = document.createElement("div");
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
+
+// Confirm
+function confirmBox(msg, cb){
+  const c = document.createElement("div");
+  c.className = "confirmBox";
+  c.innerHTML = `
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+  c.querySelector(".ok").onclick = ()=>{ c.remove(); cb(true); };
+  c.querySelector(".cancel").onclick = ()=>{ c.remove(); cb(false); };
+}
+
+sendSupport.onclick = () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if (yes) sendSupportMessage();
+  });
 };
+
+async function sendSupportMessage(){
+  const name  = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const msg   = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if (!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+
+  if (fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safeName = `${Date.now()}_${f.name.replace(/\s+/g,"_").replace(/[^\w.-]/g,"")}`;
+
+    const { error: uploadError } = await supabase
+      .storage.from("uploads")
+      .upload(`public/${safeName}`, f, { cacheControl:"3600", upsert:false });
+
+    if (uploadError){
+      console.error(uploadError);
+      showToast("File upload failed ❌","error");
+      return;
+    }
+
+    fileUrl =
+      `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safeName}`;
+  }
+
+  const { error: insertError } = await supabase
+    .from("messages")
+    .insert([{
+      name,
+      email,
+      category: "Cart",
+      message: msg,
+      file: fileUrl,
+      date: new Date().toLocaleString(),
+      read: false
+    }]);
+
+  if (insertError){
+    console.error(insertError);
+    showToast("Message failed ❌","error");
+  } else {
+    showToast("Message sent ✅","success");
+    supportPanel.style.display = "none";
+    document.getElementById("supName").value = "";
+    document.getElementById("supEmail").value = "";
+    document.getElementById("supMsg").value = "";
+    document.getElementById("supFile").value = "";
+  }
+}
 </script>
 
 </body>
