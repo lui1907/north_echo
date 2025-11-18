@@ -15,15 +15,12 @@
 <style>
 body { color:white; margin:0; padding:0; }
 
-/* WRAPPER */
 .addresses-wrapper{
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
-
-/* MAIN CARD */
 .addresses-card{
   width:700px;
   background:#0d0d0d;
@@ -31,16 +28,12 @@ body { color:white; margin:0; padding:0; }
   border-radius:18px;
   padding:25px;
 }
-
-/* HEADER */
 .addr-top-line{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin-bottom:15px;
 }
-
-/* ADD BUTTON */
 .add-btn{
   padding:8px 14px;
   background:#000;
@@ -51,7 +44,6 @@ body { color:white; margin:0; padding:0; }
 }
 .add-btn:hover{ background:#111; }
 
-/* ADDRESS ITEM */
 .addr-box{
   background:#141414;
   border:1px solid #333;
@@ -60,77 +52,70 @@ body { color:white; margin:0; padding:0; }
   margin-bottom:15px;
 }
 .addr-header{ display:flex; justify-content:space-between; }
-
-/* DEFAULT BADGE */
 .addr-default-tag{
   background:#00aa66;
-  padding:2px 8px;
+  padding:3px 8px;
   border-radius:8px;
   font-size:11px;
   color:black;
-  margin-left:8px;
 }
 
 .addr-actions button{
   padding:6px 12px;
-  border-radius:6px;
   background:#000;
   border:1px solid #333;
-  color:#fff;
+  border-radius:6px;
+  color:white;
   cursor:pointer;
 }
 .addr-actions button:hover{ background:#111; }
 
-.no-address{ text-align:center; opacity:.7; }
-
-/* POPUP */
 .address-popup{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
   background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
   z-index:9999;
 }
 .address-popup-inner{
   width:350px;
   background:#111;
+  border:1px solid #333;
   border-radius:14px;
   padding:20px;
-  border:1px solid #333;
 }
 .address-popup-inner input,
 .address-popup-inner textarea{
   width:100%;
-  padding:9px;
   margin-bottom:10px;
+  padding:9px;
   background:#1a1a1a;
   color:white;
   border:1px solid #333;
   border-radius:8px;
 }
 
-/* TOAST / CONFIRM */
 .toast,.confirmBox{
   position:fixed;
-  top:50%; left:50%;
+  top:50%;left:50%;
   transform:translate(-50%,-50%) scale(.8);
   opacity:0;
+  transition:.25s;
   background:#111;
-  color:white;
   border:1px solid #333;
-  padding:15px 20px;
+  padding:15px 22px;
   border-radius:12px;
   z-index:99999;
-  transition:.25s;
+  color:white;
 }
 .toast.show,.confirmBox.show{
   opacity:1;
   transform:translate(-50%,-50%) scale(1);
 }
-.toast.error{ color:#ff6666; border-color:#aa0000; }
-.toast.success{ color:#00ff99; border-color:#00aa66; }
+.toast.error{ color:#ff6666;border-color:#aa0000; }
+.toast.success{ color:#00ff99;border-color:#00aa66; }
 
 .confirm-buttons{
   margin-top:12px;
@@ -152,15 +137,14 @@ body { color:white; margin:0; padding:0; }
 
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
@@ -171,7 +155,6 @@ body { color:white; margin:0; padding:0; }
   </div>
 </header>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -182,22 +165,18 @@ body { color:white; margin:0; padding:0; }
   <a href="addresses.html">Addresses</a>
 </div>
 
-<!-- PAGE CONTENT -->
 <div class="addresses-wrapper">
   <div class="addresses-card">
-
     <div class="addr-top-line">
       <h2>My Addresses</h2>
       <button class="add-btn" id="openAddPopup">+ Add Address</button>
     </div>
 
     <div id="addressList"></div>
-
   </div>
 </div>
 
-<!-- POPUP -->
-<div id="addressPopup" class="address-popup">
+<div class="address-popup" id="addressPopup">
   <div class="address-popup-inner">
     <h3 id="popupTitle">Add Address</h3>
 
@@ -229,33 +208,29 @@ body { color:white; margin:0; padding:0; }
 </div>
 
 <!-- SUPPORT PANEL (DEĞİŞMEDİ) -->
-<div id="supportPanel">… (SENDEKİYLE AYNI — HİÇBİR ŞEY DEĞİŞTİRİLMEDİ) …</div>
+<div id="supportPanel"> … SENDEKİYLE AYNI … </div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabase = createClient(
   "https://xedfviwffpsvbmyqzoof.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 );
 
+// USER CHECK
 const username = localStorage.getItem("loggedInUser");
-if(!username) window.location.href = "login.html";
+if(!username) window.location.href="login.html";
 
-/* DOM */
-const list = document.getElementById("addressList");
-const pop = document.getElementById("addressPopup");
-const title = document.getElementById("popupTitle");
-
-let editId = null;
-
-/* LOAD ADDRESSES */
+// LOAD ADDRESSES
 async function loadAddresses(){
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("addresses")
     .select("*")
     .eq("username", username)
     .order("created_at", { ascending:false });
+
+  const list = document.getElementById("addressList");
 
   if(!data || data.length === 0){
     list.innerHTML = `<p class="no-address">You have no saved addresses yet.</p>`;
@@ -280,32 +255,31 @@ async function loadAddresses(){
       </div>
     </div>
   `).join("");
+
 }
 loadAddresses();
 
-/* POPUP AÇ */
+// POPUP
+const pop = document.getElementById("addressPopup");
 document.getElementById("openAddPopup").onclick = ()=>{
   editId = null;
-  title.textContent = "Add Address";
-
-  a_fullname.value="";
-  a_phone.value="";
-  a_country.value="";
-  a_city.value="";
+  popupTitle.textContent="Add Address";
+  a_fullname.value=""; a_phone.value="";
+  a_country.value=""; a_city.value="";
   a_address.value="";
-
   pop.style.display="flex";
 };
+document.getElementById("cancelPopup").onclick=()=> pop.style.display="none";
 
-document.getElementById("cancelPopup").onclick = ()=> pop.style.display="none";
+let editId=null;
 
-/* SAVE */
+// SAVE
 document.getElementById("saveAddressBtn").onclick = async ()=>{
-  const fullname = a_fullname.value.trim();
-  const phone = a_phone.value.trim();
-  const country = a_country.value.trim();
-  const city = a_city.value.trim();
-  const address = a_address.value.trim();
+  const fullname=a_fullname.value.trim();
+  const phone=a_phone.value.trim();
+  const country=a_country.value.trim();
+  const city=a_city.value.trim();
+  const address=a_address.value.trim();
 
   if(!fullname || !phone || !country || !city || !address){
     toast("Please fill all fields ❌","error");
@@ -313,12 +287,9 @@ document.getElementById("saveAddressBtn").onclick = async ()=>{
   }
 
   if(!editId){
-    await supabase.from("addresses").insert([{ 
-      username, fullname, phone, country, city, address, is_default:false 
-    }]);
+    await supabase.from("addresses").insert([{ username, fullname, phone, country, city, address, is_default:false }]);
     toast("Address added ✓","success");
-  } 
-  else {
+  } else {
     await supabase.from("addresses")
       .update({ fullname, phone, country, city, address })
       .eq("id", editId)
@@ -331,57 +302,50 @@ document.getElementById("saveAddressBtn").onclick = async ()=>{
   loadAddresses();
 };
 
-/* EDIT */
-window.editAddr = async function(id){
+// EDIT
+window.editAddr=async(id)=>{
   const { data } = await supabase
     .from("addresses")
     .select("*")
     .eq("id", id)
     .single();
 
-  editId = id;
+  editId=id;
 
-  title.textContent = "Edit Address";
-  a_fullname.value = data.fullname;
-  a_phone.value = data.phone;
-  a_country.value = data.country;
-  a_city.value = data.city;
-  a_address.value = data.address;
+  popupTitle.textContent="Edit Address";
+  a_fullname.value=data.fullname;
+  a_phone.value=data.phone;
+  a_country.value=data.country;
+  a_city.value=data.city;
+  a_address.value=data.address;
 
   pop.style.display="flex";
 };
 
-/* DELETE */
-window.delAddr = function(id){
-  confirmBox("Delete address?", async yes=>{
+// DELETE
+window.delAddr=(id)=>{
+  confirmBox("Delete?", async yes=>{
     if(!yes) return;
-
-    await supabase.from("addresses")
-      .delete()
-      .eq("id", id)
-      .eq("username", username);
-
+    await supabase.from("addresses").delete().eq("id", id).eq("username", username);
     toast("Deleted ✓","success");
     loadAddresses();
   });
 };
 
-/* SET DEFAULT */
-window.setDefault = async function(id){
+// SET DEFAULT
+window.setDefault=async(id)=>{
   await supabase.from("addresses").update({ is_default:false }).eq("username", username);
   await supabase.from("addresses").update({ is_default:true }).eq("id", id);
-
-  toast("Default updated ✓","success");
+  toast("Default updated","success");
   loadAddresses();
 };
 
-/* TOAST */
+// TOAST
 function toast(msg,type){
-  const t = document.createElement("div");
-  t.className = `toast ${type}`;
-  t.textContent = msg;
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
   document.body.appendChild(t);
-
   setTimeout(()=>t.classList.add("show"),50);
   setTimeout(()=>{
     t.classList.remove("show");
@@ -389,11 +353,11 @@ function toast(msg,type){
   },2500);
 }
 
-/* CONFIRM */
+// CONFIRM
 function confirmBox(msg,cb){
-  const el = document.createElement("div");
+  const el=document.createElement("div");
   el.className="confirmBox";
-  el.innerHTML = `
+  el.innerHTML=`
     <div>${msg}</div>
     <div class="confirm-buttons">
       <button class="ok">Yes</button>
@@ -406,6 +370,35 @@ function confirmBox(msg,cb){
   el.querySelector(".ok").onclick=()=>{ el.remove(); cb(true); };
   el.querySelector(".cancel").onclick=()=>{ el.remove(); cb(false); };
 }
+
+/* SUPPORT BUTTON FIX */
+document.getElementById("supportBtn").onclick = ()=>{
+  const panel=document.getElementById("supportPanel");
+  panel.style.display = (panel.style.display==="block") ? "none" : "block";
+};
+document.getElementById("closeSupport").onclick = ()=>{
+  document.getElementById("supportPanel").style.display="none";
+};
+
+/* AVATAR MENU FIX */
+const avatar = document.getElementById("userAvatar");
+const avatarMenu = document.getElementById("avatarMenu");
+
+avatar.onclick = (e)=>{
+  e.stopPropagation();
+  avatarMenu.style.display = (avatarMenu.style.display==="flex") ? "none" : "flex";
+};
+document.addEventListener("click",(e)=>{
+  if(!avatarMenu.contains(e.target) && e.target!==avatar){
+    avatarMenu.style.display="none";
+  }
+});
+
+/* LOGOUT */
+window.logout=function(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href="login.html";
+};
 </script>
 
 </body>
