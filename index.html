@@ -204,5 +204,24 @@ async function sendMessage(){
 }
 </script>
 
+<script>
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+if (avatar) {
+  avatar.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  });
+}
+
+document.addEventListener("click", (e) => {
+  if (menu && !menu.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
+</script>
+
+  
 </body>
 </html>
