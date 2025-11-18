@@ -1,15 +1,16 @@
 <!doctype html>
 <html lang="en">
-  <link rel="stylesheet" href="support.css">
-<script src="support.js" defer></script>
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Checkout — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="support.css">
+
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="support.js" defer></script>
 
 <style>
   .checkout-wrapper {
@@ -38,18 +39,20 @@
     margin-bottom:15px;
   }
 
+  /* ✔ BEYAZ ORDER BUTTON */
   .placeorder-btn {
     padding:14px;
-    background:#00aa66;
-    color:white;
+    background:#fff;
+    color:#000;
     border:none;
     border-radius:10px;
     cursor:pointer;
     margin-top:20px;
     width:100%;
     font-size:16px;
+    font-weight:600;
   }
-  .placeorder-btn:hover { background:#009655; }
+  .placeorder-btn:hover { background:#ddd; }
 
   .checkout-summary {
     flex: 1;
@@ -59,34 +62,28 @@
     border:1px solid #222;
     height:max-content;
   }
-
   .summary-product {
     display:flex;
     gap:12px;
     margin-bottom:15px;
   }
-
   .summary-product img {
     width:70px;
     height:70px;
     border-radius:10px;
     object-fit:cover;
   }
-
   .co-line {
     display:flex;
     justify-content:space-between;
     margin:8px 0;
   }
-  .avatar-menu a {
-  color: white !important;
-}
-.avatar-menu a.logout {
-  color: #ff4444 !important;
-}
 
+  .avatar-menu a { color:white !important; }
+  .avatar-menu a.logout { color:#ff4444 !important; }
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -97,6 +94,7 @@
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
+    <!-- ✔ DEFAULT AVATAR HER ZAMAN -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
@@ -113,13 +111,11 @@
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="sweatshirts.html">Hoodies</a>
+  <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PAGE -->
 <main class="checkout-wrapper">
-
   <div class="checkout-layout">
 
     <!-- FORM -->
@@ -128,24 +124,24 @@
       <h2>Contact Information</h2>
 
       <label>Name</label>
-      <input id="c_name" type="text" placeholder="Your full name" required>
+      <input id="c_name" type="text" required>
 
       <label>Email</label>
-      <input id="c_email" type="email" placeholder="your@mail.com" required>
+      <input id="c_email" type="email" required>
 
       <label>Phone Number</label>
-      <input id="c_phone" type="text" placeholder="+358 xx xxx xx xx" required>
+      <input id="c_phone" type="text" required>
 
       <h2 style="margin-top:30px;">Shipping Address</h2>
 
       <label>Country</label>
-      <input id="c_country" type="text" placeholder="Finland" required>
+      <input id="c_country" type="text" required>
 
       <label>City</label>
-      <input id="c_city" type="text" placeholder="Helsinki" required>
+      <input id="c_city" type="text" required>
 
       <label>Full Address</label>
-      <textarea id="c_address" placeholder="Street, building, apartment number..." required></textarea>
+      <textarea id="c_address" required></textarea>
 
     </form>
 
@@ -171,25 +167,21 @@
         <span id="sumTotal">0€</span>
       </div>
 
-      <!-- ✔ BUTTON TAM BURADA -->
       <button class="placeorder-btn" type="submit" form="checkoutForm">
         Complete Order →
       </button>
 
     </div>
-
   </div>
 </main>
 
 <script>
-/* LOAD ORDER SUMMARY FROM CART */
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const box = document.getElementById("sumItems");
 let subtotal = 0;
 
 cart.forEach(item => {
   subtotal += item.price * item.quantity;
-
   box.innerHTML += `
     <div class="summary-product">
       <img src="${item.image}">
@@ -198,22 +190,23 @@ cart.forEach(item => {
         <p>Size: ${item.size}</p>
         <p>${item.price}€ × ${item.quantity}</p>
       </div>
-    </div>
-  `;
+    </div>`;
 });
 
 document.getElementById("sumSubtotal").textContent = subtotal + "€";
 document.getElementById("sumTotal").textContent = subtotal + "€";
 
 /* COMPLETE ORDER */
-document.getElementById("checkoutForm").addEventListener("submit", function(e) {
+document.getElementById("checkoutForm").addEventListener("submit", e => {
   e.preventDefault();
 
-  const username = localStorage.getItem("loggedInUser");
-  if (!username) return alert("Please login first.");
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) return alert("Please login first.");
 
-  const orderData = {
-    user: username,
+  let orders = JSON.parse(localStorage.getItem("orders_" + user)) || [];
+
+  orders.push({
+    user,
     items: cart,
     total: subtotal,
     contact: {
@@ -225,24 +218,19 @@ document.getElementById("checkoutForm").addEventListener("submit", function(e) {
       address: c_address.value
     },
     date: new Date().toLocaleString()
-  };
+  });
 
-  /* save order */
-  let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
-  orders.push(orderData);
-  localStorage.setItem("orders_" + username, JSON.stringify(orders));
-
-  /* clear cart */
+  localStorage.setItem("orders_" + user, JSON.stringify(orders));
   localStorage.removeItem("cart");
 
   window.location.href = "order-success.html";
 });
 
-/* avatar dropdown */
+/* avatar menu */
 document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
-}
+};
 
 /* logout */
 function logout() {
@@ -250,20 +238,15 @@ function logout() {
   window.location.href = "login.html";
 }
 
-/* load small avatar */
-let un = localStorage.getItem("loggedInUser");
-if (un) {
-  let ud = JSON.parse(localStorage.getItem("user_" + un));
-  if (ud && ud.avatar) document.getElementById("userAvatar").src = ud.avatar;
-}
+/* ✔ DEFAULT AVATAR – KULLANICI RESMİ GETİRME YOK */
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
+<!-- SUPPORT BUTTON -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
+  <img src="assets/support.svg">
 </div>
 
-<!-- 💬 SUPPORT PANEL -->
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -271,31 +254,31 @@ if (un) {
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe">
+    <input id="supName" type="text">
 
     <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com">
+    <input id="supEmail" type="email">
 
     <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <textarea id="supMsg"></textarea>
 
-    <!-- 📎 FILE UPLOAD -->
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <label>Attach File</label>
+    <input type="file" id="supFile">
 
     <button class="sup-send" onclick="sendSupportMessage()">
       Send Message →
     </button>
-
   </div>
 </div>
 
-<!-- SUPPORT CSS + JS -->
-<link rel="stylesheet" href="support.css">
-<script src="support.js"></script>
+<!-- SUPPORT TOGGLE -->
+<script>
+function toggleSupportPanel(){
+  const p = document.getElementById("supportPanel");
+  p.style.display = (p.style.display === "block") ? "none" : "block";
+}
+</script>
 
-  
 </body>
 </html>
