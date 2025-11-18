@@ -13,18 +13,13 @@
 <script src="theme.js" defer></script>
 
 <style>
-
-body { color:white; margin:0; padding:0; }
-
-/* PAGE WRAPPER */
+body { color:white; margin:0; }
 .orders-wrapper {
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
-
-/* MAIN CARD */
 .orders-card {
   width:700px;
   background:#0d0d0d;
@@ -32,8 +27,6 @@ body { color:white; margin:0; padding:0; }
   border-radius:18px;
   padding:25px;
 }
-
-/* ORDER BLOCK */
 .order-box {
   background:#141414;
   border:1px solid #333;
@@ -41,72 +34,37 @@ body { color:white; margin:0; padding:0; }
   padding:15px;
   margin-bottom:18px;
 }
+.order-header { font-size:17px; font-weight:bold; margin-bottom:6px; }
+.order-status { color:#00aa66; font-size:14px; margin-bottom:5px; }
+.order-date { opacity:0.8; font-size:14px; margin-bottom:10px; }
 
-/* ORDER HEADER */
-.order-header {
-  font-size:17px;
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.order-status {
-  color:#00aa66;
-  font-size:14px;
-  margin-bottom:5px;
-}
-
-.order-date {
-  opacity:0.8;
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-/* PRODUCT CARD INSIDE ORDER */
 .order-product {
   display:flex;
-  align-items:center;
   gap:12px;
-  margin-bottom:10px;
   padding:10px;
   background:#1a1a1a;
   border-radius:10px;
+  margin-bottom:8px;
   border:1px solid #2a2a2a;
 }
-
 .order-product img {
-  width:60px;
-  height:60px;
-  object-fit:cover;
+  width:60px; height:60px;
   border-radius:8px;
+  object-fit:cover;
 }
+.order-product-info { font-size:14px; }
 
-.order-product-info {
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-
-.order-product-info span {
-  font-size:14px;
-}
-
-/* EMPTY MESSAGE */
 .no-orders {
   text-align:center;
   margin-top:40px;
   font-size:16px;
   opacity:0.7;
 }
-
-.avatar-menu a { color:white !important; }
-.avatar-menu .logout { color:#ff4444 !important; }
-
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
@@ -124,7 +82,6 @@ body { color:white; margin:0; padding:0; }
   </div>
 </header>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
   <button id="closeMenu" class="close-menu">×</button>
   <a href="index.html">Home</a>
@@ -134,7 +91,6 @@ body { color:white; margin:0; padding:0; }
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PAGE CONTENT -->
 <div class="orders-wrapper">
   <div class="orders-card">
     <h2>My Orders</h2>
@@ -142,62 +98,51 @@ body { color:white; margin:0; padding:0; }
   </div>
 </div>
 
-<script>
-/* LOGIN CHECK */
-let username = localStorage.getItem("loggedInUser");
+<!-- SUPABASE ORDERS -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-/* LOAD USER ORDERS */
-let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
-let container = document.getElementById("ordersList");
+const { data: user } = await supabase
+  .from("users")
+  .select("id")
+  .eq("username", username)
+  .single();
 
-if (orders.length === 0) {
+const { data: orders } = await supabase
+  .from("orders")
+  .select("id, total, status, created_at")
+  .eq("user_id", user.id)
+  .order("id", { ascending: false });
+
+const container = document.getElementById("ordersList");
+
+if (!orders || orders.length === 0) {
   container.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
 } else {
-  orders.reverse().forEach(order => {
-    
-    let itemHTML = order.items.map(i => `
-      <div class="order-product">
-        <img src="${i.image}">
-        <div class="order-product-info">
-          <span><b>${i.name}</b></span>
-          <span>Size: ${i.size}</span>
-          <span>${i.quantity} × ${i.price}€</span>
-        </div>
-      </div>
-    `).join("");
-
+  orders.forEach(o => {
     container.innerHTML += `
-      <div class="order-box">
-        <div class="order-header">Order — ${order.date.split(" ")[0]}</div>
-        <div class="order-status">Completed</div>
-        <div class="order-date">${order.date}</div>
-
-        ${itemHTML}
-
-        <hr style="opacity:0.2;margin:10px 0;">
-        <div><b>Total:</b> ${order.total}€</div>
+      <div class="order-box" onclick="window.location.href='order-details.html?id=${o.id}'">
+        <div class="order-header">Order #${o.id}</div>
+        <div class="order-status">${o.status}</div>
+        <div class="order-date">${o.created_at}</div>
+        <hr style="opacity:.2;margin:10px 0;">
+        <b>Total:</b> ${o.total}€
       </div>
     `;
   });
 }
-
-/* AVATAR MENU */
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
-};
-
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
 </script>
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn">
-  <img src="assets/support.svg">
-</div>
+<div id="supportBtn"><img src="assets/support.svg"></div>
 
 <!-- SUPPORT PANEL -->
 <div id="supportPanel">
@@ -207,7 +152,6 @@ function logout() {
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
     <input id="supName" type="text">
 
@@ -225,37 +169,26 @@ function logout() {
     <label>Your Message *</label>
     <textarea id="supMsg"></textarea>
 
-    <label>Attach File (optional)</label>
+    <label>Attach File</label>
     <input type="file" id="supFile">
 
     <button class="sup-send" id="sendSupportBtn">Send Message →</button>
-
   </div>
 </div>
 
-<!-- SUPPORT + CONFIRM POPUP + SUPABASE -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const supabase = createClient(
-  "https://xedfviwffpsvbmyqzoof.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
-);
-
-const supportBtn   = document.getElementById("supportBtn");
+<!-- SUPPORT JS (T-Shirts ile %100 aynı) -->
+<script>
+const supportBtn = document.getElementById("supportBtn");
 const supportPanel = document.getElementById("supportPanel");
 const closeSupport = document.getElementById("closeSupport");
-const sendSupport  = document.getElementById("sendSupportBtn");
+const sendSupportBtn = document.getElementById("sendSupportBtn");
 
-/* PANEL AÇ/KAPAT */
-supportBtn.onclick = () => {
-  supportPanel.style.display =
-    supportPanel.style.display === "block" ? "none" : "block";
-};
-closeSupport.onclick = () => supportPanel.style.display = "none";
+supportBtn.onclick = ()=> supportPanel.style.display =
+  supportPanel.style.display==="block" ? "none" : "block";
 
-/* TOAST */
-function showToast(msg, type="info"){
+closeSupport.onclick = ()=> supportPanel.style.display="none";
+
+function showToast(msg,type="info"){
   const t=document.createElement("div");
   t.className=`toast ${type}`;
   t.textContent=msg;
@@ -267,8 +200,7 @@ function showToast(msg, type="info"){
   },2500);
 }
 
-/* CONFIRM BOX */
-function confirmBox(msg, callback){
+function confirmBox(msg,cb){
   const c=document.createElement("div");
   c.className="confirmBox";
   c.innerHTML=`
@@ -279,49 +211,48 @@ function confirmBox(msg, callback){
     </div>`;
   document.body.appendChild(c);
   setTimeout(()=>c.classList.add("show"),50);
-
-  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
-  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
 }
+</script>
 
-/* SEND MESSAGE BTN */
-sendSupport.onclick = () => {
-  confirmBox("Are you sure you want to send this message?", yes=>{
-    if(yes) sendMessage();
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const supabase2 = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+document.getElementById("sendSupportBtn").onclick = ()=>{
+  confirmBox("Are you sure you want to send this message?", ok=>{
+    if(ok) sendMessage();
   });
 };
 
-/* SUPABASE MESSAGE INSERT */
 async function sendMessage(){
-  const name  = supName.value.trim();
-  const email = supEmail.value.trim();
-  const cat   = supCategory.value;
-  const msg   = supMsg.value.trim();
-  const file  = supFile.files[0];
+  const name=supName.value.trim();
+  const email=supEmail.value.trim();
+  const cat=supCategory.value;
+  const msg=supMsg.value.trim();
+  const fileInput=supFile;
 
-  if(!name || !email || !msg){
+  if(!name||!email||!msg){
     showToast("Please fill all required fields ❌","error");
     return;
   }
 
   let fileUrl="";
-  if(file){
-    const safe = `${Date.now()}_${file.name.replace(/\s+/g,"_")}`;
-    const { error } = await supabase.storage
-      .from("uploads")
-      .upload("public/"+safe, file);
-    if(error){ showToast("File upload failed ❌","error"); return; }
+  if(fileInput.files.length>0){
+    const f=fileInput.files[0];
+    const safe=`${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const {error}=await supabase2.storage.from("uploads").upload(`public/${safe}`,f);
+    if(error) return showToast("Upload failed ❌","error");
     fileUrl=`https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
   }
 
-  await supabase.from("messages").insert([{
-    name,
-    email,
-    category: cat,
-    message: msg,
-    file: fileUrl,
-    date: new Date().toLocaleString(),
-    read: false
+  await supabase2.from("messages").insert([{
+    name,email,category:cat,message:msg,file:fileUrl,
+    date:new Date().toLocaleString(),read:false
   }]);
 
   showToast("Message sent successfully ✅","success");
