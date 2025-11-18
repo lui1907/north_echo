@@ -10,7 +10,7 @@
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="support.js" defer></script>
+<script src="cart.js" defer></script>
 
 <style>
   .checkout-wrapper {
@@ -30,8 +30,7 @@
     flex-direction: column;
   }
   .checkout-form input,
-  .checkout-form textarea,
-  .checkout-form select {
+  .checkout-form textarea {
     background:#111;
     border:1px solid #333;
     border-radius:10px;
@@ -39,8 +38,6 @@
     color:white;
     margin-bottom:15px;
   }
-
-  /* BEYAZ ORDER BUTTON */
   .placeorder-btn {
     padding:14px;
     background:#fff;
@@ -95,7 +92,6 @@
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
-    <!-- DAİMA DEFAULT AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
@@ -125,36 +121,29 @@
       <h2>Contact Information</h2>
 
       <label>Name</label>
-      <input id="c_name" type="text" placeholder="John Doe" required>
+      <input id="c_name" type="text" placeholder="Your full name" required>
 
       <label>Email</label>
-      <input id="c_email" type="email" placeholder="example@mail.com" required>
+      <input id="c_email" type="email" placeholder="your@mail.com" required>
 
       <label>Phone Number</label>
-      <input id="c_phone" type="tel" required pattern="^[0-9+\s\-]{7,20}$" placeholder="+358 xx xxx xxx">
-
-      <h2 style="margin-top:30px;">Select Saved Address</h2>
-
-      <select id="addressSelect">
-        <option value="">-- Choose Saved Address --</option>
-      </select>
+      <input id="c_phone" type="text" placeholder="+90 555 555 55 55" required>
 
       <h2 style="margin-top:30px;">Shipping Address</h2>
 
       <label>Country</label>
-      <input id="c_country" type="text" placeholder="Finland" required>
+      <input id="c_country" type="text" placeholder="Country" required>
 
       <label>City</label>
-      <input id="c_city" type="text" placeholder="Helsinki" required>
+      <input id="c_city" type="text" placeholder="City" required>
 
       <label>Full Address</label>
-      <textarea id="c_address" placeholder="Street, building, apartment number..." required></textarea>
+      <textarea id="c_address" placeholder="Street, building, apartment..." required></textarea>
 
     </form>
 
     <!-- SUMMARY -->
     <div class="checkout-summary">
-
       <h2>Order Summary</h2>
 
       <div id="sumItems"></div>
@@ -177,155 +166,27 @@
       <button class="placeorder-btn" type="submit" form="checkoutForm">
         Complete Order →
       </button>
-
     </div>
   </div>
 </main>
-
-<script>
-// --------- CART SUMMARY ----------
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-const box = document.getElementById("sumItems");
-let subtotal = 0;
-
-cart.forEach(item => {
-  subtotal += item.price * (item.quantity || 1);
-  box.innerHTML += `
-    <div class="summary-product">
-      <img src="${item.image}">
-      <div>
-        <h4>${item.name}</h4>
-        <p>Size: ${item.size}</p>
-        <p>${item.price}€ × ${item.quantity || 1}</p>
-      </div>
-    </div>`;
-});
-
-document.getElementById("sumSubtotal").textContent = subtotal + "€";
-document.getElementById("sumTotal").textContent = subtotal + "€";
-
-// --------- LOAD SAVED ADDRESSES ----------
-const currentUser = localStorage.getItem("loggedInUser");
-const addressSelect = document.getElementById("addressSelect");
-let savedAddresses = [];
-
-if (!currentUser) {
-  // login yoksa checkout olmaz
-  // ama yine de sayfayı patlatmayalım
-  console.warn("No loggedInUser found");
-} else {
-  savedAddresses = JSON.parse(localStorage.getItem("addresses_" + currentUser)) || [];
-
-  savedAddresses.forEach((a, index) => {
-    // bozuk / eski formatlı kayıtları gösterme
-    if (!a || !a.country || !a.city || !a.full) return;
-
-    const opt = document.createElement("option");
-    opt.value = index; // index tutuyoruz
-    opt.textContent = `${a.country}, ${a.city} — ${a.full}`;
-    addressSelect.appendChild(opt);
-  });
-
-  // default adres varsa otomatik seç + formu doldur
-  const defaultIndex = savedAddresses.findIndex(a => a && a.default);
-  if (defaultIndex !== -1 && savedAddresses[defaultIndex].country) {
-    addressSelect.value = String(defaultIndex);
-    fillAddressFields(savedAddresses[defaultIndex]);
-  }
-}
-
-function fillAddressFields(addr){
-  if (!addr) return;
-  document.getElementById("c_country").value = addr.country || "";
-  document.getElementById("c_city").value    = addr.city || "";
-  document.getElementById("c_address").value = addr.full || "";
-}
-
-// dropdown değişince alanları doldur
-addressSelect.addEventListener("change", () => {
-  if (addressSelect.value === "") return;
-  const idx = Number(addressSelect.value);
-  const addr = savedAddresses[idx];
-  if (!addr || !addr.country) return;
-  fillAddressFields(addr);
-});
-
-// --------- COMPLETE ORDER ----------
-document.getElementById("checkoutForm").addEventListener("submit", e => {
-  e.preventDefault();
-
-  const user = localStorage.getItem("loggedInUser");
-  if (!user) return alert("Please login first.");
-
-  let orders = JSON.parse(localStorage.getItem("orders_" + user)) || [];
-
-  const orderData = {
-    user,
-    items: cart,
-    total: subtotal,
-    contact: {
-      name: c_name.value,
-      email: c_email.value,
-      phone: c_phone.value,
-      country: c_country.value,
-      city: c_city.value,
-      address: c_address.value
-    },
-    date: new Date().toLocaleString()
-  };
-
-  orders.push(orderData);
-  localStorage.setItem("orders_" + user, JSON.stringify(orders));
-  localStorage.removeItem("cart");
-
-  window.location.href = "order-success.html";
-});
-
-// --------- AVATAR MENU ----------
-document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = (m.style.display === "flex") ? "none" : "flex";
-};
-
-// --------- LOGOUT ----------
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-// --------- CART COUNT (QUANTITY DAHİL) ----------
-document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCountEl = document.getElementById("cartCount");
-  if (!cartCountEl) return;
-
-  const totalCount = cart.reduce((sum, item) => {
-    const qty = item.quantity ? Number(item.quantity) : 1;
-    return sum + (isNaN(qty) ? 1 : qty);
-  }, 0);
-
-  cartCountEl.textContent = totalCount;
-});
-</script>
-
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="assets/support.svg">
+<div id="supportBtn">
+  <img src="assets/support.svg" style="width:26px;height:26px;" alt="Support">
 </div>
 
 <!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
+    <button id="closeSupport">✕</button>
   </div>
 
   <div class="sup-body">
     <label>Your Name *</label>
-    <input id="supName" type="text">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input id="supEmail" type="email">
+    <input type="email" id="supEmail">
 
     <label>Category *</label>
     <select id="supCategory">
@@ -341,17 +202,164 @@ document.addEventListener("DOMContentLoaded", () => {
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">
-      Send Message →
-    </button>
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<!-- SUPPORT TOGGLE -->
+<!-- SUPPORT + SUPABASE -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const supportBtn   = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupport  = document.getElementById("sendSupportBtn");
+
+/* PANEL AÇ/KAPAT */
+supportBtn.addEventListener("click", () => {
+  supportPanel.style.display =
+    supportPanel.style.display === "block" ? "none" : "block";
+});
+
+closeSupport.addEventListener("click", () => {
+  supportPanel.style.display = "none";
+});
+
+/* TOAST */
+function showToast(msg, type="info"){
+  const t = document.createElement("div");
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
+
+/* CONFIRM BOX */
+function confirmBox(msg, callback){
+  const c = document.createElement("div");
+  c.className = "confirmBox";
+  c.innerHTML = `
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+
+  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
+  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+}
+
+/* GÖNDER BUTONU */
+sendSupport.addEventListener("click", () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if(yes) sendMessage();
+  });
+});
+
+/* SUPABASE MESAJ GÖNDER */
+async function sendMessage(){
+  const name  = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const cat   = document.getElementById("supCategory").value;
+  const msg   = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if(!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+  if(fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safe = `${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const { error } = await supabase
+      .storage
+      .from("uploads")
+      .upload(`public/${safe}`, f);
+
+    if(error){
+      showToast("File upload failed ❌","error");
+      return;
+    }
+    fileUrl =
+      `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
+  }
+
+  await supabase.from("messages").insert([{
+    name,
+    email,
+    category: cat,
+    message: msg,
+    file: fileUrl,
+    date: new Date().toLocaleString(),
+    read: false
+  }]);
+
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display = "none";
+}
+</script>
+
+<!-- ORDER CALC + AVATAR MENU -->
 <script>
-function toggleSupportPanel(){
-  const p = document.getElementById("supportPanel");
-  p.style.display = (p.style.display === "block") ? "none" : "block";
+/* CART COUNT */
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+  
+  const totalCount = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+  cartCountEl.textContent = totalCount;
+});
+
+/* ORDER SUMMARY LOAD */
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+let subtotal = 0;
+const box = document.getElementById("sumItems");
+
+cart.forEach(item => {
+  subtotal += item.price * item.quantity;
+  box.innerHTML += `
+    <div class="summary-product">
+      <img src="${item.image}">
+      <div>
+        <h4>${item.name}</h4>
+        <p>Size: ${item.size}</p>
+        <p>${item.price}€ × ${item.quantity}</p>
+      </div>
+    </div>`;
+});
+
+document.getElementById("sumSubtotal").textContent = subtotal + "€";
+document.getElementById("sumTotal").textContent = subtotal + "€";
+
+/* AVATAR MENU */
+document.getElementById("userAvatar").onclick = (e) => {
+  e.stopPropagation();
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+document.addEventListener("click", () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = "none";
+});
+
+/* LOGOUT */
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
 }
 </script>
 
