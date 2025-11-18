@@ -1,78 +1,135 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>My Addresses — North Echo</title>
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="support.css">
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="support.js" defer></script>
 
 <style>
-body { color:white; }
+body{
+  background:#000;
+  color:white;
+  font-family:'Poppins',sans-serif;
+  margin:0;
+}
 
-.address-wrapper {
+.address-wrapper{
   margin-top:130px;
-  max-width:700px;
-  margin-left:auto;
-  margin-right:auto;
+  display:flex;
+  justify-content:center;
+  padding:20px;
 }
 
-.address-card {
-  background:#0f0f0f;
+.address-card{
+  width:750px;
+  background:#0d0d0d;
   border:1px solid #222;
-  border-radius:12px;
-  padding:18px;
-  margin-bottom:12px;
+  border-radius:16px;
+  padding:25px;
 }
 
-.addr-actions {
-  margin-top:10px;
+.address-card h2{
+  margin-top:0;
+}
+
+.address-box{
+  background:#141414;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.addr-actions{
+  margin-top:12px;
   display:flex;
   gap:10px;
 }
 
-.addr-actions button {
-  padding:6px 12px;
+.addr-actions button{
+  padding:7px 12px;
   border:none;
-  border-radius:8px;
+  border-radius:6px;
   cursor:pointer;
 }
 
-.set-default { background:#00aa66; color:white; }
-.delete-btn { background:#bb0000; color:white; }
-
-.add-box {
-  margin-top:25px;
-  background:#141414;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:20px;
+.set-default{
+  background:#00aa66;
+  color:white;
 }
-
-.add-box input {
-  width:100%;
-  padding:10px;
-  margin-bottom:12px;
-  background:#111;
-  border:1px solid #333;
-  border-radius:8px;
+.delete-btn{
+  background:#aa0000;
   color:white;
 }
 
-.add-box button {
-  background:white;
-  color:black;
-  padding:10px;
+.add-address-box{
+  margin-top:20px;
+  padding:15px;
+  border-radius:12px;
+  background:#111;
+  border:1px solid #333;
+}
+
+.add-address-box input, .add-address-box textarea{
   width:100%;
+  background:#0d0d0d;
+  border:1px solid #333;
+  padding:12px;
+  border-radius:8px;
+  color:white;
+  margin-bottom:10px;
+}
+.add-btn{
+  width:100%;
+  background:#00aa66;
+  color:white;
+  padding:12px;
+  border:none;
   border-radius:8px;
   cursor:pointer;
-  font-weight:bold;
+  font-weight:600;
 }
+
+.toast,.confirmBox{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(.9);
+  background:#141414;
+  border:1px solid #333;
+  padding:16px 22px;
+  color:white;
+  border-radius:10px;
+  opacity:0;transition:all .3s;
+  z-index:99999;
+  font-size:15px;
+  text-align:center;
+}
+.toast.show,.confirmBox.show{
+  opacity:1;transform:translate(-50%,-50%) scale(1);
+}
+
+.confirm-buttons{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:12px;
+}
+.confirm-buttons button{
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
+}
+.confirm-buttons .ok{ background:#00aa66; }
+.confirm-buttons .cancel{ background:#444; }
 </style>
 </head>
 
@@ -80,111 +137,210 @@ body { color:white; }
 
 <!-- HEADER -->
 <header class="header">
-    <div class="hamburger" id="menuBtn">☰</div>
-    <a href="index.html" class="logo">NORTH ECHO</a>
+  <div class="hamburger" id="menuBtn">☰</div>
+  <a href="index.html" class="logo">NORTH ECHO</a>
 
-    <div class="right-buttons">
-      <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-      <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-      <div class="avatar-menu" id="avatarMenu">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="settings.html">Settings</a>
-        <a href="profile.html">Profile</a>
-        <a href="#" class="logout" onclick="logout()">Logout</a>
-      </div>
+  <div class="right-buttons">
+    <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="orders.html">My Orders</a>
+      <a href="addresses.html">Addresses</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
+  </div>
 </header>
 
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <button id="closeMenu" class="close-menu">×</button>
+  <a href="index.html">Home</a>
+  <a href="tshirts.html">T-Shirts</a>
+  <a href="sweatshirts.html">Sweatshirts</a>
+  <a href="hoodies.html">Hoodies</a>
+  <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
+  <a href="addresses.html">Addresses</a>
+</div>
+
+<!-- PAGE -->
 <div class="address-wrapper">
-  <h2>My Addresses</h2>
+  <div class="address-card">
+    <h2>My Addresses</h2>
 
-  <div id="addressList"></div>
+    <div id="addressList"></div>
 
-  <div class="add-box">
-    <h3>Add New Address</h3>
+    <div class="add-address-box">
+      <h3>Add New Address</h3>
 
-    <input id="add_country" type="text" placeholder="Country">
-    <input id="add_city" type="text" placeholder="City">
-    <input id="add_full" type="text" placeholder="Full Address">
+      <input id="add_country" placeholder="Country">
+      <input id="add_city" placeholder="City">
+      <textarea id="add_full" placeholder="Full Address"></textarea>
 
-    <button onclick="addAddress()">Add Address</button>
+      <button class="add-btn" onclick="addAddress()">Add Address</button>
+    </div>
   </div>
 </div>
 
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn" onclick="toggleSupportPanel()">
+  <img src="assets/support.svg">
+</div>
+
+<!-- SUPPORT PANEL -->
+<div id="supportPanel">
+  <div class="sup-header">
+    <span>Support</span>
+    <button onclick="toggleSupportPanel()">✕</button>
+  </div>
+  <div class="sup-body">
+    <label>Your Name *</label>
+    <input id="supName" type="text">
+
+    <label>Email *</label>
+    <input id="supEmail" type="email">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="Website">Website Issue</option>
+      <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Your Message *</label>
+    <textarea id="supMsg"></textarea>
+
+    <label>Attach File</label>
+    <input type="file" id="supFile">
+
+    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+  </div>
+</div>
+
+<!-- SUPPORT TOGGLE -->
+<script>
+function toggleSupportPanel(){
+  const p = document.getElementById("supportPanel");
+  p.style.display = (p.style.display === "block") ? "none" : "block";
+}
+</script>
+
+<!-- MAIN SCRIPT -->
 <script>
 const user = localStorage.getItem("loggedInUser");
-if (!user) window.location.href = "login.html";
+if (!user) location.href = "login.html";
 
+/* ---------------- POPUP ---------------- */
+function confirmBox(msg, callback){
+  const c = document.createElement("div");
+  c.className = "confirmBox";
+  c.innerHTML = `
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),20);
+
+  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
+  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+}
+
+/* ---------------- ADDRESS LIST ---------------- */
 function loadAddresses(){
   const list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
   const box = document.getElementById("addressList");
   box.innerHTML = "";
 
-  list.forEach((a, i) => {
+  list.forEach((a,i)=>{
     box.innerHTML += `
-      <div class="address-card">
+      <div class="address-box">
         <b>${a.country}</b>, ${a.city}<br>
         ${a.full}
-        ${a.default ? "<p style='color:#00ff99;font-size:14px;margin-top:8px;'>✔ Default Address</p>" : ""}
-        
+        ${a.default ? "<p style='color:#00ff99;margin-top:8px;'>✔ Default Address</p>" : ""}
         <div class="addr-actions">
           <button class="set-default" onclick="setDefault(${i})">Set Default</button>
           <button class="delete-btn" onclick="deleteAddress(${i})">Delete</button>
         </div>
-      </div>
-    `;
+      </div>`;
   });
 }
-
 loadAddresses();
 
-/* ➕ Add New Address */
+/* -------------- ADD NEW -------------- */
 function addAddress(){
   let c = add_country.value.trim();
   let ci = add_city.value.trim();
   let f = add_full.value.trim();
-  if (!c || !ci || !f) return alert("Fill all fields");
+  if(!c || !ci || !f) return alert("Fill all fields");
 
   let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
 
   list.push({
-    country: c,
-    city: ci,
-    full: f,
-    default: list.length === 0 ? true : false
+    country:c,
+    city:ci,
+    full:f,
+    default: list.length === 0
   });
 
   localStorage.setItem("addresses_" + user, JSON.stringify(list));
-
   loadAddresses();
+
   add_country.value = "";
   add_city.value = "";
   add_full.value = "";
 }
 
-/* 🟢 Default Set */
+/* -------------- DEFAULT SET -------------- */
 function setDefault(i){
   let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
   list.forEach(a => a.default = false);
   list[i].default = true;
-
   localStorage.setItem("addresses_" + user, JSON.stringify(list));
   loadAddresses();
 }
 
-/* ❌ Delete Address */
+/* -------------- DELETE -------------- */
 function deleteAddress(i){
-  let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
-  list.splice(i, 1);
+  confirmBox("Delete this address?", (ok)=>{
+    if(!ok) return;
 
-  // eğer default silindiyse ilk adresi default yap
-  if (list.length > 0 && !list.some(a => a.default)) {
-    list[0].default = true;
-  }
+    let list = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
+    list.splice(i,1);
 
-  localStorage.setItem("addresses_" + user, JSON.stringify(list));
-  loadAddresses();
+    if(list.length > 0 && !list.some(a=>a.default)){
+      list[0].default = true;
+    }
+
+    localStorage.setItem("addresses_" + user, JSON.stringify(list));
+    loadAddresses();
+  });
 }
+
+/* -------------- AVATAR MENU -------------- */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+/* -------------- LOGOUT -------------- */
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  location.href = "login.html";
+}
+
+/* -------------- CART COUNT -------------- */
+document.addEventListener("DOMContentLoaded", ()=> {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const el = document.getElementById("cartCount");
+  el.textContent = cart.reduce((sum,i)=> sum + (i.quantity || 1),0);
+});
 </script>
 
 </body>
