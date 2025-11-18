@@ -176,11 +176,6 @@ function logout() {
 }
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
-<div id="supportBtn">
-  <img src="assets/support.svg" style="width:26px;height:26px;">
-</div>
-
 <!-- 💬 SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
@@ -189,19 +184,30 @@ function logout() {
   </div>
 
   <div class="sup-body">
+
     <label>Your Name *</label>
-    <input type="text" id="supName">
+    <input type="text" id="supName" placeholder="John Doe">
 
     <label>Email *</label>
-    <input type="email" id="supEmail">
+    <input type="email" id="supEmail" placeholder="your@mail.com">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="Cart">Cart Issue</option>
+      <option value="Order">Order Issue</option>
+      <option value="Website">Website Issue</option>
+      <option value="Product">Product Info</option>
+      <option value="Other">Other</option>
+    </select>
 
     <label>Your Message *</label>
-    <textarea id="supMsg"></textarea>
+    <textarea id="supMsg" placeholder="Write your message..."></textarea>
 
-    <label>Attach File</label>
-    <input type="file" id="supFile">
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
 
     <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+
   </div>
 </div>
 
@@ -296,7 +302,7 @@ async function sendSupportMessage(){
     .insert([{
       name,
       email,
-      category: "Cart",
+      category: document.getElementById("supCategory").value,
       message: msg,
       file: fileUrl,
       date: new Date().toLocaleString(),
