@@ -61,7 +61,7 @@ body { color:white; margin:0; padding:0; }
   margin-bottom:10px;
 }
 
-/* PRODUCT CARD */
+/* PRODUCT CARD INSIDE ORDER */
 .order-product {
   display:flex;
   align-items:center;
@@ -88,17 +88,6 @@ body { color:white; margin:0; padding:0; }
 
 .order-product-info span {
   font-size:14px;
-}
-
-/* ADDRESS BOX */
-.order-address {
-  background:#1a1a1a;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #2a2a2a;
-  margin-top:10px;
-  font-size:14px;
-  opacity:0.9;
 }
 
 /* EMPTY MESSAGE */
@@ -130,7 +119,6 @@ body { color:white; margin:0; padding:0; }
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="orders.html">My Orders</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -144,10 +132,9 @@ body { color:white; margin:0; padding:0; }
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
-  <a href="orders.html">My Orders</a>
 </div>
 
-<!-- PAGE CONTENT -->
+<!-- ORDERS LIST -->
 <div class="orders-wrapper">
   <div class="orders-card">
     <h2>My Orders</h2>
@@ -156,11 +143,9 @@ body { color:white; margin:0; padding:0; }
 </div>
 
 <script>
-/* LOGIN CHECK */
 let username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-/* LOAD USER ORDERS */
 let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
 let container = document.getElementById("ordersList");
 
@@ -169,7 +154,7 @@ if (orders.length === 0) {
 } else {
   orders.reverse().forEach(order => {
 
-    let itemsHTML = order.items.map(i => `
+    let products = order.items.map(i => `
       <div class="order-product">
         <img src="${i.image}">
         <div class="order-product-info">
@@ -180,27 +165,13 @@ if (orders.length === 0) {
       </div>
     `).join("");
 
-    let addressHTML = `
-      <div class="order-address">
-        <b>Shipping Address:</b><br>
-        ${order.contact.name}<br>
-        ${order.contact.address}<br>
-        ${order.contact.city}, ${order.contact.country}<br>
-        Phone: ${order.contact.phone}
-      </div>
-    `;
-
     container.innerHTML += `
       <div class="order-box">
         <div class="order-header">Order — ${order.date.split(" ")[0]}</div>
         <div class="order-status">Completed</div>
         <div class="order-date">${order.date}</div>
-
-        ${itemsHTML}
-
-        ${addressHTML}
-
-        <hr style="opacity:0.2;margin:10px 0;">
+        ${products}
+        <hr style="opacity:.2;margin:10px 0;">
         <div><b>Total:</b> ${order.total}€</div>
       </div>
     `;
@@ -212,7 +183,6 @@ document.getElementById("userAvatar").onclick = () => {
   const m = document.getElementById("avatarMenu");
   m.style.display = (m.style.display === "flex") ? "none" : "flex";
 };
-
 function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
@@ -233,10 +203,10 @@ function logout() {
 
   <div class="sup-body">
     <label>Your Name *</label>
-    <input id="supName" type="text">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input id="supEmail" type="email">
+    <input type="email" id="supEmail">
 
     <label>Category *</label>
     <select id="supCategory">
@@ -249,35 +219,66 @@ function logout() {
     <label>Your Message *</label>
     <textarea id="supMsg"></textarea>
 
-    <label>Attach File (optional)</label>
+    <label>Attach File</label>
     <input type="file" id="supFile">
 
     <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<!-- SUPPORT JS -->
+<!-- SUPPORT LOGIC (T-SHIRTS HTML İLE %100 AYNI) -->
+<script>
+const supportBtn=document.getElementById("supportBtn");
+const supportPanel=document.getElementById("supportPanel");
+const closeSupport=document.getElementById("closeSupport");
+const sendSupportBtn=document.getElementById("sendSupportBtn");
+
+supportBtn.onclick=()=>supportPanel.style.display =
+  (supportPanel.style.display==="block") ? "none" : "block";
+
+closeSupport.onclick=()=>supportPanel.style.display="none";
+
+function showToast(msg,type="info"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{t.classList.remove("show");setTimeout(()=>t.remove(),300)},2500);
+}
+
+function confirmBox(msg,cb){
+  const c=document.createElement("div");
+  c.className="confirmBox";
+  c.innerHTML=`
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
+}
+
+sendSupportBtn.onclick=()=>{
+  confirmBox("Are you sure you want to send this message?",res=>{
+    if(res) sendSupportMessage();
+  });
+};
+</script>
+
+<!-- REAL SENDER -->
 <script src="support.js"></script>
 
 <script>
-function toggleSupportPanel() {
-  const p = document.getElementById("supportPanel");
-  p.style.display = (p.style.display === "block") ? "none" : "block";
-}
-
-document.getElementById("supportBtn").onclick = toggleSupportPanel;
-document.getElementById("closeSupport").onclick = toggleSupportPanel;
-</script>
-
-<script>
-/* CART COUNT */
+// CART COUNT
 document.addEventListener("DOMContentLoaded", () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCountEl = document.getElementById("cartCount");
-  if (!cartCountEl) return;
-
-  const totalQty = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
-  cartCountEl.textContent = totalQty;
+  const el = document.getElementById("cartCount");
+  const total = cart.reduce((s,i)=>s+(i.quantity||1),0);
+  el.textContent = total;
 });
 </script>
 
