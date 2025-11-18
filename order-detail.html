@@ -4,17 +4,19 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Order Detail — North Echo</title>
+<title>Order Details — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="support.css">
+
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="support.js" defer></script>
+<script src="cart.js" defer></script>
 
 <style>
-body { color:white;margin:0;background:black; }
+body { color:white; margin:0; padding:0; }
 
+/* WRAPPER */
 .detail-wrapper {
   margin-top:130px;
   display:flex;
@@ -22,45 +24,72 @@ body { color:white;margin:0;background:black; }
   padding:20px;
 }
 
+/* CARD */
 .detail-card {
   width:750px;
   background:#0d0d0d;
   border:1px solid #222;
-  padding:25px;
   border-radius:18px;
+  padding:25px;
 }
 
+/* BACK BUTTON */
 .back-btn {
-  cursor:pointer;
+  display:inline-block;
   margin-bottom:15px;
-  color:#00cc77;
+  color:#00aa66;
+  cursor:pointer;
+  font-size:15px;
+}
+.back-btn:hover { text-decoration:underline; }
+
+/* SECTION TITLES */
+.section-title {
+  font-size:18px;
+  margin:15px 0 10px 0;
+  font-weight:600;
+}
+
+/* PRODUCT */
+.order-product {
   display:flex;
   align-items:center;
-  gap:8px;
-}
-
-.product-box {
+  gap:15px;
+  margin-bottom:12px;
   background:#161616;
-  border:1px solid #333;
-  padding:10px;
+  padding:12px;
   border-radius:10px;
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
+  border:1px solid #2a2a2a;
 }
 
-.product-box img {
-  width:60px;
-  height:60px;
-  border-radius:8px;
+.order-product img {
+  width:70px;
+  height:70px;
+  border-radius:10px;
   object-fit:cover;
 }
 
-.shipping-info span {
+.order-product-info span {
   display:block;
-  margin:4px 0;
-  opacity:0.9;
+  font-size:14px;
 }
+
+/* INFO BOX */
+.info-box {
+  background:#161616;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #2a2a2a;
+  margin-bottom:20px;
+}
+
+.info-line {
+  margin-bottom:8px;
+  font-size:15px;
+}
+
+html.light .detail-card { background:white; border-color:#ccc; color:#111; }
+html.light .order-product { background:#eee; }
 </style>
 </head>
 
@@ -70,13 +99,17 @@ body { color:white;margin:0;background:black; }
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" onclick="logout()" class="logout">Logout</a>
+      <a href="orders.html">My Orders</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
 </header>
@@ -89,22 +122,25 @@ body { color:white;margin:0;background:black; }
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
 </div>
 
+
+<!-- CONTENT -->
 <div class="detail-wrapper">
   <div class="detail-card">
 
-    <div class="back-btn" onclick="history.back()">
-      ← Back to orders
-    </div>
+    <div class="back-btn" onclick="window.location.href='orders.html'">← Back to Orders</div>
 
-    <h2>Order Detail</h2>
-    <div id="orderInfo" style="margin-top:20px;"></div>
+    <h2>Order Details</h2>
+
+    <div id="orderContent"></div>
 
   </div>
 </div>
 
-<!-- LOAD ORDER DETAIL -->
+
+<!-- SUPABASE ORDER DETAILS -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -113,83 +149,158 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-const id = new URLSearchParams(location.search).get("id");
-const container = document.getElementById("orderInfo");
+const username = localStorage.getItem("loggedInUser");
+if (!username) window.location.href = "login.html";
 
-if (!id) container.innerHTML = "Order not found.";
+const params = new URLSearchParams(window.location.search);
+const orderId = params.get("id");
 
-/* 1) Order Info */
-const { data: order } = await supabase
-  .from("orders")
-  .select("*")
-  .eq("id", id)
-  .single();
+const orderBox = document.getElementById("orderContent");
 
-/* 2) Order Items */
-const { data: items } = await supabase
-  .from("order_items")
-  .select("*")
-  .eq("order_id", id);
+async function loadOrder() {
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", orderId)
+    .eq("username", username)
+    .single();
 
-container.innerHTML = `
-  <h3>Order #${order.id}</h3>
-  <p>Status: <b>${order.status}</b></p>
-  <p>Date: ${order.date}</p>
+  if (!order) {
+    orderBox.innerHTML = "<p>Order not found.</p>";
+    return;
+  }
 
-  <h3 style="margin-top:20px;">Products</h3>
-`;
+  /* LOAD ITEMS */
+  const { data: items } = await supabase
+    .from("order_items")
+    .select("*")
+    .eq("order_id", orderId);
 
-items.forEach(i => {
-  container.innerHTML += `
-    <div class="product-box">
-      <img src="${i.image}">
-      <div>
-        <div><b>${i.product_name}</b></div>
-        <div>Size: ${i.size}</div>
-        <div>${i.quantity} × ${i.price}€</div>
+  /* BUILD HTML */
+  orderBox.innerHTML = `
+    <div class="info-box">
+      <div class="info-line"><b>Order ID:</b> ${order.id}</div>
+      <div class="info-line"><b>Status:</b> ${order.status}</div>
+      <div class="info-line"><b>Date:</b> ${order.created_at}</div>
+      <div class="info-line"><b>Total:</b> ${order.total_price}€</div>
+    </div>
+
+    <div class="section-title">Products</div>
+    ${items.map(i => `
+      <div class="order-product">
+        <img src="${i.image}">
+        <div class="order-product-info">
+          <span><b>${i.product_name}</b></span>
+          <span>Size: ${i.size}</span>
+          <span>${i.quantity} × ${i.price}€</span>
+        </div>
       </div>
+    `).join("")}
+
+    <div class="section-title">Shipping Address</div>
+    <div class="info-box">
+      <div class="info-line"><b>Name:</b> ${order.fullname}</div>
+      <div class="info-line"><b>Email:</b> ${order.email}</div>
+      <div class="info-line"><b>City:</b> ${order.city}</div>
+      <div class="info-line"><b>Country:</b> ${order.country}</div>
+      <div class="info-line"><b>Address:</b> ${order.address}</div>
     </div>
   `;
-});
-
-container.innerHTML += `
-  <hr style="opacity:.3;margin:20px 0">
-
-  <h3>Shipping Address</h3>
-  <div class="shipping-info">
-    <span><b>Name:</b> ${order.name}</span>
-    <span><b>Email:</b> ${order.email}</span>
-    <span><b>Phone:</b> ${order.phone}</span>
-    <span><b>Country:</b> ${order.country}</span>
-    <span><b>City:</b> ${order.city}</span>
-    <span><b>Address:</b> ${order.full_address}</span>
-  </div>
-
-  <hr style="opacity:.3;margin:20px 0">
-  <h3>Total: ${order.total}€</h3>
-`;
-</script>
-
-<!-- PROFILE + CART COUNT -->
-<script>
-document.getElementById("userAvatar").onclick=()=>{
-  avatarMenu.style.display =
-  avatarMenu.style.display==="flex"?"none":"flex";
-};
-function logout(){
-  localStorage.removeItem("loggedInUser");
-  window.location="login.html";
 }
-document.addEventListener("DOMContentLoaded",()=>{
-  const c=JSON.parse(localStorage.getItem("cart"))||[];
-  cartCount.textContent=c.reduce((s,i)=>s+i.quantity,0);
-});
+
+loadOrder();
 </script>
+
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn"><img src="assets/support.svg"></div>
-<div id="supportPanel"> … </div>
-<script src="support.js"></script>
+<div id="supportBtn">
+  <img src="assets/support.svg">
+</div>
+
+<!-- SUPPORT PANEL -->
+<div id="supportPanel">
+  <div class="sup-header">
+    <span>Support</span>
+    <button id="closeSupport">✕</button>
+  </div>
+
+  <div class="sup-body">
+
+    <label>Your Name *</label>
+    <input type="text" id="supName">
+
+    <label>Email *</label>
+    <input type="email" id="supEmail">
+
+    <label>Category *</label>
+    <select id="supCategory">
+      <option value="Website">Website Issue</option>
+      <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Your Message *</label>
+    <textarea id="supMsg"></textarea>
+
+    <label>Attach File</label>
+    <input type="file" id="supFile">
+
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+  </div>
+</div>
+
+
+<!-- SUPPORT SCRIPT (HER SAYFADA SORUNSUZ ÇALIŞAN SÜRÜM) -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabaseMSG = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const supportBtnX = document.getElementById("supportBtn");
+const supportPanelX = document.getElementById("supportPanel");
+const closeSupportX = document.getElementById("closeSupport");
+const sendBtn = document.getElementById("sendSupportBtn");
+
+supportBtnX.onclick = () => {
+  supportPanelX.style.display = supportPanelX.style.display === "block" ? "none" : "block";
+};
+closeSupportX.onclick = () => supportPanelX.style.display = "none";
+
+function showToast(txt) { alert(txt); }
+
+sendBtn.onclick = async () => {
+  const name = supName.value.trim();
+  const email = supEmail.value.trim();
+  const msg = supMsg.value.trim();
+  const cat = supCategory.value;
+
+  if (!name || !email || !msg) return showToast("Fill all fields");
+
+  await supabaseMSG.from("messages").insert({
+    name,
+    email,
+    message: msg,
+    category: cat
+  });
+
+  showToast("Message sent successfully!");
+  supMsg.value = "";
+};
+</script>
+
+
+<script>
+// CART COUNT FIX
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const total = cart.reduce((s,i)=>s+Number(i.quantity||1),0);
+  document.getElementById("cartCount").textContent = total;
+});
+</script>
 
 </body>
 </html>
