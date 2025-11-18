@@ -6,6 +6,8 @@
 <title>My Addresses — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
+
+<!-- SUPPORT STYLES -->
 <link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
@@ -13,74 +15,202 @@
 <script src="cart.js" defer></script>
 
 <style>
-.page-wrapper {
+body { color:white; margin:0; padding:0; }
+
+/* WRAPPER */
+.addresses-wrapper{
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
 
-.addr-card {
-  width:750px;
+/* MAIN CARD */
+.addresses-card{
+  width:700px;
   background:#0d0d0d;
-  padding:25px;
-  border-radius:16px;
   border:1px solid #222;
+  border-radius:18px;
+  padding:25px;
 }
 
-.addr-box {
-  background:#141414;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #333;
+/* HEADER LINE */
+.addr-top-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   margin-bottom:15px;
 }
 
-.addr-actions {
-  display:flex;
-  gap:10px;
-  margin-top:10px;
+.addr-top-line h2{
+  margin:0;
 }
 
-.addr-btn {
-  padding:8px 12px;
-  border-radius:6px;
+/* ADD BUTTON */
+.add-btn{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid #333;
+  background:#000;
+  color:#fff;
   cursor:pointer;
   font-size:14px;
-  border:none;
 }
+.add-btn:hover{background:#111;}
 
-.set-btn { background:#00aa66; color:#fff; }
-.del-btn { background:#aa0000; color:#fff; }
-
-.add-form {
-  margin-top:25px;
-  padding:15px;
-  background:#111;
-  border-radius:12px;
-  border:1px solid #333;
-}
-
-.add-form input {
-  width:100%;
-  padding:10px;
-  margin-bottom:12px;
-  border-radius:8px;
+/* ADDRESS CARD */
+.addr-box{
   background:#141414;
   border:1px solid #333;
-  color:white;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
 }
 
-.add-submit {
-  width:100%;
-  padding:12px;
-  background:#00aa66;
-  color:white;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
+.addr-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
 }
+
+.addr-name{
+  font-weight:bold;
+  font-size:15px;
+}
+
+.addr-default-tag{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#00aa66;
+  color:#000;
+  margin-left:8px;
+}
+
+.addr-lines{
+  font-size:14px;
+  opacity:0.85;
+  margin-bottom:8px;
+}
+
+.addr-actions{
+  display:flex;
+  gap:8px;
+  margin-top:4px;
+}
+
+.addr-actions button{
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid #333;
+  background:#000;
+  color:#fff;
+  cursor:pointer;
+  font-size:13px;
+}
+.addr-actions button:hover{background:#111;}
+
+.no-address{
+  text-align:center;
+  margin-top:20px;
+  opacity:0.7;
+}
+
+/* POPUP */
+.address-popup{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.address-popup-inner{
+  width:350px;
+  background:#111;
+  border-radius:14px;
+  border:1px solid #333;
+  padding:20px;
+}
+
+.address-popup-inner h3{
+  margin-top:0;
+  margin-bottom:10px;
+}
+
+.address-popup-inner label{
+  display:block;
+  font-size:13px;
+  margin-bottom:4px;
+  color:#ccc;
+}
+
+.address-popup-inner input,
+.address-popup-inner textarea{
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:1px solid #333;
+  background:#1a1a1a;
+  color:white;
+  font-size:14px;
+}
+
+.address-popup-buttons{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:4px;
+}
+
+.address-popup-buttons button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #444;
+  background:#000;
+  color:#fff;
+  cursor:pointer;
+  font-size:13px;
+}
+.address-popup-buttons .primary{
+  background:#00aa66;
+  border-color:#00aa66;
+  color:#000;
+}
+.address-popup-buttons .primary:hover{background:#00cc77;}
+.address-popup-buttons .cancel:hover{background:#111;}
+
+/* TOAST & CONFIRM (index ile aynı mantık) */
+.toast,.confirmBox{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(.9);
+  background:rgba(20,20,20,.95);
+  border:1px solid #333;
+  padding:16px 22px;
+  color:white;border-radius:10px;
+  opacity:0;transition:all .3s;
+  z-index:99999;font-size:15px;text-align:center;
+}
+.toast.show,.confirmBox.show{
+  opacity:1;transform:translate(-50%,-50%) scale(1);
+}
+.toast.success{border-color:#00aa66;color:#00ff99;}
+.toast.error{border-color:#aa0000;color:#ff5555;}
+
+.confirm-buttons{
+  display:flex;gap:10px;justify-content:center;margin-top:10px;
+}
+.confirm-buttons button{
+  background:#00aa66;border:none;
+  padding:8px 14px;border-radius:6px;
+  cursor:pointer;color:white;font-weight:bold;
+}
+.confirm-buttons .cancel{background:#444;}
 </style>
 </head>
 
@@ -99,6 +229,8 @@
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
+      <a href="addresses.html">Addresses</a>
+      <a href="orders.html">My Orders</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -112,32 +244,50 @@
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
+  <a href="addresses.html">Addresses</a>
 </div>
 
-<!-- PAGE -->
-<div class="page-wrapper">
-  <div class="addr-card">
-    <h2>My Addresses</h2>
+<!-- PAGE CONTENT -->
+<div class="addresses-wrapper">
+  <div class="addresses-card">
+    <div class="addr-top-line">
+      <h2>My Addresses</h2>
+      <button class="add-btn" id="openAddPopup">+ Add Address</button>
+    </div>
+    <div id="addressList"></div>
+  </div>
+</div>
 
-    <div id="addrList"></div>
+<!-- POPUP -->
+<div class="address-popup" id="addressPopup">
+  <div class="address-popup-inner">
+    <h3 id="popupTitle">Add Address</h3>
 
-    <h3 style="margin-top:30px;">Add New Address</h3>
+    <label>Full Name *</label>
+    <input id="a_fullname" type="text" placeholder="John Doe"/>
 
-    <div class="add-form">
-      <input id="addr_fullname" placeholder="Full Name">
-      <input id="addr_phone" placeholder="Phone Number">
-      <input id="addr_country" placeholder="Country">
-      <input id="addr_city" placeholder="City">
-      <input id="addr_address" placeholder="Full Address">
+    <label>Phone *</label>
+    <input id="a_phone" type="text" placeholder="+358 xx xxx xx xx"/>
 
-      <button class="add-submit" onclick="addAddress()">Add Address</button>
+    <label>Country *</label>
+    <input id="a_country" type="text" placeholder="Finland"/>
+
+    <label>City *</label>
+    <input id="a_city" type="text" placeholder="Helsinki"/>
+
+    <label>Full Address *</label>
+    <textarea id="a_address" placeholder="Street, building, apartment..."></textarea>
+
+    <div class="address-popup-buttons">
+      <button class="cancel" id="cancelPopup">Cancel</button>
+      <button class="primary" id="saveAddressBtn">Save</button>
     </div>
   </div>
 </div>
 
 <!-- SUPPORT BUTTON -->
 <div id="supportBtn">
-  <img src="assets/support.svg">
+  <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
 
 <!-- SUPPORT PANEL -->
@@ -149,10 +299,10 @@
 
   <div class="sup-body">
     <label>Your Name *</label>
-    <input id="supName" type="text">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input id="supEmail" type="email">
+    <input type="email" id="supEmail">
 
     <label>Category *</label>
     <select id="supCategory">
@@ -172,7 +322,7 @@
   </div>
 </div>
 
-<!-- SUPPORT LOGIC + ADDRESSES LOGIC -->
+<!-- SUPABASE + ADDRESSES + SUPPORT -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -181,126 +331,233 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-/* GET USER */
-async function getUserId() {
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id || null;
+/* ---------------- USER CHECK ---------------- */
+const username = localStorage.getItem("loggedInUser");
+if (!username) {
+  window.location.href = "login.html";
 }
 
-/* LOAD ADDRESSES */
-async function loadAddresses() {
-  const userId = await getUserId();
-  if (!userId) return window.location.href = "login.html";
+/* ---------------- DOM ---------------- */
+const addressList      = document.getElementById("addressList");
+const openAddPopupBtn  = document.getElementById("openAddPopup");
+const addressPopup     = document.getElementById("addressPopup");
+const cancelPopupBtn   = document.getElementById("cancelPopup");
+const saveAddressBtn   = document.getElementById("saveAddressBtn");
+const popupTitle       = document.getElementById("popupTitle");
+
+const a_fullname = document.getElementById("a_fullname");
+const a_phone    = document.getElementById("a_phone");
+const a_country  = document.getElementById("a_country");
+const a_city     = document.getElementById("a_city");
+const a_address  = document.getElementById("a_address");
+
+let editingId = null;
+
+/* ---------------- LOAD ADDRESSES ---------------- */
+async function loadAddresses(){
+  addressList.innerHTML = "Loading...";
 
   const { data, error } = await supabase
     .from("addresses")
     .select("*")
-    .eq("user_id", userId)
-    .order("is_default", { ascending: false });
+    .eq("username", username)
+    .order("created_at", { ascending:false });
 
-  if (error) return;
+  if (error){
+    console.error("loadAddresses error:", error);
+    addressList.innerHTML = `<p class="no-address">Failed to load addresses.</p>`;
+    return;
+  }
 
-  const box = document.getElementById("addrList");
-  box.innerHTML = "";
+  if (!data || data.length === 0){
+    addressList.innerHTML = `<p class="no-address">You have no saved addresses yet.</p>`;
+    return;
+  }
 
-  data.forEach(a => {
-    box.innerHTML += `
-      <div class="addr-box">
-        <b>${a.fullname}</b><br>
-        ${a.phone}<br>
-        ${a.country}, ${a.city}<br>
-        ${a.full_address}<br>
-
-        <div class="addr-actions">
-          <button class="addr-btn set-btn" onclick="setDefault(${a.id})">
-            ${a.is_default ? "Default ✓" : "Set Default"}
-          </button>
-
-          <button class="addr-btn del-btn" onclick="deleteAddress(${a.id})">
-            Delete
-          </button>
+  addressList.innerHTML = data.map(addr => `
+    <div class="addr-box">
+      <div class="addr-header">
+        <div class="addr-name">
+          ${addr.fullname || ""} 
+          ${addr.is_default ? `<span class="addr-default-tag">Default</span>` : ""}
         </div>
       </div>
-    `;
-  });
+
+      <div class="addr-lines">
+        <div>📞 ${addr.phone || "-"}</div>
+        <div>🌍 ${addr.country || "-"} / ${addr.city || "-"}</div>
+        <div>🏠 ${addr.address || "-"}</div>
+      </div>
+
+      <div class="addr-actions">
+        <button onclick="setDefault(${addr.id})">Set Default</button>
+        <button onclick="editAddress(${addr.id})">Edit</button>
+        <button onclick="deleteAddress(${addr.id})">Delete</button>
+      </div>
+    </div>
+  `).join("");
 }
 
-window.addEventListener("DOMContentLoaded", loadAddresses);
+loadAddresses();
 
-/* ADD ADDRESS */
-window.addAddress = async function () {
-  const fullname = addr_fullname.value.trim();
-  const phone = addr_phone.value.trim();
-  const country = addr_country.value.trim();
-  const city = addr_city.value.trim();
-  const address = addr_address.value.trim();
+/* ---------------- POPUP HELPERS ---------------- */
+function openPopupForNew(){
+  editingId = null;
+  popupTitle.textContent = "Add Address";
+  a_fullname.value = "";
+  a_phone.value    = "";
+  a_country.value  = "";
+  a_city.value     = "";
+  a_address.value  = "";
+  addressPopup.style.display = "flex";
+}
 
-  if (!fullname || !phone || !country || !city || !address) {
-    showToast("Please fill all fields ❌", "error");
+function closeAddressPopup(){
+  addressPopup.style.display = "none";
+}
+
+/* BUTTONS */
+openAddPopupBtn.addEventListener("click", openPopupForNew);
+cancelPopupBtn.addEventListener("click", closeAddressPopup);
+
+/* ---------------- SAVE ADDRESS ---------------- */
+saveAddressBtn.addEventListener("click", async () => {
+  const fullname = a_fullname.value.trim();
+  const phone    = a_phone.value.trim();
+  const country  = a_country.value.trim();
+  const city     = a_city.value.trim();
+  const addr     = a_address.value.trim();
+
+  if (!fullname || !phone || !country || !city || !addr){
+    showToast("Please fill all address fields ❌","error");
     return;
   }
 
-  const userId = await getUserId();
+  if (!editingId){
+    // INSERT
+    const { error } = await supabase
+      .from("addresses")
+      .insert([{
+        username,
+        fullname,
+        phone,
+        country,
+        city,
+        address: addr,
+        is_default: false
+      }]);
 
-  const { error } = await supabase.from("addresses").insert([
-    {
-      user_id: userId,
-      fullname,
-      phone,
-      country,
-      city,
-      full_address: address,
-      address,
-      is_default: false
+    if (error){
+      console.error("insert address error:", error);
+      showToast("Address add failed: " + (error.message || "check Supabase policies") + " ❌","error");
+      return;
     }
-  ]);
 
-  if (error) {
-    console.log(error);
-    showToast("Address add failed ❌", "error");
+    showToast("Address added ✅","success");
+  } else {
+    // UPDATE
+    const { error } = await supabase
+      .from("addresses")
+      .update({
+        fullname,
+        phone,
+        country,
+        city,
+        address: addr
+      })
+      .eq("id", editingId)
+      .eq("username", username);
+
+    if (error){
+      console.error("update address error:", error);
+      showToast("Address update failed: " + (error.message || "") + " ❌","error");
+      return;
+    }
+
+    showToast("Address updated ✅","success");
+  }
+
+  closeAddressPopup();
+  loadAddresses();
+});
+
+/* ---------------- EDIT ADDRESS ---------------- */
+window.editAddress = async function(id){
+  editingId = id;
+
+  const { data, error } = await supabase
+    .from("addresses")
+    .select("*")
+    .eq("id", id)
+    .eq("username", username)
+    .single();
+
+  if (error){
+    console.error("editAddress load error:", error);
+    showToast("Failed to load address ❌","error");
     return;
   }
 
-  showToast("Address added successfully ✅", "success");
-  loadAddresses();
+  popupTitle.textContent = "Edit Address";
+
+  a_fullname.value = data.fullname || "";
+  a_phone.value    = data.phone || "";
+  a_country.value  = data.country || "";
+  a_city.value     = data.city || "";
+  a_address.value  = data.address || "";
+
+  addressPopup.style.display = "flex";
 };
 
-/* DELETE ADDRESS */
-window.deleteAddress = function (id) {
-  confirmBox("Delete this address?", async (yes) => {
+/* ---------------- DELETE ADDRESS ---------------- */
+window.deleteAddress = function(id){
+  confirmBox("Are you sure you want to delete?", async yes=>{
     if (!yes) return;
 
-    await supabase.from("addresses").delete().eq("id", id);
+    const { error } = await supabase
+      .from("addresses")
+      .delete()
+      .eq("id", id)
+      .eq("username", username);
+
+    if (error){
+      console.error("deleteAddress error:", error);
+      showToast("Delete failed: " + (error.message || "") + " ❌","error");
+      return;
+    }
+
+    showToast("Address deleted ✅","success");
     loadAddresses();
   });
 };
 
-/* SET DEFAULT */
-window.setDefault = async function (id) {
-  const userId = await getUserId();
+/* ---------------- SET DEFAULT ---------------- */
+window.setDefault = async function(id){
+  // önce hepsini kapat
+  await supabase
+    .from("addresses")
+    .update({ is_default:false })
+    .eq("username", username);
 
-  await supabase.from("addresses").update({ is_default: false }).eq("user_id", userId);
-  await supabase.from("addresses").update({ is_default: true }).eq("id", id);
+  // sonra seçileni default yap
+  const { error } = await supabase
+    .from("addresses")
+    .update({ is_default:true })
+    .eq("id", id)
+    .eq("username", username);
 
-  showToast("Default address updated ✓", "success");
+  if (error){
+    console.error("setDefault error:", error);
+    showToast("Set default failed: " + (error.message || "") + " ❌","error");
+    return;
+  }
+
+  showToast("Default address updated ✅","success");
   loadAddresses();
 };
 
-/* -------------- SUPPORT MESSAGE SYSTEM (POPUP + SEND) -------------- */
-
-const supportBtn = document.getElementById("supportBtn");
-const supportPanel = document.getElementById("supportPanel");
-const closeSupport = document.getElementById("closeSupport");
-
-supportBtn.onclick = () => {
-  supportPanel.style.display =
-    supportPanel.style.display === "block" ? "none" : "block";
-};
-
-closeSupport.onclick = () => supportPanel.style.display = "none";
-
-/* Toast */
-function showToast(msg, type="info"){
+/* ---------------- TOAST / CONFIRM ---------------- */
+function showToast(msg,type="info"){
   const t=document.createElement("div");
   t.className=`toast ${type}`;
   t.textContent=msg;
@@ -312,8 +569,7 @@ function showToast(msg, type="info"){
   },2500);
 }
 
-/* Confirm Popup */
-function confirmBox(msg, cb){
+function confirmBox(msg,cb){
   const c=document.createElement("div");
   c.className="confirmBox";
   c.innerHTML=`
@@ -324,16 +580,88 @@ function confirmBox(msg, cb){
     </div>`;
   document.body.appendChild(c);
   setTimeout(()=>c.classList.add("show"),50);
-  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);};
-  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);};
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
 }
 
-</script>
+/* ---------------- SUPPORT (index ile aynı) ---------------- */
+const supportBtn   = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupport  = document.getElementById("sendSupportBtn");
 
-<!-- AVATAR MENU JS -->
-<script>
-const avatar=document.getElementById("userAvatar");
-const menu=document.getElementById("avatarMenu");
+supportBtn.addEventListener("click", () => {
+  supportPanel.style.display =
+    supportPanel.style.display === "block" ? "none" : "block";
+});
+
+closeSupport.addEventListener("click", () => {
+  supportPanel.style.display = "none";
+});
+
+sendSupport.addEventListener("click", () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if(yes) sendSupportMessage();
+  });
+});
+
+async function sendSupportMessage(){
+  const name  = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const cat   = document.getElementById("supCategory").value;
+  const msg   = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if(!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+  if(fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safe = `${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const { error:upErr } = await supabase
+      .storage.from("uploads")
+      .upload(`public/${safe}`, f);
+
+    if(upErr){
+      console.error("support upload error:", upErr);
+      showToast("File upload failed ❌","error");
+      return;
+    }
+
+    fileUrl = `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
+  }
+
+  const { error } = await supabase.from("messages").insert([{
+    name,
+    email,
+    category: cat,
+    message: msg,
+    file: fileUrl,
+    date: new Date().toLocaleString(),
+    read: false
+  }]);
+
+  if(error){
+    console.error("support insert error:", error);
+    showToast("Message failed ❌","error");
+    return;
+  }
+
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display = "none";
+}
+
+/* ---------------- LOGOUT + AVATAR MENU + CART COUNT ---------------- */
+window.logout = function(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+};
+
+const avatar = document.getElementById("userAvatar");
+const menu   = document.getElementById("avatarMenu");
 
 if(avatar){
   avatar.addEventListener("click",(e)=>{
@@ -341,12 +669,24 @@ if(avatar){
     menu.style.display = (menu.style.display==="flex") ? "none" : "flex";
   });
 }
-
 document.addEventListener("click",(e)=>{
   if(menu && !menu.contains(e.target) && e.target !== avatar){
     menu.style.display="none";
   }
 });
+
+// Cart count (quantity toplamı)
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const el   = document.getElementById("cartCount");
+  if(!el) return;
+  const total = cart.reduce((sum, item)=>{
+    const q = item.quantity ? Number(item.quantity) : 1;
+    return sum + (isNaN(q)?1:q);
+  },0);
+  el.textContent = total;
+});
+
 </script>
 
 </body>
