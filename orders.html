@@ -11,12 +11,11 @@
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
+<script src="support.js" defer></script>
 
 <style>
+body { color:white;margin:0;padding:0;background:black; }
 
-body { color:white; margin:0; padding:0; }
-
-/* PAGE WRAPPER */
 .orders-wrapper {
   margin-top:130px;
   display:flex;
@@ -24,16 +23,14 @@ body { color:white; margin:0; padding:0; }
   padding:20px;
 }
 
-/* MAIN CARD */
 .orders-card {
-  width:700px;
+  width:750px;
   background:#0d0d0d;
   border:1px solid #222;
   border-radius:18px;
   padding:25px;
 }
 
-/* ORDER BLOCK */
 .order-box {
   background:#141414;
   border:1px solid #333;
@@ -41,53 +38,11 @@ body { color:white; margin:0; padding:0; }
   padding:15px;
   margin-bottom:18px;
   cursor:pointer;
-  transition:.2s;
-}
-.order-box:hover { border-color:#00aa66; }
-
-/* ORDER HEADER */
-.order-header {
-  font-size:17px;
-  font-weight:bold;
-  margin-bottom:6px;
 }
 
-.order-status {
-  color:#00aa66;
-  font-size:14px;
-  margin-bottom:5px;
-}
-
-.order-date {
-  opacity:0.8;
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-/* PRODUCT CARD INSIDE ORDER */
-.order-product {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:10px;
-  padding:10px;
-  background:#1a1a1a;
-  border-radius:10px;
-  border:1px solid #2a2a2a;
-}
-
-.order-product img {
-  width:60px;
-  height:60px;
-  object-fit:cover;
-  border-radius:8px;
-}
-
-.order-product-info {
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
+.order-header { font-size:17px;font-weight:bold;margin-bottom:6px; }
+.order-status { color:#00aa66;font-size:14px;margin-bottom:5px; }
+.order-date { opacity:0.8;font-size:14px;margin-bottom:10px; }
 
 .no-orders {
   text-align:center;
@@ -96,9 +51,10 @@ body { color:white; margin:0; padding:0; }
   opacity:0.7;
 }
 
-.avatar-menu a { color:white !important; }
-.avatar-menu .logout { color:#ff4444 !important; }
-
+.order-total {
+  margin-top:8px;
+  font-weight:bold;
+}
 </style>
 </head>
 
@@ -108,10 +64,8 @@ body { color:white; margin:0; padding:0; }
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
-
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
@@ -131,7 +85,6 @@ body { color:white; margin:0; padding:0; }
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- PAGE -->
 <div class="orders-wrapper">
   <div class="orders-card">
     <h2>My Orders</h2>
@@ -139,107 +92,65 @@ body { color:white; margin:0; padding:0; }
   </div>
 </div>
 
-<script>
-let username = localStorage.getItem("loggedInUser");
+<!-- LOAD ORDERS FROM SUPABASE -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const username = localStorage.getItem("loggedInUser");
 if (!username) window.location.href = "login.html";
 
-let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
-let container = document.getElementById("ordersList");
+const list = document.getElementById("ordersList");
 
-if (orders.length === 0) {
-  container.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
+/* Orders’ı çek (supabase orders tablosu) */
+const { data: orders } = await supabase
+  .from("orders")
+  .select("*")
+  .eq("username", username)
+  .order("id", { ascending: false });
+
+if (!orders || orders.length === 0) {
+  list.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
 } else {
-  orders.reverse().forEach((order, index) => {
-
-    let itemHTML = order.items.map(i => `
-      <div class="order-product">
-        <img src="${i.image}">
-        <div class="order-product-info">
-          <span><b>${i.name}</b></span>
-          <span>Size: ${i.size}</span>
-          <span>${i.quantity} × ${i.price}€</span>
-        </div>
-      </div>
-    `).join("");
-
-    container.innerHTML += `
-      <div class="order-box" onclick="openOrder(${index})">
-        <div class="order-header">Order — ${order.date.split(" ")[0]}</div>
-        <div class="order-status">Completed</div>
-        <div class="order-date">${order.date}</div>
-        ${itemHTML}
-        <hr style="opacity:0.2;margin:10px 0;">
-        <div><b>Total:</b> ${order.total}€</div>
+  orders.forEach(o => {
+    list.innerHTML += `
+      <div class="order-box" onclick="window.location='order-detail.html?id=${o.id}'">
+        <div class="order-header">Order #${o.id}</div>
+        <div class="order-status">${o.status}</div>
+        <div class="order-date">${o.date}</div>
+        <div class="order-total">Total: ${o.total}€</div>
       </div>
     `;
   });
 }
+</script>
 
-function openOrder(i){
-  localStorage.setItem("selectedOrderIndex", i);
-  window.location.href = "order-detail.html";
-}
-
-/* Avatar menu */
+<!-- PROFILE MENU -->
+<script>
 document.getElementById("userAvatar").onclick = () => {
-  const m = document.getElementById("avatarMenu");
-  m.style.display = m.style.display === "flex" ? "none" : "flex";
+  avatarMenu.style.display = avatarMenu.style.display === "flex" ? "none":"flex";
 };
-
 function logout(){
   localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 </script>
 
-<!-- SUPPORT BTN -->
+<!-- SUPPORT BUTTON -->
 <div id="supportBtn"><img src="assets/support.svg"></div>
-
-<!-- SUPPORT PANEL -->
-<div id="supportPanel">
-  <div class="sup-header">
-    <span>Support</span>
-    <button id="closeSupport">✕</button>
-  </div>
-  <div class="sup-body">
-    <label>Your Name *</label>
-    <input id="supName" type="text">
-    <label>Email *</label>
-    <input id="supEmail" type="email">
-    <label>Category *</label>
-    <select id="supCategory">
-      <option value="Website">Website Issue</option>
-      <option value="Product">Product Info</option>
-      <option value="Design">Design Request</option>
-      <option value="Other">Other</option>
-    </select>
-    <label>Your Message *</label>
-    <textarea id="supMsg"></textarea>
-    <label>Attach File</label>
-    <input type="file" id="supFile">
-    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
-  </div>
-</div>
+<div id="supportPanel"> … </div> <!-- support.js hepsini kendisi dolduruyor -->
 
 <script src="support.js"></script>
 
+<!-- CART COUNT -->
 <script>
-const supportBtn = document.getElementById("supportBtn");
-const supportPanel = document.getElementById("supportPanel");
-const closeSupport = document.getElementById("closeSupport");
-const sendSupportBtn = document.getElementById("sendSupportBtn");
-
-supportBtn.onclick = ()=>supportPanel.style.display="block";
-closeSupport.onclick = ()=>supportPanel.style.display="none";
-
-sendSupportBtn.onclick = ()=>{ sendSupportMessage(); };
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", ()=>{
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartCount = cart.reduce((s,i)=>s + Number(i.quantity||1), 0);
-  document.getElementById("cartCount").textContent = cartCount;
+  cartCount.textContent = cart.reduce((s,i)=>s+i.quantity,0);
 });
 </script>
 
