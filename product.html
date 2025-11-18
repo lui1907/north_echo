@@ -314,7 +314,7 @@ document.addEventListener("click", e => {
     const item = {
       id: document.getElementById("productId").value,
       name: document.getElementById("productName").textContent,
-      price: document.getElementById("productPrice").textContent,
+      price: parseFloat(document.getElementById("productPrice").textContent.replace("€","")),
       size: selectedSize
     };
 
