@@ -61,7 +61,7 @@ body { color:white; margin:0; padding:0; }
   margin-bottom:10px;
 }
 
-/* PRODUCT CARD INSIDE ORDER */
+/* PRODUCT CARD */
 .order-product {
   display:flex;
   align-items:center;
@@ -90,6 +90,17 @@ body { color:white; margin:0; padding:0; }
   font-size:14px;
 }
 
+/* ADDRESS BOX */
+.order-address {
+  background:#1a1a1a;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #2a2a2a;
+  margin-top:10px;
+  font-size:14px;
+  opacity:0.9;
+}
+
 /* EMPTY MESSAGE */
 .no-orders {
   text-align:center;
@@ -97,9 +108,6 @@ body { color:white; margin:0; padding:0; }
   font-size:16px;
   opacity:0.7;
 }
-
-html.light .orders-card { background:white; border-color:#ccc; color:#111; }
-html.light .order-box { background:#f1f1f1; border-color:#ccc; }
 
 .avatar-menu a { color:white !important; }
 .avatar-menu .logout { color:#ff4444 !important; }
@@ -122,6 +130,7 @@ html.light .order-box { background:#f1f1f1; border-color:#ccc; }
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
+      <a href="orders.html">My Orders</a>
       <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -135,6 +144,7 @@ html.light .order-box { background:#f1f1f1; border-color:#ccc; }
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
 </div>
 
 <!-- PAGE CONTENT -->
@@ -158,8 +168,8 @@ if (orders.length === 0) {
   container.innerHTML = `<p class="no-orders">You have no orders yet.</p>`;
 } else {
   orders.reverse().forEach(order => {
-    
-    let itemHTML = order.items.map(i => `
+
+    let itemsHTML = order.items.map(i => `
       <div class="order-product">
         <img src="${i.image}">
         <div class="order-product-info">
@@ -170,13 +180,25 @@ if (orders.length === 0) {
       </div>
     `).join("");
 
+    let addressHTML = `
+      <div class="order-address">
+        <b>Shipping Address:</b><br>
+        ${order.contact.name}<br>
+        ${order.contact.address}<br>
+        ${order.contact.city}, ${order.contact.country}<br>
+        Phone: ${order.contact.phone}
+      </div>
+    `;
+
     container.innerHTML += `
       <div class="order-box">
         <div class="order-header">Order — ${order.date.split(" ")[0]}</div>
         <div class="order-status">Completed</div>
         <div class="order-date">${order.date}</div>
 
-        ${itemHTML}
+        ${itemsHTML}
+
+        ${addressHTML}
 
         <hr style="opacity:0.2;margin:10px 0;">
         <div><b>Total:</b> ${order.total}€</div>
@@ -206,11 +228,10 @@ function logout() {
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
+    <button id="closeSupport">✕</button>
   </div>
 
   <div class="sup-body">
-
     <label>Your Name *</label>
     <input id="supName" type="text">
 
@@ -231,45 +252,34 @@ function logout() {
     <label>Attach File (optional)</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
-
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<!-- SUPPORT SCRIPT (TEK DOĞRU ŞEKİL) -->
+<!-- SUPPORT JS -->
 <script src="support.js"></script>
 
 <script>
 function toggleSupportPanel() {
-  const panel = document.getElementById("supportPanel");
-  panel.style.display = (panel.style.display === "block") ? "none" : "block";
+  const p = document.getElementById("supportPanel");
+  p.style.display = (p.style.display === "block") ? "none" : "block";
 }
 
-const supportBtn = document.getElementById("supportBtn");
-const closeBtn = document.querySelector("#supportPanel button");
-
-if (supportBtn) supportBtn.onclick = toggleSupportPanel;
-if (closeBtn) closeBtn.onclick = toggleSupportPanel;
+document.getElementById("supportBtn").onclick = toggleSupportPanel;
+document.getElementById("closeSupport").onclick = toggleSupportPanel;
 </script>
 
 <script>
-// 🔥 CART COUNT (TOPLAM ADET, QUANTITY DAHİL)
+/* CART COUNT */
 document.addEventListener("DOMContentLoaded", () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartCountEl = document.getElementById("cartCount");
   if (!cartCountEl) return;
 
-  // Örnek: L (2 adet) + S (2 adet) => 4
-  const totalCount = cart.reduce((sum, item) => {
-    const qty = item.quantity ? Number(item.quantity) : 1;
-    return sum + (isNaN(qty) ? 1 : qty);
-  }, 0);
-
-  cartCountEl.textContent = totalCount;
+  const totalQty = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+  cartCountEl.textContent = totalQty;
 });
 </script>
 
-
-  
 </body>
 </html>
