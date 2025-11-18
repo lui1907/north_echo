@@ -336,5 +336,37 @@ function logout(){
   </div>
 </div>
 
+  <script>
+// 🔥 KULLANICININ KAYITLI ADRESLERİNİ YÜKLE
+document.addEventListener("DOMContentLoaded", () => {
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) return;
+
+  const savedAddresses = JSON.parse(localStorage.getItem("addresses_" + user)) || [];
+  const addressSelect = document.getElementById("addressSelect");
+
+  // Dropdown’a adresleri ekle
+  savedAddresses.forEach((addr, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = `${addr.country}, ${addr.city} — ${addr.full}`;
+    addressSelect.appendChild(opt);
+  });
+
+  // 🔥 Seçildiğinde otomatik doldur
+  addressSelect.addEventListener("change", () => {
+    const idx = addressSelect.value;
+    if (idx === "") return;
+
+    const selected = savedAddresses[idx];
+
+    document.getElementById("c_country").value = selected.country;
+    document.getElementById("c_city").value = selected.city;
+    document.getElementById("c_address").value = selected.full;
+  });
+});
+</script>
+
+
 </body>
 </html>
