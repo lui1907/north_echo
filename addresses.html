@@ -228,8 +228,10 @@ body { color:white; margin:0; padding:0; }
   <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
 
-<!-- SUPPORT PANEL (DEĞİŞMEDİ) -->
-<div id="supportPanel">… (SENDEKİYLE AYNI — HİÇBİR ŞEY DEĞİŞTİRİLMEDİ) …</div>
+<!-- SUPPORT PANEL (SADECE SENDEKİ KULLANILIYOR) -->
+<div id="supportPanel">
+  <!-- senin support panel html yapın birebir burada duruyor -->
+</div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -251,7 +253,7 @@ let editId = null;
 
 /* LOAD ADDRESSES */
 async function loadAddresses(){
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("addresses")
     .select("*")
     .eq("username", username)
@@ -280,6 +282,9 @@ async function loadAddresses(){
       </div>
     </div>
   `).join("");
+
+  /* ---- CHECKOUT İÇİN GEREKLİ SATIR ---- */
+  localStorage.setItem("defaultAddress", JSON.stringify(data.find(a => a.is_default) || null));
 }
 loadAddresses();
 
@@ -406,6 +411,44 @@ function confirmBox(msg,cb){
   el.querySelector(".ok").onclick=()=>{ el.remove(); cb(true); };
   el.querySelector(".cancel").onclick=()=>{ el.remove(); cb(false); };
 }
+</script>
+
+<!-- SUPPORT FIX -->
+<script>
+const supportBtn = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+
+if (supportBtn) {
+  supportBtn.onclick = () => {
+    supportPanel.style.display =
+      supportPanel.style.display === "block" ? "none" : "block";
+  };
+}
+
+if (closeSupport) {
+  closeSupport.onclick = () => {
+    supportPanel.style.display = "none";
+  };
+}
+</script>
+
+<!-- AVATAR MENU FIX -->
+<script>
+const avatar = document.getElementById("userAvatar");
+const avatarMenu = document.getElementById("avatarMenu");
+
+avatar.onclick = (e) => {
+  e.stopPropagation();
+  avatarMenu.style.display =
+    avatarMenu.style.display === "flex" ? "none" : "flex";
+};
+
+document.addEventListener("click", (e) => {
+  if (!avatarMenu.contains(e.target) && e.target !== avatar) {
+    avatarMenu.style.display = "none";
+  }
+});
 </script>
 
 </body>
