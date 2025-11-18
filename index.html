@@ -1,19 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>North Echo — Premium Apparel</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>North Echo — Minimal Luxury Apparel</title>
 
-<!-- STYLES & SCRIPTS -->
-<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="style.css" />
+
+<!-- JS -->
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
-<link rel="stylesheet" href="support.css">
-<script src="support.js" type="module"></script>
-</head>
 
+<!-- SUPPORT -->
+<link rel="stylesheet" href="support.css">
+<script src="support.js" defer></script>
+
+</head>
 <body>
 
 <!-- HEADER -->
@@ -22,18 +25,8 @@
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
-
-    <!-- PROFIL FOTOĞRAFI -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
-
-    <!-- AÇILIR MENÜ -->
-    <div class="avatar-menu" id="avatarMenu">
-      <a href="profile.html">Profile</a>
-      <a href="settings.html">Settings</a>
-      <a href="#" class="logout" onclick="logout()">Logout</a>
-    </div>
   </div>
 </header>
 
@@ -43,34 +36,31 @@
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- HERO SECTION -->
-<section class="full-hero">
+<!-- HERO -->
+<div class="full-hero">
   <div class="hero-overlay">
-    <h1 class="fh-title">Winter Collection 2025</h1>
-    <p class="fh-sub">Minimal. Clean. Premium. Designed for everyday comfort.</p>
-
+    <h1 class="fh-title">North Echo</h1>
+    <p class="fh-sub">Minimal Luxury Apparel</p>
     <div class="fh-buttons">
       <a href="tshirts.html" class="fh-btn">Shop T-Shirts</a>
       <a href="sweatshirts.html" class="fh-btn alt">Shop Sweatshirts</a>
     </div>
   </div>
-</section>
+</div>
 
 <!-- CATEGORIES -->
 <section class="categories-section">
-  <h2 class="cat-title-home">Categories</h2>
   <div class="categories-grid">
     <a href="tshirts.html" class="category-card">
-      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg" alt="">
+      <img src="https://i.ibb.co/DNJdMBr/white-tshirt1.jpg">
       <h3>T-Shirts</h3>
     </a>
 
     <a href="sweatshirts.html" class="category-card">
-      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg" alt="">
+      <img src="https://i.ibb.co/MyBV7FLJ/black-sweatshirt-3.jpg">
       <h3>Sweatshirts</h3>
     </a>
   </div>
@@ -79,70 +69,23 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-content">
-    <h3>NORTH ECHO</h3>
-    <p>Minimalist & premium apparel designed for everyday comfort and style.</p>
-    <a href="https://instagram.com/northecho.fi" target="_blank" class="footer-link">
-      Instagram
-    </a>
+    <h3>North Echo</h3>
+    <p>Minimal luxury apparel crafted with precision.</p>
+    <a href="#" class="footer-link">Instagram</a>
   </div>
 </footer>
 
-<!-- MENU & LOGOUT -->
-<script>
-const avatar = document.getElementById("userAvatar");
-const menu = document.getElementById("avatarMenu");
-
-if (avatar) {
-  avatar.addEventListener("click", function () {
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-  });
-}
-
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-</script>
-
-<!-- ✅ SUPABASE AVATAR LOAD -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-const username = localStorage.getItem("loggedInUser");
-
-if (username) {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("avatar")
-      .eq("username", username)
-      .single();
-
-    if (!error && data && data.avatar) {
-      const userAvatar = document.getElementById("userAvatar");
-      if (userAvatar) userAvatar.src = data.avatar;
-    }
-  } catch (err) {
-    console.error("Avatar load failed:", err);
-  }
-}
-</script>
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
+<div id="supportBtn">
   <img src="assets/support.svg" style="width:26px;height:26px;">
 </div>
-  
+
 <!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
+    <button id="closeSupport">✕</button>
   </div>
 
   <div class="sup-body">
@@ -166,14 +109,100 @@ if (username) {
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" onclick="sendSupportMessage()">Send Message →</button>
+    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<link rel="stylesheet" href="support.css">
-<script src="support.js"></script>
 
+<!-- SUPPORT LOGIC -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const supportBtn   = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupport  = document.getElementById("sendSupportBtn");
+
+supportBtn.onclick = () => {
+  supportPanel.style.display =
+    supportPanel.style.display === "block" ? "none" : "block";
+};
+closeSupport.onclick = () => supportPanel.style.display = "none";
+
+// TOAST
+function showToast(msg, type="info"){
+  const t = document.createElement("div");
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
+
+// CONFIRM POPUP
+function confirmBox(msg, callback){
+  const c = document.createElement("div");
+  c.className = "confirmBox";
+  c.innerHTML = `
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+
+  c.querySelector(".ok").onclick = ()=>{ c.remove(); callback(true); };
+  c.querySelector(".cancel").onclick = ()=>{ c.remove(); callback(false); };
+}
+
+sendSupport.onclick = () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if(yes) sendMessage();
+  });
+};
+
+async function sendMessage(){
+  const name  = supName.value.trim();
+  const email = supEmail.value.trim();
+  const cat   = supCategory.value;
+  const msg   = supMsg.value.trim();
+  const fileInput = supFile;
+
+  if(!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+  if(fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safe = `${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const { error } = await supabase.storage.from("uploads").upload(`public/${safe}`, f);
+    if(error){
+      showToast("File upload failed ❌","error");
+      return;
+    }
+    fileUrl = `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
+  }
+
+  await supabase.from("messages").insert([{
+    name,email,category:cat,message:msg,
+    file:fileUrl,date:new Date().toLocaleString(),read:false
+  }]);
+
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display = "none";
+}
+</script>
 
 </body>
 </html>
