@@ -292,10 +292,11 @@ loadProduct();
 </script>
 
 
-<!-- SIZE SELECTION + CART -->
+<!-- SIZE SELECTION + ADD TO CART -->
 <script>
 let selectedSize = null;
 
+// BEDEN SEÇME
 document.addEventListener("click", e => {
   if (e.target.classList.contains("size-btn")) {
     document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
@@ -304,28 +305,38 @@ document.addEventListener("click", e => {
   }
 });
 
+// SEPETE EKLEME (YENİ SİSTEM)
 document.addEventListener("click", e => {
   if (e.target.id === "addToCartBtn") {
+
     if (!selectedSize) {
       showToast("⚠ Please select a size first", "error");
       return;
     }
 
-    const item = {
-      id: document.getElementById("productId").value,
-      name: document.getElementById("productName").textContent,
-      price: parseFloat(document.getElementById("productPrice").textContent.replace("€","")),
-      size: selectedSize
-    };
+    const productId = document.getElementById("productId").value;
+    const name = document.getElementById("productName").textContent;
+    const priceText = document.getElementById("productPrice").textContent;
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(item);
-    localStorage.setItem("cart", JSON.stringify(cart));
+    const price = parseFloat(
+      priceText.replace("€","").replace(",",".")
+    );
+
+    const image = document.getElementById("mainImg").src;
+
+    addToCart({
+      id: productId,
+      name: name,
+      price: price,
+      size: selectedSize,
+      image: image
+    });
 
     showToast("Added to cart ✅", "success");
   }
 });
 </script>
+
 
 
 <!-- TOAST -->
