@@ -151,11 +151,11 @@ if (orders.length === 0) {
         <hr style="opacity:0.2;margin:10px 0;">
         ${order.items.map(i => `
           <div class="order-item">
-            ${i.qty}× ${i.productName} — ${i.price}₺
+            ${i.qty}× ${i.productName} — ${i.price}€
           </div>
         `).join("")}
         <hr style="opacity:0.2;margin:10px 0;">
-        <div class="order-total"><b>Total:</b> ${order.total}₺</div>
+        <div class="order-total"><b>Total:</b> ${order.total}€</div>
       </div>
     `;
 
