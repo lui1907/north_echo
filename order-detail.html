@@ -1,75 +1,80 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Order Details — North Echo</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Order Detail — North Echo</title>
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="support.css">
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
 
 <style>
-body { margin:0; padding:0; color:white; }
+body{color:white;margin:0;padding:0;}
 
-.detail-wrapper {
-  margin-top:140px;
+.detail-wrapper{
+  margin-top:130px;
   display:flex;
   justify-content:center;
-  padding-bottom:80px;
+  padding:20px;
 }
 
-.detail-card {
-  width:700px;
+.detail-card{
+  width:750px;
   background:#0d0d0d;
-  border:1px solid #222;
-  border-radius:16px;
   padding:25px;
+  border-radius:16px;
+  border:1px solid #222;
 }
 
-.back-btn {
-  position:absolute;
-  top:110px;
-  left:40px;
-  padding:6px 14px;
-  border-radius:8px;
-  background:#111;
-  border:1px solid #333;
-  color:#ccc;
-  cursor:pointer;
-  transition:.25s;
-}
-.back-btn:hover {
-  background:#222;
-  color:white;
+.section-title{
+  font-size:20px;
+  font-weight:bold;
+  margin:15px 0 10px 0;
 }
 
-/* Product box */
-.product-box {
+.product-box{
+  display:flex;
+  gap:12px;
   background:#1a1a1a;
   border:1px solid #2a2a2a;
-  border-radius:12px;
-  padding:12px;
-  display:flex;
-  gap:15px;
-  margin-bottom:15px;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:12px;
 }
+
 .product-box img{
   width:70px;
   height:70px;
-  border-radius:8px;
+  border-radius:10px;
   object-fit:cover;
 }
 
-/* Address */
-.addr-line b {
-  display:inline-block;
-  width:90px;
+.back-btn {
+  position: absolute;
+  top: 110px;
+  left: 100px;
+  color: #ccc;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  transition: .2s;
 }
+
+.back-btn:hover {
+  color: white;
+  background: #222;
+  border-color: #555;
+}
+
+  
+.avatar-menu a{color:white!important;}
+.avatar-menu .logout{color:#ff4444!important;}
 </style>
 </head>
 
@@ -100,77 +105,92 @@ body { margin:0; padding:0; color:white; }
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
+  <a href="orders.html">My Orders</a>
 </div>
 
 <!-- BACK BUTTON -->
-<div class="back-btn" onclick="history.back()">← Back to Orders</div>
+<div class="back-btn" onclick="history.back()">
+  ← Back to Orders
+</div>
 
+  
 <!-- PAGE -->
 <div class="detail-wrapper">
   <div class="detail-card">
-
     <h2>Order Details</h2>
-
-    <h4 style="margin-top:20px;">General Info</h4>
-    <div><b>Order ID:</b> <span id="od_id"></span></div>
-    <div><b>Date:</b> <span id="od_date"></span></div>
-    <div><b>Total:</b> <span id="od_total"></span></div>
-    <div><b>Status:</b> <span id="od_status" style="color:#00ff99;"></span></div>
-
-    <h4 style="margin-top:25px;">Products</h4>
-    <div id="od_products"></div>
-
-    <h4 style="margin-top:25px;">Shipping Address</h4>
-    <div class="addr-line"><b>Name:</b> <span id="ad_name"></span></div>
-    <div class="addr-line"><b>Email:</b> <span id="ad_email"></span></div>
-    <div class="addr-line"><b>Phone:</b> <span id="ad_phone"></span></div>
-    <div class="addr-line"><b>Country:</b> <span id="ad_country"></span></div>
-    <div class="addr-line"><b>City:</b> <span id="ad_city"></span></div>
-    <div class="addr-line"><b>Address:</b> <span id="ad_address"></span></div>
-
+    <div id="detail"></div>
   </div>
 </div>
 
 <!-- ORDER DETAIL SCRIPT -->
 <script>
-const id = new URLSearchParams(window.location.search).get("id");
-const username = localStorage.getItem("loggedInUser");
+let username = localStorage.getItem("loggedInUser");
+if (!username) window.location = "login.html";
 
-if (!username) window.location.href = "login.html";
+const index = localStorage.getItem("selectedOrderIndex");
+if (index === null) window.location = "orders.html";
 
-const orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
-const order = orders.find(o => o.id == id);
+let orders = JSON.parse(localStorage.getItem("orders_" + username)) || [];
+let reversed = [...orders].reverse();
+let order = reversed[index];
 
 if (!order) {
-  document.querySelector(".detail-card").innerHTML = "<h3>Order Not Found</h3>";
+  document.getElementById("detail").innerHTML =
+    "<p>Order not found.</p>";
 } else {
+  let html = `
+    <div class="section-title">General Info</div>
+    <p><b>Date:</b> ${order.date}</p>
+    <p><b>Total:</b> ${order.total}€</p>
+    <p><b>Status:</b> Completed</p>
 
-  document.getElementById("od_id").textContent = order.id;
-  document.getElementById("od_date").textContent = order.date;
-  document.getElementById("od_total").textContent = order.total + "€";
-  document.getElementById("od_status").textContent = order.status;
+    <div class="section-title">Products</div>
+  `;
 
-  // Products
-  order.items.forEach(p => {
-    document.getElementById("od_products").innerHTML += `
+  order.items.forEach(i=>{
+    html += `
       <div class="product-box">
-        <img src="${p.image}">
+        <img src="${i.image}">
         <div>
-          <b>${p.name}</b><br>
-          Size: ${p.size}<br>
-          ${p.quantity} × ${p.price}€
+          <p><b>${i.name}</b></p>
+          <p>Size: ${i.size}</p>
+          <p>${i.quantity} × ${i.price}€</p>
         </div>
-      </div>`;
+      </div>
+    `;
   });
 
-  // Address
-  document.getElementById("ad_name").textContent = order.contact.name;
-  document.getElementById("ad_email").textContent = order.contact.email;
-  document.getElementById("ad_phone").textContent = order.contact.phone;
-  document.getElementById("ad_country").textContent = order.contact.country;
-  document.getElementById("ad_city").textContent = order.contact.city;
-  document.getElementById("ad_address").textContent = order.contact.address;
+  html += `
+    <div class="section-title">Shipping Address</div>
+    <p><b>Name:</b> ${order.contact.name}</p>
+    <p><b>Email:</b> ${order.contact.email}</p>
+    <p><b>Phone:</b> ${order.contact.phone}</p>
+    <p><b>Country:</b> ${order.contact.country}</p>
+    <p><b>City:</b> ${order.contact.city}</p>
+    <p><b>Address:</b> ${order.contact.address}</p>
+  `;
+
+  document.getElementById("detail").innerHTML = html;
 }
+
+/* Avatar menu */
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href="login.html";
+}
+
+/* CART COUNT (adet bazlı) */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const total = cart.reduce((s,i)=> s + (Number(i.quantity)||1), 0);
+  const cnt = document.getElementById("cartCount");
+  if (cnt) cnt.textContent = total;
+});
 </script>
 
 <!-- SUPPORT BUTTON -->
@@ -182,28 +202,151 @@ if (!order) {
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button onclick="toggleSupportPanel()">✕</button>
+    <button id="closeSupport">✕</button>
   </div>
 
   <div class="sup-body">
     <label>Your Name *</label>
     <input id="supName" type="text">
+
     <label>Email *</label>
     <input id="supEmail" type="email">
+
     <label>Category *</label>
     <select id="supCategory">
-      <option value="Order">Order Issue</option>
       <option value="Website">Website Issue</option>
       <option value="Product">Product Info</option>
+      <option value="Design">Design Request</option>
       <option value="Other">Other</option>
     </select>
+
     <label>Your Message *</label>
     <textarea id="supMsg"></textarea>
+
+    <label>Attach File (optional)</label>
+    <input type="file" id="supFile">
+
     <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
 </div>
 
-<script src="support.js"></script>
+<!-- SUPPORT LOGIC (T-SHIRTS MANTIĞI İLE) -->
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
+
+const supportBtn    = document.getElementById("supportBtn");
+const supportPanel  = document.getElementById("supportPanel");
+const closeSupport  = document.getElementById("closeSupport");
+const sendSupportBtn= document.getElementById("sendSupportBtn");
+
+if (supportBtn) supportBtn.onclick = () => {
+  supportPanel.style.display =
+    (supportPanel.style.display === "block") ? "none" : "block";
+};
+if (closeSupport) closeSupport.onclick = () => {
+  supportPanel.style.display = "none";
+};
+
+function showToast(msg,type="info"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
+    t.classList.remove("show");
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
+
+function confirmBox(msg,cb){
+  const c=document.createElement("div");
+  c.className="confirmBox";
+  c.innerHTML=`
+    <div>${msg}</div>
+    <div class="confirm-buttons">
+      <button class="ok">Yes</button>
+      <button class="cancel">No</button>
+    </div>`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
+}
+
+sendSupportBtn.onclick = () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if (yes) sendSupportMessage();
+  });
+};
+
+async function sendSupportMessage(){
+  const name  = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const msg   = document.getElementById("supMsg").value.trim();
+  const cat   = document.getElementById("supCategory").value;
+  const fileInput = document.getElementById("supFile");
+
+  if (!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+
+  if (fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safeName = `${Date.now()}_${f.name
+      .replace(/\s+/g,"_")
+      .replace(/[^\w.-]/g,"")}`;
+
+    const { error: uploadError } = await supabase
+      .storage.from("uploads")
+      .upload(`public/${safeName}`, f, {
+        cacheControl:"3600",
+        upsert:false
+      });
+
+    if (uploadError){
+      console.error(uploadError);
+      showToast("File upload failed ❌","error");
+      return;
+    }
+
+    fileUrl =
+      `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safeName}`;
+  }
+
+  const { error: insertError } = await supabase
+    .from("messages")
+    .insert([{
+      name,
+      email,
+      category: cat || "Order Detail",
+      message: msg,
+      file: fileUrl,
+      date: new Date().toLocaleString(),
+      read: false
+    }]);
+
+  if (insertError){
+    console.error(insertError);
+    showToast("Message failed ❌","error");
+  } else {
+    showToast("Message sent ✅","success");
+    supportPanel.style.display = "none";
+    document.getElementById("supName").value = "";
+    document.getElementById("supEmail").value = "";
+    document.getElementById("supMsg").value = "";
+    document.getElementById("supFile").value = "";
+  }
+}
+</script>
 
 </body>
 </html>
