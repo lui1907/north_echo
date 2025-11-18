@@ -6,6 +6,8 @@
 <title>My Addresses — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
+
+<!-- SUPPORT STYLES (index’teki ile aynı) -->
 <link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
@@ -13,107 +15,202 @@
 <script src="cart.js" defer></script>
 
 <style>
-body { color:white; }
+body { color:white; margin:0; padding:0; }
 
 /* WRAPPER */
-.addr-wrapper {
+.addresses-wrapper{
   margin-top:130px;
   display:flex;
   justify-content:center;
   padding:20px;
 }
 
-/* CARD */
-.addr-card {
+/* MAIN CARD */
+.addresses-card{
   width:700px;
   background:#0d0d0d;
   border:1px solid #222;
-  border-radius:16px;
+  border-radius:18px;
   padding:25px;
 }
 
-.addr-header {
+/* HEADER LINE */
+.addr-top-line{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:15px;
 }
 
-.add-btn {
-  padding:10px 16px;
-  background:#00aa66;
-  border:none;
+.addr-top-line h2{
+  margin:0;
+}
+
+/* ADD BUTTON */
+.add-btn{
+  padding:8px 14px;
   border-radius:8px;
-  font-weight:bold;
+  border:1px solid #333;
+  background:#000;
+  color:#fff;
   cursor:pointer;
+  font-size:14px;
 }
-.add-btn:hover { background:#00cc77; }
+.add-btn:hover{background:#111;}
 
-/* ADDRESS BOX */
-.addr-box {
+/* ADDRESS CARD */
+.addr-box{
   background:#141414;
-  border:1px solid #2a2a2a;
+  border:1px solid #333;
   border-radius:12px;
   padding:15px;
-  margin-top:15px;
+  margin-bottom:15px;
 }
 
-.addr-line {
+.addr-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   margin-bottom:6px;
 }
 
-.addr-actions {
-  margin-top:10px;
+.addr-name{
+  font-weight:bold;
+  font-size:15px;
+}
+
+.addr-default-tag{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#00aa66;
+  color:#000;
+  margin-left:8px;
+}
+
+.addr-lines{
+  font-size:14px;
+  opacity:0.85;
+  margin-bottom:8px;
+}
+
+.addr-actions{
   display:flex;
-  gap:10px;
+  gap:8px;
+  margin-top:4px;
 }
 
-.addr-btn {
-  padding:7px 12px;
-  border-radius:8px;
+.addr-actions button{
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid #333;
+  background:#000;
+  color:#fff;
   cursor:pointer;
-  border:none;
+  font-size:13px;
 }
+.addr-actions button:hover{background:#111;}
 
-.edit-btn { background:#444; }
-.del-btn { background:#aa2222; }
-.default-btn { background:#0066aa; }
+.no-address{
+  text-align:center;
+  margin-top:20px;
+  opacity:0.7;
+}
 
 /* POPUP */
-.toast, .confirmBox {
+.address-popup{
   position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%) scale(.9);
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.address-popup-inner{
+  width:350px;
+  background:#111;
+  border-radius:14px;
+  border:1px solid #333;
+  padding:20px;
+}
+
+.address-popup-inner h3{
+  margin-top:0;
+  margin-bottom:10px;
+}
+
+.address-popup-inner label{
+  display:block;
+  font-size:13px;
+  margin-bottom:4px;
+  color:#ccc;
+}
+
+.address-popup-inner input,
+.address-popup-inner textarea{
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:1px solid #333;
+  background:#1a1a1a;
+  color:white;
+  font-size:14px;
+}
+
+.address-popup-buttons{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:4px;
+}
+
+.address-popup-buttons button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #444;
+  background:#000;
+  color:#fff;
+  cursor:pointer;
+  font-size:13px;
+}
+.address-popup-buttons .primary{
+  background:#00aa66;
+  border-color:#00aa66;
+  color:#000;
+}
+.address-popup-buttons .primary:hover{background:#00cc77;}
+.address-popup-buttons .cancel:hover{background:#111;}
+
+/* TOAST & CONFIRM (index ile aynı mantık) */
+.toast,.confirmBox{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(.9);
   background:rgba(20,20,20,.95);
   border:1px solid #333;
   padding:16px 22px;
-  color:white;
-  border-radius:10px;
-  opacity:0;
-  transition:all .3s;
-  z-index:99999;
-  font-size:15px;
-  text-align:center;
+  color:white;border-radius:10px;
+  opacity:0;transition:all .3s;
+  z-index:99999;font-size:15px;text-align:center;
 }
-.toast.show, .confirmBox.show {
-  opacity:1;
-  transform:translate(-50%, -50%) scale(1);
+.toast.show,.confirmBox.show{
+  opacity:1;transform:translate(-50%,-50%) scale(1);
 }
+.toast.success{border-color:#00aa66;color:#00ff99;}
+.toast.error{border-color:#aa0000;color:#ff5555;}
 
-.confirm-buttons {
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  margin-top:10px;
+.confirm-buttons{
+  display:flex;gap:10px;justify-content:center;margin-top:10px;
 }
-.confirm-buttons button {
-  background:#00aa66;
-  border:none;
-  padding:8px 14px;
-  border-radius:6px;
-  cursor:pointer;
+.confirm-buttons button{
+  background:#00aa66;border:none;
+  padding:8px 14px;border-radius:6px;
+  cursor:pointer;color:white;font-weight:bold;
 }
-.confirm-buttons .cancel { background:#444; }
+.confirm-buttons .cancel{background:#444;}
 </style>
 </head>
 
@@ -123,13 +220,18 @@ body { color:white; }
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
     <div class="avatar-menu" id="avatarMenu">
       <a href="profile.html">Profile</a>
       <a href="settings.html">Settings</a>
-      <a href="#" onclick="logout()" class="logout">Logout</a>
+      <a href="addresses.html">Addresses</a>
+      <a href="orders.html">My Orders</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
   </div>
 </header>
@@ -142,39 +244,53 @@ body { color:white; }
   <a href="sweatshirts.html">Sweatshirts</a>
   <a href="hoodies.html">Hoodies</a>
   <a href="cart.html">Cart</a>
-  <a href="addresses.html">My Addresses</a>
+  <a href="addresses.html">Addresses</a>
 </div>
 
-<!-- PAGE -->
-<div class="addr-wrapper">
-  <div class="addr-card">
-    <div class="addr-header">
+<!-- PAGE CONTENT -->
+<div class="addresses-wrapper">
+  <div class="addresses-card">
+    <div class="addr-top-line">
       <h2>My Addresses</h2>
-      <button class="add-btn" onclick="openAddressForm()">+ Add Address</button>
+      <button class="add-btn" id="openAddPopup">+ Add Address</button>
     </div>
-
-    <div id="addrList"></div>
+    <div id="addressList"></div>
   </div>
 </div>
 
-<!-- ADDRESS FORM POPUP -->
-<div id="addressPopup" class="confirmBox" style="width:350px; display:none;">
-  <h3 id="popupTitle">Add Address</h3>
+<!-- POPUP -->
+<div class="address-popup" id="addressPopup">
+  <div class="address-popup-inner">
+    <h3 id="popupTitle">Add Address</h3>
 
-  <input id="a_fullname" placeholder="Full Name" class="auth-input">
-  <input id="a_phone" placeholder="Phone Number" class="auth-input">
-  <input id="a_country" placeholder="Country" class="auth-input">
-  <input id="a_city" placeholder="City" class="auth-input">
-  <textarea id="a_address" placeholder="Full Address" class="auth-input"></textarea>
+    <label>Full Name *</label>
+    <input id="a_fullname" type="text" placeholder="John Doe"/>
 
-  <div class="confirm-buttons">
-    <button class="ok" onclick="saveAddress()">Save</button>
-    <button class="cancel" onclick="closeAddressForm()">Cancel</button>
+    <label>Phone *</label>
+    <input id="a_phone" type="text" placeholder="+358 xx xxx xx xx"/>
+
+    <label>Country *</label>
+    <input id="a_country" type="text" placeholder="Finland"/>
+
+    <label>City *</label>
+    <input id="a_city" type="text" placeholder="Helsinki"/>
+
+    <label>Full Address *</label>
+    <textarea id="a_address" placeholder="Street, building, apartment..."></textarea>
+
+    <div class="address-popup-buttons">
+      <button class="cancel" id="cancelPopup">Cancel</button>
+      <button class="primary" id="saveAddressBtn">Save</button>
+    </div>
   </div>
 </div>
 
 <!-- SUPPORT BUTTON -->
-<div id="supportBtn"><img src="assets/support.svg"></div>
+<div id="supportBtn">
+  <img src="assets/support.svg" style="width:26px;height:26px;">
+</div>
+
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -206,9 +322,8 @@ body { color:white; }
   </div>
 </div>
 
-<!-- JS -->
+<!-- SUPABASE + ADDRESSES + SUPPORT (INDEX GİBİ) -->
 <script type="module">
-/* ----------------------- SUPABASE ------------------------- */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabase = createClient(
@@ -216,118 +331,158 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-/* LOGIN CHECK */
+/* ---------------- USER CHECK ---------------- */
 const username = localStorage.getItem("loggedInUser");
-if (!username) window.location.href = "login.html";
+if (!username) {
+  window.location.href = "login.html";
+}
+
+/* ---------------- DOM ---------------- */
+const addressList      = document.getElementById("addressList");
+const openAddPopupBtn  = document.getElementById("openAddPopup");
+const addressPopup     = document.getElementById("addressPopup");
+const cancelPopupBtn   = document.getElementById("cancelPopup");
+const saveAddressBtn   = document.getElementById("saveAddressBtn");
+const popupTitle       = document.getElementById("popupTitle");
+
+const a_fullname = document.getElementById("a_fullname");
+const a_phone    = document.getElementById("a_phone");
+const a_country  = document.getElementById("a_country");
+const a_city     = document.getElementById("a_city");
+const a_address  = document.getElementById("a_address");
 
 let editingId = null;
 
-/* --------------------- LOAD ADDRESSES ---------------------- */
-loadAddresses();
+/* ---------------- LOAD ADDRESSES ---------------- */
+async function loadAddresses(){
+  addressList.innerHTML = "Loading...";
 
-async function loadAddresses() {
   const { data, error } = await supabase
     .from("addresses")
     .select("*")
     .eq("username", username)
-    .order("id", { ascending: true });
+    .order("created_at", { ascending:false });
 
-  if (error) {
-    showToast("Failed to load addresses ❌", "error");
+  if (error){
+    console.error(error);
+    addressList.innerHTML = `<p class="no-address">Failed to load addresses.</p>`;
     return;
   }
 
-  const box = document.getElementById("addrList");
-  box.innerHTML = "";
+  if (!data || data.length === 0){
+    addressList.innerHTML = `<p class="no-address">You have no saved addresses yet.</p>`;
+    return;
+  }
 
-  data.forEach(a => {
-    box.innerHTML += `
-      <div class="addr-box">
-        <div class="addr-line"><b>${a.fullname}</b></div>
-        <div class="addr-line">Phone: ${a.phone}</div>
-        <div class="addr-line">Country: ${a.country}</div>
-        <div class="addr-line">City: ${a.city}</div>
-        <div class="addr-line">Address: ${a.address}</div>
-        <div class="addr-line" style="color:#00aa66; font-weight:bold;">
-          ${a.is_default ? "✓ Default Address" : ""}
-        </div>
-
-        <div class="addr-actions">
-          <button class="addr-btn edit-btn" onclick="editAddress(${a.id})">Edit</button>
-          <button class="addr-btn del-btn" onclick="deleteAddress(${a.id})">Delete</button>
-          <button class="addr-btn default-btn" onclick="setDefault(${a.id})">Set Default</button>
+  addressList.innerHTML = data.map(addr => `
+    <div class="addr-box">
+      <div class="addr-header">
+        <div class="addr-name">
+          ${addr.fullname || ""} 
+          ${addr.is_default ? `<span class="addr-default-tag">Default</span>` : ""}
         </div>
       </div>
-    `;
-  });
+
+      <div class="addr-lines">
+        <div>📞 ${addr.phone || "-"}</div>
+        <div>🌍 ${addr.country || "-"} / ${addr.city || "-"}</div>
+        <div>🏠 ${addr.address || "-"}</div>
+      </div>
+
+      <div class="addr-actions">
+        <button onclick="setDefault(${addr.id})">Set Default</button>
+        <button onclick="editAddress(${addr.id})">Edit</button>
+        <button onclick="deleteAddress(${addr.id})">Delete</button>
+      </div>
+    </div>
+  `).join("");
 }
 
-/* ------------------------ POPUP ------------------------- */
-function openAddressForm() {
+loadAddresses();
+
+/* ---------------- POPUP HELPERS ---------------- */
+function openPopupForNew(){
   editingId = null;
-  document.getElementById("popupTitle").textContent = "Add Address";
-  document.getElementById("addressPopup").style.display = "block";
+  popupTitle.textContent = "Add Address";
+  a_fullname.value = "";
+  a_phone.value    = "";
+  a_country.value  = "";
+  a_city.value     = "";
+  a_address.value  = "";
+  addressPopup.style.display = "flex";
 }
-window.openAddressForm = openAddressForm;
 
-function closeAddressForm() {
-  document.getElementById("addressPopup").style.display = "none";
+function closeAddressPopup(){
+  addressPopup.style.display = "none";
 }
-window.closeAddressForm = closeAddressForm;
 
-/* --------------------- SAVE ADDRESS ---------------------- */
-window.saveAddress = async function () {
+/* BUTTONS */
+openAddPopupBtn.addEventListener("click", openPopupForNew);
+cancelPopupBtn.addEventListener("click", closeAddressPopup);
+
+/* ---------------- SAVE ADDRESS ---------------- */
+saveAddressBtn.addEventListener("click", async () => {
   const fullname = a_fullname.value.trim();
   const phone    = a_phone.value.trim();
   const country  = a_country.value.trim();
   const city     = a_city.value.trim();
-  const address  = a_address.value.trim();
+  const addr     = a_address.value.trim();
 
-  if (!fullname || !phone || !country || !city || !address) {
-    showToast("Fill all fields ❌", "error");
+  if (!fullname || !phone || !country || !city || !addr){
+    showToast("Please fill all address fields ❌","error");
     return;
   }
 
-  if (editingId === null) {
-    // Add new
-    const { error } = await supabase.from("addresses").insert([{
-      username,
-      fullname,
-      phone,
-      country,
-      city,
-      address,
-      is_default: false
-    }]);
+  if (!editingId){
+    // INSERT
+    const { error } = await supabase
+      .from("addresses")
+      .insert([{
+        username,
+        fullname,
+        phone,
+        country,
+        city,
+        address: addr,
+        is_default: false
+      }]);
 
-    if (error) {
-      showToast("Add failed ❌", "error");
+    if (error){
+      console.error(error);
+      showToast("Address add failed ❌","error");
       return;
     }
 
-    showToast("Address added ✅", "success");
+    showToast("Address added ✅","success");
   } else {
-    // Update
+    // UPDATE
     const { error } = await supabase
       .from("addresses")
-      .update({ fullname, phone, country, city, address })
+      .update({
+        fullname,
+        phone,
+        country,
+        city,
+        address: addr
+      })
       .eq("id", editingId)
       .eq("username", username);
 
-    if (error) {
-      showToast("Update failed ❌", "error");
+    if (error){
+      console.error(error);
+      showToast("Address update failed ❌","error");
       return;
     }
 
-    showToast("Address updated ✅", "success");
+    showToast("Address updated ✅","success");
   }
 
-  closeAddressForm();
+  closeAddressPopup();
   loadAddresses();
-};
+});
 
-/* ---------------------- EDIT ADDRESS ---------------------- */
-window.editAddress = async function (id) {
+/* ---------------- EDIT ADDRESS ---------------- */
+window.editAddress = async function(id){
   editingId = id;
 
   const { data, error } = await supabase
@@ -337,25 +492,26 @@ window.editAddress = async function (id) {
     .eq("username", username)
     .single();
 
-  if (error) {
-    showToast("Failed to load address ❌", "error");
+  if (error){
+    console.error(error);
+    showToast("Failed to load address ❌","error");
     return;
   }
 
-  document.getElementById("popupTitle").textContent = "Edit Address";
+  popupTitle.textContent = "Edit Address";
 
-  a_fullname.value = data.fullname;
-  a_phone.value    = data.phone;
-  a_country.value  = data.country;
-  a_city.value     = data.city;
-  a_address.value  = data.address;
+  a_fullname.value = data.fullname || "";
+  a_phone.value    = data.phone || "";
+  a_country.value  = data.country || "";
+  a_city.value     = data.city || "";
+  a_address.value  = data.address || "";
 
-  document.getElementById("addressPopup").style.display = "block";
+  addressPopup.style.display = "flex";
 };
 
-/* ---------------------- DELETE ADDRESS ---------------------- */
-window.deleteAddress = function (id) {
-  confirmBox("Are you sure you want to delete?", async yes => {
+/* ---------------- DELETE ADDRESS ---------------- */
+window.deleteAddress = function(id){
+  confirmBox("Are you sure you want to delete?", async yes=>{
     if (!yes) return;
 
     const { error } = await supabase
@@ -364,79 +520,173 @@ window.deleteAddress = function (id) {
       .eq("id", id)
       .eq("username", username);
 
-    if (error) {
-      showToast("Delete failed ❌", "error");
+    if (error){
+      console.error(error);
+      showToast("Delete failed ❌","error");
       return;
     }
 
-    showToast("Address deleted ✅", "success");
+    showToast("Address deleted ✅","success");
     loadAddresses();
   });
 };
 
-/* ---------------------- SET DEFAULT ---------------------- */
-window.setDefault = async function (id) {
-  // Önce tüm adreslerin default'unu kapat
+/* ---------------- SET DEFAULT ---------------- */
+window.setDefault = async function(id){
+  // önce hepsini kapat
   await supabase
     .from("addresses")
-    .update({ is_default: false })
+    .update({ is_default:false })
     .eq("username", username);
 
-  // Sonra seçileni default yap
-  await supabase
+  // sonra seçileni default yap
+  const { error } = await supabase
     .from("addresses")
-    .update({ is_default: true })
+    .update({ is_default:true })
     .eq("id", id)
     .eq("username", username);
 
-  showToast("Default address updated ✅", "success");
+  if (error){
+    console.error(error);
+    showToast("Set default failed ❌","error");
+    return;
+  }
+
+  showToast("Default address updated ✅","success");
   loadAddresses();
 };
 
-/* ---------------------- TOAST BOX ---------------------- */
-window.showToast = function (msg, type="info") {
-  const t = document.createElement("div");
-  t.className = `toast ${type}`;
-  t.textContent = msg;
+/* ---------------- TOAST / CONFIRM (index’le aynı) ---------------- */
+function showToast(msg,type="info"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
   document.body.appendChild(t);
-
-  setTimeout(() => t.classList.add("show"), 30);
-  setTimeout(() => {
+  setTimeout(()=>t.classList.add("show"),50);
+  setTimeout(()=>{
     t.classList.remove("show");
-    setTimeout(() => t.remove(), 200);
-  }, 2300);
-};
+    setTimeout(()=>t.remove(),300);
+  },2500);
+}
 
-/* ---------------------- CONFIRM POPUP ---------------------- */
-window.confirmBox = function (msg, callback) {
-  const c = document.createElement("div");
-  c.className = "confirmBox";
-  c.innerHTML = `
+function confirmBox(msg,cb){
+  const c=document.createElement("div");
+  c.className="confirmBox";
+  c.innerHTML=`
     <div>${msg}</div>
     <div class="confirm-buttons">
       <button class="ok">Yes</button>
       <button class="cancel">No</button>
-    </div>
-  `;
+    </div>`;
   document.body.appendChild(c);
+  setTimeout(()=>c.classList.add("show"),50);
+  c.querySelector(".ok").onclick=()=>{c.remove();cb(true);}
+  c.querySelector(".cancel").onclick=()=>{c.remove();cb(false);}
+}
 
-  setTimeout(() => c.classList.add("show"), 30);
+/* ---------------- SUPPORT (INDEX İLE BİREBİR) ---------------- */
+const supportBtn   = document.getElementById("supportBtn");
+const supportPanel = document.getElementById("supportPanel");
+const closeSupport = document.getElementById("closeSupport");
+const sendSupport  = document.getElementById("sendSupportBtn");
 
-  c.querySelector(".ok").onclick = () => { c.remove(); callback(true); };
-  c.querySelector(".cancel").onclick = () => { c.remove(); callback(false); };
-};
+supportBtn.addEventListener("click", () => {
+  supportPanel.style.display =
+    supportPanel.style.display === "block" ? "none" : "block";
+});
 
-/* ----------------- SUPPORT PANEL (Aynı index gibi) ----------------- */
-import { showSupportToast, sendSupportMessage, setupSupport } 
-  from "./support.js";
+closeSupport.addEventListener("click", () => {
+  supportPanel.style.display = "none";
+});
 
-setupSupport();
+sendSupport.addEventListener("click", () => {
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if(yes) sendSupportMessage();
+  });
+});
 
-/* ------------------ LOGOUT ------------------ */
-window.logout = function () {
+async function sendSupportMessage(){
+  const name  = document.getElementById("supName").value.trim();
+  const email = document.getElementById("supEmail").value.trim();
+  const cat   = document.getElementById("supCategory").value;
+  const msg   = document.getElementById("supMsg").value.trim();
+  const fileInput = document.getElementById("supFile");
+
+  if(!name || !email || !msg){
+    showToast("Please fill all required fields ❌","error");
+    return;
+  }
+
+  let fileUrl = "";
+  if(fileInput.files.length > 0){
+    const f = fileInput.files[0];
+    const safe = `${Date.now()}_${f.name.replace(/\s+/g,"_")}`;
+    const { error:upErr } = await supabase
+      .storage.from("uploads")
+      .upload(`public/${safe}`, f);
+
+    if(upErr){
+      console.error(upErr);
+      showToast("File upload failed ❌","error");
+      return;
+    }
+
+    fileUrl = `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safe}`;
+  }
+
+  const { error } = await supabase.from("messages").insert([{
+    name,
+    email,
+    category: cat,
+    message: msg,
+    file: fileUrl,
+    date: new Date().toLocaleString(),
+    read: false
+  }]);
+
+  if(error){
+    console.error(error);
+    showToast("Message failed ❌","error");
+    return;
+  }
+
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display = "none";
+}
+
+/* ---------------- LOGOUT + AVATAR MENU + CART COUNT ---------------- */
+window.logout = function(){
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 };
+
+const avatar = document.getElementById("userAvatar");
+const menu   = document.getElementById("avatarMenu");
+
+if(avatar){
+  avatar.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    menu.style.display = (menu.style.display==="flex") ? "none" : "flex";
+  });
+}
+document.addEventListener("click",(e)=>{
+  if(menu && !menu.contains(e.target) && e.target !== avatar){
+    menu.style.display="none";
+  }
+});
+
+// Cart count (quantity toplamı)
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const el   = document.getElementById("cartCount");
+  if(!el) return;
+  const total = cart.reduce((sum, item)=>{
+    const q = item.quantity ? Number(item.quantity) : 1;
+    return sum + (isNaN(q)?1:q);
+  },0);
+  el.textContent = total;
+});
+
 </script>
 
 </body>
