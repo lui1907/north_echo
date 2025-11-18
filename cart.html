@@ -8,31 +8,10 @@
 <link rel="stylesheet" href="style.css"/>
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
 
-<style>
-  /* Boş sepet uyarı tostu */
-  .cart-toast{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%) scale(.9);
-    background:rgba(20,20,20,.96);
-    border:1px solid #333;
-    padding:14px 22px;
-    color:#fff;
-    border-radius:10px;
-    opacity:0;
-    z-index:99999;
-    transition:.25s;
-    font-size:15px;
-    text-align:center;
-  }
-  .cart-toast.show{
-    opacity:1;
-    transform:translate(-50%,-50%) scale(1);
-  }
-</style>
+<link rel="stylesheet" href="support.css">
+<script src="support.js" defer></script>
+
 </head>
 
 <body>
@@ -40,20 +19,27 @@
 <!-- HEADER -->
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
+
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
+
+    <!-- SUBMIT KALDIRILDI -->
+
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <!-- PROFIL FOTOĞRAFI -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
+
+    <!-- AÇILIR MENÜ -->
+    <div class="avatar-menu" id="avatarMenu">
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+
   </div>
 </header>
-
-<!-- PROFILE DROPDOWN -->
-<div class="avatar-menu" id="avatarMenu">
-  <a href="profile.html">Profile</a>
-  <a href="settings.html">Settings</a>
-  <a href="#" id="logoutLink" class="logout" style="color:#ff4444;">Logout</a>
-</div>
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
@@ -64,6 +50,7 @@
   <a href="cart.html">Cart</a>
 </div>
 
+
 <!-- CART PAGE -->
 <div class="cart-wrapper">
 
@@ -73,7 +60,7 @@
 
     <!-- SOL: ÜRÜNLER -->
     <div class="cart-products" id="cartItems">
-      <!-- Ürünler JS ile doldurulacak -->
+      <!-- Ürünler JS ile eklenecek -->
     </div>
 
     <!-- SAĞ: ÖZET -->
@@ -96,7 +83,7 @@
         <strong id="cartTotal">0€</strong>
       </div>
 
-      <a href="checkout.html" id="checkoutBtn" class="checkout-final-btn" style="
+      <a href="checkout.html" class="checkout-final-btn" id="checkoutBtn" style="
         display:block;
         text-align:center;
         background:#fff;
@@ -113,130 +100,129 @@
   </div>
 </div>
 
+
 <!-- CART FUNCTIONALITY -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const itemsBox   = document.getElementById("cartItems");
-  const subtotalEl = document.getElementById("cartSubtotal");
-  const totalEl    = document.getElementById("cartTotal");
 
-  itemsBox.innerHTML = "";
-  let subtotal = 0;
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const itemsBox = document.getElementById("cartItems");
+    const subtotalEl = document.getElementById("cartSubtotal");
+    const totalEl = document.getElementById("cartTotal");
 
-  if (!cart.length) {
-    itemsBox.innerHTML = `
-      <p style="margin-top:20px;color:#aaa;">
-        Your cart is empty.
-      </p>`;
-  }
+    itemsBox.innerHTML = "";
+    let subtotal = 0;
 
-  cart.forEach((item, index) => {
-    const price = parseFloat(item.price) || 0;
-    const qty   = item.quantity ? parseInt(item.quantity) : 1;
+    cart.forEach((item, index) => {
 
-    itemsBox.innerHTML += `
-      <div class="cart-item-box">
+        itemsBox.innerHTML += `
+        
+          <div class="cart-item-box">
 
-        <img src="${item.image || 'assets/noimg.png'}" class="cart-img">
+            <img src="${item.image}" class="cart-img">
 
-        <div class="cart-info">
-          <h3>${item.name}</h3>
-          <p>Size: ${item.size || '-'}</p>
-          <p>${price}€</p>
+            <div class="cart-info">
+              <h3>${item.name}</h3>
+              <p>Size: ${item.size}</p>
+              <p>${item.price}€</p>
 
-          <div class="quantity-controls">
-            <button onclick="changeQuantity(${index}, -1)">-</button>
-            <span>${qty}</span>
-            <button onclick="changeQuantity(${index}, 1)">+</button>
-            <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
+              <div class="quantity-controls">
+                <button onclick="changeQuantity(${index}, -1)">-</button>
+                <span>${item.quantity}</span>
+                <button onclick="changeQuantity(${index}, 1)">+</button>
+
+                <button onclick="removeItem(${index})" style="margin-left:10px;">🗑️</button>
+              </div>
+
+            </div>
+
           </div>
-        </div>
+        
+        `;
 
-      </div>
-    `;
+        subtotal += item.price * item.quantity;
+    });
 
-    subtotal += price * qty;
-  });
+    subtotalEl.textContent = subtotal + "€";
+    totalEl.textContent = subtotal + "€";
+});
 
-  subtotalEl.textContent = subtotal + "€";
-  totalEl.textContent    = subtotal + "€";
 
-  // Checkout tıklandığında sepet boşsa engelle
-  const checkoutBtn = document.getElementById("checkoutBtn");
-  checkoutBtn.addEventListener("click", (e) => {
-    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (!currentCart.length) {
+// Sepet boşken checkout engelle
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("checkoutBtn");
+  btn.addEventListener("click", (e) => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.length === 0) {
       e.preventDefault();
-      showCartToast("Your cart is empty 🛒");
+      alert("Your cart is empty.");
     }
   });
 });
 
-function changeQuantity(index, amount) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  if (!cart[index]) return;
 
-  cart[index].quantity = (cart[index].quantity || 1) + amount;
-  if (cart[index].quantity <= 0) {
-    cart.splice(index, 1);
-  }
-  localStorage.setItem("cart", JSON.stringify(cart));
-  location.reload();
+function changeQuantity(index, amount) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart[index].quantity += amount;
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    location.reload();
 }
 
 function removeItem(index) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  location.reload();
-}
-
-// Boş sepet uyarı tostu
-function showCartToast(msg){
-  const t = document.createElement("div");
-  t.className = "cart-toast";
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.classList.add("show"),50);
-  setTimeout(()=>{
-    t.classList.remove("show");
-    setTimeout(()=>t.remove(),250);
-  },1800);
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    location.reload();
 }
 </script>
 
-<!-- PROFILE MENU JS -->
+
+<!-- PROFIL MENU FIX -->
 <script>
 const avatar = document.getElementById("userAvatar");
-const menu   = document.getElementById("avatarMenu");
-const logoutLink = document.getElementById("logoutLink");
+const menu = document.getElementById("avatarMenu");
 
-if (avatar && menu) {
+if (avatar) {
   avatar.addEventListener("click", (e) => {
     e.stopPropagation();
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
   });
-
-  document.addEventListener("click", (e) => {
-    if (!menu.contains(e.target)) {
-      menu.style.display = "none";
-    }
-  });
 }
 
-if (logoutLink) {
-  logoutLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "login.html";
-  });
+document.addEventListener("click", (e) => {
+  if (!menu.contains(e.target) && e.target !== avatar) {
+    menu.style.display = "none";
+  }
+});
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
 }
 </script>
 
-<!-- 💬 SUPPORT BUTTON -->
+
+<!-- LOGIN → KÜÇÜK AVATAR YÜKLEME -->
+<script>
+let username = localStorage.getItem("loggedInUser");
+if (username) {
+  let data = JSON.parse(localStorage.getItem("user_" + username));
+  if (data && data.avatar) {
+    document.getElementById("userAvatar").src = data.avatar;
+  }
+}
+</script>
+
+
+<!-- 💬 SUPPORT BUTTON (DÜZELTİLMİŞ) -->
 <div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="assets/support.svg" style="width:26px;height:26px;">
+  <img src="assets/support.svg" style="width:26px; height:26px;">
 </div>
 
 <!-- 💬 SUPPORT PANEL -->
@@ -247,33 +233,26 @@ if (logoutLink) {
   </div>
 
   <div class="sup-body">
+
     <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com">
-
-    <label>Category *</label>
-    <select id="supCategory">
-      <option value="Website">Website Issue</option>
-      <option value="Product">Product Info</option>
-      <option value="Design">Design Request</option>
-      <option value="Other">Other</option>
-    </select>
+    <input type="email" id="supEmail">
 
     <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <textarea id="supMsg"></textarea>
 
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <label>Attach File</label>
+    <input type="file" id="supFile">
 
     <button class="sup-send" onclick="sendSupportMessage()">
       Send Message →
     </button>
+
   </div>
 </div>
 
-<!-- SUPPORT CSS + JS (eski çalışan sürüm) -->
 <link rel="stylesheet" href="support.css">
 <script src="support.js"></script>
 
