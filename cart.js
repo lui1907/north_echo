@@ -1,107 +1,186 @@
-/* ================= CART SYSTEM ================= */
+/* =============== CART CORE =============== */
+
+function normalizeItem(raw) {
+  if (!raw) return null;
+
+  const item = { ...raw };
+
+  // ID zorunlu
+  if (item.id == null) return null;
+
+  // quantity düzelt
+  let q = Number(item.quantity);
+  if (!Number.isFinite(q) || q <= 0) q = 1;
+  item.quantity = q;
+
+  // price hem "20" hem "20€" hem NaN gelse toparla
+  let priceNum = Number(item.price);
+  if (!Number.isFinite(priceNum)) {
+    const cleaned = String(item.price || "")
+      .replace(",", ".")
+      .replace(/[^\d.]/g, "");
+    priceNum = parseFloat(cleaned);
+  }
+  if (!Number.isFinite(priceNum)) priceNum = 0;
+  item.price = priceNum;
+
+  // name / size / image boş kalmasın
+  item.name = item.name || "Product";
+  item.size = item.size || "-";
+  item.image = item.image || "assets/noimg.png";
+
+  return item;
+}
 
 function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
+  let cart;
+  try {
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+  } catch (e) {
+    cart = [];
+  }
+
+  cart = cart
+    .map(normalizeItem)
+    .filter((x) => x !== null);
+
+  // bozuk veriyi temizleyip geri yaz
+  localStorage.setItem("cart", JSON.stringify(cart));
+  return cart;
 }
 
 function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
 }
 
-/* SEPET SAYISINI GÜNCELLE */
+/* =============== CART ICON COUNT =============== */
+
 function updateCartCount() {
-    const cart = getCart();
-    let totalQty = 0;
+  const el = document.getElementById("cartCount");
+  if (!el) return;
 
-    cart.forEach(item => {
-        totalQty += item.quantity;
-    });
-
-    document.getElementById("cartCount").textContent = totalQty;
+  const cart = getCart();
+  const total = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+  el.textContent = total;
 }
 
-/* SEPETE EKLE */
+/* =============== ADD TO CART (GLOBAL) =============== */
+
 function addToCart(product) {
-    let cart = getCart();
+  // product: {id, name, price, size, image}
+  let cart = getCart();
 
-    const existing = cart.find(
-        item => item.id == product.id && item.size == product.size
-    );
+  // Fiyatı garantiye al
+  let p = Number(product.price);
+  if (!Number.isFinite(p)) {
+    const cleaned = String(product.price || "")
+      .replace(",", ".")
+      .replace(/[^\d.]/g, "");
+    p = parseFloat(cleaned);
+  }
+  if (!Number.isFinite(p)) p = 0;
 
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        product.quantity = 1;
-        cart.push(product);
-    }
+  const normalized = {
+    id: product.id,
+    name: product.name || "Product",
+    price: p,
+    size: product.size || "-",
+    image: product.image || "assets/noimg.png",
+    quantity: 1,
+  };
 
-    saveCart(cart);
+  const existing = cart.find(
+    (item) => item.id == normalized.id && item.size === normalized.size
+  );
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push(normalized);
+  }
+
+  saveCart(cart);
 }
 
-/* ================= CART PAGE ================= */
+// global yap
+window.addToCart = addToCart;
+
+/* =============== CART PAGE RENDER =============== */
+
 function renderCartPage() {
-    const cart = getCart();
+  const list = document.getElementById("cartItems");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
 
-    const list = document.getElementById("cartItems");
-    const subtotalEl = document.getElementById("subtotal");
-    const totalEl = document.getElementById("total");
+  if (!list) return; // cart.html dışında çağrılırsa
 
-    if (!list) return;
+  const cart = getCart();
 
-    list.innerHTML = "";
+  if (cart.length === 0) {
+    list.innerHTML = `<p style="color:#aaa;">Your cart is empty.</p>`;
+    if (subtotalEl) subtotalEl.textContent = "0€";
+    if (totalEl) totalEl.textContent = "0€";
+    return;
+  }
 
-    let subtotal = 0;
+  list.innerHTML = "";
+  let subtotal = 0;
 
-    cart.forEach((item, index) => {
-        subtotal += item.price * item.quantity;
+  cart.forEach((item, index) => {
+    const lineTotal = item.price * item.quantity;
+    subtotal += lineTotal;
 
-        list.innerHTML += `
-            <div class="cart-item">
-                <img src="${item.image}" class="ci-img">
+    list.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.image}" class="ci-img">
 
-                <div class="ci-info">
-                    <h3>${item.name}</h3>
-                    <p>Size: ${item.size}</p>
-                    <p>${item.price}€</p>
+        <div class="ci-info">
+          <h3>${item.name}</h3>
+          <p>Size: ${item.size}</p>
+          <p>${item.price}€</p>
 
-                    <div class="ci-qty">
-                        <button onclick="changeQty(${index}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="changeQty(${index}, 1)">+</button>
-                        <button onclick="removeItem(${index})">🗑️</button>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
+          <div class="ci-qty">
+            <button onclick="changeQty(${index}, -1)">-</button>
+            <span>${item.quantity}</span>
+            <button onclick="changeQty(${index}, 1)">+</button>
+            <button onclick="removeItem(${index})">🗑️</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
 
-    subtotalEl.textContent = subtotal + "€";
-    totalEl.textContent = subtotal + "€";
+  if (subtotalEl) subtotalEl.textContent = subtotal + "€";
+  if (totalEl) totalEl.textContent = subtotal + "€";
 }
 
-function changeQty(index, val) {
-    let cart = getCart();
-    cart[index].quantity += val;
+function changeQty(index, diff) {
+  let cart = getCart();
+  if (!cart[index]) return;
 
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-    }
+  cart[index].quantity += diff;
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
 
-    saveCart(cart);
-    renderCartPage();
+  saveCart(cart);
+  renderCartPage();
 }
 
 function removeItem(index) {
-    let cart = getCart();
-    cart.splice(index, 1);
-
-    saveCart(cart);
-    renderCartPage();
+  let cart = getCart();
+  cart.splice(index, 1);
+  saveCart(cart);
+  renderCartPage();
 }
 
-/* SAYFA YÜKLENİNCE */
+window.changeQty = changeQty;
+window.removeItem = removeItem;
+
+/* =============== INIT =============== */
+
 window.addEventListener("DOMContentLoaded", () => {
-    updateCartCount();
-    renderCartPage();
+  updateCartCount();
+  renderCartPage();
 });
