@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard — North Echo</title>
@@ -9,6 +10,8 @@
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
+
+<!-- SUPPORT -->
 <link rel="stylesheet" href="support.css">
 <script src="support.js" defer></script>
 
@@ -86,6 +89,7 @@ body {
     font-size: 14px;
 }
 </style>
+
 </head>
 
 <body>
@@ -96,16 +100,23 @@ body {
   <a href="index.html" class="logo">NORTH ECHO</a>
 
   <div class="right-buttons">
-    <a href="submit-design.html" class="submit-nav">Submit</a>
+
+    <!-- SUBMIT SİLİNDİ -->
+
+    <!-- CART -->
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
 
     <!-- Avatar -->
     <img src="assets/default-avatar.png" id="userAvatar" class="avatar">
+
+    <!-- Profile Menu -->
     <div class="avatar-menu" id="avatarMenu">
         <a href="profile.html">Profile</a>
         <a href="settings.html">Settings</a>
+        <a href="orders.html">My Orders</a>
         <a href="#" class="logout" onclick="logout()">Logout</a>
     </div>
+
   </div>
 </header>
 
@@ -138,24 +149,26 @@ body {
       <h3>Profile</h3>
       <p>View & edit your personal information</p>
     </a>
-    <a href="messages.html" class="panel-card">
-      <h3>Messages</h3>
-      <p>Check your received messages</p>
+
+    <a href="orders.html" class="panel-card">
+      <h3>My Orders</h3>
+      <p>View your purchase history</p>
     </a>
+
     <a href="settings.html" class="panel-card">
       <h3>Settings</h3>
-      <p>Manage your account & preferences</p>
+      <p>Manage your account preferences</p>
     </a>
   </div>
 
 </div>
 
-<!-- 💬 SUPPORT BUTTON -->
-<div id="supportBtn" onclick="toggleSupportPanel()">
-  <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnPjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuMDggMiAxMS4yNXY5LjI1YzAgMS4yOSAxLjA0IDIuNSAyLjUgMi41aDMuNXYzLjI1YzAgLjQyLjUyLjYzLjgzLjMzTDExLjY3IDIzaDQuODNjNS41MiAwIDEwLTQuMDggMTAtOS4yNVMxNy41MiAyIDEyIDJ6bTAgMkMxNi40MiA0IDIwIDcuMDggMjAgMTEuMjVzLTMuNTggNy4yNS04IDcuMjVoLTUuMTdsLTIuNjcgMi42N1YxOC40N0g0Yy0yLjIxIDAtNC0xLjc5LTQtNC4wNlYxMS4yNUM0IDcuMDggNy41OCA0IDEyIDR6Ii8+PC9nPjwvc3ZnPg==">
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn">
+  <img src="assets/support.svg">
 </div>
 
-<!-- 💬 SUPPORT PANEL -->
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
@@ -163,70 +176,77 @@ body {
   </div>
 
   <div class="sup-body">
+
     <label>Your Name *</label>
-    <input type="text" id="supName" placeholder="John Doe">
+    <input type="text" id="supName">
 
     <label>Email *</label>
-    <input type="email" id="supEmail" placeholder="your@mail.com">
+    <input type="email" id="supEmail">
 
     <label>Your Message *</label>
-    <textarea id="supMsg" placeholder="Write your message..."></textarea>
+    <textarea id="supMsg"></textarea>
 
-    <!-- 📎 FILE UPLOAD -->
-    <label>Attach File (optional)</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <label>Attach File</label>
+    <input type="file" id="supFile">
 
     <button class="sup-send" onclick="sendSupportMessage()">
       Send Message →
     </button>
+
   </div>
 </div>
 
-<!-- 💡 Supabase + User Info Script -->
+<!-- USER INFO + CART COUNT -->
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = "https://xedfviwffpsvbmyqzoof.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(
+  "https://xedfviwffpsvbmyqzoof.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
+);
 
-// 🟩 Get logged-in username
+// USER LOGIN CHECK
 const currentUser = localStorage.getItem("loggedInUser");
-if (!currentUser) {
-  window.location.href = "login.html";
-}
+if (!currentUser) window.location.href = "login.html";
 
-// 🟦 Fetch fullname from Supabase
-const { data, error } = await supabase
+// LOAD FULLNAME
+const { data } = await supabase
   .from("users")
   .select("fullname")
   .eq("username", currentUser)
   .single();
 
-if (error) {
-  console.error(error);
-  document.getElementById("dashName").innerText = currentUser;
-} else {
-  document.getElementById("dashName").innerText = data.fullname || currentUser;
-}
+document.getElementById("dashName").innerText =
+  data?.fullname || currentUser;
 
-// 🟢 Avatar defaults
+// AVATARS DEFAULT
 document.getElementById("dashAvatar").src = "assets/default-avatar.png";
 document.getElementById("userAvatar").src = "assets/default-avatar.png";
 
-// 🔴 Logout
+// CART COUNT FIX
+function updateCartCount() {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+  document.getElementById("cartCount").textContent = totalQty;
+}
+updateCartCount();
+
+// AVATAR MENU
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+avatar.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+});
+document.addEventListener("click", () => menu.style.display = "none");
+
+// LOGOUT
 window.logout = function () {
   localStorage.removeItem("loggedInUser");
-  localStorage.removeItem("loggedInFullName");
   window.location.href = "login.html";
 };
 
-// ⚪ Avatar menu toggle
-document.getElementById("userAvatar").addEventListener("click", () => {
-  const menu = document.getElementById("avatarMenu");
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-});
 </script>
 
 </body>
