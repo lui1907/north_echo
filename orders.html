@@ -252,6 +252,15 @@ if (supportBtn) supportBtn.onclick = toggleSupportPanel;
 if (closeBtn) closeBtn.onclick = toggleSupportPanel;
 </script>
 
+  <script>
+// 🔥 CART COUNT (SAĞ ÜSTTE GÖRÜNEN SEPET SAYISI)
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartCount = document.getElementById("cartCount");
+  if (cartCount) cartCount.textContent = cart.length;
+});
+</script>
+
   
 </body>
 </html>
