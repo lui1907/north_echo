@@ -6,47 +6,42 @@
 <title>Checkout — North Echo</title>
 
 <link rel="stylesheet" href="style.css"/>
-<link rel="stylesheet" href="support.css">
+<link rel="stylesheet" href="support.css"/>
 
 <script src="menu.js" defer></script>
 <script src="theme.js" defer></script>
-<script src="cart.js" defer></script>
+<script src="support.js" defer></script>
 
 <style>
-  body{color:white;margin:0;padding:0;}
-
-  .checkout-wrapper{
-    margin-top:120px;
-    width:100%;
-    display:flex;
-    justify-content:center;
+  .checkout-wrapper {
+    margin-top: 120px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
-
-  .checkout-layout{
-    width:80%;
-    display:flex;
-    gap:40px;
+  .checkout-layout {
+    width: 80%;
+    display: flex;
+    gap: 40px;
   }
-
-  .checkout-form{
-    flex:2;
-    display:flex;
-    flex-direction:column;
+  .checkout-form {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
   }
-
   .checkout-form input,
   .checkout-form textarea,
-  .checkout-form select{
+  .checkout-form select {
     background:#111;
     border:1px solid #333;
     border-radius:10px;
     padding:12px;
     color:white;
     margin-bottom:15px;
-    width:100%;
   }
 
-  .placeorder-btn{
+  /* BEYAZ ORDER BUTTON */
+  .placeorder-btn {
     padding:14px;
     background:#fff;
     color:#000;
@@ -58,34 +53,35 @@
     font-size:16px;
     font-weight:600;
   }
+  .placeorder-btn:hover { background:#ddd; }
 
-  .checkout-summary{
-    flex:1;
+  .checkout-summary {
+    flex: 1;
     background:#0d0d0d;
     padding:20px;
     border-radius:16px;
     border:1px solid #222;
     height:max-content;
   }
-
-  .summary-product{
+  .summary-product {
     display:flex;
     gap:12px;
     margin-bottom:15px;
   }
-
-  .summary-product img{
+  .summary-product img {
     width:70px;
     height:70px;
     border-radius:10px;
     object-fit:cover;
   }
-
-  .co-line{
+  .co-line {
     display:flex;
     justify-content:space-between;
     margin:8px 0;
   }
+
+  .avatar-menu a { color:white !important; }
+  .avatar-menu a.logout { color:#ff4444 !important; }
 </style>
 </head>
 
@@ -98,6 +94,8 @@
 
   <div class="right-buttons">
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
+
+    <!-- DAİMA DEFAULT AVATAR -->
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar">
 
     <div class="avatar-menu" id="avatarMenu">
@@ -118,7 +116,6 @@
   <a href="cart.html">Cart</a>
 </div>
 
-<!-- MAIN -->
 <main class="checkout-wrapper">
   <div class="checkout-layout">
 
@@ -131,12 +128,12 @@
       <input id="c_name" type="text" placeholder="John Doe" required>
 
       <label>Email</label>
-      <input id="c_email" type="email" placeholder="your@mail.com" required>
+      <input id="c_email" type="email" placeholder="example@mail.com" required>
 
       <label>Phone Number</label>
-      <input id="c_phone" type="text" placeholder="+90 555 555 55 55" required>
+      <input id="c_phone" type="tel" required pattern="^[0-9+\s\-]{7,20}$" placeholder="+358 xx xxx xxx">
 
-      <h2 style="margin-top:30px;">Saved Address</h2>
+      <h2 style="margin-top:30px;">Select Saved Address</h2>
 
       <select id="addressSelect">
         <option value="">-- Choose Saved Address --</option>
@@ -145,18 +142,19 @@
       <h2 style="margin-top:30px;">Shipping Address</h2>
 
       <label>Country</label>
-      <input id="c_country" type="text" placeholder="Country" required>
+      <input id="c_country" type="text" placeholder="Finland" required>
 
       <label>City</label>
-      <input id="c_city" type="text" placeholder="City" required>
+      <input id="c_city" type="text" placeholder="Helsinki" required>
 
       <label>Full Address</label>
-      <textarea id="c_address" placeholder="Street / Building / Apartment" required></textarea>
+      <textarea id="c_address" placeholder="Street, building, apartment number..." required></textarea>
 
     </form>
 
     <!-- SUMMARY -->
     <div class="checkout-summary">
+
       <h2>Order Summary</h2>
 
       <div id="sumItems"></div>
@@ -179,132 +177,147 @@
       <button class="placeorder-btn" type="submit" form="checkoutForm">
         Complete Order →
       </button>
-    </div>
 
+    </div>
   </div>
 </main>
 
-
-<!-- SUPABASE ORDER SAVE -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const supabase = createClient(
-  "https://xedfviwffpsvbmyqzoof.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
-);
-
-// USER CHECK
-const user = localStorage.getItem("loggedInUser");
-if (!user) window.location.href = "login.html";
-
-// CART LOAD
+<script>
+// --------- CART SUMMARY ----------
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const box = document.getElementById("sumItems");
 let subtotal = 0;
 
-cart.forEach(i => {
-  subtotal += i.price * i.quantity;
+cart.forEach(item => {
+  subtotal += item.price * (item.quantity || 1);
   box.innerHTML += `
     <div class="summary-product">
-      <img src="${i.image}">
+      <img src="${item.image}">
       <div>
-        <h4>${i.name}</h4>
-        <p>Size: ${i.size}</p>
-        <p>${i.price}€ × ${i.quantity}</p>
+        <h4>${item.name}</h4>
+        <p>Size: ${item.size}</p>
+        <p>${item.price}€ × ${item.quantity || 1}</p>
       </div>
     </div>`;
 });
 
-sumSubtotal.textContent = subtotal + "€";
-sumTotal.textContent = subtotal + "€";
+document.getElementById("sumSubtotal").textContent = subtotal + "€";
+document.getElementById("sumTotal").textContent = subtotal + "€";
 
-/* LOAD SAVED ADDRESSES */
-async function loadAddresses(){
-  const { data } = await supabase
-    .from("addresses")
-    .select("*")
-    .eq("username", user);
+// --------- LOAD SAVED ADDRESSES ----------
+const currentUser = localStorage.getItem("loggedInUser");
+const addressSelect = document.getElementById("addressSelect");
+let savedAddresses = [];
 
-  if(!data) return;
+if (!currentUser) {
+  // login yoksa checkout olmaz
+  // ama yine de sayfayı patlatmayalım
+  console.warn("No loggedInUser found");
+} else {
+  savedAddresses = JSON.parse(localStorage.getItem("addresses_" + currentUser)) || [];
 
-  data.forEach(a=>{
-    addressSelect.innerHTML += `
-      <option value="${a.id}"
-        data-country="${a.country}"
-        data-city="${a.city}"
-        data-address="${a.full_address}">
-        ${a.country}, ${a.city} — ${a.full_address.substring(0,25)}...
-      </option>`;
+  savedAddresses.forEach((a, index) => {
+    // bozuk / eski formatlı kayıtları gösterme
+    if (!a || !a.country || !a.city || !a.full) return;
+
+    const opt = document.createElement("option");
+    opt.value = index; // index tutuyoruz
+    opt.textContent = `${a.country}, ${a.city} — ${a.full}`;
+    addressSelect.appendChild(opt);
   });
+
+  // default adres varsa otomatik seç + formu doldur
+  const defaultIndex = savedAddresses.findIndex(a => a && a.default);
+  if (defaultIndex !== -1 && savedAddresses[defaultIndex].country) {
+    addressSelect.value = String(defaultIndex);
+    fillAddressFields(savedAddresses[defaultIndex]);
+  }
 }
-loadAddresses();
 
-/* SELECTING SAVED ADDRESS → AUTO FILL */
-addressSelect.onchange = () => {
-  const opt = addressSelect.selectedOptions[0];
-  if (!opt.value) return;
+function fillAddressFields(addr){
+  if (!addr) return;
+  document.getElementById("c_country").value = addr.country || "";
+  document.getElementById("c_city").value    = addr.city || "";
+  document.getElementById("c_address").value = addr.full || "";
+}
 
-  c_country.value = opt.dataset.country;
-  c_city.value = opt.dataset.city;
-  c_address.value = opt.dataset.address;
-};
+// dropdown değişince alanları doldur
+addressSelect.addEventListener("change", () => {
+  if (addressSelect.value === "") return;
+  const idx = Number(addressSelect.value);
+  const addr = savedAddresses[idx];
+  if (!addr || !addr.country) return;
+  fillAddressFields(addr);
+});
 
-/* SUBMIT ORDER */
-document.getElementById("checkoutForm").addEventListener("submit", async e => {
+// --------- COMPLETE ORDER ----------
+document.getElementById("checkoutForm").addEventListener("submit", e => {
   e.preventDefault();
 
-  // 1) ORDER INSERT
-  const { data: orderData, error: orderErr } = await supabase
-    .from("orders")
-    .insert({
-      username: user,
-      status: "Processing",
-      total_price: subtotal,
-      country: c_country.value,
-      city: c_city.value,
-      full_address: c_address.value,
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) return alert("Please login first.");
+
+  let orders = JSON.parse(localStorage.getItem("orders_" + user)) || [];
+
+  const orderData = {
+    user,
+    items: cart,
+    total: subtotal,
+    contact: {
+      name: c_name.value,
       email: c_email.value,
       phone: c_phone.value,
-      fullname: c_name.value
-    })
-    .select()
-    .single();
+      country: c_country.value,
+      city: c_city.value,
+      address: c_address.value
+    },
+    date: new Date().toLocaleString()
+  };
 
-  if(orderErr){
-    alert("Order failed!");
-    return;
-  }
-
-  const orderId = orderData.id;
-
-  // 2) ORDER ITEMS INSERT
-  const itemsToInsert = cart.map(i => ({
-    order_id: orderId,
-    product_name: i.name,
-    size: i.size,
-    quantity: i.quantity,
-    price: i.price,
-    image: i.image
-  }));
-
-  await supabase.from("order_items").insert(itemsToInsert);
-
-  // CLEAR CART
+  orders.push(orderData);
+  localStorage.setItem("orders_" + user, JSON.stringify(orders));
   localStorage.removeItem("cart");
 
-  window.location.href = `order-success.html?id=${orderId}`;
+  window.location.href = "order-success.html";
+});
+
+// --------- AVATAR MENU ----------
+document.getElementById("userAvatar").onclick = () => {
+  const m = document.getElementById("avatarMenu");
+  m.style.display = (m.style.display === "flex") ? "none" : "flex";
+};
+
+// --------- LOGOUT ----------
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+// --------- CART COUNT (QUANTITY DAHİL) ----------
+document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartCountEl = document.getElementById("cartCount");
+  if (!cartCountEl) return;
+
+  const totalCount = cart.reduce((sum, item) => {
+    const qty = item.quantity ? Number(item.quantity) : 1;
+    return sum + (isNaN(qty) ? 1 : qty);
+  }, 0);
+
+  cartCountEl.textContent = totalCount;
 });
 </script>
 
+<!-- SUPPORT BUTTON -->
+<div id="supportBtn" onclick="toggleSupportPanel()">
+  <img src="assets/support.svg">
+</div>
 
-<!-- SUPPORT PANEL (HER SAYFADA STANDART) -->
-<div id="supportBtn"><img src="assets/support.svg"></div>
-
+<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
-    <button id="closeSupport">✕</button>
+    <button onclick="toggleSupportPanel()">✕</button>
   </div>
 
   <div class="sup-body">
@@ -328,61 +341,17 @@ document.getElementById("checkoutForm").addEventListener("submit", async e => {
     <label>Attach File</label>
     <input type="file" id="supFile">
 
-    <button class="sup-send" id="sendSupportBtn">Send Message →</button>
+    <button class="sup-send" onclick="sendSupportMessage()">
+      Send Message →
+    </button>
   </div>
 </div>
 
-<!-- SUPPORT SCRIPT (HER SAYFADA AYNI) -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const supabase = createClient(
-  "https://xedfviwffpsvbmyqzoof.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
-);
-
-const panel = document.getElementById("supportPanel");
-const btn = document.getElementById("supportBtn");
-const closeBtn = document.getElementById("closeSupport");
-const sendBtn = document.getElementById("sendSupportBtn");
-
-btn.onclick = () => {
-  panel.style.display = panel.style.display === "block" ? "none" : "block";
-};
-closeBtn.onclick = () => (panel.style.display = "none");
-
-function showToast(msg){
-  alert(msg);
-}
-
-sendBtn.onclick = async () => {
-
-  const name = supName.value.trim();
-  const email = supEmail.value.trim();
-  const msg = supMsg.value.trim();
-  const cat = supCategory.value;
-
-  if (!name || !email || !msg){
-    return showToast("Fill all required fields.");
-  }
-
-  await supabase.from("messages").insert({
-    name,
-    email,
-    message: msg,
-    category: cat
-  });
-
-  showToast("Message sent!");
-  supMsg.value = "";
-};
-</script>
-
-
+<!-- SUPPORT TOGGLE -->
 <script>
-function logout(){
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
+function toggleSupportPanel(){
+  const p = document.getElementById("supportPanel");
+  p.style.display = (p.style.display === "block") ? "none" : "block";
 }
 </script>
 
