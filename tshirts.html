@@ -9,7 +9,6 @@
 
 <!-- JS -->
 <script src="menu.js" defer></script>
-<script src="theme.js" defer></script>
 <script src="cart.js" defer></script>
 
 <style>
@@ -74,7 +73,7 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   color:#fff;
 }
 
-/* SUPPORT BUTTON & PANEL (sadece bu sayfa için) */
+/* SUPPORT BUTTON */
 #supportBtn{
   position:fixed;
   bottom:30px;
@@ -89,15 +88,10 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   cursor:pointer;
   box-shadow:0 0 12px rgba(0,0,0,.3);
   z-index:9999;
-  transition:.25s;
 }
-#supportBtn:hover{background:#00cc77;}
-#supportBtn img{
-  width:26px;
-  height:26px;
-  pointer-events:none;
-}
+#supportBtn img{width:26px;height:26px;pointer-events:none;}
 
+/* SUPPORT PANEL */
 #supportPanel{
   position:fixed;
   bottom:95px;
@@ -110,7 +104,6 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   display:none;
   z-index:9998;
   box-shadow:0 0 20px rgba(0,0,0,.5);
-  backdrop-filter:blur(6px);
 }
 
 .sup-header{
@@ -119,21 +112,8 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   align-items:center;
   margin-bottom:8px;
 }
-.sup-header span{font-weight:bold;font-size:16px;}
-.sup-header button{
-  background:none;
-  border:none;
-  color:#fff;
-  cursor:pointer;
-  font-size:18px;
-}
+.sup-header button{background:none;border:none;color:white;font-size:18px;cursor:pointer;}
 
-.sup-body label{
-  display:block;
-  margin-bottom:5px;
-  font-size:13px;
-  color:#aaa;
-}
 .sup-body input,
 .sup-body textarea,
 .sup-body select{
@@ -144,44 +124,40 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   background:#111;
   color:white;
   padding:8px;
-  font-size:14px;
 }
+
 .sup-send{
   width:100%;
   background:#00aa66;
   border:none;
   border-radius:6px;
   padding:10px;
-  font-weight:bold;
   color:white;
+  font-weight:bold;
   cursor:pointer;
-  transition:.2s;
 }
-.sup-send:hover{background:#00cc77;}
 
-/* TOAST & CONFIRM */
+/* TOAST + CONFIRM */
 .toast,.confirmBox{
   position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%) scale(.9);
-  background:rgba(20,20,20,.95);
+  background:#151515;
   border:1px solid #333;
   padding:16px 22px;
   color:white;
   border-radius:10px;
   opacity:0;
-  transition:all .3s;
+  transition:.25s;
   z-index:99999;
-  font-size:15px;
-  text-align:center;
 }
 .toast.show,.confirmBox.show{
   opacity:1;
   transform:translate(-50%,-50%) scale(1);
 }
-.toast.success{border-color:#00aa66;color:#00ff99;}
-.toast.error{border-color:#aa0000;color:#ff5555;}
+.toast.success{color:#00ff99;border-color:#00aa66;}
+.toast.error{color:#ff4444;border-color:#aa0000;}
 
 .confirm-buttons{
   display:flex;
@@ -189,16 +165,28 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   justify-content:center;
   margin-top:10px;
 }
-.confirm-buttons button{
-  background:#00aa66;
-  border:none;
-  padding:8px 14px;
-  border-radius:6px;
-  cursor:pointer;
-  color:white;
-  font-weight:bold;
-}
 .confirm-buttons .cancel{background:#444;}
+
+.avatar-menu{
+  position:absolute;
+  right:20px;
+  top:70px;
+  background:#111;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:10px;
+  display:none;
+  flex-direction:column;
+  gap:8px;
+  z-index:9999;
+}
+.avatar-menu a{
+  color:white;
+  text-decoration:none;
+  padding:6px;
+  border-radius:6px;
+}
+.avatar-menu .logout{color:#ff4444;}
 </style>
 </head>
 <body>
@@ -206,12 +194,19 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
 <header class="header">
   <div class="hamburger" id="menuBtn">☰</div>
   <a href="index.html" class="logo">NORTH ECHO</a>
+
   <div class="right-buttons">
-    <a href="submit-design.html" class="submit-nav">Submit</a>
     <a href="cart.html" class="cart-icon">🛒 <span id="cartCount">0</span></a>
     <img src="assets/default-avatar.png" class="avatar" id="userAvatar" />
   </div>
 </header>
+
+<!-- AVATAR MENU -->
+<div class="avatar-menu" id="avatarMenu">
+  <a href="profile.html">Profile</a>
+  <a href="settings.html">Settings</a>
+  <a href="#" class="logout" onclick="logout()">Logout</a>
+</div>
 
 <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
@@ -219,7 +214,6 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
   <a href="index.html">Home</a>
   <a href="tshirts.html">T-Shirts</a>
   <a href="sweatshirts.html">Sweatshirts</a>
-  <a href="submit-design.html">Submit Design</a>
   <a href="cart.html">Cart</a>
 </div>
 
@@ -227,23 +221,18 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
 
 <div class="tshirt-layout">
 
-  <!-- ÜRÜNLER -->
   <div class="product-area">
     <div class="product-grid" id="productGrid"></div>
   </div>
 
-  <!-- FİLTRE -->
   <div class="filter-side">
-
     <input type="text" id="searchInput" placeholder="Search products..." />
 
     <h3>Filters</h3>
 
     <h4>Price</h4>
     <input type="range" id="priceRange" min="0" max="100" value="100" />
-    <div class="price-value">
-      Max: <span id="priceVal">100</span>€
-    </div>
+    <div class="price-value">Max: <span id="priceVal">100</span>€</div>
 
     <h4>Size</h4>
     <div class="size-buttons">
@@ -252,28 +241,23 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
       <div class="size-btn" data-size="L">L</div>
       <div class="size-btn" data-size="XL">XL</div>
     </div>
-
   </div>
 </div>
 
-<!-- SUPPORT BUTTON -->
-<div id="supportBtn">
-  <img src="assets/support.svg" alt="support">
-</div>
+<!-- SUPPORT -->
+<div id="supportBtn"><img src="assets/support.svg"></div>
 
-<!-- SUPPORT PANEL -->
 <div id="supportPanel">
   <div class="sup-header">
     <span>Support</span>
     <button id="closeSupport">✕</button>
   </div>
-
   <div class="sup-body">
     <label>Your Name *</label>
-    <input type="text" id="supName">
+    <input id="supName">
 
     <label>Email *</label>
-    <input type="email" id="supEmail">
+    <input id="supEmail">
 
     <label>Category *</label>
     <select id="supCategory">
@@ -287,7 +271,7 @@ body{background:#000;color:white;font-family:'Poppins',sans-serif;}
     <textarea id="supMsg"></textarea>
 
     <label>Attach File</label>
-    <input type="file" id="supFile" accept="image/*,.pdf,.txt,.zip,.rar,.doc,.docx">
+    <input type="file" id="supFile">
 
     <button class="sup-send" id="sendSupportBtn">Send Message →</button>
   </div>
@@ -301,53 +285,36 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZGZ2aXdmZnBzdmJteXF6b29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMjM0NzMsImV4cCI6MjA3ODY5OTQ3M30.SK7mEei8GTfUWWPPi4PZjxQzDl68yHsOgQMgYIHunaM"
 );
 
-/* ===================== ÜRÜNLER ===================== */
+/* ÜRÜNLER */
 async function loadProducts(){
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("category","T-Shirts");
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-  renderProducts(data || []);
+  const { data } = await supabase.from("products").select("*").eq("category","T-Shirts");
+  renderProducts(data||[]);
 }
 loadProducts();
 
 function renderProducts(list){
-  const grid = document.getElementById("productGrid");
-  grid.innerHTML = list.map(p=>`
+  productGrid.innerHTML = list.map(p=>`
     <a href="product.html?id=${p.id}" class="product-card"
        data-name="${p.name.toLowerCase()}" data-price="${p.price}">
-      <img src="${(p.images||'').split(',')[0] || 'assets/noimg.png'}">
+      <img src="${p.images.split(',')[0]}">
       <h3>${p.name}</h3>
       <p>${p.price}€</p>
     </a>
   `).join("");
 }
 
-/* ===================== FİLTRE ===================== */
-const priceRange = document.getElementById("priceRange");
-const priceVal   = document.getElementById("priceVal");
-const searchInput = document.getElementById("searchInput");
-const sizeBtns   = document.querySelectorAll(".size-btn");
-let selectedSize = null;
-
+/* FİLTRE */
 priceRange.oninput = applyFilters;
 searchInput.oninput = applyFilters;
 
+const sizeBtns = document.querySelectorAll(".size-btn");
+let selectedSize = null;
+
 sizeBtns.forEach(btn=>{
-  btn.onclick = ()=>{
-    if (btn.classList.contains("active")) {
-      btn.classList.remove("active");
-      selectedSize = null;
-    } else {
-      sizeBtns.forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      selectedSize = btn.dataset.size;
-    }
+  btn.onclick=()=>{
+    sizeBtns.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedSize = btn.dataset.size;
     applyFilters();
   };
 });
@@ -358,48 +325,36 @@ function applyFilters(){
   const m = parseInt(priceRange.value);
 
   document.querySelectorAll(".product-card").forEach(c=>{
-    const n = c.dataset.name;
-    const p = parseInt(c.dataset.price);
-    const matchSearch = n.includes(s);
-    const matchPrice  = p <= m;
-    // Şimdilik tüm bedenler var gibi davranıyoruz
-    const matchSize   = true;
+    const name = c.dataset.name;
+    const price = parseInt(c.dataset.price);
 
-    c.style.display = (matchSearch && matchPrice && matchSize) ? "block" : "none";
+    const searchMatch = name.includes(s);
+    const priceMatch  = price <= m;
+
+    c.style.display = (searchMatch && priceMatch) ? "block" : "none";
   });
 }
 
-/* ===================== SUPPORT ===================== */
-const supportBtn    = document.getElementById("supportBtn");
-const supportPanel  = document.getElementById("supportPanel");
-const closeSupport  = document.getElementById("closeSupport");
-const sendSupportBtn= document.getElementById("sendSupportBtn");
+/* SUPPORT PANEL */
+supportBtn.onclick = ()=>supportPanel.style.display="block";
+closeSupport.onclick=()=>supportPanel.style.display="none";
 
-supportBtn.onclick = () => {
-  supportPanel.style.display = (supportPanel.style.display === "block") ? "none" : "block";
-};
-closeSupport.onclick = () => {
-  supportPanel.style.display = "none";
-};
-
-// Toast
-function showToast(msg,type="info"){
-  const t = document.createElement("div");
-  t.className = `toast ${type}`;
-  t.textContent = msg;
+function showToast(msg,type="success"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  t.textContent=msg;
   document.body.appendChild(t);
-  setTimeout(()=>t.classList.add("show"), 50);
+  setTimeout(()=>t.classList.add("show"),50);
   setTimeout(()=>{
     t.classList.remove("show");
-    setTimeout(()=>t.remove(),300);
-  },2500);
+    setTimeout(()=>t.remove(),100);
+  },2200);
 }
 
-// Confirm popup
 function confirmBox(msg,cb){
-  const c = document.createElement("div");
-  c.className = "confirmBox";
-  c.innerHTML = `
+  const c=document.createElement("div");
+  c.className="confirmBox";
+  c.innerHTML=`
     <div>${msg}</div>
     <div class="confirm-buttons">
       <button class="ok">Yes</button>
@@ -407,77 +362,64 @@ function confirmBox(msg,cb){
     </div>`;
   document.body.appendChild(c);
   setTimeout(()=>c.classList.add("show"),50);
-  c.querySelector(".ok").onclick = ()=>{ c.remove(); cb(true); };
-  c.querySelector(".cancel").onclick = ()=>{ c.remove(); cb(false); };
+  c.querySelector(".ok").onclick = ()=>{c.remove();cb(true);};
+  c.querySelector(".cancel").onclick = ()=>{c.remove();cb(false);};
 }
 
-sendSupportBtn.onclick = () => {
-  confirmBox("Are you sure you want to send this message?", (res)=>{
-    if (!res) return;
-    sendSupportMessage();
+sendSupportBtn.onclick = ()=>{
+  confirmBox("Are you sure you want to send this message?", (yes)=>{
+    if(yes) sendSupportMessage();
   });
 };
 
 async function sendSupportMessage(){
-  const name  = document.getElementById("supName").value.trim();
-  const email = document.getElementById("supEmail").value.trim();
-  const cat   = document.getElementById("supCategory").value;
-  const msg   = document.getElementById("supMsg").value.trim();
-  const fileInput = document.getElementById("supFile");
+  const name = supName.value.trim();
+  const email= supEmail.value.trim();
+  const cat  = supCategory.value;
+  const msg  = supMsg.value.trim();
+  const file = supFile.files[0];
 
-  if (!name || !email || !cat || !msg){
+  if(!name||!email||!msg){
     showToast("Please fill all required fields ❌","error");
     return;
   }
 
-  let fileUrl = "";
-
-  if (fileInput.files.length > 0){
-    const f = fileInput.files[0];
-    const safeName = `${Date.now()}_${f.name.replace(/\s+/g,"_").replace(/[^\w.-]/g,"")}`;
-
-    const { error: uploadError } = await supabase
-      .storage
-      .from("uploads")
-      .upload(`public/${safeName}`, f, {
-        cacheControl: "3600",
-        upsert: false
-      });
-
-    if (uploadError){
-      console.error(uploadError);
-      showToast("File upload failed ❌","error");
-      return;
+  let fileUrl="";
+  if(file){
+    const safeName = `${Date.now()}_${file.name}`;
+    const up = await supabase.storage.from("uploads").upload(`public/${safeName}`,file);
+    if(!up.error){
+      fileUrl=`https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safeName}`;
     }
-
-    fileUrl = `https://xedfviwffpsvbmyqzoof.supabase.co/storage/v1/object/public/uploads/public/${safeName}`;
   }
 
-  const { error: insertError } = await supabase
-    .from("messages")
-    .insert([{
-      name,
-      email,
-      category: cat,
-      message: msg,
-      file: fileUrl,
-      date: new Date().toLocaleString(),
-      read: false
-    }]);
+  await supabase.from("messages").insert([{name,email,category:cat,message:msg,file:fileUrl,date:new Date().toLocaleString()}]);
 
-  if (insertError){
-    console.error(insertError);
-    showToast("Message failed ❌","error");
-  } else {
-    showToast("Message sent ✅","success");
-    supportPanel.style.display = "none";
-    document.getElementById("supName").value = "";
-    document.getElementById("supEmail").value = "";
-    document.getElementById("supCategory").value = "Website";
-    document.getElementById("supMsg").value = "";
-    document.getElementById("supFile").value = "";
-  }
+  showToast("Message sent successfully ✅","success");
+  supportPanel.style.display="none";
 }
+</script>
+
+<!-- AVATAR MENU JS -->
+<script>
+function logout(){
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+const avatar = document.getElementById("userAvatar");
+const menu = document.getElementById("avatarMenu");
+
+avatar.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  menu.style.display = (menu.style.display==="flex") ? "none" : "flex";
+});
+
+document.addEventListener("click",(e)=>{
+  if(menu && !menu.contains(e.target) && e.target!==avatar){
+    menu.style.display="none";
+  }
+});
 </script>
 
 </body>
